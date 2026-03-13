@@ -1,23 +1,26 @@
 <!DOCTYPE html>
-<!-- saved from url=(0044)file:///C:/Users/lenovo/Downloads/sahel.html -->
-<html lang="ar" dir="rtl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ساهل — منصة الجمعيات المالية</title>
-<link href="./index_files/css2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#04070f;--s1:#080f1e;--s2:#0c1528;--s3:#101d36;
   --b1:rgba(99,179,255,.1);--b2:rgba(99,179,255,.2);--b3:rgba(99,179,255,.35);
-  --accent:#4f9eff;--teal:#00e5b0;--gold:#fbbf24;--red:#f43f5e;--purple:#a78bfa;
-  --text:#ddeeff;--muted:#5a7aa0;--radius:14px;
+  --accent:#4f9eff;--teal:#00e5b0;--gold:#fbbf24;--red:#f43f5e;--pu:#a78bfa;
+  --text:#ddeeff;--muted:#5a7aa0;--r:14px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-.screen{display:none;min-height:100vh}.screen.active{display:block}
-@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pop{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
+
+/* ══ SCREENS — المبدأ: كل الشاشات مخفية افتراضياً ══ */
+.screen{display:none !important;min-height:100vh}
+.screen.active{display:block !important}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .fadein{animation:up .3s ease}
+@keyframes popin{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
 
 /* inputs */
 input,select,textarea{width:100%;padding:12px 15px;background:rgba(255,255,255,.04);border:1.5px solid var(--b2);border-radius:11px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px;outline:none;transition:all .2s}
@@ -27,793 +30,740 @@ select option{background:#0c1528}
 .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:700}
 
 /* buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 20px;border:none;border-radius:11px;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .18s;user-select:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 20px;border:none;border-radius:11px;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .18s;user-select:none;text-decoration:none}
 .btn:hover{transform:translateY(-1px);filter:brightness(1.1)}.btn:active{transform:scale(.97)}
-.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.btn-p{background:linear-gradient(135deg,#4f9eff,#1d6fd4);color:#fff;width:100%;box-shadow:0 4px 18px rgba(79,158,255,.25)}
-.btn-s{background:linear-gradient(135deg,#059669,#00e5b0);color:#fff;box-shadow:0 4px 14px rgba(0,229,176,.2)}
-.btn-d{background:linear-gradient(135deg,#b91c1c,#f43f5e);color:#fff}
-.btn-g{background:linear-gradient(135deg,#b45309,#fbbf24);color:#fff;box-shadow:0 4px 14px rgba(251,191,36,.2)}
-.btn-o{background:rgba(79,158,255,.1);border:1px solid var(--b2);color:var(--accent)}
-.btn-w{background:linear-gradient(135deg,#166534,#22c55e);color:#fff}
-.btn-pu{background:linear-gradient(135deg,#5b21b6,#a78bfa);color:#fff}
-.btn-sm{padding:7px 13px;font-size:12px;border-radius:9px}
-.btn-xs{padding:5px 9px;font-size:11px;border-radius:7px}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none !important;filter:none !important}
+.bp{background:linear-gradient(135deg,#4f9eff,#1d6fd4);color:#fff;box-shadow:0 4px 16px rgba(79,158,255,.25)}
+.bs{background:linear-gradient(135deg,#059669,#00e5b0);color:#fff;box-shadow:0 4px 14px rgba(0,229,176,.2)}
+.bd{background:linear-gradient(135deg,#b91c1c,#f43f5e);color:#fff}
+.bg{background:linear-gradient(135deg,#b45309,#fbbf24);color:#fff;box-shadow:0 4px 14px rgba(251,191,36,.2)}
+.bo{background:rgba(79,158,255,.1);border:1px solid var(--b2);color:var(--accent)}
+.bw{background:linear-gradient(135deg,#166534,#22c55e);color:#fff}
+.bpu{background:linear-gradient(135deg,#5b21b6,#a78bfa);color:#fff}
+.bfull{width:100%}
+.sm{padding:7px 13px;font-size:12px;border-radius:9px}
+.xs{padding:5px 9px;font-size:11px;border-radius:7px}
 
 /* topbar */
-.topbar{background:rgba(4,7,15,.92);border-bottom:1px solid var(--b1);backdrop-filter:blur(24px);padding:0 16px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.brand{font-size:18px;font-weight:900;display:flex;align-items:center;gap:7px}
-.brand-txt{background:linear-gradient(135deg,#4f9eff,#00e5b0);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.topbar-r{display:flex;gap:5px;align-items:center}
+.bar{background:rgba(4,7,15,.95);border-bottom:1px solid var(--b1);backdrop-filter:blur(24px);padding:0 16px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.brand{font-size:18px;font-weight:900;display:flex;align-items:center;gap:7px;letter-spacing:-.3px}
+.btxt{background:linear-gradient(135deg,#4f9eff,#00e5b0);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.barr{display:flex;gap:5px;align-items:center}
 
 /* layout */
-.wrap{max-width:1080px;margin:0 auto;padding:18px 14px 80px}
-.wrap-sm{max-width:520px;margin:0 auto;padding:14px 14px 80px}
-.wrap-pub{max-width:680px;margin:0 auto;padding:10px 14px 80px}
+.wrap{max-width:1080px;margin:0 auto;padding:18px 14px 90px}
+.wsm{max-width:520px;margin:0 auto;padding:14px 14px 90px}
+.wpub{max-width:680px;margin:0 auto;padding:10px 14px 90px}
 
 /* tabs */
 .tabs{display:flex;gap:3px;background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:4px;margin-bottom:18px;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab{padding:8px 13px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;position:relative;flex-shrink:0}
-.tab.active{background:var(--accent);color:#fff;box-shadow:0 2px 12px rgba(79,158,255,.35)}
-.tab:hover:not(.active){color:var(--text);background:rgba(255,255,255,.05)}
-.tab-badge{position:absolute;top:-5px;right:-5px;background:var(--gold);color:#000;border-radius:99px;padding:1px 5px;font-size:10px;font-weight:800;min-width:16px;text-align:center}
-.tc{display:none}.tc.active{display:block;animation:up .25s ease}
+.tab.on{background:var(--accent);color:#fff;box-shadow:0 2px 12px rgba(79,158,255,.35)}
+.tab:hover:not(.on){color:var(--text);background:rgba(255,255,255,.05)}
+.tbadge{position:absolute;top:-5px;right:-5px;background:var(--gold);color:#000;border-radius:99px;padding:1px 5px;font-size:10px;font-weight:800;min-width:16px;text-align:center}
+.tc{display:none}.tc.on{display:block;animation:up .25s ease}
 
 /* cards */
-.card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--radius);padding:18px;margin-bottom:14px}
-.card-t{font-size:15px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.ct{font-size:15px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:7px}
 
 /* stats */
-.sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:14px}
-@media(min-width:560px){.sgrid{grid-template-columns:repeat(4,1fr)}}
-.scard{background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:14px;transition:border-color .2s}
-.scard:hover{border-color:var(--b2)}
-.snum{font-size:24px;font-weight:900;line-height:1;margin-bottom:3px}
-.slbl{font-size:11px;color:var(--muted);font-weight:600}
+.sg{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:14px}
+@media(min-width:560px){.sg{grid-template-columns:repeat(4,1fr)}}
+.sc{background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:14px;transition:border-color .2s}
+.sc:hover{border-color:var(--b2)}
+.sn{font-size:24px;font-weight:900;line-height:1;margin-bottom:3px}
+.sl{font-size:11px;color:var(--muted);font-weight:600}
 
-/* hero month */
-.hero{background:linear-gradient(135deg,#0a1d4a 0%,#080f1e 60%,#040710 100%);border:2px solid rgba(251,191,36,.35);border-radius:18px;padding:22px;margin-bottom:14px;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(251,191,36,.09) 0%,transparent 70%);pointer-events:none}
-.hero::after{content:'';position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(79,158,255,.06) 0%,transparent 70%);pointer-events:none}
-.hero-lbl{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px}
-.hero-name{font-size:30px;font-weight:900;color:var(--gold);line-height:1.2;margin-bottom:6px;text-shadow:0 0 30px rgba(251,191,36,.3)}
-.hero-iban{display:inline-flex;align-items:center;gap:7px;background:rgba(0,229,176,.08);border:1px solid rgba(0,229,176,.2);border-radius:9px;padding:7px 13px;cursor:pointer;font-family:monospace;font-size:12px;color:var(--teal);font-weight:700;word-break:break-all;margin-top:5px}
-.prog-wrap{margin-top:16px}
-.prog-lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px}
-.prog{height:7px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
-.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--teal),var(--accent));transition:width .6s ease}
+/* hero */
+.hero{background:linear-gradient(135deg,#0a1d4a,#080f1e,#040710);border:2px solid rgba(251,191,36,.3);border-radius:18px;padding:22px;margin-bottom:14px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(251,191,36,.08),transparent 70%);pointer-events:none}
+.hlbl{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px}
+.hname{font-size:30px;font-weight:900;color:var(--gold);line-height:1.2;margin-bottom:6px;text-shadow:0 0 30px rgba(251,191,36,.25)}
+.hiban{display:inline-flex;align-items:center;gap:7px;background:rgba(0,229,176,.07);border:1px solid rgba(0,229,176,.18);border-radius:9px;padding:7px 13px;cursor:pointer;font-family:monospace;font-size:12px;color:var(--teal);font-weight:700;word-break:break-all;margin-top:5px}
 
-/* countdown */
-.countdown{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
-.cd-box{background:rgba(255,255,255,.05);border:1px solid var(--b2);border-radius:12px;padding:12px 16px;text-align:center;min-width:64px}
-.cd-num{font-size:26px;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--gold),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.cd-lbl{font-size:10px;color:var(--muted);font-weight:700;margin-top:2px}
-.cd-urgent .cd-num{background:linear-gradient(135deg,var(--red),#ff6b6b);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+/* days counter */
+.daycnt{margin-top:14px;background:rgba(255,255,255,.04);border:1px solid var(--b2);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:center;gap:10px}
+.daynum{font-size:36px;font-weight:900;color:var(--gold);line-height:1}
+.daynum.urgent{color:var(--red);animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+.daylbl{font-size:13px;color:var(--muted);font-weight:700}
+
+/* progress */
+.pw{margin-top:14px}
+.pl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px}
+.pb{height:7px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
+.pf{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--teal),var(--accent));transition:width .6s ease}
 
 /* member cards */
 .mc{background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:13px;margin-bottom:9px;transition:border-color .2s}
-.mc.receiver{border-color:var(--gold);background:linear-gradient(135deg,rgba(251,191,36,.05),var(--s2))}
-.mc.pending-mc{border-color:rgba(251,191,36,.25)}
-.mc-top{display:flex;align-items:flex-start;gap:11px}
+.mc.rcvr{border-color:var(--gold);background:linear-gradient(135deg,rgba(251,191,36,.04),var(--s2))}
+.mc.pend{border-color:rgba(251,191,36,.22)}
+.mct{display:flex;align-items:flex-start;gap:11px}
 .av{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;flex-shrink:0;color:#fff;background:linear-gradient(135deg,var(--accent),#1d6fd4)}
-.av-g{background:linear-gradient(135deg,#b45309,var(--gold))!important}
-.av-t{background:linear-gradient(135deg,#059669,var(--teal))!important}
-.av-p{background:linear-gradient(135deg,#5b21b6,var(--purple))!important}
+.avgo{background:linear-gradient(135deg,#b45309,var(--gold))!important}
+.avte{background:linear-gradient(135deg,#059669,var(--teal))!important}
+.avpu{background:linear-gradient(135deg,#5b21b6,var(--pu))!important}
 .mi{flex:1;min-width:0}
 .mn{font-size:14px;font-weight:800}
 .ms{font-size:12px;color:var(--muted);margin-top:2px}
-.miban{font-size:11px;color:var(--teal);margin-top:3px;font-family:monospace;cursor:pointer;word-break:break-all}
-.badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
-.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:99px;font-size:11px;font-weight:700}
-.b-blue{background:rgba(79,158,255,.1);color:#60a5fa;border:1px solid rgba(79,158,255,.2)}
-.b-teal{background:rgba(0,229,176,.08);color:#00e5b0;border:1px solid rgba(0,229,176,.2)}
-.b-red{background:rgba(244,63,94,.08);color:#fb7185;border:1px solid rgba(244,63,94,.2)}
-.b-gold{background:rgba(251,191,36,.1);color:var(--gold);border:1px solid rgba(251,191,36,.25)}
-.b-orange{background:rgba(249,115,22,.08);color:#fb923c;border:1px solid rgba(249,115,22,.2)}
-.b-pu{background:rgba(167,139,250,.08);color:var(--purple);border:1px solid rgba(167,139,250,.2);cursor:pointer}
-.b-gray{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid rgba(255,255,255,.1)}
+.mib{font-size:11px;color:var(--teal);margin-top:3px;font-family:monospace;cursor:pointer;word-break:break-all}
+.bdgs{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.bdg{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:99px;font-size:11px;font-weight:700}
+.bb{background:rgba(79,158,255,.1);color:#60a5fa;border:1px solid rgba(79,158,255,.2)}
+.bt{background:rgba(0,229,176,.08);color:#00e5b0;border:1px solid rgba(0,229,176,.18)}
+.br{background:rgba(244,63,94,.08);color:#fb7185;border:1px solid rgba(244,63,94,.2)}
+.bgd{background:rgba(251,191,36,.1);color:var(--gold);border:1px solid rgba(251,191,36,.22)}
+.bor{background:rgba(249,115,22,.08);color:#fb923c;border:1px solid rgba(249,115,22,.2)}
+.bgr{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid rgba(255,255,255,.1)}
 .ma{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
-.rthumb{width:52px;height:52px;border-radius:9px;object-fit:cover;border:2px solid var(--teal);cursor:pointer;flex-shrink:0}
-.rph{width:52px;height:52px;border-radius:9px;background:rgba(79,158,255,.05);border:1.5px dashed rgba(79,158,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;color:var(--muted)}
+.rth{width:52px;height:52px;border-radius:9px;object-fit:cover;border:2px solid var(--teal);cursor:pointer;flex-shrink:0}
+.rph{width:52px;height:52px;border-radius:9px;background:rgba(79,158,255,.04);border:1.5px dashed rgba(79,158,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;color:var(--muted)}
 
-/* schedule table */
+/* table */
 .tbl{width:100%;border-collapse:collapse}
 .tbl th{padding:9px 10px;text-align:right;background:var(--s2);font-size:11px;font-weight:700;color:var(--muted);border-bottom:1px solid var(--b1)}
 .tbl td{padding:9px 10px;border-bottom:1px solid var(--b1);font-size:12px;vertical-align:middle}
 .tbl tr:last-child td{border-bottom:none}
-.tbl tr.tr-cur td{background:rgba(79,158,255,.05)}
-.tbl tr.tr-done td{opacity:.45}
+.tbl tr.cur td{background:rgba(79,158,255,.04)}
+.tbl tr.dn td{opacity:.45}
 .rn{width:24px;height:24px;border-radius:6px;background:var(--s2);border:1px solid var(--b1);display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:var(--accent)}
 .sdot{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600}
 .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.dot-g{background:#00e5b0;box-shadow:0 0 5px #00e5b0}.dot-y{background:var(--gold);box-shadow:0 0 5px var(--gold)}.dot-m{background:var(--muted)}
+.dg{background:#00e5b0;box-shadow:0 0 5px #00e5b0}.dy{background:var(--gold);box-shadow:0 0 5px var(--gold)}.dm{background:var(--muted)}
 
 /* month grid */
 .mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
 @media(min-width:440px){.mgrid{grid-template-columns:repeat(4,1fr)}}
 @media(min-width:620px){.mgrid{grid-template-columns:repeat(6,1fr)}}
-.mslot{border-radius:10px;padding:10px 5px;text-align:center;cursor:pointer;border:2px solid transparent;transition:all .2s;position:relative}
-.mslot.av{background:var(--s2);border-color:var(--b1)}.mslot.av:hover{border-color:var(--accent);transform:translateY(-2px)}
-.mslot.picked{border-color:var(--teal);background:rgba(0,229,176,.07)}
-.mslot.bk{background:rgba(244,63,94,.04);border-color:rgba(244,63,94,.2);cursor:not-allowed}
-.mslot-n{font-size:11px;font-weight:800;margin-bottom:2px}.mslot-y{font-size:10px;color:var(--muted)}
-.mslot-o{font-size:9px;font-weight:700;margin-top:3px;padding:1px 4px;border-radius:99px;background:rgba(244,63,94,.15);color:#fb7185;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msl{border-radius:10px;padding:10px 5px;text-align:center;cursor:pointer;border:2px solid transparent;transition:all .2s}
+.msl.av{background:var(--s2);border-color:var(--b1)}.msl.av:hover{border-color:var(--accent);transform:translateY(-2px)}
+.msl.pk{border-color:var(--teal);background:rgba(0,229,176,.06)}
+.msl.bk{background:rgba(244,63,94,.03);border-color:rgba(244,63,94,.18);cursor:not-allowed}
+.msln{font-size:11px;font-weight:800;margin-bottom:2px}.msly{font-size:10px;color:var(--muted)}
+.mslo{font-size:9px;font-weight:700;margin-top:3px;padding:1px 4px;border-radius:99px;background:rgba(244,63,94,.15);color:#fb7185;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* history */
-.hcard{background:var(--s2);border:1px solid var(--b1);border-radius:11px;padding:12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
-.hbadge{background:linear-gradient(135deg,var(--accent),#1d6fd4);border-radius:8px;padding:6px 9px;font-size:11px;font-weight:800;color:#fff;text-align:center;min-width:48px;flex-shrink:0;line-height:1.3}
+.hc{background:var(--s2);border:1px solid var(--b1);border-radius:11px;padding:12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+.hb{background:linear-gradient(135deg,var(--accent),#1d6fd4);border-radius:8px;padding:6px 9px;font-size:11px;font-weight:800;color:#fff;text-align:center;min-width:48px;flex-shrink:0;line-height:1.3}
 
 /* upload */
-.upzone{border:2px dashed rgba(79,158,255,.25);border-radius:11px;padding:20px;text-align:center;cursor:pointer;background:rgba(79,158,255,.03);transition:all .2s}
-.upzone:hover{border-color:var(--accent);background:rgba(79,158,255,.07)}
-.upzone input[type=file]{display:none}
+.upz{border:2px dashed rgba(79,158,255,.22);border-radius:11px;padding:20px;text-align:center;cursor:pointer;background:rgba(79,158,255,.02);transition:all .2s}
+.upz:hover{border-color:var(--accent);background:rgba(79,158,255,.06)}
+.upz input[type=file]{display:none}
 
-/* home cards */
+/* home jcard */
+#screenHome{background:radial-gradient(ellipse at 50% -5%,#0a1d4a,var(--bg) 65%)}
 .jcard{background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:15px;margin-bottom:10px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s}
 .jcard:hover{border-color:var(--b2);transform:translateY(-1px);background:var(--s2)}
-.jicon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.jico{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
 
-/* login */
-#screenLogin{background:radial-gradient(ellipse at 60% 20%,#0a1d4a 0%,var(--bg) 70%);display:flex;align-items:center;justify-content:center;min-height:100vh}
-.lbox{background:var(--s1);border:1px solid var(--b2);border-radius:20px;padding:34px 28px;width:100%;max-width:340px;box-shadow:0 40px 80px rgba(0,0,0,.6);animation:pop .35s ease}
+/* login — centered */
+#screenLogin{background:radial-gradient(ellipse at 60% 20%,#0a1d4a,var(--bg) 70%)}
+.lbox{background:var(--s1);border:1px solid var(--b2);border-radius:20px;padding:34px 28px;width:100%;max-width:340px;box-shadow:0 40px 80px rgba(0,0,0,.6);animation:popin .35s ease;margin:auto}
 
 /* banners */
-.trial-banner{background:linear-gradient(135deg,rgba(251,191,36,.1),rgba(249,115,22,.06));border:1px solid rgba(251,191,36,.3);border-radius:13px;padding:15px;margin-bottom:14px;text-align:center}
-.frozen-banner{background:linear-gradient(135deg,rgba(244,63,94,.08),rgba(185,28,28,.05));border:1px solid rgba(244,63,94,.3);border-radius:13px;padding:15px;margin-bottom:14px;text-align:center}
-.success-banner{background:linear-gradient(135deg,rgba(0,229,176,.08),rgba(5,150,105,.05));border:1px solid rgba(0,229,176,.25);border-radius:13px;padding:15px;margin-bottom:14px;text-align:center}
+.trial-b{background:linear-gradient(135deg,rgba(251,191,36,.08),rgba(249,115,22,.05));border:1px solid rgba(251,191,36,.28);border-radius:13px;padding:15px;margin-bottom:14px;text-align:center}
+.frozen-b{background:linear-gradient(135deg,rgba(244,63,94,.07),rgba(185,28,28,.04));border:1px solid rgba(244,63,94,.28);border-radius:13px;padding:15px;margin-bottom:14px;text-align:center}
+.active-b{background:linear-gradient(135deg,rgba(0,229,176,.07),rgba(5,150,105,.04));border:1px solid rgba(0,229,176,.22);border-radius:13px;padding:13px 15px;margin-bottom:14px;text-align:center}
 
 /* modals */
-.moverlay{position:fixed;inset:0;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;z-index:500;padding:13px;opacity:0;pointer-events:none;transition:opacity .22s}
-.moverlay.open{opacity:1;pointer-events:all}
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.83);display:flex;align-items:center;justify-content:center;z-index:500;padding:13px;opacity:0;pointer-events:none;transition:opacity .22s}
+.mov.open{opacity:1;pointer-events:all}
 .modal{background:var(--s1);border:1px solid var(--b2);border-radius:16px;padding:22px;width:100%;max-width:500px;transform:scale(.92);transition:transform .22s;max-height:92vh;overflow-y:auto}
-.moverlay.open .modal{transform:scale(1)}
-.modal-t{font-size:16px;font-weight:800;margin-bottom:15px}
-.mfooter{display:flex;gap:8px;margin-top:15px;justify-content:flex-end}
+.mov.open .modal{transform:scale(1)}
+.mt{font-size:16px;font-weight:800;margin-bottom:15px}
+.mf{display:flex;gap:8px;margin-top:15px;justify-content:flex-end}
 
 /* terms */
-.terms-box{background:var(--s2);border:1px solid var(--b1);border-radius:11px;padding:16px;max-height:280px;overflow-y:auto;font-size:12px;line-height:1.8;color:var(--muted);margin-bottom:14px}
-.terms-box h4{color:var(--text);font-size:13px;font-weight:800;margin:10px 0 5px}
-.terms-box h4:first-child{margin-top:0}
+.tbox{background:var(--s2);border:1px solid var(--b1);border-radius:11px;padding:16px;max-height:280px;overflow-y:auto;font-size:12px;line-height:1.85;color:var(--muted);margin-bottom:14px}
+.tbox h4{color:var(--text);font-size:13px;font-weight:800;margin:10px 0 4px}
+.tbox h4:first-child{margin-top:0}
 
-/* subscription wizard */
-.sub-step{display:none}.sub-step.active{display:block;animation:up .3s ease}
-.price-calc{background:linear-gradient(135deg,rgba(79,158,255,.08),rgba(0,229,176,.05));border:1px solid var(--b2);border-radius:13px;padding:16px;text-align:center;margin:14px 0}
-.price-big{font-size:36px;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+/* sub wizard */
+.sstep{display:none}.sstep.on{display:block;animation:up .3s ease}
+.pcalc{background:linear-gradient(135deg,rgba(79,158,255,.07),rgba(0,229,176,.04));border:1px solid var(--b2);border-radius:13px;padding:16px;text-align:center;margin:14px 0}
+.pbig{font-size:36px;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 
 /* link box */
-.lnkbox{background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:11px;display:flex;align-items:center;gap:8px;cursor:pointer}
-.lnkbox span{flex:1;font-size:11px;color:var(--teal);word-break:break-all;font-family:monospace}
+.lnkb{background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:11px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.lnkb span{flex:1;font-size:11px;color:var(--teal);word-break:break-all;font-family:monospace}
 
-/* divider */
+/* misc */
 hr.dv{border:none;border-top:1px solid var(--b1);margin:13px 0}
 .sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;flex-wrap:wrap;gap:6px}
 .sh h3{font-size:14px;font-weight:700}
-.empty{text-align:center;padding:28px 14px;color:var(--muted)}
-.empty-i{font-size:32px;margin-bottom:7px}
-
-/* sync */
-.sdot-s{width:7px;height:7px;border-radius:50%;background:var(--teal);display:inline-block;animation:pulse 2s infinite;margin-left:4px}
+.emp{text-align:center;padding:28px 14px;color:var(--muted)}
+.ei{font-size:32px;margin-bottom:7px}
+.g2{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:560px){.g2{grid-template-columns:1fr 1fr}}
+.sdt{width:7px;height:7px;border-radius:50%;background:var(--teal);display:inline-block;animation:pulse 2s infinite;margin-left:4px}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.sdot-s.sy{background:var(--gold)}.sdot-s.er{background:var(--red);animation:none}
+.sdts{background:var(--gold)}.sdte{background:var(--red);animation:none}
+.galb{background:rgba(79,158,255,.04);border:1px solid rgba(79,158,255,.14);border-radius:10px;padding:11px;margin-top:10px}
 
-/* toast */
-#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120px);padding:11px 24px;border-radius:99px;font-weight:700;font-size:14px;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s;opacity:0;z-index:9999;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4)}
-#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+/* thank you */
+.tyc{background:linear-gradient(135deg,#061428,#0a1d36,#061428);border:2px solid rgba(0,229,176,.25);border-radius:20px;padding:26px;text-align:center;position:relative;overflow:hidden}
+.tyc::before{content:'✨';position:absolute;top:10px;right:14px;font-size:24px;opacity:.25}
+.tyc::after{content:'✨';position:absolute;bottom:10px;left:14px;font-size:18px;opacity:.18}
 
-/* thank you card */
-.ty-card{background:linear-gradient(135deg,#061428,#0a1d36,#061428);border:2px solid rgba(0,229,176,.3);border-radius:20px;padding:28px;text-align:center;position:relative;overflow:hidden}
-.ty-card::before{content:'🌟';position:absolute;top:10px;right:14px;font-size:28px;opacity:.3}
-.ty-card::after{content:'🌟';position:absolute;bottom:10px;left:14px;font-size:20px;opacity:.2}
+/* public screens */
+#screenPublic,#screenRegister{background:radial-gradient(ellipse at 50% -5%,#0a1d4a,var(--bg) 65%)}
 
-/* ga link */
-.ga-lnk{background:rgba(79,158,255,.05);border:1px solid rgba(79,158,255,.15);border-radius:10px;padding:11px;margin-top:10px}
-
-/* responsive */
-@media(max-width:580px){.wrap,.wrap-sm,.wrap-pub{padding:12px 10px 80px}.topbar{padding:0 10px}.modal{padding:16px}}
-
-/* settings grid */
-.sgrd2{display:grid;grid-template-columns:1fr;gap:10px}
-@media(min-width:560px){.sgrd2{grid-template-columns:1fr 1fr}}
-
-/* public hero special */
-#screenPublic{background:radial-gradient(ellipse at 50% -5%,#0a1d4a 0%,var(--bg) 65%)}
-#screenHome{background:radial-gradient(ellipse at 50% -5%,#0a1d4a 0%,var(--bg) 65%)}
-#screenRegister{background:radial-gradient(ellipse at 50% -5%,#0a1d4a 0%,var(--bg) 65%)}
+@media(max-width:580px){.wrap,.wsm,.wpub{padding:12px 10px 80px}.bar{padding:0 10px}.modal{padding:16px}}
 </style>
 </head>
 <body>
 
-<!-- HOME -->
-<div id="screenHome" class="screen active">
-  <div class="topbar">
-    <div class="brand">🏦 <span class="brand-txt">ساهل</span></div>
+<!-- ════════════════════════════════════════════
+     SCREEN 1: HOME — الصفحة الرئيسية
+     هذه هي الصفحة الوحيدة التي تفتح افتراضياً
+════════════════════════════════════════════ -->
+<div id="screenHome" class="screen">
+  <div class="bar">
+    <div class="brand">🏦 <span class="btxt">ساهل</span></div>
   </div>
-  <div class="wrap-sm">
-    <div style="text-align:center;padding:30px 0 22px">
-      <div style="font-size:50px;margin-bottom:10px;filter:drop-shadow(0 0 20px rgba(79,158,255,.4))">🏦</div>
-      <h1 style="font-size:24px;font-weight:900;background:linear-gradient(135deg,#4f9eff,#00e5b0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:5px">منصة ساهل</h1>
+  <div class="wsm fadein">
+    <div style="text-align:center;padding:32px 0 24px">
+      <div style="font-size:52px;margin-bottom:10px;filter:drop-shadow(0 0 20px rgba(79,158,255,.35))">🏦</div>
+      <h1 style="font-size:24px;font-weight:900;background:linear-gradient(135deg,#4f9eff,#00e5b0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px">منصة ساهل</h1>
       <p style="color:var(--muted);font-size:13px">للجمعيات المالية الموثوقة</p>
     </div>
-    <div id="homeList"><div class="jcard" onclick="openJameia(&#39;j1773377424632&#39;)"><div class="jicon" style="background:linear-gradient(135deg,#4f9eff,#1d4ed8)">🏦</div><div style="flex:1"><div style="font-size:15px;font-weight:800">جمعيتي الأولى</div><div style="font-size:12px;color:var(--muted);margin-top:2px">👥 0 عضو</div></div><div style="color:var(--muted);font-size:20px">←</div></div></div>
+    <div id="homeList"><div class="emp"><div class="ei">🔍</div>لا توجد جمعيات متاحة حالياً</div></div>
   </div>
 </div>
 
-<!-- PUBLIC -->
+<!-- ════════════════════════════════════════════
+     SCREEN 2: PUBLIC — صفحة الجمعية للأعضاء
+════════════════════════════════════════════ -->
 <div id="screenPublic" class="screen">
-  <div class="topbar">
-    <div class="brand">🏦 <span id="pubTitle" class="brand-txt" style="font-size:14px">الجمعية</span></div>
-    <div class="topbar-r">
-      <button class="btn btn-o btn-sm" onclick="showScreen(&#39;screenHome&#39;)">← رجوع</button>
-    </div>
+  <div class="bar">
+    <div class="brand">🏦 <span id="pubTitle" class="btxt" style="font-size:14px">الجمعية</span></div>
+    <div class="barr"><button class="btn bo sm" onclick="goHome()">← رجوع</button></div>
   </div>
-  <div class="wrap-pub fadein">
-    <!-- HERO RECEIVER -->
-    <div class="hero" id="pubHero">
-      <div class="hero-lbl">مستلم هذا الشهر</div>
-      <div class="hero-name" id="pubReceiver">—</div>
-      <div id="pubIbanWrap">
-        <div class="hero-iban" id="pubIban" onclick="copyText(this.dataset.v)">
-          <span>🏦</span><span id="pubIbanTxt">—</span><span style="font-size:11px;opacity:.6">اضغط للنسخ</span>
+  <div class="wpub fadein">
+    <div class="hero">
+      <div class="hlbl">مستلم هذا الشهر</div>
+      <div class="hname" id="pubRec">—</div>
+      <div id="pubIbanWrap" style="display:none">
+        <div class="hiban" id="pubIban" onclick="copyText(this.dataset.v)">
+          🏦 <span id="pubIbanTxt">—</span> <span style="font-size:10px;opacity:.5">اضغط للنسخ</span>
         </div>
       </div>
-      <div class="countdown" id="pubCountdown">
-        <div class="cd-box" id="cd-d"><div class="cd-num" id="cd-days">00</div><div class="cd-lbl">يوم</div></div>
-        <div class="cd-box" id="cd-h"><div class="cd-num" id="cd-hrs">00</div><div class="cd-lbl">ساعة</div></div>
-        <div class="cd-box" id="cd-m"><div class="cd-num" id="cd-min">00</div><div class="cd-lbl">دقيقة</div></div>
-        <div class="cd-box" id="cd-s"><div class="cd-num" id="cd-sec">00</div><div class="cd-lbl">ثانية</div></div>
+      <!-- عداد الأيام فقط -->
+      <div class="daycnt" id="daycnt">
+        <div class="daynum" id="daynum">—</div>
+        <div class="daylbl">يوم متبقي في الشهر</div>
       </div>
-      <div class="prog-wrap">
-        <div class="prog-lbl"><span>تقدم الدفعات</span><span id="pubProgTxt">0/0</span></div>
-        <div class="prog"><div class="prog-fill" id="pubProgFill" style="width:0%"></div></div>
+      <div class="pw">
+        <div class="pl"><span>تقدم الدفعات</span><span id="pubPrgTxt">0/0</span></div>
+        <div class="pb"><div class="pf" id="pubPrgFill" style="width:0%"></div></div>
       </div>
     </div>
-
-    <!-- RECEIPT UPLOAD -->
+    <!-- رفع إيصال -->
     <div class="card">
-      <div class="card-t">📤 رفع إيصال الدفع</div>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">حوّل المبلغ لمستلم الشهر ثم ارفع إيصال التحويل هنا</p>
-      <div class="field"><label>اسمك الكامل *</label><input type="text" id="pubRName" placeholder="اسمك الكامل"></div>
+      <div class="ct">📤 رفع إيصال الدفع</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">حوّل المبلغ للمستلم ثم ارفع الإيصال هنا</p>
+      <div class="field"><label>اسمك الكامل *</label><input type="text" id="pubRN" placeholder="اسمك الكامل"></div>
       <div class="field"><label>صورة الإيصال *</label>
-        <div class="upzone" onclick="document.getElementById(&#39;pubRFile&#39;).click()">
-          <input type="file" id="pubRFile" accept="image/*" onchange="prevReceipt(&#39;pub&#39;,this)">
-          <div id="pubRPrev" style="font-size:30px;margin-bottom:5px">📎</div>
+        <div class="upz" onclick="document.getElementById('pubRF').click()">
+          <input type="file" id="pubRF" accept="image/*" onchange="prevR('pub',this)">
+          <div id="pubRP" style="font-size:30px;margin-bottom:5px">📎</div>
           <div style="font-size:12px;color:var(--muted)">اضغط لاختيار صورة الإيصال</div>
         </div>
       </div>
       <div class="field"><label>رقم العملية (اختياري)</label><input type="text" id="pubRNote" placeholder="رقم التحويل أو وقته"></div>
-      <button class="btn btn-s" onclick="submitPubReceipt()">📤 إرسال الإيصال</button>
+      <button class="btn bs bfull" onclick="subPubR()">📤 إرسال الإيصال</button>
     </div>
-
-    <!-- SCHEDULE TABLE -->
+    <!-- جدول -->
     <div class="card">
-      <div class="card-t">📅 جدول الجمعية</div>
+      <div class="ct">📅 جدول الجمعية</div>
       <div style="overflow-x:auto">
         <table class="tbl"><thead><tr><th>#</th><th>الشهر</th><th>المستلم</th><th>آيبان الاستلام</th><th>الحالة</th></tr></thead>
-        <tbody id="pubSchedBody"></tbody></table>
+        <tbody id="pubSchedB"></tbody></table>
       </div>
     </div>
     <div style="text-align:center;margin-top:8px">
-      <button class="btn btn-p" onclick="showScreen(&#39;screenRegister&#39;);initReg()" style="max-width:280px">📝 سجّل في الجمعية</button>
+      <button class="btn bp" onclick="goReg()" style="max-width:280px;width:100%">📝 سجّل في الجمعية</button>
     </div>
   </div>
 </div>
 
-<!-- REGISTER -->
+<!-- ════════════════════════════════════════════
+     SCREEN 3: REGISTER — صفحة التسجيل
+════════════════════════════════════════════ -->
 <div id="screenRegister" class="screen">
-  <div class="topbar">
-    <div class="brand">📝 <span class="brand-txt" style="font-size:13px" id="regTitleBar">التسجيل</span></div>
-    <div class="topbar-r"><button class="btn btn-o btn-sm" onclick="showScreen(&#39;screenPublic&#39;)">← رجوع</button></div>
+  <div class="bar">
+    <div class="brand">📝 <span class="btxt" style="font-size:13px" id="regBarTitle">التسجيل</span></div>
+    <div class="barr"><button class="btn bo sm" onclick="showS('screenPublic')">← رجوع</button></div>
   </div>
-  <div class="wrap-sm fadein">
+  <div class="wsm fadein">
     <div id="rs1">
       <div class="card">
-        <div class="card-t">👤 بياناتك الشخصية</div>
-        <div class="field"><label>الاسم الكامل *</label><input type="text" id="rName" placeholder="الاسم الكامل"></div>
-        <div class="field"><label>رقم الهاتف *</label><input type="text" id="rPhone" placeholder="0501234567"></div>
-        <div class="field"><label>رقم الآيبان — لاستلام مبلغ الجمعية</label><input type="text" id="rIban" placeholder="AE070331234567890123456"></div>
-        <button class="btn btn-p" onclick="rNext()">التالي ← اختيار الشهر</button>
+        <div class="ct">👤 بياناتك الشخصية</div>
+        <div class="field"><label>الاسم الكامل *</label><input type="text" id="rN" placeholder="اسمك الكامل"></div>
+        <div class="field"><label>رقم الهاتف *</label><input type="text" id="rP" placeholder="0501234567"></div>
+        <div class="field"><label>رقم الآيبان — لاستلام مبلغ الجمعية</label><input type="text" id="rI" placeholder="AE070331234567890123456"></div>
+        <button class="btn bp bfull" onclick="rNext()">التالي ← اختيار الشهر</button>
       </div>
     </div>
     <div id="rs2" style="display:none">
       <div class="card">
-        <div class="card-t">📅 اختر شهر استلامك</div>
-        <p style="font-size:12px;color:var(--muted);margin-bottom:12px">اختر الشهر الذي تريد استلام الجمعية فيه — الخانات البيضاء متاحة</p>
+        <div class="ct">📅 اختر شهر استلامك</div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px">الخانات البيضاء متاحة — الحمراء محجوزة</p>
         <div class="mgrid" id="rGrid"></div>
-        <div id="rPickedLbl" style="margin-top:10px;font-size:13px;color:var(--teal);font-weight:700;min-height:20px"></div>
+        <div id="rPLbl" style="margin-top:10px;font-size:13px;color:var(--teal);font-weight:700;min-height:20px"></div>
         <div style="display:flex;gap:7px;margin-top:14px">
-          <button class="btn btn-o" style="width:auto" onclick="rBack()">← رجوع</button>
-          <button class="btn btn-p" onclick="rConfirm()">✅ تأكيد التسجيل</button>
+          <button class="btn bo" style="width:auto" onclick="rBack()">← رجوع</button>
+          <button class="btn bp" onclick="rConf()">✅ تأكيد التسجيل</button>
         </div>
       </div>
     </div>
     <div id="rs3" style="display:none">
-      <div class="ty-card">
-        <div style="font-size:50px;margin-bottom:12px">🎊</div>
+      <div class="tyc">
+        <div style="font-size:52px;margin-bottom:12px">🎊</div>
         <h2 style="font-size:20px;font-weight:900;color:var(--teal);margin-bottom:8px">أهلاً وسهلاً!</h2>
-        <p id="rSuccessMsg" style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:16px">تم تسجيلك بنجاح</p>
-        <div style="background:rgba(79,158,255,.07);border:1px solid var(--b2);border-radius:12px;padding:14px;margin-bottom:16px;text-align:right">
-          <div class="card-t" style="margin-bottom:10px">📤 رفع إيصال دفعك الأول</div>
-          <p style="font-size:12px;color:var(--muted);margin-bottom:10px">حوّل المبلغ لمستلم الشهر الحالي ثم ارفع الإيصال</p>
+        <p id="rSMsg" style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:16px">تم التسجيل</p>
+        <div class="card" style="text-align:right">
+          <div class="ct" style="margin-bottom:10px">📤 رفع إيصال دفعك الأول</div>
           <div class="field"><label>صورة الإيصال</label>
-            <div class="upzone" onclick="document.getElementById(&#39;rRFile&#39;).click()">
-              <input type="file" id="rRFile" accept="image/*" onchange="prevReceipt(&#39;reg&#39;,this)">
-              <div id="rRPrev" style="font-size:28px;margin-bottom:5px">📎</div>
+            <div class="upz" onclick="document.getElementById('rRF').click()">
+              <input type="file" id="rRF" accept="image/*" onchange="prevR('reg',this)">
+              <div id="rRP" style="font-size:28px;margin-bottom:5px">📎</div>
               <div style="font-size:12px;color:var(--muted)">اضغط لرفع صورة الإيصال</div>
             </div>
           </div>
           <div class="field"><label>ملاحظة</label><input type="text" id="rRNote" placeholder="رقم العملية..."></div>
-          <button class="btn btn-s" onclick="submitRegReceipt()">📤 إرسال الإيصال</button>
+          <button class="btn bs bfull" onclick="subRegR()">📤 إرسال الإيصال</button>
         </div>
-        <button class="btn btn-o" onclick="showScreen(&#39;screenPublic&#39;)" style="max-width:200px">👁 عرض الجدول</button>
+        <button class="btn bo sm" onclick="showS('screenPublic')" style="margin-top:10px">👁 عرض الجدول</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- LOGIN -->
+<!-- ════════════════════════════════════════════
+     SCREEN 4: LOGIN — صفحة الدخول (سرية)
+════════════════════════════════════════════ -->
 <div id="screenLogin" class="screen">
-  <div class="lbox">
-    <div style="text-align:center;margin-bottom:22px">
-      <div style="font-size:38px;margin-bottom:8px">🔐</div>
-      <h2 style="font-size:18px;font-weight:900">تسجيل الدخول</h2>
-      <p style="font-size:12px;color:var(--muted);margin-top:4px">مدير جمعية أو مشرف المنصة</p>
+  <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px">
+    <div class="lbox">
+      <div style="text-align:center;margin-bottom:22px">
+        <div style="font-size:38px;margin-bottom:8px">🔐</div>
+        <h2 style="font-size:18px;font-weight:900">تسجيل الدخول</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:4px">مدير جمعية أو مشرف المنصة</p>
+      </div>
+      <div class="field"><label>كلمة المرور</label>
+        <input type="password" id="lPass" onkeydown="if(event.key==='Enter')doLogin()" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <p id="lErr" style="color:var(--red);font-size:12px;margin-bottom:9px;display:none">⚠️ كلمة المرور غير صحيحة</p>
+      <button class="btn bp bfull" onclick="doLogin()">دخول →</button>
+      <button class="btn bo sm bfull" onclick="goHome()" style="margin-top:9px">← الصفحة الرئيسية</button>
     </div>
-    <div class="field"><label>كلمة المرور</label><input type="password" id="loginPass" onkeydown="if(event.key===&#39;Enter&#39;)doLogin()" placeholder="••••••••" autocomplete="current-password"></div>
-    <p id="loginErr" style="color:var(--red);font-size:12px;margin-bottom:9px;display:none">⚠️ كلمة المرور غير صحيحة</p>
-    <button class="btn btn-p" onclick="doLogin()">دخول →</button>
-    <button class="btn btn-o btn-sm" onclick="showScreen(&#39;screenHome&#39;)" style="margin-top:9px;width:100%">← الصفحة الرئيسية</button>
   </div>
 </div>
 
-<!-- GROUP ADMIN -->
+<!-- ════════════════════════════════════════════
+     SCREEN 5: GROUP ADMIN — لوحة مدير الجمعية
+════════════════════════════════════════════ -->
 <div id="screenGA" class="screen">
-  <div class="topbar">
-    <div class="brand" style="font-size:14px">🏦 <span id="gaTopName" class="brand-txt">جمعيتي</span></div>
-    <div class="topbar-r">
-      <span class="sdot-s" id="sdot"></span>
-      <button class="btn btn-o btn-sm" onclick="gaRefresh()">🔄</button>
-      <button class="btn btn-o btn-sm" onclick="showScreen(&#39;screenPublic&#39;)">👁</button>
-      <button class="btn btn-d btn-sm" onclick="doLogout()">خروج</button>
+  <div class="bar">
+    <div class="brand" style="font-size:14px">🏦 <span id="gaTopN" class="btxt">جمعيتي</span></div>
+    <div class="barr">
+      <span class="sdт" id="sdot"></span>
+      <button class="btn bo sm" onclick="gaRef()">🔄</button>
+      <button class="btn bo sm" onclick="showS('screenPublic')">👁</button>
+      <button class="btn bd sm" onclick="doLogout()">خروج</button>
     </div>
   </div>
   <div class="wrap">
-    <!-- TRIAL BANNER -->
-    <div id="gaTrial" class="trial-banner" style="display:none">
+    <div id="gaTB" class="trial-b" style="display:none">
       <div style="font-size:16px;font-weight:900;color:var(--gold);margin-bottom:5px">⚠️ وضع تجريبي مجاني</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:10px">أنت الآن في الوضع التجريبي — يمكنك إضافة <strong style="color:var(--gold)" id="gaTrialLimitTxt">عضوين</strong> فقط للتجربة</div>
-      <button class="btn btn-g btn-sm" onclick="openSubWizard()">💳 اشترك الآن وابدأ جمعيتك كاملاً</button>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px">يمكنك إضافة <strong style="color:var(--gold)" id="gaTrialN">عضوين</strong> فقط للتجربة</div>
+      <button class="btn bg sm" onclick="openSub()">💳 اشترك لتفعيل جمعيتك كاملاً</button>
     </div>
-    <!-- FROZEN BANNER -->
-    <div id="gaFrozen" class="frozen-banner" style="display:none">
+    <div id="gaFB" class="frozen-b" style="display:none">
       <div style="font-size:16px;font-weight:900;color:var(--red);margin-bottom:5px">🔒 الحساب مجمّد</div>
       <div style="font-size:12px;color:var(--muted)">تواصل مع مشرف المنصة لإعادة التفعيل</div>
     </div>
-    <!-- ACTIVE BANNER -->
-    <div id="gaActive" class="success-banner" style="display:none">
-      <div style="font-size:13px;font-weight:800;color:var(--teal)">✅ حساب مفعّل — <span id="gaMaxMembersTxt">—</span> عضو كحد أقصى</div>
+    <div id="gaAB" class="active-b" style="display:none">
+      <div style="font-size:13px;font-weight:800;color:var(--teal)">✅ حساب مفعّل — <span id="gaMaxTxt">—</span></div>
     </div>
 
     <div class="tabs">
-      <button class="tab active" onclick="gaTab(&#39;dash&#39;)">📊 الرئيسية</button>
-      <button class="tab" onclick="gaTab(&#39;members&#39;)" id="gaTabM">👥 الأعضاء</button>
-      <button class="tab" onclick="gaTab(&#39;receipts&#39;)">🧾 الإيصالات</button>
-      <button class="tab" onclick="gaTab(&#39;sched&#39;)">📅 الجدول</button>
-      <button class="tab" onclick="gaTab(&#39;hist&#39;)">📋 السجل</button>
-      <button class="tab" onclick="gaTab(&#39;settings&#39;)">⚙️ الإعداد</button>
+      <button class="tab on" onclick="gaTab('dash')">📊 الرئيسية</button>
+      <button class="tab" onclick="gaTab('members')" id="gaTabM">👥 الأعضاء</button>
+      <button class="tab" onclick="gaTab('receipts')">🧾 الإيصالات</button>
+      <button class="tab" onclick="gaTab('sched')">📅 الجدول</button>
+      <button class="tab" onclick="gaTab('hist')">📋 السجل</button>
+      <button class="tab" onclick="gaTab('cfg')">⚙️ الإعداد</button>
     </div>
 
-    <!-- DASH -->
-    <div class="tc active" id="gtc-dash">
-      <div class="sgrid">
-        <div class="scard"><div class="snum" id="gs0" style="color:var(--accent)">0</div><div class="slbl">الأعضاء</div></div>
-        <div class="scard"><div class="snum" id="gs1" style="color:var(--gold)">0</div><div class="slbl">انتظار</div></div>
-        <div class="scard"><div class="snum" id="gs2" style="color:var(--teal)">0</div><div class="slbl">دفعوا</div></div>
-        <div class="scard"><div class="snum" id="gs3" style="color:var(--muted)">0</div><div class="slbl">مكتملة</div></div>
+    <div class="tc on" id="gt-dash">
+      <div class="sg">
+        <div class="sc"><div class="sn" id="gs0" style="color:var(--accent)">0</div><div class="sl">الأعضاء</div></div>
+        <div class="sc"><div class="sn" id="gs1" style="color:var(--gold)">0</div><div class="sl">انتظار</div></div>
+        <div class="sc"><div class="sn" id="gs2" style="color:var(--teal)">0</div><div class="sl">دفعوا</div></div>
+        <div class="sc"><div class="sn" id="gs3" style="color:var(--muted)">0</div><div class="sl">مكتملة</div></div>
       </div>
       <div class="hero">
-        <div class="hero-lbl">الشهر الحالي</div>
-        <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:8px" id="gaHMonth">—</div>
-        <div class="hero-lbl">مستلم هذا الشهر</div>
-        <div class="hero-name" id="gaHRec">لم يتم التحديد بعد</div>
-        <div id="gaHIban" style="font-family:monospace;font-size:11px;color:var(--teal);margin-top:4px"></div>
-        <div class="countdown" id="gaCountdown">
-          <div class="cd-box"><div class="cd-num" id="ga-cd-d">00</div><div class="cd-lbl">يوم</div></div>
-          <div class="cd-box"><div class="cd-num" id="ga-cd-h">00</div><div class="cd-lbl">ساعة</div></div>
-          <div class="cd-box"><div class="cd-num" id="ga-cd-m">00</div><div class="cd-lbl">دقيقة</div></div>
+        <div class="hlbl">الشهر الحالي</div>
+        <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:8px" id="gaHM">—</div>
+        <div class="hlbl">مستلم هذا الشهر</div>
+        <div class="hname" id="gaHR">لم يتم التحديد بعد</div>
+        <div id="gaHI" style="font-family:monospace;font-size:11px;color:var(--teal);margin-top:4px"></div>
+        <div class="daycnt" id="gadaycnt">
+          <div class="daynum" id="gadaynum">—</div>
+          <div class="daylbl">يوم متبقي في الشهر</div>
         </div>
-        <div class="prog-wrap">
-          <div class="prog-lbl"><span>تقدم الدفعات</span><span id="gaProgTxt">0/0</span></div>
-          <div class="prog"><div class="prog-fill" id="gaProgFill" style="width:0%"></div></div>
+        <div class="pw">
+          <div class="pl"><span>تقدم الدفعات</span><span id="gaPT">0/0</span></div>
+          <div class="pb"><div class="pf" id="gaPF" style="width:0%"></div></div>
         </div>
       </div>
       <div class="card">
-        <div class="card-t">🔗 رابط المشاركة للأعضاء</div>
-        <div class="lnkbox" onclick="copyText(document.getElementById(&#39;gaLnk&#39;).textContent)">
-          <span id="gaLnk">—</span><button class="btn btn-o btn-xs">📋</button>
+        <div class="ct">🔗 رابط المشاركة للأعضاء</div>
+        <div class="lnkb" onclick="copyText(document.getElementById('gaLnk').textContent)">
+          <span id="gaLnk">—</span><button class="btn bo xs">📋</button>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:9px">
-          <button class="btn btn-w btn-sm" onclick="shareRegLink()">📤 إرسال واتساب</button>
-          <button class="btn btn-g btn-sm" onclick="openComplete()">✅ إنهاء الشهر</button>
-          <button class="btn btn-o btn-sm" onclick="openNewMonth()">📅 شهر جديد</button>
-          <button class="btn btn-w btn-sm" onclick="shareSchedule()">📊 مشاركة الجدول</button>
+          <button class="btn bw sm" onclick="shareRL()">📤 إرسال واتساب</button>
+          <button class="btn bg sm" onclick="openCmp()">✅ إنهاء الشهر</button>
+          <button class="btn bo sm" onclick="openNM()">📅 شهر جديد</button>
+          <button class="btn bw sm" onclick="shareSched()">📊 مشاركة الجدول</button>
         </div>
       </div>
-      <div class="card" id="gaUnpaidCard" style="display:none">
-        <div class="card-t" style="color:var(--gold)">⚠️ لم يدفعوا بعد</div>
-        <div id="gaUnpaidList"></div>
+      <div class="card" id="gaUPC" style="display:none">
+        <div class="ct" style="color:var(--gold)">⚠️ لم يدفعوا بعد</div>
+        <div id="gaUPL"></div>
       </div>
     </div>
 
-    <!-- MEMBERS -->
-    <div class="tc" id="gtc-members">
-      <div id="gaPendSec" style="display:none">
-        <div class="sh"><h3>⏳ طلبات جديدة</h3></div>
-        <div id="gaPendList"></div>
-        <hr class="dv">
+    <div class="tc" id="gt-members">
+      <div id="gaPndS" style="display:none">
+        <div class="sh"><h3>⏳ طلبات جديدة بانتظار موافقتك</h3></div>
+        <div id="gaPndL"></div><hr class="dv">
       </div>
       <div class="sh">
         <h3>👥 الأعضاء</h3>
         <div style="display:flex;gap:5px">
-          <button class="btn btn-o btn-sm" onclick="openSwap()">🔄 تبديل</button>
-          <button class="btn btn-s btn-sm" id="gaAddBtn" onclick="openAddM()">➕ إضافة</button>
+          <button class="btn bo sm" onclick="openSwap()">🔄 تبديل</button>
+          <button class="btn bs sm" id="gaAddB" onclick="openAddM()">➕ إضافة</button>
         </div>
       </div>
-      <div id="gaMList"><div class="empty"><div class="empty-i">👤</div>لا يوجد أعضاء بعد</div></div>
+      <div id="gaML"><div class="emp"><div class="ei">👤</div>لا يوجد أعضاء بعد</div></div>
     </div>
 
-    <!-- RECEIPTS -->
-    <div class="tc" id="gtc-receipts">
-      <div class="sh"><h3>🧾 إيصالات التحويل</h3><span id="gaRecMonthLbl" style="font-size:12px;color:var(--teal)"></span></div>
-      <div id="gaRList"><div class="empty"><div class="empty-i">🧾</div>لا توجد إيصالات</div></div>
+    <div class="tc" id="gt-receipts">
+      <div class="sh"><h3>🧾 إيصالات التحويل</h3></div>
+      <div id="gaRL"><div class="emp"><div class="ei">🧾</div>لا توجد إيصالات</div></div>
     </div>
 
-    <!-- SCHEDULE -->
-    <div class="tc" id="gtc-sched">
+    <div class="tc" id="gt-sched">
       <div class="card">
-        <div class="card-t">📅 الجدول الكامل</div>
+        <div class="ct">📅 الجدول الكامل</div>
         <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-          <button class="btn btn-w btn-sm" onclick="shareSchedule()">📤 واتساب</button>
-          <button class="btn btn-o btn-sm" onclick="copySchedule()">📋 نسخ</button>
+          <button class="btn bw sm" onclick="shareSched()">📤 واتساب</button>
+          <button class="btn bo sm" onclick="copySched()">📋 نسخ</button>
         </div>
         <div style="overflow-x:auto">
           <table class="tbl"><thead><tr><th>#</th><th>الشهر</th><th>المستلم</th><th>الآيبان</th><th>المبلغ</th><th>الحالة</th><th></th></tr></thead>
-          <tbody id="gaSchedBody"></tbody></table>
+          <tbody id="gaScB"></tbody></table>
         </div>
       </div>
     </div>
 
-    <!-- HISTORY -->
-    <div class="tc" id="gtc-hist">
+    <div class="tc" id="gt-hist">
       <div class="sh"><h3>📋 سجل الدورات المكتملة</h3></div>
-      <div id="gaHistList"><div class="empty"><div class="empty-i">📋</div>لا يوجد سجل بعد</div></div>
+      <div id="gaHL"><div class="emp"><div class="ei">📋</div>لا يوجد سجل بعد</div></div>
     </div>
 
-    <!-- SETTINGS -->
-    <div class="tc" id="gtc-settings">
+    <div class="tc" id="gt-cfg">
       <div class="card">
-        <div class="card-t">⚙️ إعدادات الجمعية</div>
-        <div class="sgrd2">
-          <div class="field"><label>اسم الجمعية</label><input type="text" id="cfgName"></div>
-          <div class="field"><label>مبلغ الاشتراك (د.إ)</label><input type="number" id="cfgAmt"></div>
-          <div class="field"><label>الشهر الحالي</label><input type="text" id="cfgMonth" placeholder="يناير 2026"></div>
+        <div class="ct">⚙️ إعدادات الجمعية</div>
+        <div class="g2">
+          <div class="field"><label>اسم الجمعية</label><input type="text" id="cfgN"></div>
+          <div class="field"><label>مبلغ الاشتراك (د.إ)</label><input type="number" id="cfgA"></div>
+          <div class="field"><label>الشهر الحالي</label><input type="text" id="cfgM" placeholder="يناير 2026"></div>
         </div>
-        <button class="btn btn-p" onclick="saveJSettings()" style="max-width:160px">💾 حفظ</button>
+        <button class="btn bp" onclick="saveJCfg()" style="max-width:160px">💾 حفظ</button>
         <hr class="dv">
-        <div class="card-t">🔐 تغيير كلمة المرور</div>
-        <div class="field"><label>كلمة مرور جديدة</label><input type="password" id="cfgPass" placeholder="كلمة مرور جديدة"></div>
-        <button class="btn btn-o btn-sm" onclick="changeMyPass()">تغيير</button>
+        <div class="ct">🔐 تغيير كلمة المرور</div>
+        <div class="field"><label>كلمة مرور جديدة</label><input type="password" id="cfgPW" placeholder="كلمة مرور جديدة"></div>
+        <button class="btn bo sm" onclick="changeMyPW()">تغيير</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- SUPER ADMIN -->
+<!-- ════════════════════════════════════════════
+     SCREEN 6: SUPER ADMIN — لوحة مشرف المنصة
+════════════════════════════════════════════ -->
 <div id="screenSuper" class="screen">
-  <div class="topbar">
+  <div class="bar">
     <div class="brand">👑 <span style="color:var(--gold);font-size:14px">مشرف ساهل</span></div>
-    <div class="topbar-r">
-      <span class="sdot-s" id="sdot2"></span>
-      <button class="btn btn-o btn-sm" onclick="superRefresh()">🔄</button>
-      <button class="btn btn-d btn-sm" onclick="doLogout()">خروج</button>
+    <div class="barr">
+      <span class="sdт" id="sdot2"></span>
+      <button class="btn bo sm" onclick="supRef()">🔄</button>
+      <button class="btn bd sm" onclick="doLogout()">خروج</button>
     </div>
   </div>
   <div class="wrap">
     <div class="tabs">
-      <button class="tab active" onclick="supTab(&#39;ov&#39;)">📊 نظرة عامة</button>
-      <button class="tab" onclick="supTab(&#39;admins&#39;)">👤 المديرون</button>
-      <button class="tab" onclick="supTab(&#39;jams&#39;)">🏦 الجمعيات</button>
-      <button class="tab" onclick="supTab(&#39;pays&#39;)" id="supPayTab">💳 الدفعات</button>
-      <button class="tab" onclick="supTab(&#39;prices&#39;)">💰 الأسعار</button>
-      <button class="tab" onclick="supTab(&#39;setup&#39;)">⚙️ الإعداد</button>
+      <button class="tab on" onclick="supTab('ov')">📊 نظرة عامة</button>
+      <button class="tab" onclick="supTab('adm')">👤 المديرون</button>
+      <button class="tab" onclick="supTab('jam')">🏦 الجمعيات</button>
+      <button class="tab" onclick="supTab('pay')" id="supPayT">💳 الدفعات</button>
+      <button class="tab" onclick="supTab('prc')">💰 الأسعار</button>
+      <button class="tab" onclick="supTab('set')">⚙️ الإعداد</button>
     </div>
 
-    <!-- OVERVIEW -->
-    <div class="tc active" id="stc-ov">
-      <div class="sgrid">
-        <div class="scard"><div class="snum" id="ss0" style="color:var(--gold)">0</div><div class="slbl">المديرون</div></div>
-        <div class="scard"><div class="snum" id="ss1" style="color:var(--accent)">0</div><div class="slbl">الجمعيات</div></div>
-        <div class="scard"><div class="snum" id="ss2" style="color:var(--teal)">0</div><div class="slbl">الأعضاء</div></div>
-        <div class="scard"><div class="snum" id="ss3" style="color:var(--gold)">0 د.إ</div><div class="slbl">إيرادات</div></div>
+    <div class="tc on" id="st-ov">
+      <div class="sg">
+        <div class="sc"><div class="sn" id="ss0" style="color:var(--gold)">0</div><div class="sl">المديرون</div></div>
+        <div class="sc"><div class="sn" id="ss1" style="color:var(--accent)">0</div><div class="sl">الجمعيات</div></div>
+        <div class="sc"><div class="sn" id="ss2" style="color:var(--teal)">0</div><div class="sl">الأعضاء</div></div>
+        <div class="sc"><div class="sn" id="ss3" style="color:var(--gold)">0</div><div class="sl">إيرادات د.إ</div></div>
       </div>
-      <div id="supOvList"></div>
+      <div id="supOvL"></div>
     </div>
 
-    <!-- ADMINS -->
-    <div class="tc" id="stc-admins">
-      <div class="sh"><h3>👤 مديرو الجمعيات</h3><button class="btn btn-s btn-sm" onclick="openAddGA()">➕ إضافة مدير</button></div>
-      <div id="supAdminList"><div class="empty"><div class="empty-i">👤</div>لا يوجد مديرون بعد</div></div>
+    <div class="tc" id="st-adm">
+      <div class="sh"><h3>👤 مديرو الجمعيات</h3><button class="btn bs sm" onclick="openAddGA()">➕ إضافة مدير</button></div>
+      <div id="supAL"><div class="emp"><div class="ei">👤</div>لا يوجد مديرون بعد</div></div>
     </div>
 
-    <!-- JAMEIAS -->
-    <div class="tc" id="stc-jams">
+    <div class="tc" id="st-jam">
       <div class="sh"><h3>🏦 جميع الجمعيات</h3></div>
-      <div id="supJamList"></div>
+      <div id="supJL"></div>
     </div>
 
-    <!-- PAYMENTS -->
-    <div class="tc" id="stc-pays">
-      <div class="sh"><h3>💳 طلبات الاشتراك والتفعيل</h3></div>
-      <div id="supPayList"><div class="empty"><div class="empty-i">💳</div>لا توجد طلبات</div></div>
+    <div class="tc" id="st-pay">
+      <div class="sh"><h3>💳 طلبات الاشتراك</h3></div>
+      <div id="supPL"><div class="emp"><div class="ei">💳</div>لا توجد طلبات</div></div>
     </div>
 
-    <!-- PRICES -->
-    <div class="tc" id="stc-prices">
+    <div class="tc" id="st-prc">
       <div class="card">
-        <div class="card-t">💰 نظام التسعير</div>
-        <div class="sgrd2">
-          <div class="field"><label>سعر كل عضو (د.إ)</label><input type="number" id="spPPM" value="5" min="1"></div>
-          <div class="field"><label>الحد الأقصى التجريبي (أعضاء)</label><input type="number" id="spTrial" value="2" min="1"></div>
-          <div class="field"><label>الحد الأدنى للاشتراك (أعضاء)</label><input type="number" id="spMin" value="3" min="1"></div>
-          <div class="field"><label>الحد الأقصى للاشتراك (أعضاء)</label><input type="number" id="spMax" value="50" min="5"></div>
+        <div class="ct">💰 نظام التسعير — قابل للتعديل في أي وقت</div>
+        <div class="g2">
+          <div class="field"><label>💵 سعر كل عضو (د.إ)</label><input type="number" id="pppm" value="5" min="1"></div>
+          <div class="field"><label>👥 الحد التجريبي (أعضاء)</label><input type="number" id="pptrl" value="2" min="1"></div>
+          <div class="field"><label>📉 الحد الأدنى للاشتراك</label><input type="number" id="ppmin" value="3" min="1"></div>
+          <div class="field"><label>📈 الحد الأقصى للاشتراك</label><input type="number" id="ppmax" value="50" min="5"></div>
+          <div class="field"><label>🏦 آيبانك لاستلام الرسوم</label><input type="text" id="ppiban" placeholder="AE..."></div>
+          <div class="field"><label>📱 رقم واتساب للتواصل</label><input type="text" id="ppphone" placeholder="971501234567"></div>
         </div>
-        <div style="background:rgba(79,158,255,.07);border:1px solid var(--b1);border-radius:11px;padding:13px;margin-bottom:13px">
-          <div style="font-size:12px;color:var(--muted);margin-bottom:8px">معاينة حساب الأسعار:</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-            <div style="text-align:center"><div style="font-size:18px;font-weight:900;color:var(--teal)">5×5=25</div><div style="font-size:10px;color:var(--muted)">5 أعضاء</div></div>
-            <div style="text-align:center"><div style="font-size:18px;font-weight:900;color:var(--accent)">10×5=50</div><div style="font-size:10px;color:var(--muted)">10 أعضاء</div></div>
-            <div style="text-align:center"><div style="font-size:18px;font-weight:900;color:var(--gold)">20×5=100</div><div style="font-size:10px;color:var(--muted)">20 عضو</div></div>
+        <div style="background:rgba(79,158,255,.06);border:1px solid var(--b1);border-radius:11px;padding:13px;margin-bottom:13px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:700">معاينة سريعة للأسعار:</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <span style="font-size:13px">5 أعضاء = <strong style="color:var(--teal)">25 د.إ</strong></span>
+            <span style="font-size:13px">10 أعضاء = <strong style="color:var(--accent)">50 د.إ</strong></span>
+            <span style="font-size:13px">20 عضو = <strong style="color:var(--gold)">100 د.إ</strong></span>
           </div>
         </div>
-        <button class="btn btn-p" onclick="savePrices()" style="max-width:160px">💾 حفظ الأسعار</button>
-      </div>
-      <div class="card">
-        <div class="card-t">🏦 بيانات الدفع</div>
-        <div class="sgrd2">
-          <div class="field"><label>آيبانك لاستلام الرسوم</label><input type="text" id="spIban" placeholder="AE..."></div>
-          <div class="field"><label>رقم واتساب للتواصل</label><input type="text" id="spPhone" placeholder="971501234567"></div>
-        </div>
-        <button class="btn btn-p" onclick="savePrices()" style="max-width:160px">💾 حفظ</button>
+        <button class="btn bp" onclick="savePrices()" style="max-width:160px">💾 حفظ الأسعار</button>
       </div>
     </div>
 
-    <!-- SETUP -->
-    <div class="tc" id="stc-setup">
+    <div class="tc" id="st-set">
       <div class="card">
-        <div class="card-t">☁️ إعداد السحابة (JSONBin)</div>
-        <div class="field"><label>Master API Key</label><input type="text" id="supApiKey" placeholder="$2a$10$..."></div>
-        <button class="btn btn-s" onclick="setupCloud()" style="max-width:180px">☁️ حفظ وإنشاء</button>
+        <div class="ct">☁️ إعداد السحابة (JSONBin)</div>
+        <div class="field"><label>Master API Key</label><input type="text" id="supAK" placeholder="$2a$10$..."></div>
+        <button class="btn bs" onclick="setupCloud()" style="max-width:180px">☁️ حفظ وإنشاء</button>
         <div id="cloudMsg" style="margin-top:9px;font-size:12px"></div>
         <div id="binRow" style="display:none;margin-top:9px">
-          <div class="field"><label>Bin ID (محفوظ)</label><input id="supBinId" readonly="" style="font-family:monospace;font-size:11px;opacity:.7"></div>
+          <div class="field"><label>Bin ID</label><input id="supBID" readonly style="font-family:monospace;font-size:11px;opacity:.7"></div>
         </div>
       </div>
       <div class="card">
-        <div class="card-t">🔐 كلمة مرور المشرف</div>
+        <div class="ct">🔐 كلمة مرور المشرف</div>
         <div class="field"><label>كلمة مرور جديدة</label><input type="password" id="supNP" placeholder="••••••••"></div>
-        <button class="btn btn-o btn-sm" onclick="changeSuperPass()">تغيير</button>
+        <button class="btn bo sm" onclick="changeSuperPW()">تغيير</button>
         <hr class="dv">
-        <button class="btn btn-d btn-sm" onclick="resetAll()">⚠️ إعادة ضبط كامل</button>
+        <button class="btn bd sm" onclick="resetAll()">⚠️ إعادة ضبط كامل للمنصة</button>
       </div>
     </div>
   </div>
 </div>
 
-
-<!-- MODALS -->
-
-<!-- Add Member -->
-<div class="moverlay" id="mAddM"><div class="modal">
-  <div class="modal-t">➕ إضافة عضو يدوياً</div>
-  <div class="field"><label>الاسم *</label><input type="text" id="amName" placeholder="الاسم الكامل"></div>
-  <div class="field"><label>الهاتف</label><input type="text" id="amPhone" placeholder="0501234567"></div>
-  <div class="field"><label>الآيبان (IBAN)</label><input type="text" id="amIban" placeholder="AE..."></div>
-  <div class="sgrd2">
-    <div class="field"><label>شهر الاستلام</label><select id="amMonth"><option value="">اختر</option></select></div>
-    <div class="field"><label>السنة</label><select id="amYear"><option value="2025">2025</option><option value="2026" selected="">2026</option><option value="2027">2027</option><option value="2028">2028</option></select></div>
+<!-- ════ MODALS ════ -->
+<div class="mov" id="mAddM"><div class="modal">
+  <div class="mt">➕ إضافة عضو يدوياً</div>
+  <div class="field"><label>الاسم *</label><input type="text" id="amN"></div>
+  <div class="field"><label>الهاتف</label><input type="text" id="amP"></div>
+  <div class="field"><label>الآيبان</label><input type="text" id="amI"></div>
+  <div class="g2">
+    <div class="field"><label>شهر الاستلام</label><select id="amM"><option value="">اختر</option></select></div>
+    <div class="field"><label>السنة</label><select id="amY"><option value="2025">2025</option><option value="2026" selected>2026</option><option value="2027">2027</option><option value="2028">2028</option></select></div>
   </div>
-  <div class="mfooter"><button class="btn btn-o" onclick="closeM(&#39;mAddM&#39;)">إلغاء</button><button class="btn btn-s" onclick="addMConfirm()">إضافة ✓</button></div>
+  <div class="mf"><button class="btn bo" onclick="cM('mAddM')">إلغاء</button><button class="btn bs" onclick="addMConf()">إضافة ✓</button></div>
 </div></div>
 
-<!-- Edit Member -->
-<div class="moverlay" id="mEditM"><div class="modal">
-  <div class="modal-t">✏️ تعديل بيانات عضو</div>
-  <input type="hidden" id="emId">
-  <div class="field"><label>الاسم</label><input type="text" id="emName"></div>
-  <div class="field"><label>الهاتف</label><input type="text" id="emPhone"></div>
-  <div class="field"><label>الآيبان</label><input type="text" id="emIban"></div>
-  <div class="sgrd2">
-    <div class="field"><label>شهر الاستلام</label><select id="emMonth"><option value="">اختر</option></select></div>
-    <div class="field"><label>السنة</label><select id="emYear"><option value="2025">2025</option><option value="2026" selected="">2026</option><option value="2027">2027</option><option value="2028">2028</option></select></div>
+<div class="mov" id="mEditM"><div class="modal">
+  <div class="mt">✏️ تعديل بيانات عضو</div>
+  <input type="hidden" id="emID">
+  <div class="field"><label>الاسم</label><input type="text" id="emN"></div>
+  <div class="field"><label>الهاتف</label><input type="text" id="emP"></div>
+  <div class="field"><label>الآيبان</label><input type="text" id="emI"></div>
+  <div class="g2">
+    <div class="field"><label>شهر الاستلام</label><select id="emM"><option value="">اختر</option></select></div>
+    <div class="field"><label>السنة</label><select id="emY"><option value="2025">2025</option><option value="2026" selected>2026</option><option value="2027">2027</option><option value="2028">2028</option></select></div>
   </div>
-  <div class="mfooter"><button class="btn btn-o" onclick="closeM(&#39;mEditM&#39;)">إلغاء</button><button class="btn btn-s" onclick="editMConfirm()">حفظ ✓</button></div>
+  <div class="mf"><button class="btn bo" onclick="cM('mEditM')">إلغاء</button><button class="btn bs" onclick="editMConf()">حفظ ✓</button></div>
 </div></div>
 
-<!-- Swap -->
-<div class="moverlay" id="mSwap"><div class="modal">
-  <div class="modal-t">🔄 تبديل الأشهر بين عضوين</div>
+<div class="mov" id="mSwap"><div class="modal">
+  <div class="mt">🔄 تبديل الأشهر بين عضوين</div>
   <div class="field"><label>العضو الأول</label><select id="sw1"></select></div>
   <div class="field"><label>العضو الثاني</label><select id="sw2"></select></div>
-  <div class="mfooter"><button class="btn btn-o" onclick="closeM(&#39;mSwap&#39;)">إلغاء</button><button class="btn btn-g" onclick="doSwap()">🔄 تبديل</button></div>
+  <div class="mf"><button class="btn bo" onclick="cM('mSwap')">إلغاء</button><button class="btn bg" onclick="doSwap()">🔄 تبديل</button></div>
 </div></div>
 
-<!-- Complete Month -->
-<div class="moverlay" id="mComplete"><div class="modal" style="text-align:center">
+<div class="mov" id="mCmp"><div class="modal" style="text-align:center">
   <div style="font-size:44px;margin-bottom:12px">✅</div>
-  <div class="modal-t" style="justify-content:center">إنهاء الشهر الحالي؟</div>
-  <p style="font-size:13px;color:var(--muted);margin-bottom:15px;line-height:1.7">سيتم نقل هذا الشهر للسجل وإعادة ضبط الدفعات استعداداً للشهر الجديد</p>
-  <div class="mfooter" style="justify-content:center">
-    <button class="btn btn-o" onclick="closeM(&#39;mComplete&#39;)">إلغاء</button>
-    <button class="btn btn-s" onclick="completeMonth()">✅ إنهاء الشهر</button>
+  <div class="mt" style="justify-content:center">إنهاء الشهر الحالي؟</div>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:15px;line-height:1.7">سيتم نقله للسجل وإعادة ضبط الدفعات</p>
+  <div class="mf" style="justify-content:center">
+    <button class="btn bo" onclick="cM('mCmp')">إلغاء</button>
+    <button class="btn bs" onclick="cmpMonth()">✅ إنهاء</button>
   </div>
 </div></div>
 
-<!-- New Month -->
-<div class="moverlay" id="mNewMonth"><div class="modal">
-  <div class="modal-t">📅 تحديد الشهر الجديد</div>
-  <div class="field"><label>اسم الشهر</label><input type="text" id="nmVal" placeholder="فبراير 2026"></div>
-  <div class="mfooter"><button class="btn btn-o" onclick="closeM(&#39;mNewMonth&#39;)">إلغاء</button><button class="btn btn-p" onclick="setNewMonth()">تحديد ✓</button></div>
+<div class="mov" id="mNM"><div class="modal">
+  <div class="mt">📅 تحديد الشهر الجديد</div>
+  <div class="field"><label>اسم الشهر</label><input type="text" id="nmV" placeholder="فبراير 2026"></div>
+  <div class="mf"><button class="btn bo" onclick="cM('mNM')">إلغاء</button><button class="btn bp" onclick="setNM()">تحديد ✓</button></div>
 </div></div>
 
-<!-- View Receipt -->
-<div class="moverlay" id="mViewR"><div class="modal" style="text-align:center">
-  <div class="modal-t">🧾 إيصال التحويل</div>
-  <img id="rImg" src="file:///C:/Users/lenovo/Downloads/sahel.html" style="max-width:100%;border-radius:12px;margin-bottom:12px;box-shadow:0 8px 24px rgba(0,0,0,.5)">
+<div class="mov" id="mVR"><div class="modal" style="text-align:center">
+  <div class="mt">🧾 إيصال التحويل</div>
+  <img id="rImg" src="" style="max-width:100%;border-radius:12px;margin-bottom:12px;box-shadow:0 8px 24px rgba(0,0,0,.5)">
   <div id="rMeta" style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6"></div>
-  <div class="mfooter" style="justify-content:center"><button class="btn btn-o" onclick="closeM(&#39;mViewR&#39;)">إغلاق</button></div>
+  <div class="mf" style="justify-content:center"><button class="btn bo" onclick="cM('mVR')">إغلاق</button></div>
 </div></div>
 
-<!-- Thank You Modal -->
-<div class="moverlay" id="mThankYou"><div class="modal" style="text-align:center">
-  <div class="ty-card" style="border:none;padding:10px 0">
-    <div style="font-size:56px;margin-bottom:10px" id="tyEmoji">🎉</div>
-    <h2 style="font-size:20px;font-weight:900;color:var(--teal);margin-bottom:10px" id="tyTitle">شكراً جزيلاً!</h2>
-    <p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:14px" id="tyMsg">—</p>
-    <div style="background:rgba(0,229,176,.06);border:1px solid rgba(0,229,176,.2);border-radius:11px;padding:12px;margin-bottom:14px;font-size:13px;color:var(--teal)" id="tyExtra"></div>
+<div class="mov" id="mTY"><div class="modal" style="text-align:center">
+  <div class="tyc" style="border:none;padding:8px 0">
+    <div style="font-size:54px;margin-bottom:10px">💚</div>
+    <h2 style="font-size:20px;font-weight:900;color:var(--teal);margin-bottom:10px" id="tyTit">شكراً!</h2>
+    <p style="font-size:13px;color:var(--muted);line-height:1.85;margin-bottom:14px" id="tyMsg">—</p>
+    <div style="background:rgba(0,229,176,.05);border:1px solid rgba(0,229,176,.18);border-radius:10px;padding:12px;margin-bottom:14px;font-size:13px;color:var(--teal)" id="tyEx"></div>
   </div>
-  <div class="mfooter" style="justify-content:center"><button class="btn btn-s" onclick="closeM(&#39;mThankYou&#39;)">💚 رائع!</button></div>
+  <div class="mf" style="justify-content:center"><button class="btn bs" onclick="cM('mTY')">💚 رائع!</button></div>
 </div></div>
 
-<!-- Completion Ceremony -->
-<div class="moverlay" id="mDone"><div class="modal" style="text-align:center">
+<div class="mov" id="mDone"><div class="modal" style="text-align:center">
   <div style="font-size:60px;margin-bottom:12px">🏆</div>
   <h2 style="font-size:22px;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px">اكتملت الدورة!</h2>
-  <p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:16px" id="doneMsg">—</p>
-  <div style="background:linear-gradient(135deg,rgba(251,191,36,.07),rgba(0,229,176,.05));border:1px solid var(--b2);border-radius:13px;padding:14px;margin-bottom:16px" id="doneSummary"></div>
-  <p style="font-size:12px;color:var(--muted);margin-bottom:14px">🔒 تم أرشفة الجمعية — لإنشاء دورة جديدة تواصل مع المشرف</p>
-  <div class="mfooter" style="justify-content:center"><button class="btn btn-g" onclick="closeM(&#39;mDone&#39;)">🌟 رائع!</button></div>
+  <p style="font-size:13px;color:var(--muted);line-height:1.85;margin-bottom:16px" id="donMsg">—</p>
+  <div style="background:linear-gradient(135deg,rgba(251,191,36,.06),rgba(0,229,176,.04));border:1px solid var(--b2);border-radius:13px;padding:14px;margin-bottom:16px" id="donSum"></div>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:14px">🔒 تم أرشفة الجمعية — لدورة جديدة تواصل مع المشرف</p>
+  <div class="mf" style="justify-content:center"><button class="btn bg" onclick="cM('mDone')">🌟 ممتاز!</button></div>
 </div></div>
 
-<!-- Add GA (Super) -->
-<div class="moverlay" id="mAddGA"><div class="modal">
-  <div class="modal-t">➕ إضافة مدير جمعية</div>
-  <div class="field"><label>الاسم *</label><input type="text" id="gaaN" placeholder="اسم المدير"></div>
-  <div class="field"><label>رقم الهاتف *</label><input type="text" id="gaaP" placeholder="0501234567"></div>
-  <div class="field"><label>كلمة المرور *</label><input type="password" id="gaaPass" placeholder="كلمة مرور للمدير"></div>
-  <div class="field"><label>نوع الحساب الابتدائي</label>
-    <select id="gaaSt"><option value="trial">تجريبي (مجاني — حتى عضوين)</option><option value="active">مفعّل كامل</option></select>
+<div class="mov" id="mAddGA"><div class="modal">
+  <div class="mt">➕ إضافة مدير جمعية</div>
+  <div class="field"><label>الاسم *</label><input type="text" id="gaN"></div>
+  <div class="field"><label>رقم الهاتف *</label><input type="text" id="gaP"></div>
+  <div class="field"><label>كلمة المرور *</label><input type="password" id="gaPW"></div>
+  <div class="field"><label>نوع الحساب</label>
+    <select id="gaSt" onchange="document.getElementById('gaMaxR').style.display=this.value==='active'?'block':'none'">
+      <option value="trial">تجريبي (مجاني)</option>
+      <option value="active">مفعّل كامل</option>
+    </select>
   </div>
-  <div id="gaaActiveOpts" style="display:none">
-    <div class="field"><label>عدد الأعضاء المرخّص لهم</label><input type="number" id="gaaMaxM" value="10" min="3"></div>
+  <div id="gaMaxR" style="display:none">
+    <div class="field"><label>الحد الأقصى للأعضاء</label><input type="number" id="gaMaxI" value="10" min="3"></div>
   </div>
-  <div class="mfooter"><button class="btn btn-o" onclick="closeM(&#39;mAddGA&#39;)">إلغاء</button><button class="btn btn-s" onclick="createGA()">إضافة ✓</button></div>
+  <div class="mf"><button class="btn bo" onclick="cM('mAddGA')">إلغاء</button><button class="btn bs" onclick="createGA()">إضافة ✓</button></div>
 </div></div>
 
 <!-- Subscription Wizard -->
-<div class="moverlay" id="mSub"><div class="modal">
-  <div class="modal-t">💳 الاشتراك في منصة ساهل</div>
-  <!-- Step 1: Terms -->
-  <div class="sub-step active" id="sub1">
-    <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--teal)">📜 الشروط والأحكام</div>
-    <div class="terms-box">
-      <h4>1. قبول الشروط</h4>
-      باستخدام منصة ساهل وإنشاء جمعية، فإنك توافق على جميع الشروط والأحكام الواردة أدناه. إذا كنت لا توافق على أي من هذه الشروط، يرجى عدم استخدام المنصة.
-      <h4>2. طبيعة الخدمة</h4>
-      منصة ساهل هي منصة تقنية لإدارة الجمعيات المالية. المنصة لا تتولى استلام أو تحويل الأموال بين الأعضاء بشكل مباشر، وهي وسيط تقني فقط. جميع التحويلات تتم مباشرة بين الأعضاء.
+<div class="mov" id="mSub"><div class="modal">
+  <div class="mt">💳 الاشتراك في منصة ساهل</div>
+  <div class="sstep on" id="sub1">
+    <div style="font-size:13px;font-weight:700;color:var(--teal);margin-bottom:9px">📜 الشروط والأحكام — يرجى القراءة كاملاً</div>
+    <div class="tbox">
+      <h4>1. قبول الشروط</h4>باستخدام منصة ساهل وإنشاء جمعية، توافق على جميع الشروط أدناه.
+      <h4>2. طبيعة الخدمة</h4>منصة ساهل وسيط تقني فقط لإدارة الجمعيات. التحويلات تتم مباشرة بين الأعضاء.
       <h4>3. التزامات مدير الجمعية</h4>
-      • الالتزام بعدد الأعضاء المدفوع عليه في الاشتراك بدقة.<br>
-      • عدم إضافة أعضاء يتجاوز العدد المرخّص له في خطة الاشتراك.<br>
-      • التحقق من هوية الأعضاء قبل إضافتهم للجمعية.<br>
-      • إبلاغ الأعضاء بقواعد وآليات عمل الجمعية.<br>
+      • الالتزام بعدد الأعضاء المدفوع عليه بدقة تامة.<br>
+      • عدم إضافة أعضاء يتجاوز العدد المرخّص في خطة الاشتراك.<br>
+      • التحقق من هوية الأعضاء قبل إضافتهم.<br>
       • الحفاظ على سرية كلمة المرور وعدم مشاركتها.
       <h4>4. رسوم الاشتراك</h4>
-      • رسوم الاشتراك محسوبة على أساس 5 دراهم لكل عضو في الجمعية.<br>
-      • تُدفع الرسوم مسبقاً قبل تفعيل الصلاحيات الكاملة.<br>
-      • الرسوم غير قابلة للاسترداد بعد تفعيل الجمعية وإضافة الأعضاء.<br>
-      • يحق لمنصة ساهل تعديل الأسعار مع إشعار مسبق.
-      <h4>5. قفل عدد الأعضاء</h4>
-      بعد تحديد عدد الأعضاء والدفع، لا يمكن بأي حال إضافة أعضاء يتجاوز العدد المدفوع عليه. هذا الشرط غير قابل للتجاوز لحماية حقوق جميع الأطراف.
-      <h4>6. مسؤولية المنصة</h4>
-      منصة ساهل غير مسؤولة عن أي نزاعات مالية بين أعضاء الجمعية. المسؤولية الكاملة تقع على مدير الجمعية في إدارة التحويلات والتأكد من دفع الأعضاء.
-      <h4>7. إيقاف الخدمة</h4>
-      تحتفظ منصة ساهل بحق إيقاف أي حساب يخالف الشروط أو يستخدم المنصة بشكل غير لائق دون إشعار مسبق.
-      <h4>8. الخصوصية</h4>
-      بيانات الأعضاء (الاسم، الهاتف، الآيبان) محفوظة بشكل آمن وتُستخدم فقط لأغراض إدارة الجمعية. لن تُشارك البيانات مع أي طرف ثالث.
-      <h4>9. إتمام الدورة وإغلاق الجمعية</h4>
-      بعد اكتمال جميع دورات الجمعية، تنتقل إلى وضع الأرشيف تلقائياً. لا يمكن إضافة أعضاء جدد بعد الإغلاق. لفتح دورة جديدة يلزم اشتراك جديد.
+      • الرسوم محسوبة على أساس 5 دراهم لكل عضو (قابلة للتغيير).<br>
+      • تُدفع مسبقاً قبل تفعيل الصلاحيات الكاملة.<br>
+      • الرسوم غير قابلة للاسترداد بعد تفعيل الجمعية.
+      <h4>5. قفل عدد الأعضاء — مهم جداً</h4>بعد تحديد العدد والدفع، لا يمكن بأي حال إضافة أعضاء يتجاوز العدد المدفوع عليه.
+      <h4>6. مسؤولية المنصة</h4>منصة ساهل غير مسؤولة عن أي نزاعات مالية بين الأعضاء.
+      <h4>7. إيقاف الخدمة</h4>تحتفظ ساهل بحق إيقاف أي حساب يخالف الشروط دون إشعار.
+      <h4>8. الخصوصية</h4>بيانات الأعضاء محفوظة بأمان ولن تُشارك مع أطراف ثالثة.
+      <h4>9. إغلاق الجمعية</h4>بعد اكتمال الدورة تُؤرشف الجمعية تلقائياً. لدورة جديدة يلزم اشتراك جديد.
     </div>
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-      <input type="checkbox" id="termsChk" style="width:18px;height:18px;cursor:pointer;flex-shrink:0">
-      <label for="termsChk" style="font-size:13px;font-weight:700;cursor:pointer">أوافق على جميع الشروط والأحكام</label>
+      <input type="checkbox" id="tChk" style="width:18px;height:18px;cursor:pointer;flex-shrink:0;accent-color:var(--accent)">
+      <label for="tChk" style="font-size:13px;font-weight:700;cursor:pointer">أوافق على جميع الشروط والأحكام</label>
     </div>
-    <button class="btn btn-p" onclick="subNext1()">التالي ← تحديد العدد</button>
+    <button class="btn bp bfull" onclick="sNext1()">التالي ← تحديد عدد الأعضاء</button>
   </div>
-  <!-- Step 2: Choose member count -->
-  <div class="sub-step" id="sub2">
-    <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--teal)">👥 كم عضواً تريد في جمعيتك؟</div>
+  <div class="sstep" id="sub2">
+    <div style="font-size:13px;font-weight:700;color:var(--teal);margin-bottom:12px">👥 كم عضواً تريد في جمعيتك؟</div>
     <div class="field"><label>عدد الأعضاء</label>
-      <input type="number" id="subMCount" min="3" max="50" value="10" oninput="calcSubPrice()" style="font-size:20px;font-weight:900;text-align:center">
+      <input type="number" id="sMC" min="3" max="50" value="10" oninput="calcSub()" style="font-size:20px;font-weight:900;text-align:center">
     </div>
-    <div class="price-calc">
+    <div class="pcalc">
       <div style="font-size:12px;color:var(--muted);margin-bottom:5px">إجمالي الاشتراك</div>
-      <div class="price-big" id="subPriceDisp">50 د.إ</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:5px"><span id="subMDisp">10</span> عضو × <span id="subPPM">5</span> د.إ</div>
+      <div class="pbig" id="sPD">50 د.إ</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:5px"><span id="sMD">10</span> عضو × <span id="sPPM">5</span> د.إ</div>
     </div>
-    <p style="font-size:12px;color:var(--gold);background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);border-radius:9px;padding:10px;margin-bottom:14px">⚠️ تنبيه: بعد الدفع لن يمكنك إضافة أعضاء يتجاوز هذا العدد</p>
-    <div class="mfooter"><button class="btn btn-o" onclick="subBack1()">← رجوع</button><button class="btn btn-p" onclick="subNext2()">التالي ← الدفع</button></div>
+    <p style="font-size:12px;color:var(--gold);background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.18);border-radius:9px;padding:10px;margin-bottom:14px">⚠️ بعد الدفع لن يمكنك إضافة أعضاء يتجاوز هذا العدد</p>
+    <div class="mf"><button class="btn bo" onclick="sBack1()">← رجوع</button><button class="btn bp" onclick="sNext2()">التالي ← الدفع</button></div>
   </div>
-  <!-- Step 3: Payment -->
-  <div class="sub-step" id="sub3">
-    <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--teal)">💳 تفاصيل الدفع</div>
+  <div class="sstep" id="sub3">
+    <div style="font-size:13px;font-weight:700;color:var(--teal);margin-bottom:12px">💳 تفاصيل الدفع</div>
     <div style="background:var(--s2);border:1px solid var(--b2);border-radius:13px;padding:16px;margin-bottom:14px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
         <span style="color:var(--muted);font-size:12px">المبلغ المطلوب:</span>
-        <span style="font-size:22px;font-weight:900;color:var(--gold)" id="sub3Price">—</span>
+        <span style="font-size:22px;font-weight:900;color:var(--gold)" id="s3Price">—</span>
       </div>
       <div style="margin-bottom:10px">
         <div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:4px">حوّل على آيبان:</div>
-        <div style="font-family:monospace;font-size:13px;color:var(--teal);cursor:pointer" id="sub3Iban" onclick="copyText(this.textContent);showToast(&#39;تم نسخ الآيبان&#39;)">—</div>
+        <div style="font-family:monospace;font-size:13px;color:var(--teal);cursor:pointer" id="s3Iban" onclick="copyText(this.textContent)">—</div>
       </div>
       <div>
-        <div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:4px">تواصل واتساب:</div>
-        <div style="color:#22c55e;font-weight:700" id="sub3Phone">—</div>
+        <div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:4px">واتساب للتواصل:</div>
+        <div style="color:#22c55e;font-weight:700" id="s3Phone">—</div>
       </div>
     </div>
     <div class="field"><label>ارفع إيصال التحويل *</label>
-      <div class="upzone" onclick="document.getElementById(&#39;subRFile&#39;).click()">
-        <input type="file" id="subRFile" accept="image/*" onchange="prevReceipt(&#39;sub&#39;,this)">
-        <div id="subRPrev" style="font-size:28px;margin-bottom:5px">📎</div>
-        <div style="font-size:12px;color:var(--muted)">اضغط لرفع صورة إيصال التحويل</div>
+      <div class="upz" onclick="document.getElementById('sRF').click()">
+        <input type="file" id="sRF" accept="image/*" onchange="prevR('sub',this)">
+        <div id="sRP" style="font-size:28px;margin-bottom:5px">📎</div>
+        <div style="font-size:12px;color:var(--muted)">اضغط لرفع صورة الإيصال</div>
       </div>
     </div>
-    <div class="field"><label>رقم التحويل / ملاحظة</label><input type="text" id="sub3Note" placeholder="رقم العملية..."></div>
-    <div class="mfooter"><button class="btn btn-o" onclick="subBack2()">← رجوع</button><button class="btn btn-g" onclick="submitSub()">📤 إرسال طلب الاشتراك</button></div>
+    <div class="field"><label>رقم التحويل / ملاحظة</label><input type="text" id="s3Note" placeholder="رقم العملية..."></div>
+    <div class="mf"><button class="btn bo" onclick="sBack2()">← رجوع</button><button class="btn bg" onclick="subSub()">📤 إرسال طلب الاشتراك</button></div>
   </div>
 </div></div>
 
-<!-- Super View Jameia -->
-<div class="moverlay" id="mViewJ"><div class="modal">
-  <div class="modal-t" id="vJTitle">تفاصيل الجمعية</div>
-  <div id="vJContent"></div>
-  <div class="mfooter"><button class="btn btn-o" onclick="closeM(&#39;mViewJ&#39;)">إغلاق</button></div>
+<div class="mov" id="mVJ"><div class="modal">
+  <div class="mt" id="vJT">تفاصيل الجمعية</div>
+  <div id="vJC"></div>
+  <div class="mf"><button class="btn bo" onclick="cM('mVJ')">إغلاق</button></div>
 </div></div>
 
-<div id="toast"></div>
+<div id="toast" style="position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120px);padding:11px 24px;border-radius:99px;font-weight:700;font-size:14px;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s;opacity:0;z-index:9999;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4)"></div>
+
 <script>
-// ══ CONSTANTS ══
-const SK='sahel_v2';
+const SK='sahel_v3';
 const MN=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+var S={superPass:'super1234',adminPass:'1234',apiKey:'',binId:'',jameias:[],groupAdmins:[],paymentRequests:[],prices:{ppm:5,trialLimit:2,minM:3,maxM:50,iban:'',phone:''}};
+var curJId=null,curRole=null,curGAId=null,toastT,dayT;
 
-// ══ STATE ══
-var S={
-  superPass:'super1234',adminPass:'1234',
-  apiKey:'',binId:'',
-  jameias:[],groupAdmins:[],paymentRequests:[],
-  prices:{ppm:5,trialLimit:2,minM:3,maxM:50,iban:'',phone:''}
-};
-var curJId=null,curRole=null,curGAId=null,toastT,cdInterval;
-
-// ══ HELPERS ══
 function J(){return S.jameias.find(function(j){return j.id===curJId;})||null;}
 function GA(){return(S.groupAdmins||[]).find(function(a){return a.id===curGAId;})||null;}
 function eid(id){return document.getElementById(id);}
@@ -822,41 +772,37 @@ function showToast(msg,err){
   var t=eid('toast');t.textContent=msg;
   t.style.background=err?'var(--red)':'var(--teal)';t.style.color=err?'#fff':'#042e22';
   t.classList.add('show');clearTimeout(toastT);
-  toastT=setTimeout(function(){t.classList.remove('show');},3000);
+  toastT=setTimeout(function(){t.classList.remove('show');},3200);
 }
 function copyText(txt){
-  if(navigator.clipboard)navigator.clipboard.writeText(txt);
-  else{var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
+  if(navigator.clipboard)navigator.clipboard.writeText(txt||'');
+  else{var ta=document.createElement('textarea');ta.value=txt||'';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
   showToast('✓ تم النسخ');
 }
-function slotLbl(m){return(m.dueMonthNum&&m.dueYear)?MN[m.dueMonthNum-1]+' '+m.dueYear:'غير محدد';}
-function paidCnt(){var j=J();if(!j)return 0;return j.members.filter(function(m){return j.paidMembers&&j.paidMembers[m.id];}).length;}
-function sortedM(){var j=J();if(!j)return[];return j.members.slice().sort(function(a,b){return((parseInt(a.dueYear)||9999)*12+(parseInt(a.dueMonthNum)||99))-((parseInt(b.dueYear)||9999)*12+(parseInt(b.dueMonthNum)||99));});}
-function makeJ(n,amt,ico,clr){return{id:'j'+Date.now(),name:n,amount:parseFloat(amt)||500,icon:ico||'🏦',color:clr||'#4f9eff',monthName:'',members:[],pendingMembers:[],currentReceiverId:'',paidMembers:{},completedSlots:[],history:[],receipts:{},archived:false};}
-function makeGA(n,p,pw,st,maxM){return{id:'ga'+Date.now(),name:n,phone:p,pass:pw,status:st||'trial',maxMembers:maxM||2,jameiaIds:[],createdAt:new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})};}
+function slotL(m){return(m.dueMonthNum&&m.dueYear)?MN[m.dueMonthNum-1]+' '+m.dueYear:'غير محدد';}
+function paidCt(){var j=J();if(!j)return 0;return j.members.filter(function(m){return j.paidMembers&&j.paidMembers[m.id];}).length;}
+function sortM(){var j=J();if(!j)return[];return j.members.slice().sort(function(a,b){return((parseInt(a.dueYear)||9999)*12+(parseInt(a.dueMonthNum)||99))-((parseInt(b.dueYear)||9999)*12+(parseInt(b.dueMonthNum)||99));});}
+function mkJ(n,a,ic,cl){return{id:'j'+Date.now(),name:n,amount:parseFloat(a)||500,icon:ic||'🏦',color:cl||'#4f9eff',monthName:'',members:[],pendingMembers:[],currentReceiverId:'',paidMembers:{},completedSlots:[],history:[],receipts:{},archived:false};}
+function mkGA(n,p,pw,st,mx){return{id:'ga'+Date.now(),name:n,phone:p,pass:pw,status:st||'trial',maxMembers:mx||2,jameiaIds:[],createdAt:new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})};}
 
-// ══ PERSIST ══
 function save(){localStorage.setItem(SK,JSON.stringify(S));}
 function load(){
-  try{var d=localStorage.getItem(SK);if(d){var p=JSON.parse(d);S=Object.assign({},S,p);}}catch(e){}
+  try{var d=localStorage.getItem(SK);if(d)S=Object.assign({},S,JSON.parse(d));}catch(e){}
   if(!S.jameias)S.jameias=[];
-  if(!S.jameias.length)S.jameias.push(makeJ('جمعيتي الأولى',500,'🏦','#4f9eff'));
   if(!S.groupAdmins)S.groupAdmins=[];
   if(!S.paymentRequests)S.paymentRequests=[];
   if(!S.prices)S.prices={ppm:5,trialLimit:2,minM:3,maxM:50,iban:'',phone:''};
-  S.jameias.forEach(function(j){
-    if(!j.pendingMembers)j.pendingMembers=[];if(!j.completedSlots)j.completedSlots=[];
-    if(!j.receipts)j.receipts={};if(!j.paidMembers)j.paidMembers={};
-  });
-  if(!curJId&&S.jameias.length)curJId=S.jameias[0].id;
+  S.jameias.forEach(function(j){if(!j.pendingMembers)j.pendingMembers=[];if(!j.completedSlots)j.completedSlots=[];if(!j.receipts)j.receipts={};if(!j.paidMembers)j.paidMembers={};});
+  if(!S.jameias.length){var dj=mkJ('جمعيتي الأولى',500,'🏦','#4f9eff');S.jameias.push(dj);}
+  if(!curJId)curJId=S.jameias[0].id;
 }
 
-// ══ CLOUD ══
+// CLOUD
 function ch(){return{'Content-Type':'application/json','X-Master-Key':S.apiKey,'X-Bin-Private':'false'};}
-function setSS(st){['sdot','sdot2'].forEach(function(id){var d=eid(id);if(!d)return;d.className='sdot-s'+(st==='sy'?' sy':st==='er'?' er':'');});}
-async function syncUp(){if(!S.apiKey||!S.binId)return;setSS('sy');try{await fetch('https://api.jsonbin.io/v3/b/'+S.binId,{method:'PUT',headers:ch(),body:JSON.stringify(S)});setSS('');}catch(e){setSS('er');}}
+function ssd(st){['sdot','sdot2'].forEach(function(id){var d=eid(id);if(!d)return;d.className='sdт'+(st==='sy'?' sdts':st==='er'?' sdte':'');});}
+async function syncUp(){if(!S.apiKey||!S.binId)return;ssd('sy');try{await fetch('https://api.jsonbin.io/v3/b/'+S.binId,{method:'PUT',headers:ch(),body:JSON.stringify(S)});ssd('');}catch(e){ssd('er');}}
 async function syncDown(){
-  if(!S.apiKey||!S.binId)return;setSS('sy');
+  if(!S.apiKey||!S.binId)return;ssd('sy');
   try{
     var r=await fetch('https://api.jsonbin.io/v3/b/'+S.binId+'/latest',{headers:{'X-Master-Key':S.apiKey}});
     var d=await r.json();var rem=d.record;
@@ -865,674 +811,589 @@ async function syncDown(){
     if(!S.groupAdmins)S.groupAdmins=[];if(!S.paymentRequests)S.paymentRequests=[];
     if(!S.prices)S.prices={ppm:5,trialLimit:2,minM:3,maxM:50,iban:'',phone:''};
     S.jameias.forEach(function(j){if(!j.pendingMembers)j.pendingMembers=[];if(!j.completedSlots)j.completedSlots=[];if(!j.receipts)j.receipts={};if(!j.paidMembers)j.paidMembers={};});
-    save();setSS('');
-  }catch(e){setSS('er');}
+    save();ssd('');
+  }catch(e){ssd('er');}
 }
 async function pubSync(){
   if(!S.binId)return;
   try{
     var h=S.apiKey?{'X-Master-Key':S.apiKey}:{};
     var r=await fetch('https://api.jsonbin.io/v3/b/'+S.binId+'/latest',{headers:h});
-    var d=await r.json();var rem=d.record;
-    var keep={apiKey:S.apiKey,binId:S.binId,superPass:S.superPass,adminPass:S.adminPass};
-    S=Object.assign({},S,rem,keep);
+    var d=await r.json();var keep={apiKey:S.apiKey,binId:S.binId,superPass:S.superPass,adminPass:S.adminPass};
+    S=Object.assign({},S,d.record,keep);
     S.jameias.forEach(function(j){if(!j.pendingMembers)j.pendingMembers=[];if(!j.completedSlots)j.completedSlots=[];if(!j.receipts)j.receipts={};if(!j.paidMembers)j.paidMembers={};});
     save();
   }catch(e){}
 }
 function setupCloud(){
-  var key=eid('supApiKey').value.trim();if(!key){showToast('أدخل الـ API Key',true);return;}
-  S.apiKey=key;var msg=eid('cloudMsg');msg.textContent='⏳ جاري الإنشاء...';
+  var k=eid('supAK').value.trim();if(!k){showToast('أدخل الـ API Key',true);return;}
+  S.apiKey=k;var msg=eid('cloudMsg');msg.textContent='⏳ جاري الإنشاء...';
   fetch('https://api.jsonbin.io/v3/b',{method:'POST',headers:ch(),body:JSON.stringify(S)})
   .then(function(r){return r.json();}).then(function(d){
     S.binId=d.metadata.id;save();
-    eid('supBinId').value=S.binId;eid('binRow').style.display='block';
+    eid('supBID').value=S.binId;eid('binRow').style.display='block';
     msg.innerHTML='✅ تم! Bin ID: <strong style="color:var(--teal)">'+S.binId+'</strong>';showToast('تم إعداد السحابة ✓');
-  }).catch(function(){msg.textContent='❌ فشل. تأكد من الـ API Key';});
+  }).catch(function(){msg.textContent='❌ فشل. تحقق من الـ API Key';});
 }
 
-// ══ SCREENS / MODALS ══
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');s.style.display='';});
-  var el=eid(id);if(!el)return;el.classList.add('active');
-  if(id==='screenLogin')el.style.display='flex';
-  window.scrollTo(0,0);
+// SCREENS
+function showS(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  var el=eid(id);if(!el)return;el.classList.add('active');window.scrollTo(0,0);
 }
-function openM(id){eid(id).classList.add('open');}
-function closeM(id){eid(id).classList.remove('open');}
+function oM(id){eid(id).classList.add('open');}
+function cM(id){eid(id).classList.remove('open');}
 
-// ══ COUNTDOWN ══
-function startCountdown(){
-  clearInterval(cdInterval);
-  cdInterval=setInterval(function(){
-    var now=new Date();
-    var end=new Date(now.getFullYear(),now.getMonth()+1,1,0,0,0);
-    var diff=end-now;
-    if(diff<0){clearInterval(cdInterval);return;}
-    var days=Math.floor(diff/86400000);
-    var hrs=Math.floor((diff%86400000)/3600000);
-    var min=Math.floor((diff%3600000)/60000);
-    var sec=Math.floor((diff%60000)/1000);
-    var urgent=days<5;
-    ['cd-days','cd-hrs','cd-min','cd-sec','ga-cd-d','ga-cd-h','ga-cd-m'].forEach(function(id){var el=eid(id);if(!el)return;});
-    function setCD(id,val){var el=eid(id);if(el)el.textContent=String(val).padStart(2,'0');}
-    setCD('cd-days',days);setCD('cd-hrs',hrs);setCD('cd-min',min);setCD('cd-sec',sec);
-    setCD('ga-cd-d',days);setCD('ga-cd-h',hrs);setCD('ga-cd-m',min);
-    ['cd-d','cd-h','cd-m','cd-s'].forEach(function(id){var el=eid(id);if(el){if(urgent)el.classList.add('cd-urgent');else el.classList.remove('cd-urgent');}});
-  },1000);
+// DAYS COUNTER
+function updateDays(){
+  var now=new Date();
+  var end=new Date(now.getFullYear(),now.getMonth()+1,0);
+  var days=end.getDate()-now.getDate();
+  var urgent=days<=5;
+  ['daynum','gadaynum'].forEach(function(id){
+    var el=eid(id);if(!el)return;
+    el.textContent=days;
+    if(urgent)el.classList.add('urgent');else el.classList.remove('urgent');
+  });
 }
 
-// ══ AUTH ══
+// AUTH
 function doLogin(){
-  load();var pass=eid('loginPass').value;eid('loginErr').style.display='none';
-  if(pass===S.superPass){curRole='super';curGAId=null;syncDown().then(renderSuper);showScreen('screenSuper');return;}
+  load();var pass=eid('lPass').value;eid('lErr').style.display='none';
+  if(pass===S.superPass){curRole='super';curGAId=null;syncDown().then(renderSuper);showS('screenSuper');return;}
   var ga=(S.groupAdmins||[]).find(function(a){return a.pass===pass;});
   if(ga){
     if(ga.status==='frozen'){showToast('حسابك مجمّد. تواصل مع المشرف',true);return;}
     curRole='group';curGAId=ga.id;
-    curJId=ga.jameiaIds&&ga.jameiaIds.length?ga.jameiaIds[0]:S.jameias[0]&&S.jameias[0].id;
-    syncDown().then(renderGA);showScreen('screenGA');return;
+    curJId=ga.jameiaIds&&ga.jameiaIds.length?ga.jameiaIds[0]:(S.jameias[0]&&S.jameias[0].id);
+    syncDown().then(renderGA);showS('screenGA');return;
   }
-  if(pass===S.adminPass){curRole='legacy';curJId=S.jameias[0]&&S.jameias[0].id;syncDown().then(renderGA);showScreen('screenGA');return;}
-  eid('loginErr').style.display='block';
+  if(pass===S.adminPass){curRole='legacy';curJId=S.jameias[0]&&S.jameias[0].id;syncDown().then(renderGA);showS('screenGA');return;}
+  eid('lErr').style.display='block';
 }
-function doLogout(){eid('loginPass').value='';curRole=null;curGAId=null;clearInterval(cdInterval);showScreen('screenHome');}
-function gaRefresh(){syncDown().then(function(){renderGA();showToast('تم التحديث ✓');});}
-function superRefresh(){syncDown().then(function(){renderSuper();showToast('تم التحديث ✓');});}
+function doLogout(){eid('lPass').value='';curRole=null;curGAId=null;goHome();}
+function goHome(){showS('screenHome');renderHome();}
+function goReg(){var j=J();if(!j)return;eid('regBarTitle').textContent='التسجيل في '+j.name;initReg();showS('screenRegister');}
+function gaRef(){syncDown().then(function(){renderGA();showToast('تم التحديث ✓');});}
+function supRef(){syncDown().then(function(){renderSuper();showToast('تم التحديث ✓');});}
+function getBase(){var u=window.location.href.split('#')[0].split('?')[0];if(!u.endsWith('.html'))u=u.replace(/\/$/,'')+'/index.html';return u;}
 
-// ══ HOME ══
+// HOME
 function renderHome(){
   var box=eid('homeList');
   var active=S.jameias.filter(function(j){return!j.archived;});
-  if(!active.length){box.innerHTML='<div class="empty"><div class="empty-i">🔍</div>لا توجد جمعيات متاحة حالياً</div>';return;}
+  if(!active.length){box.innerHTML='<div class="emp"><div class="ei">🔍</div>لا توجد جمعيات متاحة حالياً</div>';return;}
   box.innerHTML=active.map(function(j){
-    return '<div class="jcard" onclick="openJameia(\''+j.id+'\')">'
-      +'<div class="jicon" style="background:linear-gradient(135deg,'+j.color+',#1d4ed8)">'+j.icon+'</div>'
+    return '<div class="jcard" onclick="openJ(\''+j.id+'\')">'
+      +'<div class="jico" style="background:linear-gradient(135deg,'+j.color+',#1d4ed8)">'+j.icon+'</div>'
       +'<div style="flex:1"><div style="font-size:15px;font-weight:800">'+esc(j.name)+'</div>'
       +'<div style="font-size:12px;color:var(--muted);margin-top:2px">👥 '+j.members.length+' عضو'+(j.monthName?' · 📅 '+esc(j.monthName):'')+'</div></div>'
       +'<div style="color:var(--muted);font-size:20px">←</div></div>';
   }).join('');
 }
-function openJameia(id){curJId=id;renderPublic();showScreen('screenPublic');}
+function openJ(id){curJId=id;renderPub();showS('screenPublic');}
 
-// ══ PUBLIC ══
-function renderPublic(){
-  var j=J();if(!j){showScreen('screenHome');return;}
+// PUBLIC
+function renderPub(){
+  var j=J();if(!j){goHome();return;}
   eid('pubTitle').textContent=j.name;
-  eid('regTitleBar').textContent='التسجيل في '+j.name;
   var rec=j.members.find(function(m){return m.id===j.currentReceiverId;});
-  eid('pubReceiver').textContent=rec?rec.name:'لم يتم التحديد بعد';
-  var ib=eid('pubIban');
-  if(rec&&rec.iban){ib.dataset.v=rec.iban;eid('pubIbanTxt').textContent=rec.iban;eid('pubIbanWrap').style.display='flex';}
-  else{eid('pubIbanWrap').style.display='none';}
-  // prog
+  eid('pubRec').textContent=rec?rec.name:'لم يتم التحديد بعد';
+  if(rec&&rec.iban){eid('pubIban').dataset.v=rec.iban;eid('pubIbanTxt').textContent=rec.iban;eid('pubIbanWrap').style.display='block';}
+  else eid('pubIbanWrap').style.display='none';
   var tot=j.members.length,pc=j.members.filter(function(m){return j.paidMembers&&j.paidMembers[m.id];}).length;
-  eid('pubProgTxt').textContent=pc+'/'+tot;
-  eid('pubProgFill').style.width=(tot?Math.round(pc/tot*100):0)+'%';
-  // schedule
-  var sorted=j.members.slice().sort(function(a,b){return((parseInt(a.dueYear)||9999)*12+(parseInt(a.dueMonthNum)||99))-((parseInt(b.dueYear)||9999)*12+(parseInt(b.dueMonthNum)||99));});
-  var body=eid('pubSchedBody');
-  if(!sorted.length){body.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px">لا يوجد جدول بعد</td></tr>';return;}
-  body.innerHTML=sorted.map(function(m,i){
+  eid('pubPrgTxt').textContent=pc+'/'+tot;eid('pubPrgFill').style.width=(tot?Math.round(pc/tot*100):0)+'%';
+  updateDays();
+  var sm=j.members.slice().sort(function(a,b){return((parseInt(a.dueYear)||9999)*12+(parseInt(a.dueMonthNum)||99))-((parseInt(b.dueYear)||9999)*12+(parseInt(b.dueMonthNum)||99));});
+  var body=eid('pubSchedB');
+  if(!sm.length){body.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px">لا يوجد جدول بعد</td></tr>';return;}
+  body.innerHTML=sm.map(function(m,i){
     var isDone=j.completedSlots.indexOf(m.id)!==-1,isCur=!isDone&&j.currentReceiverId===m.id;
-    return '<tr class="'+(isDone?'tr-done':isCur?'tr-cur':'')+'">'
+    return '<tr class="'+(isDone?'dn':isCur?'cur':'')+'">'
       +'<td><span class="rn">'+(i+1)+'</span></td>'
-      +'<td style="font-weight:700">'+slotLbl(m)+'</td>'
+      +'<td style="font-weight:700">'+slotL(m)+'</td>'
       +'<td><strong>'+esc(m.name)+'</strong></td>'
       +'<td style="font-family:monospace;font-size:11px;color:var(--teal)">'+(m.iban||'—')+'</td>'
-      +'<td>'+(isDone?'<span class="sdot"><span class="dot dot-g"></span>مكتمل</span>'
-             :isCur?'<span class="sdot"><span class="dot dot-y"></span>حالي</span>'
-             :'<span class="sdot"><span class="dot dot-m"></span>قادم</span>')+'</td></tr>';
+      +'<td>'+(isDone?'<span class="sdot"><span class="dot dg"></span>مكتمل</span>'
+             :isCur?'<span class="sdot"><span class="dot dy"></span>حالي</span>'
+             :'<span class="sdot"><span class="dot dm"></span>قادم</span>')+'</td></tr>';
   }).join('');
-  startCountdown();
 }
 
-// ══ RECEIPT ══
-var rData={pub:'',reg:'',sub:''};
-function prevReceipt(key,inp){
+// RECEIPTS DATA
+var rD={pub:'',reg:'',sub:''};
+function prevR(k,inp){
   if(!inp.files[0])return;
   if(inp.files[0].size>4*1024*1024){showToast('الصورة أكبر من 4MB',true);return;}
   var fr=new FileReader();fr.onload=function(e){
-    rData[key]=e.target.result;
-    var prev=eid(key==='pub'?'pubRPrev':key==='reg'?'rRPrev':'subRPrev');
-    if(prev)prev.innerHTML='<img src="'+e.target.result+'" style="max-height:90px;border-radius:8px">';
+    rD[k]=e.target.result;
+    var id=k==='pub'?'pubRP':k==='reg'?'rRP':'sRP';
+    eid(id).innerHTML='<img src="'+e.target.result+'" style="max-height:90px;border-radius:8px">';
   };fr.readAsDataURL(inp.files[0]);
 }
-function submitPubReceipt(){
+function subPubR(){
   var j=J();if(!j)return;
-  var name=eid('pubRName').value.trim();if(!name){showToast('أدخل اسمك',true);return;}
-  if(!rData.pub){showToast('ارفع صورة الإيصال',true);return;}
+  var nm=eid('pubRN').value.trim();if(!nm){showToast('أدخل اسمك',true);return;}
+  if(!rD.pub){showToast('ارفع صورة الإيصال',true);return;}
   if(!j.receipts['__public'])j.receipts['__public']=[];
-  j.receipts['__public'].push({data:rData.pub,memberName:name,note:eid('pubRNote').value.trim(),date:new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})});
-  save();syncUp();
-  eid('pubRName').value='';eid('pubRNote').value='';eid('pubRFile').value='';eid('pubRPrev').innerHTML='📎';rData.pub='';
+  j.receipts['__public'].push({data:rD.pub,memberName:nm,note:eid('pubRNote').value.trim(),date:new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})});
+  save();syncUp();eid('pubRN').value='';eid('pubRNote').value='';eid('pubRF').value='';eid('pubRP').innerHTML='📎';rD.pub='';
   showToast('✅ تم رفع الإيصال — سيراجعه المدير قريباً');
 }
-function submitRegReceipt(){
+function subRegR(){
   var j=J();if(!j)return;
-  if(!rData.reg){showToast('ارفع صورة الإيصال أولاً',true);return;}
+  if(!rD.reg){showToast('ارفع صورة الإيصال أولاً',true);return;}
   if(!j.receipts['__public'])j.receipts['__public']=[];
-  j.receipts['__public'].push({data:rData.reg,memberName:eid('rName').value||'—',note:eid('rRNote').value.trim(),date:new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})});
-  save();syncUp();eid('rRFile').value='';eid('rRPrev').innerHTML='📎';rData.reg='';
-  showToast('✅ تم رفع الإيصال');
+  j.receipts['__public'].push({data:rD.reg,memberName:eid('rN').value||'—',note:eid('rRNote').value.trim(),date:new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})});
+  save();syncUp();eid('rRF').value='';eid('rRP').innerHTML='📎';rD.reg='';showToast('✅ تم رفع الإيصال');
 }
 
-// ══ REGISTER ══
-var rPickM=null,rPickY=null;
-function initReg(){var j=J();if(!j)return;eid('rs1').style.display='block';eid('rs2').style.display='none';eid('rs3').style.display='none';['rName','rPhone','rIban'].forEach(function(id){eid(id).value='';});rPickM=null;rPickY=null;eid('rPickedLbl').textContent='';buildGrid();}
+// REGISTER
+var rPM=null,rPY=null;
+function initReg(){eid('rs1').style.display='block';eid('rs2').style.display='none';eid('rs3').style.display='none';['rN','rP','rI'].forEach(function(id){eid(id).value='';});rPM=null;rPY=null;eid('rPLbl').textContent='';buildGrid();}
 function buildGrid(){
-  var j=J();if(!j)return;var grid=eid('rGrid');var now=new Date();
-  var booked={};
-  j.members.forEach(function(m){if(m.dueMonthNum&&m.dueYear)booked[m.dueMonthNum+'-'+m.dueYear]=m.name;});
-  (j.pendingMembers||[]).forEach(function(m){if(m.dueMonthNum&&m.dueYear)booked[m.dueMonthNum+'-'+m.dueYear]=m.name;});
-  var html='';
+  var j=J();if(!j)return;var g=eid('rGrid');var now=new Date();
+  var bk={};j.members.forEach(function(m){if(m.dueMonthNum&&m.dueYear)bk[m.dueMonthNum+'-'+m.dueYear]=m.name;});
+  (j.pendingMembers||[]).forEach(function(m){if(m.dueMonthNum&&m.dueYear)bk[m.dueMonthNum+'-'+m.dueYear]=m.name;});
+  var h='';
   for(var y=now.getFullYear();y<=now.getFullYear()+1;y++){
     var sm=y===now.getFullYear()?now.getMonth():0;
     for(var mi=sm;mi<12;mi++){
-      var key=(mi+1)+'-'+y,owner=booked[key],picked=rPickM===(mi+1)&&rPickY===y;
-      html+=owner?'<div class="mslot bk"><div class="mslot-n">'+MN[mi]+'</div><div class="mslot-y">'+y+'</div><div class="mslot-o">'+esc(owner)+'</div></div>'
-        :'<div class="mslot av'+(picked?' picked':'')+'" onclick="pickM('+(mi+1)+','+y+')">'
-          +'<div class="mslot-n" style="'+(picked?'color:var(--teal)':'')+'">'+MN[mi]+'</div><div class="mslot-y">'+y+'</div></div>';
+      var k=(mi+1)+'-'+y,ow=bk[k],pk=rPM===(mi+1)&&rPY===y;
+      h+=ow?'<div class="msl bk"><div class="msln">'+MN[mi]+'</div><div class="msly">'+y+'</div><div class="mslo">'+esc(ow)+'</div></div>'
+        :'<div class="msl av'+(pk?' pk':'')+'" onclick="pickM('+(mi+1)+','+y+')">'
+          +'<div class="msln" style="'+(pk?'color:var(--teal)':'')+'">'+MN[mi]+'</div><div class="msly">'+y+'</div></div>';
     }
   }
-  grid.innerHTML=html;
+  g.innerHTML=h;
 }
-function pickM(m,y){rPickM=m;rPickY=y;buildGrid();eid('rPickedLbl').textContent='✅ اخترت: '+MN[m-1]+' '+y;}
-function rNext(){if(!eid('rName').value.trim()){showToast('أدخل اسمك',true);return;}if(!eid('rPhone').value.trim()){showToast('أدخل رقم هاتفك',true);return;}eid('rs1').style.display='none';eid('rs2').style.display='block';}
+function pickM(m,y){rPM=m;rPY=y;buildGrid();eid('rPLbl').textContent='✅ اخترت: '+MN[m-1]+' '+y;}
+function rNext(){if(!eid('rN').value.trim()){showToast('أدخل اسمك',true);return;}if(!eid('rP').value.trim()){showToast('أدخل رقم هاتفك',true);return;}eid('rs1').style.display='none';eid('rs2').style.display='block';}
 function rBack(){eid('rs2').style.display='none';eid('rs1').style.display='block';}
-function rConfirm(){
+function rConf(){
   var j=J();if(!j)return;
-  if(!rPickM||!rPickY){showToast('اختر الشهر أولاً',true);return;}
-  var clash=j.members.find(function(m){return m.dueMonthNum==rPickM&&m.dueYear==rPickY;});
-  var clash2=(j.pendingMembers||[]).find(function(m){return m.dueMonthNum==rPickM&&m.dueYear==rPickY;});
-  if(clash||clash2){showToast('هذا الشهر محجوز بالفعل!',true);buildGrid();return;}
-  var mem={id:'m'+Date.now(),name:eid('rName').value.trim(),phone:eid('rPhone').value.trim(),iban:eid('rIban').value.trim(),dueMonthNum:rPickM,dueYear:rPickY,registeredAt:new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})};
-  if(!j.pendingMembers)j.pendingMembers=[];j.pendingMembers.push(mem);
-  save();syncUp();
-  eid('rSuccessMsg').innerHTML='أهلاً <strong style="color:var(--teal)">'+esc(mem.name)+'</strong>! 🌟<br><br>تم تسجيلك في جمعية <strong>'+esc(j.name)+'</strong> لشهر <strong style="color:var(--gold)">'+MN[rPickM-1]+' '+rPickY+'</strong>.<br><br>سيراجع المدير طلبك ويوافق عليه قريباً. يمكنك الآن رفع إيصال دفعك للشهر الحالي.';
+  if(!rPM||!rPY){showToast('اختر الشهر أولاً',true);return;}
+  var cl=j.members.find(function(m){return m.dueMonthNum==rPM&&m.dueYear==rPY;});
+  var cl2=(j.pendingMembers||[]).find(function(m){return m.dueMonthNum==rPM&&m.dueYear==rPY;});
+  if(cl||cl2){showToast('هذا الشهر محجوز!',true);buildGrid();return;}
+  var mem={id:'m'+Date.now(),name:eid('rN').value.trim(),phone:eid('rP').value.trim(),iban:eid('rI').value.trim(),dueMonthNum:rPM,dueYear:rPY,registeredAt:new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})};
+  if(!j.pendingMembers)j.pendingMembers=[];j.pendingMembers.push(mem);save();syncUp();
+  eid('rSMsg').innerHTML='أهلاً <strong style="color:var(--teal)">'+esc(mem.name)+'</strong>! 🌟<br><br>تم تسجيلك في جمعية <strong>'+esc(j.name)+'</strong> لشهر <strong style="color:var(--gold)">'+MN[rPM-1]+' '+rPY+'</strong>.<br><br>طلبك بانتظار موافقة المدير. يمكنك الآن رفع إيصال دفعك للشهر الحالي.';
   eid('rs2').style.display='none';eid('rs3').style.display='block';
 }
 
-// ══ GA RENDER ══
-function getBaseUrl(){var u=window.location.href.split('#')[0].split('?')[0];if(!u.endsWith('.html'))u=u.replace(/\/$/,'')+'/index.html';return u;}
-function gaTab(name){
-  var ns=['dash','members','receipts','sched','hist','settings'];
-  document.querySelectorAll('#screenGA .tab').forEach(function(t,i){t.classList.toggle('active',ns[i]===name);});
-  document.querySelectorAll('#screenGA .tc').forEach(function(c){c.classList.toggle('active',c.id==='gtc-'+name);});
+// GA TABS & RENDER
+function gaTab(n){
+  var ns=['dash','members','receipts','sched','hist','cfg'];
+  document.querySelectorAll('#screenGA .tab').forEach(function(t,i){t.classList.toggle('on',ns[i]===n);});
+  document.querySelectorAll('#screenGA .tc').forEach(function(c){c.classList.toggle('on',c.id==='gt-'+n);});
 }
 function renderGA(){
   var j=J();if(!j)return;var ga=GA();
-  eid('gaTopName').textContent=j.name;
-  var isTrial=!ga||ga.status==='trial',isFrozen=ga&&ga.status==='frozen',isActive=ga&&ga.status==='active';
-  eid('gaTrial').style.display=isTrial?'block':'none';
-  eid('gaFrozen').style.display=isFrozen?'block':'none';
-  eid('gaActive').style.display=isActive?'block':'none';
-  var maxM=ga?ga.maxMembers:(S.prices.trialLimit||2);
-  eid('gaTrialLimitTxt').textContent=maxM+' أعضاء';
-  if(isActive)eid('gaMaxMembersTxt').textContent=maxM+' عضو';
-  var addBtn=eid('gaAddBtn');
-  addBtn.disabled=(j.members.length>=maxM);
-  if(addBtn.disabled)addBtn.title='وصلت للحد الأقصى ('+maxM+' أعضاء)';
-  // stats
-  var pc=paidCnt();
-  eid('gs0').textContent=j.members.length;eid('gs1').textContent=(j.pendingMembers||[]).length;
+  eid('gaTopN').textContent=j.name;
+  var isTr=!ga||ga.status==='trial',isFr=ga&&ga.status==='frozen',isAc=ga&&ga.status==='active';
+  eid('gaTB').style.display=isTr?'block':'none';
+  eid('gaFB').style.display=isFr?'block':'none';
+  eid('gaAB').style.display=isAc?'block':'none';
+  var mx=ga?ga.maxMembers:(S.prices.trialLimit||2);
+  eid('gaTrialN').textContent=mx+' أعضاء';
+  if(isAc)eid('gaMaxTxt').textContent='الحد الأقصى '+mx+' عضو';
+  eid('gaAddB').disabled=j.members.length>=mx;
+  var pc=paidCt(),tot=j.members.length;
+  eid('gs0').textContent=tot;eid('gs1').textContent=(j.pendingMembers||[]).length;
   eid('gs2').textContent=pc;eid('gs3').textContent=j.history.length;
-  // hero
   var rec=j.members.find(function(m){return m.id===j.currentReceiverId;});
-  eid('gaHMonth').textContent=j.monthName||'—';
-  eid('gaHRec').textContent=rec?rec.name:'لم يتم التحديد بعد';
-  eid('gaHIban').textContent=rec&&rec.iban?'IBAN: '+rec.iban:'';
-  var tot=j.members.length,pct=tot?Math.round(pc/tot*100):0;
-  eid('gaProgTxt').textContent=pc+'/'+tot;eid('gaProgFill').style.width=pct+'%';
-  eid('gaLnk').textContent=getBaseUrl();
-  // unpaid
-  var unpaid=j.members.filter(function(m){return!(j.paidMembers&&j.paidMembers[m.id]);});
-  var uc=eid('gaUnpaidCard');
-  if(unpaid.length){uc.style.display='block';eid('gaUnpaidList').innerHTML=unpaid.map(function(m){return'<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--b1)"><div style="font-weight:700;font-size:13px">'+esc(m.name)+'</div><button class="btn btn-s btn-sm" onclick="togglePaid(\''+m.id+'\')">✓ دفع</button></div>';}).join('');}
+  eid('gaHM').textContent=j.monthName||'—';
+  eid('gaHR').textContent=rec?rec.name:'لم يتم التحديد بعد';
+  eid('gaHI').textContent=rec&&rec.iban?'IBAN: '+rec.iban:'';
+  eid('gaPT').textContent=pc+'/'+tot;
+  eid('gaPF').style.width=(tot?Math.round(pc/tot*100):0)+'%';
+  eid('gaLnk').textContent=getBase();
+  updateDays();
+  var unp=j.members.filter(function(m){return!(j.paidMembers&&j.paidMembers[m.id]);});
+  var uc=eid('gaUPC');
+  if(unp.length){uc.style.display='block';eid('gaUPL').innerHTML=unp.map(function(m){return'<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--b1)"><div style="font-weight:700;font-size:13px">'+esc(m.name)+'</div><button class="btn bs sm" onclick="tgPaid(\''+m.id+'\')">✓ دفع</button></div>';}).join('');}
   else uc.style.display='none';
-  // tab badge
-  var tb=eid('gaTabM'),bo=tb.querySelector('.tab-badge');if(bo)bo.remove();
-  var bc=(j.pendingMembers||[]).length;if(bc>0){var bs=document.createElement('span');bs.className='tab-badge';bs.textContent=bc;tb.appendChild(bs);}
-  eid('cfgName').value=j.name;eid('cfgAmt').value=j.amount;eid('cfgMonth').value=j.monthName||'';
-  renderGAMembers();renderGAPending();renderGAReceipts();renderGASchedule();renderGAHistory();
-  startCountdown();
+  var tb=eid('gaTabM'),bo=tb.querySelector('.tbadge');if(bo)bo.remove();
+  var bc=(j.pendingMembers||[]).length;if(bc>0){var bs=document.createElement('span');bs.className='tbadge';bs.textContent=bc;tb.appendChild(bs);}
+  eid('cfgN').value=j.name;eid('cfgA').value=j.amount;eid('cfgM').value=j.monthName||'';
+  renderGAM();renderGAP();renderGAR();renderGAS();renderGAH();
 }
-
-function renderGAMembers(){
-  var j=J();if(!j)return;var box=eid('gaMList');
-  if(!j.members.length){box.innerHTML='<div class="empty"><div class="empty-i">👤</div>لا يوجد أعضاء بعد</div>';return;}
+function renderGAM(){
+  var j=J();if(!j)return;var box=eid('gaML');
+  if(!j.members.length){box.innerHTML='<div class="emp"><div class="ei">👤</div>لا يوجد أعضاء بعد</div>';return;}
   box.innerHTML=j.members.map(function(m){
-    var isRec=j.currentReceiverId===m.id,isPaid=!!(j.paidMembers&&j.paidMembers[m.id]);
-    var recs=j.receipts&&j.receipts[m.id]||[];
-    return '<div class="mc'+(isRec?' receiver':'')+'"><div class="mc-top">'
+    var isR=j.currentReceiverId===m.id,iP=!!(j.paidMembers&&j.paidMembers[m.id]);
+    var rc=j.receipts&&j.receipts[m.id]||[];
+    return '<div class="mc'+(isR?' rcvr':'')+'"><div class="mct">'
       +'<div class="av">'+m.name[0]+'</div>'
       +'<div class="mi"><div class="mn">'+esc(m.name)+'</div>'
       +(m.phone?'<div class="ms">📞 '+esc(m.phone)+'</div>':'')
-      +(m.iban?'<div class="miban" onclick="copyText(\''+esc(m.iban)+'\')">🏦 '+esc(m.iban)+'</div>':'')
-      +'<div class="badges"><span class="badge b-blue">📅 '+slotLbl(m)+'</span>'
-      +(isRec?'<span class="badge b-gold">⭐ المستلم</span>':'')
-      +(isPaid?'<span class="badge b-teal">✓ دفع</span>':'<span class="badge b-red">✗ لم يدفع</span>')
-      +(recs.length?'<span class="badge b-pu" onclick="gaTab(\'receipts\')">🧾 '+recs.length+'</span>':'')
+      +(m.iban?'<div class="mib" onclick="copyText(\''+esc(m.iban)+'\')">🏦 '+esc(m.iban)+'</div>':'')
+      +'<div class="bdgs"><span class="bdg bb">📅 '+slotL(m)+'</span>'
+      +(isR?'<span class="bdg bgd">⭐ المستلم</span>':'')
+      +(iP?'<span class="bdg bt">✓ دفع</span>':'<span class="bdg br">✗ لم يدفع</span>')
+      +(rc.length?'<span class="bdg bor" style="cursor:pointer" onclick="gaTab(\'receipts\')">🧾 '+rc.length+'</span>':'')
       +'</div></div>'
-      +(recs.length?'<img src="'+recs[recs.length-1].data+'" class="rthumb" onclick="viewReceipt(\''+m.id+'\','+(recs.length-1)+')">'
+      +(rc.length?'<img src="'+rc[rc.length-1].data+'" class="rth" onclick="viewR(\''+m.id+'\','+(rc.length-1)+')">'
         :'<div class="rph">📄</div>')
       +'</div>'
       +'<div class="ma">'
-        +'<button class="btn btn-g btn-sm" onclick="setRec(\''+m.id+'\')">👑 مستلم</button>'
-        +'<button class="btn btn-sm '+(isPaid?'btn-d':'btn-s')+'" onclick="togglePaid(\''+m.id+'\')">'+(isPaid?'↩ إلغاء':'✓ دفع')+'</button>'
-        +'<button class="btn btn-o btn-sm" onclick="openEditM(\''+m.id+'\')">✏️</button>'
-        +'<button class="btn btn-d btn-sm" onclick="delM(\''+m.id+'\')">🗑</button>'
+        +'<button class="btn bg sm" onclick="setRec(\''+m.id+'\')">👑 مستلم</button>'
+        +'<button class="btn sm '+(iP?'bd':'bs')+'" onclick="tgPaid(\''+m.id+'\')">'+(iP?'↩ إلغاء':'✓ دفع')+'</button>'
+        +'<button class="btn bo sm" onclick="openEditM(\''+m.id+'\')">✏️</button>'
+        +'<button class="btn bd sm" onclick="delM(\''+m.id+'\')">🗑</button>'
       +'</div></div>';
   }).join('');
 }
-
-function renderGAPending(){
-  var j=J();if(!j)return;
-  var ps=eid('gaPendSec'),pl=eid('gaPendList');
+function renderGAP(){
+  var j=J();if(!j)return;var ps=eid('gaPndS'),pl=eid('gaPndL');
   if(!(j.pendingMembers||[]).length){ps.style.display='none';return;}
   ps.style.display='block';
-  var ga=GA(),maxM=ga?ga.maxMembers:(S.prices.trialLimit||2);
+  var ga=GA(),mx=ga?ga.maxMembers:(S.prices.trialLimit||2);
   pl.innerHTML=j.pendingMembers.map(function(m,i){
-    var canApprove=j.members.length<maxM;
-    return '<div class="mc pending-mc"><div class="mc-top">'
-      +'<div class="av av-g">'+m.name[0]+'</div>'
+    var can=j.members.length<mx;
+    return '<div class="mc pend"><div class="mct"><div class="av avgo">'+m.name[0]+'</div>'
       +'<div class="mi"><div class="mn">'+esc(m.name)+'</div>'
       +(m.phone?'<div class="ms">📞 '+esc(m.phone)+'</div>':'')
-      +(m.iban?'<div class="miban">🏦 '+esc(m.iban)+'</div>':'')
-      +'<div class="badges"><span class="badge b-blue">📅 '+slotLbl(m)+'</span><span class="badge b-orange">⏳ انتظار</span></div>'
-      +'</div></div>'
+      +(m.iban?'<div class="mib">🏦 '+esc(m.iban)+'</div>':'')
+      +'<div class="bdgs"><span class="bdg bb">📅 '+slotL(m)+'</span><span class="bdg bor">⏳ انتظار</span></div></div></div>'
       +'<div class="ma">'
-        +(canApprove?'<button class="btn btn-s btn-sm" onclick="approveM('+i+')">✅ قبول</button>'
-          :'<button class="btn btn-g btn-sm" onclick="openSubWizard()">⚠️ وصلت الحد</button>')
-        +'<button class="btn btn-d btn-sm" onclick="rejectM('+i+')">❌ رفض</button>'
+        +(can?'<button class="btn bs sm" onclick="appM('+i+')">✅ قبول</button>'
+          :'<button class="btn bg sm" onclick="openSub()">⚠️ وصلت الحد</button>')
+        +'<button class="btn bd sm" onclick="rejM('+i+')">❌ رفض</button>'
       +'</div></div>';
   }).join('');
 }
-
-function renderGAReceipts(){
-  var j=J();if(!j)return;var box=eid('gaRList');
-  eid('gaRecMonthLbl').textContent=j.monthName||'';
+function renderGAR(){
+  var j=J();if(!j)return;var box=eid('gaRL');
   var all=[];
   j.members.forEach(function(m){(j.receipts[m.id]||[]).forEach(function(r,i){all.push({m:m,r:r,mid:m.id,idx:i});});});
   (j.receipts['__public']||[]).forEach(function(r,i){all.push({m:{name:r.memberName||'—',id:'__public'},r:r,mid:'__public',idx:i});});
-  if(!all.length){box.innerHTML='<div class="empty"><div class="empty-i">🧾</div>لا توجد إيصالات بعد</div>';return;}
+  if(!all.length){box.innerHTML='<div class="emp"><div class="ei">🧾</div>لا توجد إيصالات بعد</div>';return;}
   box.innerHTML=all.map(function(it){
-    var isPaid=it.mid!=='__public'&&!!(j.paidMembers&&j.paidMembers[it.mid]);
+    var iP=it.mid!=='__public'&&!!(j.paidMembers&&j.paidMembers[it.mid]);
     return '<div class="mc"><div style="display:flex;gap:10px;align-items:center;width:100%">'
-      +'<img src="'+it.r.data+'" class="rthumb" style="width:58px;height:58px" onclick="viewReceipt(\''+it.mid+'\','+it.idx+')">'
+      +'<img src="'+it.r.data+'" class="rth" style="width:58px;height:58px" onclick="viewR(\''+it.mid+'\','+it.idx+')">'
       +'<div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px">'+esc(it.m.name)+'</div>'
       +(it.r.note?'<div style="font-size:11px;color:var(--teal)">'+esc(it.r.note)+'</div>':'')
       +'<div style="font-size:11px;color:var(--muted)">📅 '+esc(it.r.date)+'</div>'
-      +(isPaid?'<span class="badge b-teal">✓ مدفوع</span>':'<span class="badge b-orange">⏳ بانتظار القبول</span>')
+      +(iP?'<span class="bdg bt">✓ مدفوع</span>':'<span class="bdg bor">⏳ بانتظار القبول</span>')
       +'</div>'
       +'<div style="display:flex;flex-direction:column;gap:5px">'
-        +(it.mid!=='__public'&&!isPaid?'<button class="btn btn-s btn-xs" onclick="acceptReceipt(\''+it.mid+'\','+it.idx+')">✓ قبول</button>':'')
-        +'<button class="btn btn-d btn-xs" onclick="delReceipt(\''+it.mid+'\','+it.idx+')">🗑</button>'
+        +(it.mid!=='__public'&&!iP?'<button class="btn bs xs" onclick="tgPaid(\''+it.mid+'\')">✓ قبول</button>':'')
+        +'<button class="btn bd xs" onclick="delR(\''+it.mid+'\','+it.idx+')">🗑</button>'
       +'</div></div></div>';
   }).join('');
 }
-
-function renderGASchedule(){
-  var j=J();if(!j)return;var body=eid('gaSchedBody');var sm=sortedM();
+function renderGAS(){
+  var j=J();if(!j)return;var body=eid('gaScB');var sm=sortM();
   if(!sm.length){body.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:16px">لا يوجد أعضاء</td></tr>';return;}
   body.innerHTML=sm.map(function(m,i){
     var isDone=j.completedSlots.indexOf(m.id)!==-1,isCur=!isDone&&j.currentReceiverId===m.id;
-    return '<tr class="'+(isDone?'tr-done':isCur?'tr-cur':'')+'">'
-      +'<td><span class="rn">'+(i+1)+'</span></td><td style="font-weight:700">'+slotLbl(m)+'</td>'
+    return '<tr class="'+(isDone?'dn':isCur?'cur':'')+'">'
+      +'<td><span class="rn">'+(i+1)+'</span></td><td style="font-weight:700">'+slotL(m)+'</td>'
       +'<td><strong>'+esc(m.name)+'</strong></td>'
       +'<td style="font-family:monospace;font-size:11px;color:var(--teal)">'+(m.iban||'—')+'</td>'
       +'<td>'+(j.amount*j.members.length)+' د.إ</td>'
-      +'<td>'+(isDone?'<span class="sdot"><span class="dot dot-g"></span>مكتمل</span>'
-             :isCur?'<span class="sdot"><span class="dot dot-y"></span>حالي</span>'
-             :'<span class="sdot"><span class="dot dot-m"></span>قادم</span>')+'</td>'
+      +'<td>'+(isDone?'<span class="sdot"><span class="dot dg"></span>مكتمل</span>'
+             :isCur?'<span class="sdot"><span class="dot dy"></span>حالي</span>'
+             :'<span class="sdot"><span class="dot dm"></span>قادم</span>')+'</td>'
       +'<td>'+(isCur?'<span style="color:var(--gold);font-size:11px">▶</span>'
-        :(isDone?'':'<button class="btn btn-g btn-xs" onclick="setRec(\''+m.id+'\')">👑</button>'))+'</td></tr>';
+        :(isDone?'':'<button class="btn bg xs" onclick="setRec(\''+m.id+'\')">👑</button>'))+'</td></tr>';
   }).join('');
 }
-
-function renderGAHistory(){
-  var j=J();if(!j)return;var box=eid('gaHistList');
-  if(!j.history.length){box.innerHTML='<div class="empty"><div class="empty-i">📋</div>لا يوجد سجل بعد</div>';return;}
+function renderGAH(){
+  var j=J();if(!j)return;var box=eid('gaHL');
+  if(!j.history.length){box.innerHTML='<div class="emp"><div class="ei">📋</div>لا يوجد سجل بعد</div>';return;}
   box.innerHTML=j.history.map(function(r){
-    return '<div class="hcard"><div class="hbadge">'+esc(r.monthName||'—')+'</div>'
+    return '<div class="hc"><div class="hb">'+esc(r.monthName||'—')+'</div>'
       +'<div><div style="font-weight:700;font-size:13px">'+esc(r.receiverName)+'</div>'
       +(r.receiverIban?'<div style="font-size:11px;font-family:monospace;color:var(--teal)">'+esc(r.receiverIban)+'</div>':'')
       +'<div style="color:var(--muted);font-size:11px">'+((r.monthlyAmount||0)*(r.totalMembers||0))+' د.إ · '+esc(r.savedAt||'')+'</div></div></div>';
   }).join('');
 }
 
-// ══ ACTIONS ══
-function approveM(idx){var j=J();if(!j)return;var m=j.pendingMembers.splice(idx,1)[0];j.members.push(m);save();syncUp();renderGA();showToast('✅ تم قبول '+m.name);}
-function rejectM(idx){var j=J();if(!j)return;var m=j.pendingMembers.splice(idx,1)[0];save();syncUp();renderGA();showToast('تم رفض '+m.name);}
-function togglePaid(id){
+// MEMBER ACTIONS
+function appM(i){var j=J();if(!j)return;var m=j.pendingMembers.splice(i,1)[0];j.members.push(m);save();syncUp();renderGA();showToast('✅ تم قبول '+m.name);}
+function rejM(i){var j=J();if(!j)return;var m=j.pendingMembers.splice(i,1)[0];save();syncUp();renderGA();showToast('تم رفض '+m.name);}
+function tgPaid(id){
   var j=J();if(!j)return;if(!j.paidMembers)j.paidMembers={};
-  var wasPaid=!!j.paidMembers[id];
-  if(wasPaid)delete j.paidMembers[id];else{j.paidMembers[id]=true;showThankYou(id);}
+  var was=!!j.paidMembers[id];
+  if(was)delete j.paidMembers[id];
+  else{j.paidMembers[id]=true;showTY(id);}
   save();syncUp();renderGA();
 }
-function showThankYou(id){
+function showTY(id){
   var j=J();if(!j)return;var m=j.members.find(function(x){return x.id===id;});if(!m)return;
   var rec=j.members.find(function(x){return x.id===j.currentReceiverId;});
-  eid('tyEmoji').textContent='💚';
-  eid('tyTitle').textContent='شكراً '+m.name+'!';
-  eid('tyMsg').innerHTML='لقد أتممت تحويلك بنجاح لشهر <strong style="color:var(--gold)">'+esc(j.monthName||'—')+'</strong>.<br>جزاك الله خيراً على التزامك وحرصك. أنت ركيزة مهمة في هذه الجمعية! 🌟';
-  eid('tyExtra').innerHTML=(rec?'💰 التحويل استُلم بنجاح من قِبل <strong>'+esc(rec.name)+'</strong>':'')+'<br>✅ تم تسجيل دفعتك في السجل';
-  openM('mThankYou');
+  eid('tyTit').textContent='شكراً '+m.name+'! 💚';
+  eid('tyMsg').innerHTML='لقد أتممت تحويلك بنجاح لشهر <strong style="color:var(--gold)">'+esc(j.monthName||'—')+'</strong>.<br><br>جزاك الله خيراً على التزامك وأمانتك. أنت ركيزة أساسية في هذه الجمعية.<br>نفخر بثقتك في منصة ساهل 🌟';
+  eid('tyEx').innerHTML=(rec?'💰 استُلم تحويلك بنجاح من قِبل <strong>'+esc(rec.name)+'</strong>':'')+'<br>✅ تم تسجيل دفعتك في سجل الجمعية';
+  oM('mTY');
 }
-function acceptReceipt(mid,idx){
-  var j=J();if(!j)return;
-  togglePaid(mid);
-  // move from __public to member if public
-  if(mid!=='__public'&&j.receipts['__public']){
-    var pubR=j.receipts['__public'].find(function(r){return r.memberName===(j.members.find(function(m){return m.id===mid;})||{}).name;});
-    if(pubR){if(!j.receipts[mid])j.receipts[mid]=[];j.receipts[mid].push(pubR);j.receipts['__public']=j.receipts['__public'].filter(function(r){return r!==pubR;});}
-  }
-  save();syncUp();renderGA();
-}
-function delReceipt(mid,idx){if(!confirm('حذف هذا الإيصال؟'))return;var j=J();if(!j)return;if(j.receipts[mid])j.receipts[mid].splice(idx,1);save();syncUp();renderGA();}
-function setRec(id){var j=J();if(!j)return;j.currentReceiverId=id;save();syncUp();renderGA();renderPublic();showToast('تم تحديد المستلم ✓');}
+function setRec(id){var j=J();if(!j)return;j.currentReceiverId=id;save();syncUp();renderGA();renderPub();showToast('تم تحديد المستلم ✓');}
 function delM(id){if(!confirm('حذف هذا العضو؟'))return;var j=J();if(!j)return;j.members=j.members.filter(function(m){return m.id!==id;});delete(j.paidMembers||{})[id];delete(j.receipts||{})[id];if(j.currentReceiverId===id)j.currentReceiverId='';save();syncUp();renderGA();}
-function viewReceipt(mid,idx){
-  var j=J();if(!j)return;var recs=j.receipts[mid]||[];var r=recs[idx];if(!r)return;
-  eid('rImg').src=r.data;
-  var who=mid==='__public'?r.memberName:(j.members.find(function(m){return m.id===mid;})||{name:'—'}).name;
-  eid('rMeta').textContent=who+(r.note?' · '+r.note:'')+(r.date?' · '+r.date:'');
-  openM('mViewR');
-}
+function viewR(mid,idx){var j=J();if(!j)return;var rc=j.receipts[mid]||[];var r=rc[idx];if(!r)return;eid('rImg').src=r.data;var who=mid==='__public'?r.memberName:(j.members.find(function(m){return m.id===mid;})||{name:'—'}).name;eid('rMeta').textContent=who+(r.note?' · '+r.note:'')+(r.date?' · '+r.date:'');oM('mVR');}
+function delR(mid,idx){if(!confirm('حذف الإيصال؟'))return;var j=J();if(!j)return;if(j.receipts[mid])j.receipts[mid].splice(idx,1);save();syncUp();renderGA();}
 
-// Add/Edit Member Modals
+// ADD/EDIT MEMBER
 function openAddM(){
-  ['amName','amPhone','amIban'].forEach(function(id){eid(id).value='';});
-  var ms=eid('amMonth');ms.innerHTML='<option value="">اختر الشهر</option>';
-  MN.forEach(function(m,i){ms.innerHTML+='<option value="'+(i+1)+'">'+m+'</option>';});
-  openM('mAddM');
+  ['amN','amP','amI'].forEach(function(id){eid(id).value='';});
+  var s=eid('amM');s.innerHTML='<option value="">اختر الشهر</option>';
+  MN.forEach(function(m,i){s.innerHTML+='<option value="'+(i+1)+'">'+m+'</option>';});
+  oM('mAddM');
 }
-function addMConfirm(){
-  var j=J();if(!j)return;
-  var name=eid('amName').value.trim();if(!name){showToast('أدخل الاسم',true);return;}
-  var ga=GA(),maxM=ga?ga.maxMembers:(S.prices.trialLimit||2);
-  if(j.members.length>=maxM){showToast('وصلت الحد الأقصى للأعضاء!',true);return;}
-  var mn=parseInt(eid('amMonth').value),yr=parseInt(eid('amYear').value);
+function addMConf(){
+  var j=J();if(!j)return;var nm=eid('amN').value.trim();if(!nm){showToast('أدخل الاسم',true);return;}
+  var ga=GA(),mx=ga?ga.maxMembers:(S.prices.trialLimit||2);
+  if(j.members.length>=mx){showToast('وصلت الحد الأقصى '+mx+' عضو!',true);return;}
+  var mn=parseInt(eid('amM').value),yr=parseInt(eid('amY').value);
   if(mn&&yr){var cl=j.members.find(function(m){return m.dueMonthNum==mn&&m.dueYear==yr;});if(cl){showToast('هذا الشهر محجوز!',true);return;}}
-  var m={id:'m'+Date.now(),name:name,phone:eid('amPhone').value.trim(),iban:eid('amIban').value.trim(),dueMonthNum:mn||null,dueYear:yr||null,registeredAt:new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})};
-  j.members.push(m);save();syncUp();closeM('mAddM');renderGA();showToast('تمت إضافة '+name+' ✓');
+  j.members.push({id:'m'+Date.now(),name:nm,phone:eid('amP').value.trim(),iban:eid('amI').value.trim(),dueMonthNum:mn||null,dueYear:yr||null,registeredAt:new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})});
+  save();syncUp();cM('mAddM');renderGA();showToast('✅ تمت إضافة '+nm);
 }
 function openEditM(id){
   var j=J();if(!j)return;var m=j.members.find(function(x){return x.id===id;});if(!m)return;
-  eid('emId').value=id;eid('emName').value=m.name;eid('emPhone').value=m.phone||'';eid('emIban').value=m.iban||'';
-  var ms=eid('emMonth');ms.innerHTML='<option value="">اختر الشهر</option>';
-  MN.forEach(function(mn,i){ms.innerHTML+='<option value="'+(i+1)+'"'+(m.dueMonthNum==(i+1)?' selected':'')+'>'+mn+'</option>';});
-  eid('emYear').value=m.dueYear||2026;openM('mEditM');
+  eid('emID').value=id;eid('emN').value=m.name;eid('emP').value=m.phone||'';eid('emI').value=m.iban||'';
+  var s=eid('emM');s.innerHTML='<option value="">اختر الشهر</option>';
+  MN.forEach(function(mn,i){s.innerHTML+='<option value="'+(i+1)+'"'+(m.dueMonthNum==(i+1)?' selected':'')+'>'+mn+'</option>';});
+  eid('emY').value=m.dueYear||2026;oM('mEditM');
 }
-function editMConfirm(){
-  var j=J();if(!j)return;var id=eid('emId').value;var m=j.members.find(function(x){return x.id===id;});if(!m)return;
-  m.name=eid('emName').value.trim()||m.name;m.phone=eid('emPhone').value.trim();m.iban=eid('emIban').value.trim();
-  var mn=parseInt(eid('emMonth').value),yr=parseInt(eid('emYear').value);
+function editMConf(){
+  var j=J();if(!j)return;var id=eid('emID').value;var m=j.members.find(function(x){return x.id===id;});if(!m)return;
+  m.name=eid('emN').value.trim()||m.name;m.phone=eid('emP').value.trim();m.iban=eid('emI').value.trim();
+  var mn=parseInt(eid('emM').value),yr=parseInt(eid('emY').value);
   if(mn&&yr){var cl=j.members.find(function(x){return x.id!==id&&x.dueMonthNum==mn&&x.dueYear==yr;});if(cl){showToast('هذا الشهر محجوز!',true);return;}}
   m.dueMonthNum=mn||null;m.dueYear=yr||null;
-  save();syncUp();closeM('mEditM');renderGA();showToast('تم التعديل ✓');
+  save();syncUp();cM('mEditM');renderGA();showToast('تم التعديل ✓');
 }
-
-// Swap
-function openSwap(){
-  var j=J();if(!j)return;
-  var opts=j.members.map(function(m){return'<option value="'+m.id+'">'+m.name+' — '+slotLbl(m)+'</option>';}).join('');
-  eid('sw1').innerHTML=opts;eid('sw2').innerHTML=opts;openM('mSwap');
-}
+function openSwap(){var j=J();if(!j)return;var o=j.members.map(function(m){return'<option value="'+m.id+'">'+m.name+' — '+slotL(m)+'</option>';}).join('');eid('sw1').innerHTML=o;eid('sw2').innerHTML=o;oM('mSwap');}
 function doSwap(){
-  var j=J();if(!j)return;var id1=eid('sw1').value,id2=eid('sw2').value;
-  if(id1===id2){showToast('اختر عضوين مختلفين',true);return;}
-  var m1=j.members.find(function(m){return m.id===id1;}),m2=j.members.find(function(m){return m.id===id2;});
-  var tmp={mn:m1.dueMonthNum,yr:m1.dueYear};m1.dueMonthNum=m2.dueMonthNum;m1.dueYear=m2.dueYear;m2.dueMonthNum=tmp.mn;m2.dueYear=tmp.yr;
-  save();syncUp();closeM('mSwap');renderGA();showToast('تم التبديل ✓');
+  var j=J();if(!j)return;var i1=eid('sw1').value,i2=eid('sw2').value;if(i1===i2){showToast('اختر عضوين مختلفين',true);return;}
+  var m1=j.members.find(function(m){return m.id===i1;}),m2=j.members.find(function(m){return m.id===i2;});
+  var t={mn:m1.dueMonthNum,yr:m1.dueYear};m1.dueMonthNum=m2.dueMonthNum;m1.dueYear=m2.dueYear;m2.dueMonthNum=t.mn;m2.dueYear=t.yr;
+  save();syncUp();cM('mSwap');renderGA();showToast('تم التبديل ✓');
 }
-
-// Complete / New Month
-function openComplete(){openM('mComplete');}
-function completeMonth(){
+function openCmp(){oM('mCmp');}
+function cmpMonth(){
   var j=J();if(!j)return;
   var rec=j.members.find(function(m){return m.id===j.currentReceiverId;});
   if(rec){j.history.push({monthName:j.monthName||'—',receiverName:rec.name,receiverIban:rec.iban||'',monthlyAmount:j.amount,totalMembers:j.members.length,savedAt:new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})});j.completedSlots.push(rec.id);}
   j.currentReceiverId='';j.paidMembers={};
-  // Check if all members done
   var allDone=j.members.length>0&&j.members.every(function(m){return j.completedSlots.indexOf(m.id)!==-1;});
-  if(allDone){j.archived=true;completionCeremony(j);}
-  save();syncUp();closeM('mComplete');renderGA();showToast('تم إنهاء الشهر ✓');
+  if(allDone){j.archived=true;setTimeout(function(){doneCeremony(j);},400);}
+  save();syncUp();cM('mCmp');renderGA();showToast('تم إنهاء الشهر ✓');
 }
-function completionCeremony(j){
-  eid('doneMsg').innerHTML='🌟 ألف مبروك! أكملتم جمعية <strong style="color:var(--gold)">'+esc(j.name)+'</strong> بنجاح.<br>من منصة <strong style="color:var(--teal)">ساهل</strong> نشكر جميع الأعضاء على التزامهم وثقتهم. كنتم نموذجاً رائعاً في التعاون المالي! 🏆';
-  eid('doneSummary').innerHTML='<div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">ملخص الدورة:</div>'
-    +'<div style="font-size:12px;color:var(--muted);line-height:2">👥 عدد الأعضاء: <strong style="color:var(--teal)">'+j.members.length+'</strong><br>'
-    +'💰 مبلغ الجمعية: <strong style="color:var(--gold)">'+j.amount+' د.إ/شهر</strong><br>'
-    +'📅 عدد الدورات: <strong style="color:var(--accent)">'+j.history.length+'</strong><br>'
-    +'✅ اكتملت بتاريخ: <strong>'+new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})+'</strong></div>';
-  setTimeout(function(){openM('mDone');},500);
+function doneCeremony(j){
+  eid('donMsg').innerHTML='🌟 ألف مبروك! أكملتم جمعية <strong style="color:var(--gold)">'+esc(j.name)+'</strong> بنجاح تام.<br><br>من منصة <strong style="color:var(--teal)">ساهل</strong> نشكركم جميعاً على ثقتكم والتزامكم. كنتم نموذجاً رائعاً في التعاون المالي! 🏆';
+  eid('donSum').innerHTML='<div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">ملخص الدورة:</div><div style="font-size:12px;color:var(--muted);line-height:2">👥 عدد الأعضاء: <strong style="color:var(--teal)">'+j.members.length+'</strong><br>💰 المبلغ الشهري: <strong style="color:var(--gold)">'+j.amount+' د.إ</strong><br>📅 عدد الأشهر: <strong style="color:var(--accent)">'+j.history.length+'</strong><br>✅ اكتملت: <strong>'+new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})+'</strong></div>';
+  oM('mDone');
 }
-function openNewMonth(){eid('nmVal').value='';openM('mNewMonth');}
-function setNewMonth(){var j=J();if(!j)return;var v=eid('nmVal').value.trim();if(!v){showToast('أدخل اسم الشهر',true);return;}j.monthName=v;save();syncUp();closeM('mNewMonth');renderGA();showToast('تم تحديد الشهر ✓');}
+function openNM(){eid('nmV').value='';oM('mNM');}
+function setNM(){var j=J();if(!j)return;var v=eid('nmV').value.trim();if(!v){showToast('أدخل اسم الشهر',true);return;}j.monthName=v;save();syncUp();cM('mNM');renderGA();showToast('تم تحديد الشهر ✓');}
+function saveJCfg(){var j=J();if(!j)return;j.name=eid('cfgN').value.trim()||j.name;j.amount=parseFloat(eid('cfgA').value)||j.amount;j.monthName=eid('cfgM').value.trim();save();syncUp();renderGA();showToast('تم الحفظ ✓');}
+function changeMyPW(){var np=eid('cfgPW').value;if(!np||np.length<4){showToast('كلمة المرور قصيرة',true);return;}var ga=GA();if(ga)ga.pass=np;else S.adminPass=np;eid('cfgPW').value='';save();showToast('تم التغيير ✓');}
+function shareRL(){var j=J();if(!j)return;window.open('https://wa.me/?text='+encodeURIComponent('🏦 *'+j.name+'*\n\nسجّل واحجز شهرك أو ارفع إيصالك:\n🔗 '+getBase()),'_blank');}
+function shareSched(){
+  var j=J();if(!j)return;var sm=sortM();
+  window.open('https://wa.me/?text='+encodeURIComponent('🏦 *'+j.name+'*\n\n📅 الجدول:\n'+sm.map(function(m,i){return(i+1)+'. '+slotL(m)+' — *'+m.name+'*'+(m.iban?'\n   🏦 '+m.iban:'');}).join('\n')+'\n\n💰 المبلغ: '+(j.amount*j.members.length)+' د.إ\n📅 الشهر الحالي: '+(j.monthName||'—')),'_blank');
+}
+function copySched(){var j=J();if(!j)return;var sm=sortM();copyText('🏦 '+j.name+'\n\n'+sm.map(function(m,i){return(i+1)+'. '+slotL(m)+' — '+m.name+(m.iban?' ('+m.iban+')':'');}).join('\n'));}
 
-// Settings
-function saveJSettings(){var j=J();if(!j)return;j.name=eid('cfgName').value.trim()||j.name;j.amount=parseFloat(eid('cfgAmt').value)||j.amount;j.monthName=eid('cfgMonth').value.trim();save();syncUp();renderGA();showToast('تم الحفظ ✓');}
-function changeMyPass(){var np=eid('cfgPass').value;if(!np||np.length<4){showToast('كلمة المرور قصيرة',true);return;}var ga=GA();if(ga)ga.pass=np;else S.adminPass=np;eid('cfgPass').value='';save();showToast('تم تغيير كلمة المرور ✓');}
-
-// Share
-function shareRegLink(){var j=J();if(!j)return;var link=getBaseUrl();window.open('https://wa.me/?text='+encodeURIComponent('🏦 *'+j.name+'*\n\nسجّل معنا واحجز شهرك أو ارفع إيصال دفعك:\n🔗 '+link),'_blank');}
-function shareSchedule(){
-  var j=J();if(!j)return;
-  var sm=sortedM();var txt='🏦 *'+j.name+'*\n\n📅 جدول الجمعية:\n'+sm.map(function(m,i){return'  '+(i+1)+'. '+slotLbl(m)+' — *'+m.name+'*'+(m.iban?'\n      🏦 '+m.iban:'');}).join('\n')+'\n\n💰 مبلغ الشهر: '+(j.amount*j.members.length)+' د.إ\n⏰ الشهر الحالي: '+(j.monthName||'—');
-  window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+// SUBSCRIPTION WIZARD
+var subCnt=10;
+function openSub(){
+  eid('tChk').checked=false;rD.sub='';eid('sRP').innerHTML='📎';eid('sRF').value='';
+  ['sub1','sub2','sub3'].forEach(function(id){eid(id).className='sstep';});eid('sub1').classList.add('on');
+  calcSub();oM('mSub');
 }
-function copySchedule(){var j=J();if(!j)return;var sm=sortedM();var txt='🏦 '+j.name+'\n\n'+sm.map(function(m,i){return(i+1)+'. '+slotLbl(m)+' — '+m.name+(m.iban?' ('+m.iban+')':'');}).join('\n');copyText(txt);}
-
-// ══ SUBSCRIPTION WIZARD ══
-var subMCount=10;
-function openSubWizard(){
-  eid('termsChk').checked=false;rData.sub='';eid('subRPrev').innerHTML='📎';eid('subRFile').value='';
-  ['sub1','sub2','sub3'].forEach(function(id){eid(id).className='sub-step';});eid('sub1').classList.add('active');
-  calcSubPrice();openM('mSub');
+function calcSub(){
+  var c=parseInt(eid('sMC').value)||3,ppm=S.prices.ppm||5;
+  eid('sPD').textContent=(c*ppm)+' د.إ';eid('sMD').textContent=c;eid('sPPM').textContent=ppm;subCnt=c;
 }
-function calcSubPrice(){
-  var cnt=parseInt(eid('subMCount').value)||3;
-  var ppm=S.prices.ppm||5;
-  var total=cnt*ppm;
-  eid('subPriceDisp').textContent=total+' د.إ';eid('subMDisp').textContent=cnt;eid('subPPM').textContent=ppm;
-  subMCount=cnt;
+function sNext1(){if(!eid('tChk').checked){showToast('يجب الموافقة على الشروط أولاً',true);return;}eid('sub1').className='sstep';eid('sub2').className='sstep on';calcSub();}
+function sBack1(){eid('sub2').className='sstep';eid('sub1').className='sstep on';}
+function sNext2(){
+  var c=parseInt(eid('sMC').value)||3,pr=S.prices;
+  if(c<(pr.minM||3)){showToast('الحد الأدنى '+pr.minM+' أعضاء',true);return;}
+  if(c>(pr.maxM||50)){showToast('الحد الأقصى '+pr.maxM+' عضو',true);return;}
+  subCnt=c;eid('s3Price').textContent=(c*(pr.ppm||5))+' د.إ';
+  eid('s3Iban').textContent=pr.iban||'تواصل مع المشرف لمعرفة الآيبان';
+  eid('s3Phone').textContent=pr.phone?'+'+pr.phone:'—';
+  eid('sub2').className='sstep';eid('sub3').className='sstep on';
 }
-function subNext1(){if(!eid('termsChk').checked){showToast('يجب الموافقة على الشروط أولاً',true);return;}eid('sub1').className='sub-step';eid('sub2').className='sub-step active';calcSubPrice();}
-function subBack1(){eid('sub2').className='sub-step';eid('sub1').className='sub-step active';}
-function subNext2(){
-  var cnt=parseInt(eid('subMCount').value)||3;
-  var pr=S.prices;
-  if(cnt<(pr.minM||3)){showToast('الحد الأدنى '+pr.minM+' أعضاء',true);return;}
-  if(cnt>(pr.maxM||50)){showToast('الحد الأقصى '+pr.maxM+' عضو',true);return;}
-  subMCount=cnt;
-  eid('sub3Price').textContent=(cnt*(pr.ppm||5))+' د.إ';
-  eid('sub3Iban').textContent=pr.iban||'لم يُحدد بعد — تواصل مع المشرف';
-  eid('sub3Phone').textContent=pr.phone?'+'+pr.phone:'—';
-  eid('sub2').className='sub-step';eid('sub3').className='sub-step active';
-}
-function subBack2(){eid('sub3').className='sub-step';eid('sub2').className='sub-step active';}
-function submitSub(){
+function sBack2(){eid('sub3').className='sstep';eid('sub2').className='sstep on';}
+function subSub(){
   var ga=GA();if(!ga)return;
-  if(!rData.sub){showToast('ارفع إيصال التحويل',true);return;}
+  if(!rD.sub){showToast('ارفع إيصال التحويل',true);return;}
   if(!S.paymentRequests)S.paymentRequests=[];
-  S.paymentRequests.push({
-    id:'pay'+Date.now(),adminId:ga.id,adminName:ga.name,phone:ga.phone,
-    requestedMembers:subMCount,totalAmount:subMCount*(S.prices.ppm||5),
-    receipt:rData.sub,note:eid('sub3Note').value.trim(),
-    status:'pending',
-    date:new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})
-  });
-  save();syncUp();closeM('mSub');showToast('✅ تم إرسال طلب الاشتراك — بانتظار الموافقة');
-  // WhatsApp to super
-  var pr=S.prices;if(pr.phone){window.open('https://wa.me/'+pr.phone+'?text='+encodeURIComponent('🏦 طلب اشتراك جديد\nالمدير: '+ga.name+'\nالهاتف: '+ga.phone+'\nعدد الأعضاء: '+subMCount+'\nالمبلغ: '+(subMCount*(pr.ppm||5))+' د.إ'+(eid('sub3Note').value?'\nملاحظة: '+eid('sub3Note').value:'')),'_blank');}
+  S.paymentRequests.push({id:'pay'+Date.now(),adminId:ga.id,adminName:ga.name,phone:ga.phone,requestedMembers:subCnt,totalAmount:subCnt*(S.prices.ppm||5),receipt:rD.sub,note:eid('s3Note').value.trim(),status:'pending',date:new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})});
+  save();syncUp();cM('mSub');showToast('✅ تم إرسال طلب الاشتراك — بانتظار الموافقة');
+  var pr=S.prices;if(pr.phone)window.open('https://wa.me/'+pr.phone+'?text='+encodeURIComponent('🏦 طلب اشتراك\nالمدير: '+ga.name+'\nالهاتف: '+ga.phone+'\nعدد الأعضاء: '+subCnt+'\nالمبلغ: '+(subCnt*(pr.ppm||5))+' د.إ'),'_blank');
 }
 
-// ══ SUPER ADMIN ══
-function supTab(name){
-  var ns=['ov','admins','jams','pays','prices','setup'];
-  document.querySelectorAll('#screenSuper .tab').forEach(function(t,i){t.classList.toggle('active',ns[i]===name);});
-  document.querySelectorAll('#screenSuper .tc').forEach(function(c){c.classList.toggle('active',c.id==='stc-'+name);});
+// SUPER ADMIN
+function supTab(n){
+  var ns=['ov','adm','jam','pay','prc','set'];
+  document.querySelectorAll('#screenSuper .tab').forEach(function(t,i){t.classList.toggle('on',ns[i]===n);});
+  document.querySelectorAll('#screenSuper .tc').forEach(function(c){c.classList.toggle('on',c.id==='st-'+n);});
 }
 function renderSuper(){
-  var gas=S.groupAdmins||[];
-  var allM=S.jameias.reduce(function(t,j){return t+(j.members?j.members.length:0);},0);
+  var gas=S.groupAdmins||[],allM=S.jameias.reduce(function(t,j){return t+(j.members?j.members.length:0);},0);
   var rev=(S.paymentRequests||[]).filter(function(p){return p.status==='approved';}).reduce(function(t,p){return t+(p.totalAmount||0);},0);
-  eid('ss0').textContent=gas.length;eid('ss1').textContent=S.jameias.length;eid('ss2').textContent=allM;eid('ss3').textContent=rev+' د.إ';
-  // overview
-  eid('supOvList').innerHTML=S.jameias.map(function(j){
+  eid('ss0').textContent=gas.length;eid('ss1').textContent=S.jameias.length;eid('ss2').textContent=allM;eid('ss3').textContent=rev;
+  eid('supOvL').innerHTML=S.jameias.map(function(j){
     var ga=gas.find(function(a){return a.jameiaIds&&a.jameiaIds.indexOf(j.id)!==-1;});
-    return '<div class="mc"><div class="mc-top">'
-      +'<div class="av" style="background:linear-gradient(135deg,'+j.color+',#1d4ed8)">'+j.icon+'</div>'
-      +'<div class="mi"><div class="mn">'+esc(j.name)+(j.archived?' <span class="badge b-gray">🔒 مؤرشف</span>':'')+'</div>'
+    return '<div class="mc"><div class="mct"><div class="av" style="background:linear-gradient(135deg,'+j.color+',#1d4ed8)">'+j.icon+'</div>'
+      +'<div class="mi"><div class="mn">'+esc(j.name)+(j.archived?' <span class="bdg bgr">🔒 مؤرشف</span>':'')+'</div>'
       +'<div class="ms">👥 '+j.members.length+' عضو · 💰 '+j.amount+' د.إ'+(ga?' · '+esc(ga.name):'')+'</div>'
       +(j.monthName?'<div style="font-size:11px;color:var(--gold);margin-top:2px">📅 '+esc(j.monthName)+'</div>':'')
-      +'</div></div>'
-      +'<div class="ma"><button class="btn btn-o btn-sm" onclick="supViewJ(\''+j.id+'\')">👁 تفاصيل</button><button class="btn btn-d btn-sm" onclick="supDelJ(\''+j.id+'\')">🗑</button></div></div>';
-  }).join('')||'<div class="empty"><div class="empty-i">🏦</div>لا توجد جمعيات</div>';
-  renderSupAdmins();renderSupJams();renderSupPays();
-  // fill setup
-  if(S.apiKey)eid('supApiKey').value=S.apiKey;
-  if(S.binId){eid('supBinId').value=S.binId;eid('binRow').style.display='block';}
+      +'</div></div><div class="ma"><button class="btn bo sm" onclick="supVJ(\''+j.id+'\')">👁 تفاصيل</button><button class="btn bd sm" onclick="supDJ(\''+j.id+'\')">🗑</button></div></div>';
+  }).join('')||'<div class="emp"><div class="ei">🏦</div>لا توجد جمعيات</div>';
+  renderSupA();renderSupJ();renderSupP();
   var pr=S.prices||{};
-  eid('spPPM').value=pr.ppm||5;eid('spTrial').value=pr.trialLimit||2;eid('spMin').value=pr.minM||3;eid('spMax').value=pr.maxM||50;
-  eid('spIban').value=pr.iban||'';eid('spPhone').value=pr.phone||'';
+  eid('pppm').value=pr.ppm||5;eid('pptrl').value=pr.trialLimit||2;eid('ppmin').value=pr.minM||3;eid('ppmax').value=pr.maxM||50;
+  eid('ppiban').value=pr.iban||'';eid('ppphone').value=pr.phone||'';
+  if(S.apiKey)eid('supAK').value=S.apiKey;
+  if(S.binId){eid('supBID').value=S.binId;eid('binRow').style.display='block';}
 }
-function renderSupAdmins(){
-  var gas=S.groupAdmins||[];var box=eid('supAdminList');
-  if(!gas.length){box.innerHTML='<div class="empty"><div class="empty-i">👤</div>لا يوجد مديرون بعد</div>';return;}
-  var lnk=getBaseUrl()+'#admin';
+function renderSupA(){
+  var gas=S.groupAdmins||[];var box=eid('supAL');
+  if(!gas.length){box.innerHTML='<div class="emp"><div class="ei">👤</div>لا يوجد مديرون بعد</div>';return;}
+  var lnk=getBase()+'#admin';
   box.innerHTML=gas.map(function(ga){
-    var sc=ga.status==='active'?'b-teal':ga.status==='frozen'?'b-red':'b-orange';
+    var sc=ga.status==='active'?'bt':ga.status==='frozen'?'br':'bor';
     var sl=ga.status==='active'?'✅ مفعّل':ga.status==='frozen'?'🔒 مجمّد':'⏳ تجريبي';
     var jn=(ga.jameiaIds||[]).map(function(id){var j=S.jameias.find(function(j){return j.id===id;});return j?j.name:'';}).filter(Boolean).join('، ');
-    return '<div class="mc"><div class="mc-top"><div class="av av-p">'+ga.name[0]+'</div>'
+    return '<div class="mc"><div class="mct"><div class="av avpu">'+ga.name[0]+'</div>'
       +'<div class="mi"><div class="mn">'+esc(ga.name)+'</div><div class="ms">📞 '+esc(ga.phone)+'</div>'
       +(jn?'<div style="font-size:11px;color:var(--teal);margin-top:2px">🏦 '+esc(jn)+'</div>':'')
-      +'<div class="badges"><span class="badge '+sc+'">'+sl+'</span>'
-      +(ga.status==='active'?'<span class="badge b-blue">👥 حد '+ga.maxMembers+' عضو</span>':'')
+      +'<div class="bdgs"><span class="bdg '+sc+'">'+sl+'</span>'
+      +(ga.status==='active'?'<span class="bdg bb">👥 حد '+ga.maxMembers+'</span>':'')
       +'</div></div></div>'
-      +'<div class="ga-lnk"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:700">🔗 رابط دخول المدير</div>'
-      +'<div style="font-size:10px;font-family:monospace;color:var(--teal);word-break:break-all;margin-bottom:5px">'+lnk+'</div>'
-      +'<div style="font-size:11px;color:var(--muted);margin-bottom:6px">🔐 كلمة المرور: <strong style="color:var(--gold)">'+esc(ga.pass)+'</strong></div>'
-      +'<div style="display:flex;gap:6px;flex-wrap:wrap">'
-        +'<button class="btn btn-w btn-xs" onclick="sendGAWA(\''+ga.id+'\')">📤 إرسال واتساب</button>'
-        +'<button class="btn btn-o btn-xs" onclick="copyGALnk(\''+ga.id+'\')">📋 نسخ</button>'
-      +'</div></div>'
+      +'<div class="galb">'
+        +'<div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:4px">🔗 رابط الدخول للمدير</div>'
+        +'<div style="font-size:10px;font-family:monospace;color:var(--teal);word-break:break-all;margin-bottom:5px">'+lnk+'</div>'
+        +'<div style="font-size:11px;color:var(--muted);margin-bottom:7px">🔐 كلمة المرور: <strong style="color:var(--gold)">'+esc(ga.pass)+'</strong></div>'
+        +'<div style="display:flex;gap:6px;flex-wrap:wrap">'
+          +'<button class="btn bw xs" onclick="sendGAW(\''+ga.id+'\')">📤 إرسال واتساب</button>'
+          +'<button class="btn bo xs" onclick="cpGAL(\''+ga.id+'\')">📋 نسخ</button>'
+        +'</div>'
+      +'</div>'
       +'<div class="ma" style="margin-top:8px">'
-        +(ga.status!=='active'?'<button class="btn btn-s btn-sm" onclick="activateGA(\''+ga.id+'\')">✅ تفعيل</button>':'')
-        +(ga.status==='active'?'<button class="btn btn-o btn-sm" onclick="editGAMax(\''+ga.id+'\')">✏️ تعديل العدد</button>':'')
-        +(ga.status!=='frozen'?'<button class="btn btn-d btn-sm" onclick="freezeGA(\''+ga.id+'\')">🔒 تجميد</button>':'')
-        +(ga.status==='frozen'?'<button class="btn btn-g btn-sm" onclick="activateGA(\''+ga.id+'\')">🔓 فتح</button>':'')
-        +'<button class="btn btn-d btn-sm" onclick="deleteGA(\''+ga.id+'\')">🗑</button>'
+        +(ga.status!=='active'?'<button class="btn bs sm" onclick="actGA(\''+ga.id+'\')">✅ تفعيل</button>':'')
+        +(ga.status==='active'?'<button class="btn bo sm" onclick="edGAM(\''+ga.id+'\')">✏️ تعديل العدد</button>':'')
+        +(ga.status!=='frozen'?'<button class="btn bd sm" onclick="frzGA(\''+ga.id+'\')">🔒 تجميد</button>':'')
+        +(ga.status==='frozen'?'<button class="btn bg sm" onclick="actGA(\''+ga.id+'\')">🔓 فتح</button>':'')
+        +'<button class="btn bd sm" onclick="delGA(\''+ga.id+'\')">🗑</button>'
       +'</div></div>';
   }).join('');
 }
-function renderSupJams(){
-  var box=eid('supJamList');
+function renderSupJ(){
+  var box=eid('supJL');
   box.innerHTML=S.jameias.map(function(j){
-    return '<div class="mc"><div class="mc-top"><div class="av" style="background:linear-gradient(135deg,'+j.color+',#1d4ed8)">'+j.icon+'</div>'
+    return '<div class="mc"><div class="mct"><div class="av" style="background:linear-gradient(135deg,'+j.color+',#1d4ed8)">'+j.icon+'</div>'
       +'<div class="mi"><div class="mn">'+esc(j.name)+(j.archived?' 🔒':'')+'</div>'
       +'<div class="ms">👥 '+j.members.length+' عضو · 💰 '+j.amount+' د.إ</div>'
       +(j.monthName?'<div style="font-size:11px;color:var(--gold)">📅 '+esc(j.monthName)+'</div>':'')
       +'</div></div>'
-      +'<div class="ma"><button class="btn btn-o btn-sm" onclick="supViewJ(\''+j.id+'\')">👁</button>'
-      +(j.archived?'<button class="btn btn-s btn-sm" onclick="unarchiveJ(\''+j.id+'\')">🔓 فتح</button>':'')
-      +'<button class="btn btn-d btn-sm" onclick="supDelJ(\''+j.id+'\')">🗑</button></div></div>';
-  }).join('')||'<div class="empty"><div class="empty-i">🏦</div>لا توجد جمعيات</div>';
+      +'<div class="ma"><button class="btn bo sm" onclick="supVJ(\''+j.id+'\')">👁</button>'
+      +(j.archived?'<button class="btn bs sm" onclick="unarchJ(\''+j.id+'\')">🔓 فتح</button>':'')
+      +'<button class="btn bd sm" onclick="supDJ(\''+j.id+'\')">🗑</button></div></div>';
+  }).join('')||'<div class="emp"><div class="ei">🏦</div>لا توجد جمعيات</div>';
 }
-function renderSupPays(){
-  var prs=S.paymentRequests||[];var box=eid('supPayList');
-  var tb=eid('supPayTab'),bo=tb.querySelector('.tab-badge');if(bo)bo.remove();
+function renderSupP(){
+  var prs=S.paymentRequests||[];var box=eid('supPL');
+  var tb=eid('supPayT'),bo=tb.querySelector('.tbadge');if(bo)bo.remove();
   var pnd=prs.filter(function(p){return p.status==='pending';}).length;
-  if(pnd>0){var bs=document.createElement('span');bs.className='tab-badge';bs.textContent=pnd;tb.appendChild(bs);}
-  if(!prs.length){box.innerHTML='<div class="empty"><div class="empty-i">💳</div>لا توجد طلبات</div>';return;}
+  if(pnd>0){var bs=document.createElement('span');bs.className='tbadge';bs.textContent=pnd;tb.appendChild(bs);}
+  if(!prs.length){box.innerHTML='<div class="emp"><div class="ei">💳</div>لا توجد طلبات</div>';return;}
   box.innerHTML=prs.map(function(p,i){
-    var sb=p.status==='approved'?'<span class="badge b-teal">✅ موافق</span>':p.status==='rejected'?'<span class="badge b-red">❌ مرفوض</span>':'<span class="badge b-orange">⏳ انتظار</span>';
-    return '<div class="mc"><div class="mc-top"><div class="av av-g">'+p.adminName[0]+'</div>'
+    var sb=p.status==='approved'?'<span class="bdg bt">✅ موافق</span>':p.status==='rejected'?'<span class="bdg br">❌ مرفوض</span>':'<span class="bdg bor">⏳ انتظار</span>';
+    return '<div class="mc"><div class="mct"><div class="av avgo">'+p.adminName[0]+'</div>'
       +'<div class="mi"><div class="mn">'+esc(p.adminName)+'</div><div class="ms">📞 '+esc(p.phone)+'</div>'
       +(p.requestedMembers?'<div style="font-size:12px;color:var(--teal);margin-top:2px">👥 '+p.requestedMembers+' عضو · 💰 '+p.totalAmount+' د.إ</div>':'')
       +(p.note?'<div style="font-size:11px;color:var(--muted)">📝 '+esc(p.note)+'</div>':'')
       +'<div style="font-size:11px;color:var(--muted)">📅 '+esc(p.date)+'</div>'
-      +'<div class="badges">'+sb+'</div></div>'
-      +(p.receipt?'<img src="'+p.receipt+'" class="rthumb" onclick="eid(\'rImg\').src=\''+p.receipt+'\';eid(\'rMeta\').textContent=\'إيصال اشتراك '+esc(p.adminName)+'\';openM(\'mViewR\')">':'')
+      +'<div class="bdgs">'+sb+'</div></div>'
+      +(p.receipt?'<img src="'+p.receipt+'" class="rth" onclick="eid(\'rImg\').src=\''+p.receipt+'\';eid(\'rMeta\').textContent=\'إيصال اشتراك '+esc(p.adminName)+'\';oM(\'mVR\')">':'')
       +'</div>'
-      +(p.status==='pending'?'<div class="ma"><button class="btn btn-s btn-sm" onclick="approvePay('+i+')">✅ موافقة وتفعيل</button><button class="btn btn-d btn-sm" onclick="rejectPay('+i+')">❌ رفض</button></div>':'')
+      +(p.status==='pending'?'<div class="ma"><button class="btn bs sm" onclick="appP('+i+')">✅ موافقة وتفعيل</button><button class="btn bd sm" onclick="rejP('+i+')">❌ رفض</button></div>':'')
       +'</div>';
   }).join('');
 }
-
-// Super actions
-function supViewJ(id){
+function supVJ(id){
   var j=S.jameias.find(function(x){return x.id===id;});if(!j)return;
-  eid('vJTitle').textContent=j.icon+' '+j.name;
+  eid('vJT').textContent=j.icon+' '+j.name;
   var sm=j.members.slice().sort(function(a,b){return((parseInt(a.dueYear)||9999)*12+(parseInt(a.dueMonthNum)||99))-((parseInt(b.dueYear)||9999)*12+(parseInt(b.dueMonthNum)||99));});
-  eid('vJContent').innerHTML='<div class="sgrid" style="margin-bottom:12px"><div class="scard"><div class="snum" style="color:var(--accent)">'+j.members.length+'</div><div class="slbl">أعضاء</div></div><div class="scard"><div class="snum" style="color:var(--gold)">'+j.amount+'</div><div class="slbl">د.إ/شهر</div></div></div>'
+  eid('vJC').innerHTML='<div class="sg" style="margin-bottom:12px"><div class="sc"><div class="sn" style="color:var(--accent)">'+j.members.length+'</div><div class="sl">أعضاء</div></div><div class="sc"><div class="sn" style="color:var(--gold)">'+j.amount+'</div><div class="sl">د.إ/شهر</div></div></div>'
     +(j.monthName?'<div style="color:var(--teal);font-size:13px;margin-bottom:10px">📅 '+esc(j.monthName)+'</div>':'')
     +'<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>الاسم</th><th>الشهر</th><th>الآيبان</th><th>الحالة</th></tr></thead><tbody>'
-    +sm.map(function(m,i){var isPaid=j.paidMembers&&j.paidMembers[m.id];return'<tr><td>'+(i+1)+'</td><td>'+esc(m.name)+'</td><td>'+(m.dueMonthNum&&m.dueYear?MN[m.dueMonthNum-1]+' '+m.dueYear:'—')+'</td><td style="font-size:11px;font-family:monospace">'+(m.iban||'—')+'</td><td>'+(isPaid?'<span class="badge b-teal">✓</span>':'<span class="badge b-red">✗</span>')+'</td></tr>';}).join('')
+    +sm.map(function(m,i){var iP=j.paidMembers&&j.paidMembers[m.id];return'<tr><td>'+(i+1)+'</td><td>'+esc(m.name)+'</td><td>'+(m.dueMonthNum&&m.dueYear?MN[m.dueMonthNum-1]+' '+m.dueYear:'—')+'</td><td style="font-size:11px;font-family:monospace">'+(m.iban||'—')+'</td><td>'+(iP?'<span class="bdg bt">✓</span>':'<span class="bdg br">✗</span>')+'</td></tr>';}).join('')
     +'</tbody></table></div>';
-  openM('mViewJ');
+  oM('mVJ');
 }
-function supDelJ(id){if(!confirm('حذف هذه الجمعية وكل بياناتها؟'))return;S.jameias=S.jameias.filter(function(j){return j.id!==id;});(S.groupAdmins||[]).forEach(function(a){if(a.jameiaIds)a.jameiaIds=a.jameiaIds.filter(function(x){return x!==id;});});save();syncUp();renderSuper();showToast('تم الحذف');}
-function unarchiveJ(id){var j=S.jameias.find(function(x){return x.id===id;});if(j){j.archived=false;save();syncUp();renderSuper();showToast('تم فتح الجمعية ✓');}}
-
-function openAddGA(){['gaaN','gaaP','gaaPass'].forEach(function(id){eid(id).value='';});eid('gaaSt').value='trial';eid('gaaActiveOpts').style.display='none';eid('gaaSt').onchange=function(){eid('gaaActiveOpts').style.display=this.value==='active'?'block':'none';};openM('mAddGA');}
+function supDJ(id){if(!confirm('حذف هذه الجمعية وكل بياناتها؟'))return;S.jameias=S.jameias.filter(function(j){return j.id!==id;});(S.groupAdmins||[]).forEach(function(a){if(a.jameiaIds)a.jameiaIds=a.jameiaIds.filter(function(x){return x!==id;});});save();syncUp();renderSuper();}
+function unarchJ(id){var j=S.jameias.find(function(x){return x.id===id;});if(j){j.archived=false;save();syncUp();renderSuper();showToast('تم فتح الجمعية ✓');}}
+function openAddGA(){['gaN','gaP','gaPW'].forEach(function(id){eid(id).value='';});eid('gaSt').value='trial';eid('gaMaxR').style.display='none';oM('mAddGA');}
 function createGA(){
-  var name=eid('gaaN').value.trim(),phone=eid('gaaP').value.trim(),pass=eid('gaaPass').value;
-  if(!name||!phone||!pass){showToast('أدخل كل الحقول',true);return;}
-  if((S.groupAdmins||[]).find(function(a){return a.pass===pass;})){showToast('كلمة المرور مستخدمة بالفعل!',true);return;}
-  var st=eid('gaaSt').value;var maxM=st==='active'?parseInt(eid('gaaMaxM').value)||10:(S.prices.trialLimit||2);
-  var ga=makeGA(name,phone,pass,st,maxM);
-  var nj=makeJ(name+' — جمعية',500,'🏦','#4f9eff');
-  S.jameias.push(nj);ga.jameiaIds=[nj.id];
-  if(!S.groupAdmins)S.groupAdmins=[];S.groupAdmins.push(ga);
-  save();syncUp();closeM('mAddGA');renderSuper();showToast('تم إضافة '+name+' ✓');
+  var n=eid('gaN').value.trim(),p=eid('gaP').value.trim(),pw=eid('gaPW').value;
+  if(!n||!p||!pw){showToast('أدخل كل الحقول',true);return;}
+  if((S.groupAdmins||[]).find(function(a){return a.pass===pw;})){showToast('كلمة المرور مستخدمة!',true);return;}
+  var st=eid('gaSt').value,mx=st==='active'?parseInt(eid('gaMaxI').value)||10:(S.prices.trialLimit||2);
+  var ga=mkGA(n,p,pw,st,mx);var nj=mkJ(n+' — جمعية',500,'🏦','#4f9eff');
+  S.jameias.push(nj);ga.jameiaIds=[nj.id];if(!S.groupAdmins)S.groupAdmins=[];S.groupAdmins.push(ga);
+  save();syncUp();cM('mAddGA');renderSuper();showToast('✅ تم إضافة '+n);
 }
-function activateGA(id){var ga=(S.groupAdmins||[]).find(function(a){return a.id===id;});if(!ga)return;ga.status='active';save();syncUp();renderSupAdmins();showToast('تم التفعيل ✓');}
-function freezeGA(id){var ga=(S.groupAdmins||[]).find(function(a){return a.id===id;});if(!ga||!confirm('تجميد حساب '+ga.name+'؟'))return;ga.status='frozen';save();syncUp();renderSupAdmins();showToast('تم التجميد');}
-function deleteGA(id){var ga=(S.groupAdmins||[]).find(function(a){return a.id===id;});if(!ga||!confirm('حذف '+ga.name+'؟'))return;S.groupAdmins=S.groupAdmins.filter(function(a){return a.id!==id;});save();syncUp();renderSupAdmins();showToast('تم الحذف');}
-function editGAMax(id){var ga=(S.groupAdmins||[]).find(function(a){return a.id===id;});if(!ga)return;var v=prompt('الحد الأقصى الجديد للأعضاء:',ga.maxMembers);if(!v||isNaN(v))return;ga.maxMembers=parseInt(v);save();syncUp();renderSupAdmins();showToast('تم التعديل ✓');}
-function approvePay(i){
+function actGA(id){var ga=(S.groupAdmins||[]).find(function(a){return a.id===id;});if(!ga)return;ga.status='active';save();syncUp();renderSupA();showToast('تم التفعيل ✓');}
+function frzGA(id){var ga=(S.groupAdmins||[]).find(function(a){return a.id===id;});if(!ga||!confirm('تجميد '+ga.name+'؟'))return;ga.status='frozen';save();syncUp();renderSupA();showToast('تم التجميد');}
+function delGA(id){var ga=(S.groupAdmins||[]).find(function(a){return a.id===id;});if(!ga||!confirm('حذف '+ga.name+'؟'))return;S.groupAdmins=S.groupAdmins.filter(function(a){return a.id!==id;});save();syncUp();renderSupA();}
+function edGAM(id){var ga=(S.groupAdmins||[]).find(function(a){return a.id===id;});if(!ga)return;var v=prompt('الحد الجديد للأعضاء:',ga.maxMembers);if(!v||isNaN(v))return;ga.maxMembers=parseInt(v);save();syncUp();renderSupA();showToast('تم التعديل ✓');}
+function appP(i){
   var p=S.paymentRequests[i];if(!p)return;p.status='approved';
   var ga=(S.groupAdmins||[]).find(function(a){return a.id===p.adminId;});
   if(ga){ga.status='active';ga.maxMembers=p.requestedMembers||10;}
-  save();syncUp();renderSuper();showToast('تم التفعيل — الحد '+( p.requestedMembers||10)+' عضو ✓');
+  save();syncUp();renderSuper();showToast('✅ تم التفعيل — الحد '+(p.requestedMembers||10)+' عضو');
 }
-function rejectPay(i){var p=S.paymentRequests[i];if(!p||!confirm('رفض هذا الطلب؟'))return;p.status='rejected';save();syncUp();renderSuper();}
-
-function sendGAWA(gaId){
+function rejP(i){var p=S.paymentRequests[i];if(!p||!confirm('رفض هذا الطلب؟'))return;p.status='rejected';save();syncUp();renderSuper();}
+function sendGAW(gaId){
   var ga=(S.groupAdmins||[]).find(function(a){return a.id===gaId;});if(!ga)return;
-  var lnk=getBaseUrl()+'#admin';
+  var lnk=getBase()+'#admin';var pr=S.prices||{};
   var jn=(ga.jameiaIds||[]).map(function(id){var j=S.jameias.find(function(j){return j.id===id;});return j?j.name:'';}).filter(Boolean).join('، ');
-  var pr=S.prices||{};
-  var msg='🏦 *منصة ساهل*\n\nمرحباً *'+ga.name+'*!\nتم إنشاء حسابك كمدير جمعية.\n\n🔗 رابط الدخول:\n'+lnk+'\n\n🔐 كلمة المرور: *'+ga.pass+'*'+(jn?'\n🏦 جمعيتك: '+jn:'')
-    +'\n\n⚠️ الحساب '+(ga.status==='active'?'مفعّل — الحد الأقصى '+ga.maxMembers+' عضو ✅':'تجريبي — يمكنك إضافة '+ga.maxMembers+' أعضاء للتجربة\n\n💳 للاشتراك الكامل: '+( pr.ppm||5)+' د.إ × عدد الأعضاء');
+  var msg='🏦 *منصة ساهل*\n\nمرحباً *'+ga.name+'*!\nتم إنشاء حسابك بنجاح.\n\n🔗 رابط الدخول:\n'+lnk+'\n\n🔐 كلمة المرور: *'+ga.pass+'*'+(jn?'\n🏦 جمعيتك: '+jn:'')
+    +'\n\n'+(ga.status==='active'?'✅ الحساب مفعّل — الحد '+ga.maxMembers+' عضو':'⏳ الحساب تجريبي — حتى '+ga.maxMembers+' أعضاء\n💳 للاشتراك الكامل: '+(pr.ppm||5)+' د.إ × عدد الأعضاء');
   window.open('https://wa.me/'+ga.phone.replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(msg),'_blank');
 }
-function copyGALnk(gaId){var ga=(S.groupAdmins||[]).find(function(a){return a.id===gaId;});if(!ga)return;copyText('رابط الدخول: '+getBaseUrl()+'#admin\nكلمة المرور: '+ga.pass);}
+function cpGAL(gaId){var ga=(S.groupAdmins||[]).find(function(a){return a.id===gaId;});if(!ga)return;copyText('رابط الدخول: '+getBase()+'#admin\nكلمة المرور: '+ga.pass);}
+function savePrices(){S.prices={ppm:parseInt(eid('pppm').value)||5,trialLimit:parseInt(eid('pptrl').value)||2,minM:parseInt(eid('ppmin').value)||3,maxM:parseInt(eid('ppmax').value)||50,iban:eid('ppiban').value.trim(),phone:eid('ppphone').value.trim()};save();syncUp();showToast('✅ تم حفظ الأسعار');}
+function changeSuperPW(){var np=eid('supNP').value;if(!np||np.length<4){showToast('كلمة المرور قصيرة',true);return;}S.superPass=np;eid('supNP').value='';save();showToast('تم التغيير ✓');}
+function resetAll(){if(!confirm('⚠️ سيُمسح كل البيانات نهائياً!'))return;localStorage.removeItem(SK);location.reload();}
 
-function savePrices(){
-  S.prices={ppm:parseInt(eid('spPPM').value)||5,trialLimit:parseInt(eid('spTrial').value)||2,minM:parseInt(eid('spMin').value)||3,maxM:parseInt(eid('spMax').value)||50,iban:eid('spIban').value.trim(),phone:eid('spPhone').value.trim()};
-  save();syncUp();showToast('تم حفظ الأسعار ✓');
-}
-function changeSuperPass(){var np=eid('supNP').value;if(!np||np.length<4){showToast('كلمة المرور قصيرة',true);return;}S.superPass=np;eid('supNP').value='';save();showToast('تم التغيير ✓');}
-function resetAll(){if(!confirm('⚠️ سيُمسح كل البيانات! هل أنت متأكد؟'))return;localStorage.removeItem(SK);location.reload();}
-
-// ══ BOOT ══
+// ══ BOOT — أهم جزء ══
 load();
-(function(){
+(function init(){
+  // إخفاء كل الشاشات أولاً
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
   var hash=window.location.hash;
-  if(hash==='#admin'||hash==='#login'){history.replaceState(null,null,' ');showScreen('screenLogin');}
-  else{pubSync().then(renderHome);renderHome();}
+  if(hash==='#admin'||hash==='#login'){
+    history.replaceState(null,null,window.location.pathname);
+    showS('screenLogin');
+  } else {
+    // الصفحة الرئيسية فقط
+    renderHome();
+    showS('screenHome');
+    pubSync().then(renderHome);
+  }
+  updateDays();
+  setInterval(updateDays,60000);
+  setInterval(function(){
+    pubSync().then(function(){
+      if(eid('screenHome').classList.contains('active'))renderHome();
+      if(eid('screenPublic').classList.contains('active'))renderPub();
+    });
+  },30000);
 })();
-setInterval(function(){
-  pubSync().then(function(){
-    if(eid('screenHome').classList.contains('active'))renderHome();
-    if(eid('screenPublic').classList.contains('active'))renderPublic();
-  });
-},30000);
 </script>
-
-
-</body></html>
+</body>
+</html>
