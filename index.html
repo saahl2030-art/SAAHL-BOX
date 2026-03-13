@@ -1,415 +1,1226 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ساهل — منصة الجمعيات المالية</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Tajawal', sans-serif;
-  background: #04070f;
-  color: #ddeeff;
-  min-height: 100vh;
-  background-image: radial-gradient(ellipse at 50% 0%, #0a1d4a 0%, #04070f 60%);
+import React, { useEffect, useMemo, useState } from 'react';
+import { motion } from 'framer-motion';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Copy, Trash2, Users, Shield, Crown, Receipt, Clock3, Plus, CheckCircle2, AlertCircle, Link as LinkIcon, Settings, CalendarDays, WalletCards, Archive, UserPlus } from 'lucide-react';
+
+const STORAGE_KEY = 'saahl_jam3eyatna_full_prototype_v1';
+const MEMBER_PRICE_AED = 5;
+const FREE_GROUPS = 1;
+const FREE_MEMBERS = 2;
+
+const months = [
+  'يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'
+];
+
+const initialState = {
+  platform: {
+    name: 'منصة ساهل',
+    memberPrice: MEMBER_PRICE_AED,
+    termsEnabled: true,
+    terms: `الشروط والأحكام الأساسية:\n1) المنصة أداة تنظيم وإدارة فقط ولا تستلم أموال الجمعية بين الأعضاء.\n2) التحويل المالي يتم مباشرة من العضو إلى المستفيد الحالي وفق بيانات التحويل المعتمدة داخل الجمعية.\n3) رئيس المجموعة مسؤول عن إدارة جمعيته واعتماد الأعضاء والإيصالات وتحديث البيانات.\n4) لا يجوز تجاوز عدد الأعضاء المسموح به بعد شراء السعة، ويجب شراء سعة إضافية قبل إضافة أعضاء جدد.\n5) يحق للمنصة التجميد أو التعديل أو الإيقاف عند سوء الاستخدام أو مخالفة الشروط.\n6) رفع الإيصال لا يعني الاعتماد النهائي إلا بعد مراجعة رئيس المجموعة.\n7) بعد اكتمال الدورة تُؤرشف الجمعية وتصبح للقراءة فقط إلى حين إعادة تشغيلها.`,
+    thankYouMember: 'شكرًا لك. تم استلام إشعار الدفع بنجاح، ومساهمتك تعكس التزامك واحترامك لبقية أعضاء الجمعية. سيقوم رئيس المجموعة بمراجعة الإيصال واعتماده، ويمكنك متابعة الحالة من صفحتك داخل المنصة. مع خالص الشكر، منصة ساهل.',
+    thankYouCycle: 'تم بحمد الله اكتمال دورة الجمعية بنجاح. نشكر لكم التزامكم وتعاونكم طوال فترة الجمعية، ونعتز بكون منصة ساهل جزءًا من هذا التنظيم والثقة بين الأعضاء. تم الآن إغلاق هذه الدورة وأرشفتها، ويمكنكم إنشاء دورة جديدة متى شئتم.'
+  },
+  admins: [
+    { id: 'admin-1', name: 'مالك المنصة', email: 'owner@saahl.local', role: 'super_admin', active: true }
+  ],
+  leaders: [
+    {
+      id: 'leader-1',
+      name: 'رئيس مجموعة تجريبي',
+      phone: '0500000000',
+      email: 'leader@saahl.local',
+      active: true,
+      maxGroups: 3,
+      freeGroupsUsed: 0,
+      notes: 'حساب تجريبي',
+      acceptedTermsAt: null
+    }
+  ],
+  groups: [],
+  audit: []
+};
+
+function uid(prefix = 'id') {
+  return `${prefix}-${Math.random().toString(36).slice(2, 9)}-${Date.now().toString(36)}`;
 }
 
-/* ─── TOPBAR ─── */
-.topbar {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(4,7,15,0.95);
-  border-bottom: 1px solid rgba(99,179,255,0.1);
-  backdrop-filter: blur(20px);
-  height: 60px;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 20px;
-}
-.logo {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 20px; font-weight: 900;
-}
-.logo-text {
-  background: linear-gradient(135deg, #4f9eff, #00e5b0);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.login-btn {
-  background: rgba(79,158,255,0.1);
-  border: 1px solid rgba(79,158,255,0.25);
-  color: #4f9eff;
-  padding: 8px 18px;
-  border-radius: 10px;
-  font-family: 'Tajawal', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-decoration: none;
-  display: inline-flex; align-items: center; gap: 6px;
-}
-.login-btn:hover {
-  background: rgba(79,158,255,0.18);
-  border-color: rgba(79,158,255,0.4);
-  transform: translateY(-1px);
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
 }
 
-/* ─── HERO ─── */
-.hero-section {
-  text-align: center;
-  padding: 52px 20px 36px;
-}
-.hero-icon {
-  font-size: 60px;
-  margin-bottom: 16px;
-  filter: drop-shadow(0 0 24px rgba(79,158,255,0.4));
-  display: block;
-}
-.hero-title {
-  font-size: 32px;
-  font-weight: 900;
-  background: linear-gradient(135deg, #4f9eff, #00e5b0);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 8px;
-  line-height: 1.2;
-}
-.hero-sub {
-  font-size: 14px;
-  color: #5a7aa0;
-  font-weight: 500;
+function nowLabel() {
+  return new Date().toLocaleString('ar-AE');
 }
 
-/* ─── SEARCH ─── */
-.search-wrap {
-  max-width: 560px;
-  margin: 0 auto 28px;
-  padding: 0 16px;
-}
-.search-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(255,255,255,0.04);
-  border: 1.5px solid rgba(99,179,255,0.18);
-  border-radius: 13px;
-  padding: 10px 16px;
-  transition: border-color 0.2s;
-}
-.search-box:focus-within {
-  border-color: rgba(79,158,255,0.45);
-  background: rgba(79,158,255,0.05);
-}
-.search-box span { font-size: 16px; }
-.search-box input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #ddeeff;
-  font-family: 'Tajawal', sans-serif;
-  font-size: 14px;
-}
-.search-box input::placeholder { color: #5a7aa0; }
-
-/* ─── JAMEIA CARDS ─── */
-.list-wrap {
-  max-width: 560px;
-  margin: 0 auto;
-  padding: 0 16px 80px;
-}
-.section-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: #5a7aa0;
-  letter-spacing: 0.5px;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.jcard {
-  background: #080f1e;
-  border: 1px solid rgba(99,179,255,0.1);
-  border-radius: 14px;
-  padding: 16px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-decoration: none;
-}
-.jcard:hover {
-  border-color: rgba(79,158,255,0.28);
-  background: #0c1528;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-}
-.jcard-icon {
-  width: 50px; height: 50px;
-  border-radius: 13px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 24px;
-  flex-shrink: 0;
-}
-.jcard-info { flex: 1; min-width: 0; }
-.jcard-name {
-  font-size: 16px;
-  font-weight: 800;
-  color: #ddeeff;
-  margin-bottom: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.jcard-meta {
-  font-size: 12px;
-  color: #5a7aa0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.meta-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 99px;
-  padding: 2px 8px;
-  font-size: 11px;
-}
-.meta-pill.month { color: #fbbf24; border-color: rgba(251,191,36,0.2); background: rgba(251,191,36,0.06); }
-.meta-pill.members { color: #4f9eff; border-color: rgba(79,158,255,0.2); background: rgba(79,158,255,0.06); }
-.meta-pill.amount { color: #00e5b0; border-color: rgba(0,229,176,0.2); background: rgba(0,229,176,0.06); }
-.jcard-arrow {
-  color: #5a7aa0;
-  font-size: 18px;
-  flex-shrink: 0;
+function currency(n) {
+  return `${Number(n || 0).toLocaleString('en-US')} د.إ`;
 }
 
-/* ─── PROGRESS BAR ─── */
-.jprog {
-  margin-top: 10px;
-}
-.jprog-bar {
-  height: 4px;
-  background: rgba(255,255,255,0.06);
-  border-radius: 99px;
-  overflow: hidden;
-}
-.jprog-fill {
-  height: 100%;
-  border-radius: 99px;
-  background: linear-gradient(90deg, #00e5b0, #4f9eff);
-  transition: width 0.6s ease;
-}
-.jprog-lbl {
-  display: flex;
-  justify-content: space-between;
-  font-size: 10px;
-  color: #5a7aa0;
-  margin-top: 4px;
+function dateTimeLocalValue(hoursFromNow = 72) {
+  const d = new Date(Date.now() + hoursFromNow * 3600 * 1000);
+  const pad = (x) => String(x).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-/* ─── EMPTY STATE ─── */
-.empty {
-  text-align: center;
-  padding: 48px 20px;
-  color: #5a7aa0;
+function calcRemaining(deadline) {
+  if (!deadline) return null;
+  const ms = new Date(deadline).getTime() - Date.now();
+  if (ms <= 0) return { expired: true, text: 'انتهى الوقت' };
+  const totalSec = Math.floor(ms / 1000);
+  const days = Math.floor(totalSec / 86400);
+  const hours = Math.floor((totalSec % 86400) / 3600);
+  const mins = Math.floor((totalSec % 3600) / 60);
+  return { expired: false, text: `${days} يوم • ${hours} ساعة • ${mins} دقيقة` };
 }
-.empty-icon { font-size: 48px; margin-bottom: 12px; display: block; opacity: 0.6; }
-.empty-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-.empty-sub { font-size: 13px; }
 
-/* ─── FOOTER INFO ─── */
-.footer-info {
-  max-width: 560px;
-  margin: 0 auto;
-  padding: 0 16px;
-  text-align: center;
-}
-.footer-card {
-  background: rgba(79,158,255,0.04);
-  border: 1px solid rgba(79,158,255,0.1);
-  border-radius: 12px;
-  padding: 14px;
-  font-size: 12px;
-  color: #5a7aa0;
-  line-height: 1.7;
-}
-.footer-card strong { color: #4f9eff; }
-
-/* ─── TOAST ─── */
-#toast {
-  position: fixed; bottom: 24px; left: 50%;
-  transform: translateX(-50%) translateY(80px);
-  background: #00e5b0; color: #042e22;
-  padding: 11px 24px; border-radius: 99px;
-  font-weight: 700; font-size: 14px;
-  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
-  z-index: 9999; pointer-events: none;
-  white-space: nowrap;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-}
-#toast.show { transform: translateX(-50%) translateY(0); }
-
-@media (max-width: 500px) {
-  .hero-title { font-size: 26px; }
-  .topbar { padding: 0 14px; }
-}
-</style>
-</head>
-<body>
-
-<!-- ═══ TOPBAR ═══ -->
-<div class="topbar">
-  <div class="logo">
-    <span>🏦</span>
-    <span class="logo-text">ساهل</span>
-  </div>
-  <a href="index.html#admin" class="login-btn">🔐 دخول المدير</a>
-</div>
-
-<!-- ═══ HERO ═══ -->
-<div class="hero-section">
-  <span class="hero-icon">🏦</span>
-  <h1 class="hero-title">منصة ساهل</h1>
-  <p class="hero-sub">للجمعيات المالية الموثوقة والمنظّمة</p>
-</div>
-
-<!-- ═══ SEARCH ═══ -->
-<div class="search-wrap">
-  <div class="search-box">
-    <span>🔍</span>
-    <input type="text" id="searchInput" placeholder="ابحث عن جمعية..." oninput="filterList(this.value)">
-  </div>
-</div>
-
-<!-- ═══ LIST ═══ -->
-<div class="list-wrap">
-  <div class="section-title">📋 الجمعيات المتاحة</div>
-  <div id="jList">
-    <!-- سيتم ملؤه بالجافاسكريبت -->
-  </div>
-
-  <div class="footer-info" style="margin-top:20px">
-    <div class="footer-card">
-      هل أنت مدير جمعية؟ اضغط على <strong>دخول المدير</strong> في الأعلى
-      أو تواصل مع مشرف المنصة لإنشاء جمعيتك 🏦
-    </div>
-  </div>
-</div>
-
-<div id="toast"></div>
-
-<script>
-const SK = 'sahel_v3';
-const MN = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
-
-var S = { jameias: [], prices: {} };
-
-// ─── LOAD LOCAL DATA ───
-function loadData() {
-  try {
-    var d = localStorage.getItem(SK);
-    if (d) S = Object.assign({}, S, JSON.parse(d));
-  } catch(e) {}
-  if (!S.jameias) S.jameias = [];
-  S.jameias.forEach(function(j) {
-    if (!j.members) j.members = [];
-    if (!j.paidMembers) j.paidMembers = {};
+function App() {
+  const [state, setState] = useState(initialState);
+  const [roleView, setRoleView] = useState('super_admin');
+  const [selectedLeaderId, setSelectedLeaderId] = useState('leader-1');
+  const [selectedGroupId, setSelectedGroupId] = useState('');
+  const [selectedMemberId, setSelectedMemberId] = useState('');
+  const [leaderDialogOpen, setLeaderDialogOpen] = useState(false);
+  const [groupDialogOpen, setGroupDialogOpen] = useState(false);
+  const [newLeader, setNewLeader] = useState({ name: '', phone: '', email: '', maxGroups: 3, notes: '' });
+  const [newGroup, setNewGroup] = useState({
+    leaderId: 'leader-1',
+    name: '',
+    description: '',
+    monthlyAmount: 500,
+    monthsCount: 6,
+    freeMembers: FREE_MEMBERS,
+    paidCapacity: 0,
+    memberPrice: MEMBER_PRICE_AED,
+    transferName: '',
+    transferBank: '',
+    transferIban: '',
+    currentMonthName: `${months[new Date().getMonth()]} ${new Date().getFullYear()}`,
+    paymentDeadline: dateTimeLocalValue(72)
   });
-}
 
-// ─── SYNC FROM CLOUD ───
-async function cloudSync() {
-  if (!S.binId) return;
-  try {
-    var h = S.apiKey ? { 'X-Master-Key': S.apiKey } : {};
-    var r = await fetch('https://api.jsonbin.io/v3/b/' + S.binId + '/latest', { headers: h });
-    var d = await r.json();
-    var keep = { apiKey: S.apiKey, binId: S.binId, superPass: S.superPass, adminPass: S.adminPass };
-    S = Object.assign({}, S, d.record, keep);
-    S.jameias.forEach(function(j) {
-      if (!j.members) j.members = [];
-      if (!j.paidMembers) j.paidMembers = {};
-    });
-    localStorage.setItem(SK, JSON.stringify(S));
-    renderList();
-  } catch(e) {}
-}
+  useEffect(() => {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        setState(parsed);
+      } catch {}
+    }
+  }, []);
 
-// ─── RENDER ───
-function renderList(filter) {
-  var box = document.getElementById('jList');
-  var active = S.jameias.filter(function(j) { return !j.archived; });
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }, [state]);
 
-  if (filter) {
-    active = active.filter(function(j) {
-      return j.name && j.name.indexOf(filter) !== -1;
+  const leaders = state.leaders;
+  const selectedLeader = leaders.find((l) => l.id === selectedLeaderId) || leaders[0] || null;
+  const groups = state.groups;
+  const leaderGroups = groups.filter((g) => g.leaderId === selectedLeaderId);
+  const selectedGroup = groups.find((g) => g.id === selectedGroupId) || leaderGroups[0] || groups[0] || null;
+  const selectedMember = selectedGroup?.members.find((m) => m.id === selectedMemberId) || null;
+
+  useEffect(() => {
+    if (!selectedLeaderId && leaders[0]) setSelectedLeaderId(leaders[0].id);
+  }, [leaders, selectedLeaderId]);
+
+  useEffect(() => {
+    if (!selectedGroupId && leaderGroups[0]) setSelectedGroupId(leaderGroups[0].id);
+    if (selectedGroupId && !leaderGroups.find((g) => g.id === selectedGroupId)) {
+      setSelectedGroupId(leaderGroups[0]?.id || '');
+    }
+  }, [leaderGroups, selectedGroupId]);
+
+  useEffect(() => {
+    if (!selectedMemberId && selectedGroup?.members?.[0]) setSelectedMemberId(selectedGroup.members[0].id);
+    if (selectedMemberId && !selectedGroup?.members.find((m) => m.id === selectedMemberId)) {
+      setSelectedMemberId(selectedGroup?.members?.[0]?.id || '');
+    }
+  }, [selectedGroup, selectedMemberId]);
+
+  const counts = useMemo(() => {
+    return {
+      leaders: state.leaders.length,
+      groups: state.groups.length,
+      members: state.groups.reduce((sum, g) => sum + g.members.length, 0),
+      receipts: state.groups.reduce((sum, g) => sum + g.receipts.length, 0)
+    };
+  }, [state]);
+
+  function updateState(mutator) {
+    setState((prev) => {
+      const next = structuredClone(prev);
+      mutator(next);
+      return next;
     });
   }
 
-  if (!active.length) {
-    box.innerHTML = '<div class="empty">'
-      + '<span class="empty-icon">🔍</span>'
-      + '<div class="empty-title">لا توجد جمعيات متاحة</div>'
-      + '<div class="empty-sub">تواصل مع مشرف المنصة لإنشاء جمعيتك</div>'
-      + '</div>';
-    return;
+  function logAudit(action, details) {
+    updateState((draft) => {
+      draft.audit.unshift({ id: uid('audit'), action, details, at: nowLabel() });
+    });
   }
 
-  box.innerHTML = active.map(function(j) {
-    var pc = j.members.filter(function(m) { return j.paidMembers && j.paidMembers[m.id]; }).length;
-    var tot = j.members.length;
-    var pct = tot > 0 ? Math.round(pc / tot * 100) : 0;
-    var colors = ['#4f9eff,#1d6fd4','#059669,#00e5b0','#b45309,#fbbf24','#5b21b6,#a78bfa','#b91c1c,#f43f5e'];
-    var ci = j.color ? j.color : colors[Math.abs(j.id.charCodeAt(2)||0) % colors.length];
+  function addLeader() {
+    if (!newLeader.name.trim() || !newLeader.phone.trim()) return;
+    const leader = {
+      id: uid('leader'),
+      name: newLeader.name.trim(),
+      phone: newLeader.phone.trim(),
+      email: newLeader.email.trim(),
+      active: true,
+      maxGroups: Number(newLeader.maxGroups || 3),
+      freeGroupsUsed: 0,
+      notes: newLeader.notes.trim(),
+      acceptedTermsAt: null
+    };
+    updateState((draft) => {
+      draft.leaders.push(leader);
+      draft.audit.unshift({ id: uid('audit'), action: 'إضافة رئيس مجموعة', details: leader.name, at: nowLabel() });
+    });
+    setSelectedLeaderId(leader.id);
+    setNewLeader({ name: '', phone: '', email: '', maxGroups: 3, notes: '' });
+    setLeaderDialogOpen(false);
+  }
 
-    return '<div class="jcard" onclick="openJameia(\'' + j.id + '\')">'
-      + '<div class="jcard-icon" style="background:linear-gradient(135deg,' + ci + ')">' + (j.icon || '🏦') + '</div>'
-      + '<div class="jcard-info">'
-        + '<div class="jcard-name">' + esc(j.name) + '</div>'
-        + '<div class="jcard-meta">'
-          + (j.monthName ? '<span class="meta-pill month">📅 ' + esc(j.monthName) + '</span>' : '')
-          + '<span class="meta-pill members">👥 ' + tot + ' عضو</span>'
-          + (j.amount ? '<span class="meta-pill amount">💰 ' + j.amount + ' د.إ</span>' : '')
-        + '</div>'
-        + (tot > 0 ? '<div class="jprog">'
-          + '<div class="jprog-bar"><div class="jprog-fill" style="width:' + pct + '%"></div></div>'
-          + '<div class="jprog-lbl"><span>تقدم الدفعات</span><span>' + pc + '/' + tot + '</span></div>'
-          + '</div>' : '')
-      + '</div>'
-      + '<div class="jcard-arrow">←</div>'
-    + '</div>';
-  }).join('');
+  function addGroup() {
+    if (!newGroup.name.trim() || !newGroup.leaderId) return;
+    const group = {
+      id: uid('group'),
+      leaderId: newGroup.leaderId,
+      name: newGroup.name.trim(),
+      description: newGroup.description.trim(),
+      monthlyAmount: Number(newGroup.monthlyAmount || 0),
+      monthsCount: Number(newGroup.monthsCount || 1),
+      freeMembers: FREE_MEMBERS,
+      paidCapacity: Number(newGroup.paidCapacity || 0),
+      memberPrice: state.platform.memberPrice,
+      status: 'draft',
+      cycleMessageSent: false,
+      createdAt: nowLabel(),
+      termsAccepted: false,
+      currentMonthName: newGroup.currentMonthName,
+      paymentDeadline: newGroup.paymentDeadline,
+      currentBeneficiaryMemberId: '',
+      transferInfo: {
+        name: newGroup.transferName.trim(),
+        bank: newGroup.transferBank.trim(),
+        iban: newGroup.transferIban.trim()
+      },
+      inviteLink: `https://saahl.ae/join/${uid('invite')}`,
+      members: [],
+      joinRequests: [],
+      receipts: [],
+      history: [],
+      notes: [],
+      pricingSnapshot: state.platform.memberPrice
+    };
+    updateState((draft) => {
+      draft.groups.push(group);
+      draft.audit.unshift({ id: uid('audit'), action: 'إنشاء جمعية', details: group.name, at: nowLabel() });
+    });
+    setSelectedGroupId(group.id);
+    setGroupDialogOpen(false);
+    setNewGroup({
+      leaderId: selectedLeaderId || 'leader-1',
+      name: '',
+      description: '',
+      monthlyAmount: 500,
+      monthsCount: 6,
+      freeMembers: FREE_MEMBERS,
+      paidCapacity: 0,
+      memberPrice: MEMBER_PRICE_AED,
+      transferName: '',
+      transferBank: '',
+      transferIban: '',
+      currentMonthName: `${months[new Date().getMonth()]} ${new Date().getFullYear()}`,
+      paymentDeadline: dateTimeLocalValue(72)
+    });
+  }
+
+  function updateGroup(groupId, patch) {
+    updateState((draft) => {
+      const g = draft.groups.find((x) => x.id === groupId);
+      if (!g) return;
+      Object.assign(g, patch);
+    });
+  }
+
+  function updateLeader(leaderId, patch) {
+    updateState((draft) => {
+      const l = draft.leaders.find((x) => x.id === leaderId);
+      if (!l) return;
+      Object.assign(l, patch);
+    });
+  }
+
+  function groupCapacity(g) {
+    return FREE_MEMBERS + Number(g.paidCapacity || 0);
+  }
+
+  function remainingSlots(g) {
+    return groupCapacity(g) - g.members.length;
+  }
+
+  function extraMembersCost(count) {
+    return Number(count || 0) * Number(state.platform.memberPrice || MEMBER_PRICE_AED);
+  }
+
+  function addJoinRequest(groupId, payload) {
+    updateState((draft) => {
+      const g = draft.groups.find((x) => x.id === groupId);
+      if (!g) return;
+      g.joinRequests.unshift({
+        id: uid('req'),
+        name: payload.name,
+        phone: payload.phone,
+        desiredMonth: payload.desiredMonth,
+        at: nowLabel(),
+        status: 'pending',
+        agreedTerms: payload.agreedTerms
+      });
+    });
+  }
+
+  function acceptJoinRequest(groupId, requestId) {
+    updateState((draft) => {
+      const g = draft.groups.find((x) => x.id === groupId);
+      if (!g) return;
+      const req = g.joinRequests.find((r) => r.id === requestId);
+      if (!req || req.status !== 'pending') return;
+      if (g.members.length >= groupCapacity(g)) return;
+      req.status = 'accepted';
+      const monthValue = req.desiredMonth || '';
+      g.members.push({
+        id: uid('member'),
+        name: req.name,
+        phone: req.phone,
+        dueMonth: monthValue,
+        status: 'active',
+        joinedAt: nowLabel(),
+        paymentStatus: 'unpaid',
+        lastThankYou: '',
+        notes: ''
+      });
+    });
+  }
+
+  function rejectJoinRequest(groupId, requestId) {
+    updateState((draft) => {
+      const g = draft.groups.find((x) => x.id === groupId);
+      if (!g) return;
+      const req = g.joinRequests.find((r) => r.id === requestId);
+      if (!req) return;
+      req.status = 'rejected';
+    });
+  }
+
+  function addMemberDirect(groupId, member) {
+    updateState((draft) => {
+      const g = draft.groups.find((x) => x.id === groupId);
+      if (!g) return;
+      if (g.members.length >= groupCapacity(g)) return;
+      if (g.members.some((m) => m.phone === member.phone)) return;
+      g.members.push({
+        id: uid('member'),
+        name: member.name,
+        phone: member.phone,
+        dueMonth: member.dueMonth,
+        status: 'active',
+        joinedAt: nowLabel(),
+        paymentStatus: 'unpaid',
+        lastThankYou: '',
+        notes: ''
+      });
+    });
+  }
+
+  function removeMember(groupId, memberId) {
+    updateState((draft) => {
+      const g = draft.groups.find((x) => x.id === groupId);
+      if (!g) return;
+      g.members = g.members.filter((m) => m.id !== memberId);
+      if (g.currentBeneficiaryMemberId === memberId) g.currentBeneficiaryMemberId = '';
+    });
+  }
+
+  function updateMember(groupId, memberId, patch) {
+    updateState((draft) => {
+      const g = draft.groups.find((x) => x.id === groupId);
+      if (!g) return;
+      const m = g.members.find((x) => x.id === memberId);
+      if (!m) return;
+      Object.assign(m, patch);
+    });
+  }
+
+  function setBeneficiary(groupId, memberId) {
+    updateState((draft) => {
+      const g = draft.groups.find((x) => x.id === groupId);
+      if (!g) return;
+      g.currentBeneficiaryMemberId = memberId;
+    });
+  }
+
+  function purchaseCapacity(groupId, count) {
+    if (!count || count < 1) return;
+    updateState((draft) => {
+      const g = draft.groups.find((x) => x.id === groupId);
+      if (!g) return;
+      g.paidCapacity += Number(count);
+      g.status = g.status === 'draft' ? 'open' : g.status;
+      g.notes.unshift({ id: uid('note'), text: `تمت زيادة السعة بعدد ${count} عضو مقابل ${currency(count * draft.platform.memberPrice)}`, at: nowLabel() });
+    });
+  }
+
+  function submitReceipt(groupId, memberId, receiptText) {
+    updateState((draft) => {
+      const g = draft.groups.find((x) => x.id === groupId);
+      if (!g) return;
+      const m = g.members.find((x) => x.id === memberId);
+      if (!m) return;
+      g.receipts.unshift({
+        id: uid('receipt'),
+        memberId,
+        memberName: m.name,
+        monthName: g.currentMonthName,
+        beneficiaryName: g.members.find((x) => x.id === g.currentBeneficiaryMemberId)?.name || '',
+        text: receiptText,
+        status: 'submitted',
+        submittedAt: nowLabel(),
+        adminMessage: ''
+      });
+      m.paymentStatus = 'submitted';
+    });
+  }
+
+  function approveReceipt(groupId, receiptId) {
+    updateState((draft) => {
+      const g = draft.groups.find((x) => x.id === groupId);
+      if (!g) return;
+      const r = g.receipts.find((x) => x.id === receiptId);
+      if (!r) return;
+      r.status = 'approved';
+      r.adminMessage = draft.platform.thankYouMember;
+      const m = g.members.find((x) => x.id === r.memberId);
+      if (m) {
+        m.paymentStatus = 'approved';
+        m.lastThankYou = draft.platform.thankYouMember;
+      }
+    });
+  }
+
+  function rejectReceipt(groupId, receiptId) {
+    updateState((draft) => {
+      const g = draft.groups.find((x) => x.id === groupId);
+      if (!g) return;
+      const r = g.receipts.find((x) => x.id === receiptId);
+      if (!r) return;
+      r.status = 'rejected';
+      r.adminMessage = 'تم رفض الإيصال، يرجى إعادة الرفع ببيانات أوضح.';
+      const m = g.members.find((x) => x.id === r.memberId);
+      if (m) m.paymentStatus = 'rejected';
+    });
+  }
+
+  function completeCycle(groupId) {
+    updateState((draft) => {
+      const g = draft.groups.find((x) => x.id === groupId);
+      if (!g) return;
+      const beneficiary = g.members.find((m) => m.id === g.currentBeneficiaryMemberId);
+      g.history.unshift({
+        id: uid('hist'),
+        monthName: g.currentMonthName,
+        beneficiaryName: beneficiary?.name || '',
+        approvedReceipts: g.receipts.filter((r) => r.monthName === g.currentMonthName && r.status === 'approved').length,
+        totalMembers: g.members.length,
+        completedAt: nowLabel(),
+        closingMessage: draft.platform.thankYouCycle
+      });
+      const completedCount = g.history.length;
+      if (completedCount >= g.monthsCount) {
+        g.status = 'archived';
+        g.cycleMessageSent = true;
+      } else {
+        g.status = 'open';
+      }
+      g.members = g.members.map((m) => ({ ...m, paymentStatus: 'unpaid' }));
+      g.currentBeneficiaryMemberId = '';
+      g.currentMonthName = `الدورة التالية ${completedCount + 1}`;
+      g.paymentDeadline = dateTimeLocalValue(72);
+      g.notes.unshift({ id: uid('note'), text: `تم إنهاء دورة ${completedCount} بنجاح.`, at: nowLabel() });
+    });
+  }
+
+  function reopenArchived(groupId) {
+    updateState((draft) => {
+      const g = draft.groups.find((x) => x.id === groupId);
+      if (!g) return;
+      g.status = 'open';
+      g.cycleMessageSent = false;
+      g.notes.unshift({ id: uid('note'), text: 'تمت إعادة فتح الجمعية من قبل الإدارة.', at: nowLabel() });
+    });
+  }
+
+  function monthSlots(members) {
+    const map = {};
+    members.forEach((m) => {
+      if (m.dueMonth) map[m.dueMonth] = (map[m.dueMonth] || 0) + 1;
+    });
+    return map;
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-50 p-4 md:p-6">
+      <div className="mx-auto max-w-7xl space-y-6">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+          <Card className="rounded-3xl border-white/10 bg-gradient-to-br from-slate-900 to-slate-950 text-slate-50 shadow-2xl">
+            <CardHeader className="space-y-4">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <CardTitle className="text-3xl font-black">منصة ساهل — إدارة الجمعيات</CardTitle>
+                  <CardDescription className="text-slate-300 mt-2 text-base leading-7">
+                    نموذج واجهة متكامل للمنصة بثلاثة مستويات: مالك المنصة، رئيس المجموعة، والعضو. هذا النموذج
+                    يعرض منطق التشغيل كاملًا على الواجهة، لكن الربط الحقيقي مع قاعدة بيانات، تسجيل الدخول، واتساب، ورفع الملفات الفعلي يحتاج Backend.
+                  </CardDescription>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Button variant={roleView === 'super_admin' ? 'default' : 'secondary'} onClick={() => setRoleView('super_admin')} className="rounded-2xl">مالك المنصة</Button>
+                  <Button variant={roleView === 'leader' ? 'default' : 'secondary'} onClick={() => setRoleView('leader')} className="rounded-2xl">رئيس المجموعة</Button>
+                  <Button variant={roleView === 'member' ? 'default' : 'secondary'} onClick={() => setRoleView('member')} className="rounded-2xl">العضو</Button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                <MetricCard icon={<Shield className="size-5" />} label="رؤساء المجموعات" value={counts.leaders} />
+                <MetricCard icon={<Users className="size-5" />} label="الجمعيات" value={counts.groups} />
+                <MetricCard icon={<Crown className="size-5" />} label="الأعضاء" value={counts.members} />
+                <MetricCard icon={<Receipt className="size-5" />} label="الإيصالات" value={counts.receipts} />
+              </div>
+            </CardHeader>
+          </Card>
+        </motion.div>
+
+        {roleView === 'super_admin' && (
+          <div className="grid gap-6 lg:grid-cols-[1.15fr_.85fr]">
+            <div className="space-y-6">
+              <Card className="rounded-3xl border-white/10 bg-slate-900/80 text-slate-50">
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle className="text-xl font-bold">لوحة مالك المنصة</CardTitle>
+                    <CardDescription className="text-slate-300">كامل الصلاحيات على الرؤساء، الجمعيات، التسعير، الشروط، والتجميد.</CardDescription>
+                  </div>
+                  <Dialog open={leaderDialogOpen} onOpenChange={setLeaderDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="rounded-2xl"><Plus className="ms-2 size-4" />إضافة رئيس مجموعة</Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-xl rounded-3xl">
+                      <DialogHeader>
+                        <DialogTitle>إضافة رئيس مجموعة جديد</DialogTitle>
+                        <DialogDescription>يستلم صلاحية إنشاء الجمعيات وإدارة أعضائه فقط.</DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-3 md:grid-cols-2">
+                        <Field label="الاسم"><Input value={newLeader.name} onChange={(e) => setNewLeader({ ...newLeader, name: e.target.value })} /></Field>
+                        <Field label="الهاتف"><Input value={newLeader.phone} onChange={(e) => setNewLeader({ ...newLeader, phone: e.target.value })} /></Field>
+                        <Field label="البريد"><Input value={newLeader.email} onChange={(e) => setNewLeader({ ...newLeader, email: e.target.value })} /></Field>
+                        <Field label="حد الجمعيات"><Input type="number" value={newLeader.maxGroups} onChange={(e) => setNewLeader({ ...newLeader, maxGroups: e.target.value })} /></Field>
+                        <div className="md:col-span-2"><Field label="ملاحظات"><Textarea value={newLeader.notes} onChange={(e) => setNewLeader({ ...newLeader, notes: e.target.value })} /></Field></div>
+                      </div>
+                      <div className="flex justify-end"><Button onClick={addLeader} className="rounded-2xl">حفظ</Button></div>
+                    </DialogContent>
+                  </Dialog>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {leaders.map((leader) => {
+                      const leaderOwnedGroups = groups.filter((g) => g.leaderId === leader.id);
+                      return (
+                        <Card key={leader.id} className="rounded-3xl border-white/10 bg-slate-950/60 text-slate-50">
+                          <CardContent className="p-5 space-y-4">
+                            <div className="flex items-start justify-between gap-3">
+                              <div>
+                                <div className="text-lg font-extrabold">{leader.name}</div>
+                                <div className="text-sm text-slate-400">{leader.phone} • {leader.email || 'بدون بريد'}</div>
+                              </div>
+                              <Badge variant={leader.active ? 'default' : 'destructive'}>{leader.active ? 'نشط' : 'موقوف'}</Badge>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3 text-sm">
+                              <MiniStat label="جمعياته" value={leaderOwnedGroups.length} />
+                              <MiniStat label="حد الجمعيات" value={leader.maxGroups} />
+                            </div>
+                            <div className="grid gap-2 md:grid-cols-2">
+                              <Button variant="secondary" className="rounded-2xl" onClick={() => setSelectedLeaderId(leader.id)}>فتح الحساب</Button>
+                              <Button variant={leader.active ? 'destructive' : 'default'} className="rounded-2xl" onClick={() => updateLeader(leader.id, { active: !leader.active })}>{leader.active ? 'إيقاف' : 'تفعيل'}</Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="rounded-3xl border-white/10 bg-slate-900/80 text-slate-50">
+                <CardHeader>
+                  <CardTitle className="text-xl font-bold">الجمعيات الحالية</CardTitle>
+                  <CardDescription className="text-slate-300">صلاحيات تعديل، حذف، أرشفة، إعادة فتح، والتحكم في السعات والأسعار.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {groups.length === 0 ? <Empty text="لا توجد جمعيات بعد." /> : groups.map((g) => {
+                    const leader = leaders.find((l) => l.id === g.leaderId);
+                    const rem = calcRemaining(g.paymentDeadline);
+                    return (
+                      <Card key={g.id} className="rounded-3xl border-white/10 bg-slate-950/60 text-slate-50">
+                        <CardContent className="p-5 space-y-4">
+                          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                            <div>
+                              <div className="text-lg font-extrabold">{g.name}</div>
+                              <div className="text-sm text-slate-400">رئيس المجموعة: {leader?.name || '—'} • {g.currentMonthName}</div>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              <Badge>{statusLabel(g.status)}</Badge>
+                              <Badge variant="secondary">{g.members.length}/{groupCapacity(g)} عضو</Badge>
+                            </div>
+                          </div>
+                          <div className="grid gap-3 md:grid-cols-4">
+                            <MiniStat label="الاشتراك الشهري" value={currency(g.monthlyAmount)} />
+                            <MiniStat label="السعة المدفوعة" value={g.paidCapacity} />
+                            <MiniStat label="الحد المتبقي" value={remainingSlots(g)} />
+                            <MiniStat label="الوقت المتبقي" value={rem?.text || '—'} />
+                          </div>
+                          <div className="grid gap-3 md:grid-cols-2">
+                            <Button variant="secondary" className="rounded-2xl" onClick={() => { setSelectedLeaderId(g.leaderId); setSelectedGroupId(g.id); setRoleView('leader'); }}>فتح كرئيس مجموعة</Button>
+                            {g.status === 'archived' ? (
+                              <Button className="rounded-2xl" onClick={() => reopenArchived(g.id)}><Archive className="ms-2 size-4" />إعادة فتح</Button>
+                            ) : (
+                              <Button variant="destructive" className="rounded-2xl" onClick={() => updateGroup(g.id, { status: 'archived' })}>أرشفة من الإدارة</Button>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="space-y-6">
+              <Card className="rounded-3xl border-white/10 bg-slate-900/80 text-slate-50">
+                <CardHeader>
+                  <CardTitle className="text-xl font-bold">إعدادات المنصة</CardTitle>
+                  <CardDescription className="text-slate-300">تعديل السعر، الشروط، ورسائل الشكر.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Field label="اسم المنصة"><Input value={state.platform.name} onChange={(e) => updateState((d) => { d.platform.name = e.target.value; })} /></Field>
+                  <Field label="السعر لكل عضو إضافي (د.إ)"><Input type="number" value={state.platform.memberPrice} onChange={(e) => updateState((d) => { d.platform.memberPrice = Number(e.target.value || 0); })} /></Field>
+                  <div className="flex items-center justify-between rounded-2xl border border-white/10 p-4">
+                    <div>
+                      <div className="font-bold">تفعيل إلزام الموافقة على الشروط</div>
+                      <div className="text-sm text-slate-400">يجب على رئيس المجموعة والعضو الموافقة قبل الانضمام.</div>
+                    </div>
+                    <Switch checked={state.platform.termsEnabled} onCheckedChange={(v) => updateState((d) => { d.platform.termsEnabled = v; })} />
+                  </div>
+                  <Field label="الشروط والأحكام"><Textarea className="min-h-40" value={state.platform.terms} onChange={(e) => updateState((d) => { d.platform.terms = e.target.value; })} /></Field>
+                  <Field label="رسالة الشكر بعد الدفع"><Textarea value={state.platform.thankYouMember} onChange={(e) => updateState((d) => { d.platform.thankYouMember = e.target.value; })} /></Field>
+                  <Field label="رسالة ختام الدورة"><Textarea value={state.platform.thankYouCycle} onChange={(e) => updateState((d) => { d.platform.thankYouCycle = e.target.value; })} /></Field>
+                </CardContent>
+              </Card>
+
+              <Card className="rounded-3xl border-white/10 bg-slate-900/80 text-slate-50">
+                <CardHeader>
+                  <CardTitle className="text-xl font-bold">سجل الحركات</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ScrollArea className="h-[520px] pe-2">
+                    <div className="space-y-3">
+                      {state.audit.length === 0 ? <Empty text="لا توجد حركات بعد." /> : state.audit.map((item) => (
+                        <div key={item.id} className="rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm">
+                          <div className="font-bold">{item.action}</div>
+                          <div className="text-slate-400 mt-1">{item.details}</div>
+                          <div className="text-slate-500 mt-2">{item.at}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        )}
+
+        {roleView === 'leader' && selectedLeader && (
+          <div className="grid gap-6 lg:grid-cols-[1.05fr_.95fr]">
+            <div className="space-y-6">
+              <Card className="rounded-3xl border-white/10 bg-slate-900/80 text-slate-50">
+                <CardHeader className="flex flex-row items-center justify-between gap-4">
+                  <div>
+                    <CardTitle className="text-xl font-bold">لوحة رئيس المجموعة</CardTitle>
+                    <CardDescription className="text-slate-300">إدارة الجمعيات، الدعوات، الأعضاء، الأشهر، والإيصالات.</CardDescription>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Select value={selectedLeaderId} onValueChange={setSelectedLeaderId}>
+                      <SelectTrigger className="w-52 rounded-2xl bg-slate-950/60"><SelectValue placeholder="اختر رئيس المجموعة" /></SelectTrigger>
+                      <SelectContent>
+                        {leaders.map((l) => <SelectItem key={l.id} value={l.id}>{l.name}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                    <Dialog open={groupDialogOpen} onOpenChange={setGroupDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button className="rounded-2xl"><Plus className="ms-2 size-4" />إنشاء جمعية</Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-2xl rounded-3xl">
+                        <DialogHeader>
+                          <DialogTitle>إنشاء جمعية جديدة</DialogTitle>
+                          <DialogDescription>يبدأ رئيس المجموعة بجمعية واحدة وعضوين مجانًا، ثم يشتري سعة إضافية.</DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-3 md:grid-cols-2">
+                          <Field label="رئيس المجموعة">
+                            <Select value={newGroup.leaderId} onValueChange={(v) => setNewGroup({ ...newGroup, leaderId: v })}>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                              <SelectContent>{leaders.map((l) => <SelectItem key={l.id} value={l.id}>{l.name}</SelectItem>)}</SelectContent>
+                            </Select>
+                          </Field>
+                          <Field label="اسم الجمعية"><Input value={newGroup.name} onChange={(e) => setNewGroup({ ...newGroup, name: e.target.value })} /></Field>
+                          <div className="md:col-span-2"><Field label="الوصف"><Textarea value={newGroup.description} onChange={(e) => setNewGroup({ ...newGroup, description: e.target.value })} /></Field></div>
+                          <Field label="الاشتراك الشهري"><Input type="number" value={newGroup.monthlyAmount} onChange={(e) => setNewGroup({ ...newGroup, monthlyAmount: e.target.value })} /></Field>
+                          <Field label="عدد أشهر الدورة"><Input type="number" value={newGroup.monthsCount} onChange={(e) => setNewGroup({ ...newGroup, monthsCount: e.target.value })} /></Field>
+                          <Field label="الشهر الحالي"><Input value={newGroup.currentMonthName} onChange={(e) => setNewGroup({ ...newGroup, currentMonthName: e.target.value })} /></Field>
+                          <Field label="موعد انتهاء الدفع"><Input type="datetime-local" value={newGroup.paymentDeadline} onChange={(e) => setNewGroup({ ...newGroup, paymentDeadline: e.target.value })} /></Field>
+                          <Field label="اسم المستفيد للتحويل"><Input value={newGroup.transferName} onChange={(e) => setNewGroup({ ...newGroup, transferName: e.target.value })} /></Field>
+                          <Field label="البنك"><Input value={newGroup.transferBank} onChange={(e) => setNewGroup({ ...newGroup, transferBank: e.target.value })} /></Field>
+                          <div className="md:col-span-2"><Field label="رقم الآيبان أو وسيلة التحويل"><Input value={newGroup.transferIban} onChange={(e) => setNewGroup({ ...newGroup, transferIban: e.target.value })} /></Field></div>
+                        </div>
+                        <div className="flex justify-end"><Button onClick={addGroup} className="rounded-2xl">إنشاء</Button></div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Alert className="rounded-2xl border-amber-500/30 bg-amber-500/10 text-amber-100">
+                    <AlertDescription>
+                      البداية المجانية: جمعية واحدة + عضوان. بعد ذلك يتم شراء السعة بسعر {currency(state.platform.memberPrice)} لكل عضو إضافي.
+                    </AlertDescription>
+                  </Alert>
+
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    {leaderGroups.map((g) => {
+                      const rem = calcRemaining(g.paymentDeadline);
+                      const approvedThisMonth = g.receipts.filter((r) => r.monthName === g.currentMonthName && r.status === 'approved').length;
+                      return (
+                        <Card key={g.id} className={`rounded-3xl border ${selectedGroupId === g.id ? 'border-blue-500' : 'border-white/10'} bg-slate-950/60 text-slate-50`}>
+                          <CardContent className="p-5 space-y-4">
+                            <div className="flex items-start justify-between gap-3">
+                              <div>
+                                <div className="text-lg font-extrabold">{g.name}</div>
+                                <div className="text-sm text-slate-400">{g.currentMonthName}</div>
+                              </div>
+                              <Badge>{statusLabel(g.status)}</Badge>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3 text-sm">
+                              <MiniStat label="الأعضاء" value={`${g.members.length}/${groupCapacity(g)}`} />
+                              <MiniStat label="المتبقي" value={remainingSlots(g)} />
+                              <MiniStat label="اعتمادات الشهر" value={approvedThisMonth} />
+                              <MiniStat label="الوقت المتبقي" value={rem?.text || '—'} />
+                            </div>
+                            <Button className="w-full rounded-2xl" variant={selectedGroupId === g.id ? 'default' : 'secondary'} onClick={() => setSelectedGroupId(g.id)}>فتح الجمعية</Button>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                    {leaderGroups.length === 0 && <Empty text="لا توجد جمعيات لهذا الحساب بعد." />}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {selectedGroup && (
+                <LeaderGroupPanel
+                  group={selectedGroup}
+                  platform={state.platform}
+                  onUpdateGroup={updateGroup}
+                  onPurchaseCapacity={purchaseCapacity}
+                  onAddMemberDirect={addMemberDirect}
+                  onAcceptJoinRequest={acceptJoinRequest}
+                  onRejectJoinRequest={rejectJoinRequest}
+                  onRemoveMember={removeMember}
+                  onUpdateMember={updateMember}
+                  onSetBeneficiary={setBeneficiary}
+                  onApproveReceipt={approveReceipt}
+                  onRejectReceipt={rejectReceipt}
+                  onCompleteCycle={completeCycle}
+                />
+              )}
+            </div>
+
+            <div className="space-y-6">
+              {selectedGroup ? <MemberJoinSimulator group={selectedGroup} platform={state.platform} onJoin={addJoinRequest} /> : <Empty text="اختر جمعية أولًا." />}
+            </div>
+          </div>
+        )}
+
+        {roleView === 'member' && selectedGroup && (
+          <MemberPortal group={selectedGroup} member={selectedMember} setSelectedGroupId={setSelectedGroupId} groups={groups} setSelectedMemberId={setSelectedMemberId} onSubmitReceipt={submitReceipt} />
+        )}
+      </div>
+    </div>
+  );
 }
 
-function filterList(val) {
-  renderList(val.trim());
+function LeaderGroupPanel({ group, platform, onUpdateGroup, onPurchaseCapacity, onAddMemberDirect, onAcceptJoinRequest, onRejectJoinRequest, onRemoveMember, onUpdateMember, onSetBeneficiary, onApproveReceipt, onRejectReceipt, onCompleteCycle }) {
+  const [extraCount, setExtraCount] = useState(1);
+  const [memberForm, setMemberForm] = useState({ name: '', phone: '', dueMonth: '' });
+  const monthUsage = monthSlots(group.members);
+  const beneficiary = group.members.find((m) => m.id === group.currentBeneficiaryMemberId);
+  const rem = calcRemaining(group.paymentDeadline);
+  const canAddMember = remainingSlots(group) > 0;
+  const approvedThisMonth = group.receipts.filter((r) => r.monthName === group.currentMonthName && r.status === 'approved').length;
+
+  return (
+    <>
+      <Card className="rounded-3xl border-white/10 bg-slate-900/80 text-slate-50">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold">تفاصيل الجمعية</CardTitle>
+          <CardDescription className="text-slate-300">تحكم كامل داخل الجمعية: الأعضاء، الأشهر، السعة، والدعوات.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <MetricLite icon={<Users className="size-4" />} label="الأعضاء الحاليون" value={group.members.length} />
+            <MetricLite icon={<WalletCards className="size-4" />} label="السعة الكلية" value={groupCapacity(group)} />
+            <MetricLite icon={<CheckCircle2 className="size-4" />} label="المتبقي" value={remainingSlots(group)} />
+            <MetricLite icon={<Receipt className="size-4" />} label="الإيصالات المعتمدة" value={approvedThisMonth} />
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-[1.2fr_.8fr]">
+            <Card className="rounded-3xl border-white/10 bg-slate-950/50 text-slate-50">
+              <CardContent className="p-5 space-y-4">
+                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <div className="text-lg font-extrabold">رابط المشاركة عبر واتساب</div>
+                    <div className="text-sm text-slate-400">يرسل للأعضاء رابط الانضمام فقط مع اختيار الشهر المرغوب.</div>
+                  </div>
+                  <Button variant="secondary" className="rounded-2xl" onClick={() => navigator.clipboard?.writeText(group.inviteLink)}><Copy className="ms-2 size-4" />نسخ الرابط</Button>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-slate-900 p-4 text-sm break-all">{group.inviteLink}</div>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <Field label="الشهر الحالي"><Input value={group.currentMonthName} onChange={(e) => onUpdateGroup(group.id, { currentMonthName: e.target.value })} /></Field>
+                  <Field label="آخر موعد للدفع"><Input type="datetime-local" value={group.paymentDeadline} onChange={(e) => onUpdateGroup(group.id, { paymentDeadline: e.target.value })} /></Field>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="rounded-3xl border-amber-400/20 bg-amber-400/10 text-amber-50">
+              <CardContent className="p-5 space-y-4">
+                <div className="flex items-center gap-2 text-lg font-extrabold"><Clock3 className="size-5" />الوقت المتبقي للدفع</div>
+                <div className="rounded-3xl border border-amber-300/20 bg-slate-950/40 p-5">
+                  <div className="text-sm text-amber-100/80">المهلة الحالية</div>
+                  <div className="text-2xl font-black mt-2">{rem?.text || '—'}</div>
+                </div>
+                <div className="rounded-3xl border border-white/10 bg-slate-950/50 p-4">
+                  <div className="text-sm text-amber-100/80">المستفيد الحالي</div>
+                  <div className="text-2xl font-black mt-2">{beneficiary?.name || 'لم يتم تحديده بعد'}</div>
+                  <div className="text-sm text-slate-300 mt-3">قيمة الشهر: {currency(group.monthlyAmount)}</div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            <Card className="rounded-3xl border-white/10 bg-slate-950/50 text-slate-50">
+              <CardContent className="p-5 space-y-4">
+                <div className="flex items-center gap-2 text-lg font-extrabold"><Plus className="size-5" />شراء سعة إضافية</div>
+                <div className="grid gap-3 md:grid-cols-2">
+                  <Field label="عدد الأعضاء المطلوب إضافتهم"><Input type="number" value={extraCount} onChange={(e) => setExtraCount(Number(e.target.value || 1))} /></Field>
+                  <Field label="المبلغ المطلوب">
+                    <Input value={currency(extraCount * platform.memberPrice)} readOnly />
+                  </Field>
+                </div>
+                <Button className="rounded-2xl" onClick={() => onPurchaseCapacity(group.id, extraCount)}>تأكيد شراء السعة</Button>
+                <div className="text-sm text-slate-400">بعد الدفع يتم فتح هذا العدد فقط. لا يمكن تجاوز العدد المدفوع.</div>
+              </CardContent>
+            </Card>
+
+            <Card className="rounded-3xl border-white/10 bg-slate-950/50 text-slate-50">
+              <CardContent className="p-5 space-y-4">
+                <div className="flex items-center gap-2 text-lg font-extrabold"><UserPlus className="size-5" />إضافة عضو يدويًا</div>
+                <div className="grid gap-3 md:grid-cols-2">
+                  <Field label="الاسم"><Input value={memberForm.name} onChange={(e) => setMemberForm({ ...memberForm, name: e.target.value })} /></Field>
+                  <Field label="الهاتف"><Input value={memberForm.phone} onChange={(e) => setMemberForm({ ...memberForm, phone: e.target.value })} /></Field>
+                  <div className="md:col-span-2"><Field label="شهر الاستحقاق"><Input value={memberForm.dueMonth} onChange={(e) => setMemberForm({ ...memberForm, dueMonth: e.target.value })} placeholder="مثال: أغسطس 2026" /></Field></div>
+                </div>
+                <Button disabled={!canAddMember} className="rounded-2xl" onClick={() => { onAddMemberDirect(group.id, memberForm); setMemberForm({ name: '', phone: '', dueMonth: '' }); }}>إضافة العضو</Button>
+                {!canAddMember && <div className="text-sm text-rose-300">انتهت السعة الحالية. يجب شراء أعضاء إضافيين أولًا.</div>}
+              </CardContent>
+            </Card>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Tabs defaultValue="members" className="space-y-4">
+        <TabsList className="grid h-auto grid-cols-4 rounded-3xl bg-slate-900/80 p-1">
+          <TabsTrigger value="members" className="rounded-2xl">الأعضاء</TabsTrigger>
+          <TabsTrigger value="requests" className="rounded-2xl">طلبات الانضمام</TabsTrigger>
+          <TabsTrigger value="receipts" className="rounded-2xl">الإيصالات</TabsTrigger>
+          <TabsTrigger value="history" className="rounded-2xl">السجل</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="members">
+          <Card className="rounded-3xl border-white/10 bg-slate-900/80 text-slate-50">
+            <CardHeader>
+              <CardTitle className="text-xl font-bold">أعضاء الجمعية</CardTitle>
+              <CardDescription className="text-slate-300">صلاحيات كاملة: حذف، تعديل، نقل، تحديد مستفيد، وتغيير شهر الاستحقاق.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {group.members.length === 0 ? <Empty text="لا يوجد أعضاء حتى الآن." /> : group.members.map((m) => (
+                  <Card key={m.id} className="rounded-3xl border-white/10 bg-slate-950/60 text-slate-50">
+                    <CardContent className="p-5 space-y-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <div className="text-lg font-extrabold">{m.name}</div>
+                          <div className="text-sm text-slate-400">{m.phone}</div>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {group.currentBeneficiaryMemberId === m.id && <Badge className="bg-amber-500 text-slate-950">المستفيد الحالي</Badge>}
+                          <Badge variant={m.paymentStatus === 'approved' ? 'default' : m.paymentStatus === 'submitted' ? 'secondary' : m.paymentStatus === 'rejected' ? 'destructive' : 'outline'}>{paymentLabel(m.paymentStatus)}</Badge>
+                        </div>
+                      </div>
+
+                      <Field label="شهر الاستحقاق"><Input value={m.dueMonth} onChange={(e) => onUpdateMember(group.id, m.id, { dueMonth: e.target.value })} /></Field>
+                      <div className="grid gap-3 md:grid-cols-2 text-sm">
+                        <MiniStat label="حالة العضو" value={statusMemberLabel(m.status)} />
+                        <MiniStat label="تاريخ الانضمام" value={m.joinedAt} />
+                      </div>
+                      <div className="grid gap-2 md:grid-cols-2">
+                        <Button className="rounded-2xl" variant="secondary" onClick={() => onSetBeneficiary(group.id, m.id)}>تعيين كمستفيد</Button>
+                        <Button className="rounded-2xl" variant="destructive" onClick={() => onRemoveMember(group.id, m.id)}><Trash2 className="ms-2 size-4" />حذف</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+              <Separator className="bg-white/10" />
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                {Object.keys(monthUsage).length === 0 ? <Empty text="لا توجد أشهر مسندة للأعضاء بعد." /> : Object.entries(monthUsage).map(([month, count]) => (
+                  <div key={month} className="rounded-3xl border border-white/10 bg-slate-950/60 p-4 text-sm">
+                    <div className="font-bold">{month}</div>
+                    <div className="text-slate-400 mt-1">{count} عضو/أعضاء</div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="requests">
+          <Card className="rounded-3xl border-white/10 bg-slate-900/80 text-slate-50">
+            <CardHeader>
+              <CardTitle className="text-xl font-bold">طلبات الانضمام</CardTitle>
+              <CardDescription className="text-slate-300">تأتي من رابط الدعوة. يختار العضو الشهر المرغوب ثم يعتمد رئيس المجموعة الطلب.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {group.joinRequests.length === 0 ? <Empty text="لا توجد طلبات حتى الآن." /> : group.joinRequests.map((req) => (
+                <Card key={req.id} className="rounded-3xl border-white/10 bg-slate-950/60 text-slate-50">
+                  <CardContent className="p-5 space-y-4">
+                    <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                      <div>
+                        <div className="text-lg font-extrabold">{req.name}</div>
+                        <div className="text-sm text-slate-400">{req.phone} • الشهر المطلوب: {req.desiredMonth || 'غير محدد'}</div>
+                      </div>
+                      <Badge variant={req.status === 'pending' ? 'secondary' : req.status === 'accepted' ? 'default' : 'destructive'}>{requestLabel(req.status)}</Badge>
+                    </div>
+                    <div className="text-sm text-slate-500">وقت الطلب: {req.at}</div>
+                    {req.status === 'pending' && (
+                      <div className="grid gap-2 md:grid-cols-2">
+                        <Button disabled={remainingSlots(group) <= 0} className="rounded-2xl" onClick={() => onAcceptJoinRequest(group.id, req.id)}>قبول</Button>
+                        <Button variant="destructive" className="rounded-2xl" onClick={() => onRejectJoinRequest(group.id, req.id)}>رفض</Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="receipts">
+          <Card className="rounded-3xl border-white/10 bg-slate-900/80 text-slate-50">
+            <CardHeader>
+              <CardTitle className="text-xl font-bold">إيصالات الدفع</CardTitle>
+              <CardDescription className="text-slate-300">كل عضو يحول إلى المستفيد الحالي ثم يرفع الإيصال هنا. الاعتماد بيد رئيس المجموعة.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="rounded-3xl border border-white/10 bg-slate-950/60 p-5 text-sm">
+                <div className="font-bold text-base mb-2">بيانات التحويل للمستفيد الحالي</div>
+                <div>الاسم: {group.transferInfo.name || '—'}</div>
+                <div>البنك: {group.transferInfo.bank || '—'}</div>
+                <div>الآيبان / وسيلة التحويل: {group.transferInfo.iban || '—'}</div>
+              </div>
+              {group.receipts.length === 0 ? <Empty text="لا توجد إيصالات مرفوعة بعد." /> : group.receipts.map((r) => (
+                <Card key={r.id} className="rounded-3xl border-white/10 bg-slate-950/60 text-slate-50">
+                  <CardContent className="p-5 space-y-4">
+                    <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                      <div>
+                        <div className="text-lg font-extrabold">{r.memberName}</div>
+                        <div className="text-sm text-slate-400">الشهر: {r.monthName} • المستفيد: {r.beneficiaryName || '—'}</div>
+                      </div>
+                      <Badge variant={r.status === 'approved' ? 'default' : r.status === 'submitted' ? 'secondary' : 'destructive'}>{receiptLabel(r.status)}</Badge>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-slate-900 p-4 text-sm leading-7 whitespace-pre-wrap">{r.text}</div>
+                    <div className="text-sm text-slate-500">رفع بتاريخ: {r.submittedAt}</div>
+                    {r.adminMessage && <Alert className="rounded-2xl border-white/10 bg-slate-900"><AlertDescription>{r.adminMessage}</AlertDescription></Alert>}
+                    {r.status === 'submitted' && (
+                      <div className="grid gap-2 md:grid-cols-2">
+                        <Button className="rounded-2xl" onClick={() => onApproveReceipt(group.id, r.id)}>اعتماد الإيصال</Button>
+                        <Button variant="destructive" className="rounded-2xl" onClick={() => onRejectReceipt(group.id, r.id)}>رفض الإيصال</Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="history">
+          <Card className="rounded-3xl border-white/10 bg-slate-900/80 text-slate-50">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-xl font-bold">سجل الدورة</CardTitle>
+                <CardDescription className="text-slate-300">أشهر مكتملة ورسالة ختام الدورة عند النهاية.</CardDescription>
+              </div>
+              <Button className="rounded-2xl" onClick={() => onCompleteCycle(group.id)}>إنهاء هذا الشهر</Button>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {group.history.length === 0 ? <Empty text="لم تُكمل أي دورة بعد." /> : group.history.map((h) => (
+                <Card key={h.id} className="rounded-3xl border-white/10 bg-slate-950/60 text-slate-50">
+                  <CardContent className="p-5 space-y-3">
+                    <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                      <div className="text-lg font-extrabold">{h.monthName}</div>
+                      <Badge>{h.beneficiaryName || 'بدون مستفيد'}</Badge>
+                    </div>
+                    <div className="text-sm text-slate-400">الدفع المعتمد: {h.approvedReceipts} / {h.totalMembers}</div>
+                    <div className="text-sm text-slate-500">{h.completedAt}</div>
+                    <Alert className="rounded-2xl border-white/10 bg-slate-900"><AlertDescription>{h.closingMessage}</AlertDescription></Alert>
+                  </CardContent>
+                </Card>
+              ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </>
+  );
 }
 
-function openJameia(id) {
-  // تنتقل لصفحة الجمعية العامة (للأعضاء)
-  window.location.href = 'index.html?j=' + id;
+function MemberJoinSimulator({ group, platform, onJoin }) {
+  const [form, setForm] = useState({ name: '', phone: '', desiredMonth: '', agreedTerms: false });
+  return (
+    <Card className="rounded-3xl border-white/10 bg-slate-900/80 text-slate-50">
+      <CardHeader>
+        <CardTitle className="text-xl font-bold">معاينة رابط الانضمام</CardTitle>
+        <CardDescription className="text-slate-300">العضو يرى هذه الصفحة بعد وصول رابط واتساب له.</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="rounded-3xl border border-white/10 bg-slate-950/60 p-5 space-y-3">
+          <div className="text-lg font-extrabold">{group.name}</div>
+          <div className="text-sm text-slate-400">الاشتراك الشهري: {currency(group.monthlyAmount)}</div>
+          <div className="text-sm text-slate-400">الأشهر المتاحة يحددها العضو كرغبة أولية ثم يعتمدها رئيس المجموعة.</div>
+          <div className="text-xs break-all text-blue-300">{group.inviteLink}</div>
+        </div>
+        <Field label="اسم العضو"><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></Field>
+        <Field label="رقم الهاتف"><Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></Field>
+        <Field label="الشهر المرغوب"><Input value={form.desiredMonth} onChange={(e) => setForm({ ...form, desiredMonth: e.target.value })} placeholder="مثال: سبتمبر 2026" /></Field>
+        <Alert className="rounded-2xl border-white/10 bg-slate-950/60"><AlertDescription className="whitespace-pre-wrap leading-7 text-slate-300">{platform.terms}</AlertDescription></Alert>
+        <div className="flex items-center gap-3 rounded-2xl border border-white/10 p-4">
+          <Switch checked={form.agreedTerms} onCheckedChange={(v) => setForm({ ...form, agreedTerms: v })} />
+          <div className="text-sm text-slate-300">أوافق على الشروط والأحكام.</div>
+        </div>
+        <Button className="w-full rounded-2xl" disabled={!form.agreedTerms || !form.name || !form.phone} onClick={() => { onJoin(group.id, form); setForm({ name: '', phone: '', desiredMonth: '', agreedTerms: false }); }}>إرسال طلب الانضمام</Button>
+      </CardContent>
+    </Card>
+  );
 }
 
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function MemberPortal({ group, member, groups, setSelectedGroupId, setSelectedMemberId, onSubmitReceipt }) {
+  const [receiptText, setReceiptText] = useState('تم التحويل إلى المستفيد الحالي. المرجع: TRX-001');
+  const beneficiary = group.members.find((m) => m.id === group.currentBeneficiaryMemberId);
+  const rem = calcRemaining(group.paymentDeadline);
+  const members = group.members;
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-[.9fr_1.1fr]">
+      <Card className="rounded-3xl border-white/10 bg-slate-900/80 text-slate-50">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold">بوابة العضو</CardTitle>
+          <CardDescription className="text-slate-300">العضو يرى جمعيته، موعده، المستفيد الحالي، ويرفع إيصال الدفع.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-3 md:grid-cols-2">
+            <Field label="الجمعية">
+              <Select value={group.id} onValueChange={setSelectedGroupId}>
+                <SelectTrigger className="rounded-2xl bg-slate-950/60"><SelectValue /></SelectTrigger>
+                <SelectContent>{groups.map((g) => <SelectItem key={g.id} value={g.id}>{g.name}</SelectItem>)}</SelectContent>
+              </Select>
+            </Field>
+            <Field label="العضو">
+              <Select value={member?.id || ''} onValueChange={setSelectedMemberId}>
+                <SelectTrigger className="rounded-2xl bg-slate-950/60"><SelectValue placeholder="اختر العضو" /></SelectTrigger>
+                <SelectContent>{members.map((m) => <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>)}</SelectContent>
+              </Select>
+            </Field>
+          </div>
+
+          {member ? (
+            <>
+              <div className="grid gap-4 md:grid-cols-2">
+                <MetricLite icon={<CalendarDays className="size-4" />} label="شهر الاستحقاق" value={member.dueMonth || 'غير محدد'} />
+                <MetricLite icon={<CheckCircle2 className="size-4" />} label="حالة الدفع" value={paymentLabel(member.paymentStatus)} />
+              </div>
+              <div className="rounded-3xl border border-amber-400/20 bg-amber-400/10 p-5">
+                <div className="text-sm text-amber-100/80">المستفيد الحالي</div>
+                <div className="text-2xl font-black mt-2">{beneficiary?.name || 'لم يحدد بعد'}</div>
+                <div className="mt-3 text-sm text-slate-100">المبلغ المطلوب: {currency(group.monthlyAmount)}</div>
+                <div className="mt-2 text-sm text-slate-200">المهلة المتبقية: {rem?.text || '—'}</div>
+              </div>
+              <div className="rounded-3xl border border-white/10 bg-slate-950/60 p-5 space-y-2 text-sm">
+                <div className="font-bold">بيانات التحويل</div>
+                <div>اسم المستفيد: {group.transferInfo.name || '—'}</div>
+                <div>البنك: {group.transferInfo.bank || '—'}</div>
+                <div>الآيبان / وسيلة التحويل: {group.transferInfo.iban || '—'}</div>
+              </div>
+              <Field label="نص/تفاصيل الإيصال"><Textarea value={receiptText} onChange={(e) => setReceiptText(e.target.value)} /></Field>
+              <Button className="w-full rounded-2xl" onClick={() => onSubmitReceipt(group.id, member.id, receiptText)}>إرسال إيصال الدفع</Button>
+              {member.lastThankYou && <Alert className="rounded-2xl border-white/10 bg-slate-950/60"><AlertDescription>{member.lastThankYou}</AlertDescription></Alert>}
+            </>
+          ) : <Empty text="اختر عضوًا لمعاينة تجربته." />}
+        </CardContent>
+      </Card>
+
+      <Card className="rounded-3xl border-white/10 bg-slate-900/80 text-slate-50">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold">ما الذي ينقص لتحويل هذا النموذج إلى نظام حقيقي؟</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3 text-sm leading-7 text-slate-300">
+          <div>1) نظام تسجيل دخول فعلي وصلاحيات Role-Based على الخادم.</div>
+          <div>2) قاعدة بيانات للعلاقات بين المنصة، رؤساء المجموعات، الجمعيات، الأعضاء، والإيصالات.</div>
+          <div>3) رفع ملفات حقيقي للإيصالات إلى تخزين سحابي مع مراجعة.</div>
+          <div>4) تكامل واتساب لإرسال روابط الدعوة والتنبيهات.</div>
+          <div>5) تكامل دفع لشراء السعة الإضافية فقط، وليس لتحصيل أموال الجمعية بين الأعضاء.</div>
+          <div>6) إشعارات تلقائية قبل انتهاء المهلة وبعد الاعتماد والرفض والإغلاق.</div>
+          <div>7) سجل تدقيق backend لا يمكن العبث به من الواجهة.</div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
 
-// ─── BOOT ───
-loadData();
-renderList();
-cloudSync();
-// تحديث كل 30 ثانية
-setInterval(function() {
-  cloudSync();
-}, 30000);
-</script>
-</body>
-</html>
+function Field({ label, children }) {
+  return (
+    <div className="space-y-2">
+      <Label className="text-slate-200">{label}</Label>
+      {children}
+    </div>
+  );
+}
+
+function MetricCard({ icon, label, value }) {
+  return (
+    <div className="rounded-3xl border border-white/10 bg-slate-950/60 p-4">
+      <div className="flex items-center gap-2 text-slate-300">{icon}<span className="text-sm">{label}</span></div>
+      <div className="mt-3 text-3xl font-black">{value}</div>
+    </div>
+  );
+}
+
+function MetricLite({ icon, label, value }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-slate-900 p-4">
+      <div className="flex items-center gap-2 text-slate-400 text-xs">{icon}<span>{label}</span></div>
+      <div className="mt-2 font-bold text-sm md:text-base">{value}</div>
+    </div>
+  );
+}
+
+function MiniStat({ label, value }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-slate-900 p-3">
+      <div className="text-xs text-slate-400">{label}</div>
+      <div className="mt-1 font-bold">{value}</div>
+    </div>
+  );
+}
+
+function Empty({ text }) {
+  return <div className="rounded-3xl border border-dashed border-white/10 bg-slate-950/50 p-8 text-center text-slate-400">{text}</div>;
+}
+
+function statusLabel(status) {
+  const map = {
+    draft: 'مسودة',
+    open: 'مفتوحة',
+    running: 'جارية',
+    archived: 'مؤرشفة',
+    paused: 'موقوفة'
+  };
+  return map[status] || status;
+}
+
+function statusMemberLabel(status) {
+  const map = {
+    active: 'نشط',
+    pending: 'بانتظار',
+    suspended: 'موقوف',
+    completed: 'مكتمل'
+  };
+  return map[status] || status;
+}
+
+function paymentLabel(status) {
+  const map = {
+    unpaid: 'لم يدفع',
+    submitted: 'رفع إيصال',
+    approved: 'تم الاعتماد',
+    rejected: 'مرفوض'
+  };
+  return map[status] || status;
+}
+
+function requestLabel(status) {
+  const map = {
+    pending: 'بانتظار المراجعة',
+    accepted: 'تم القبول',
+    rejected: 'مرفوض'
+  };
+  return map[status] || status;
+}
+
+function receiptLabel(status) {
+  const map = {
+    submitted: 'مرفوع',
+    approved: 'معتمد',
+    rejected: 'مرفوض'
+  };
+  return map[status] || status;
+}
+
+function monthSlots(members) {
+  const map = {};
+  members.forEach((m) => {
+    if (!m.dueMonth) return;
+    map[m.dueMonth] = (map[m.dueMonth] || 0) + 1;
+  });
+  return map;
+}
+
+export default App;
