@@ -47,15 +47,6 @@ const SUPABASE_KEY = "sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function checkUser() {
-  const { data } = await supabase.auth.getSession();
-
-  if (!data.session) {
-    window.location.href = "login.html";
-  }
-}
-
-checkUser();
-
 async function logout(){
   await supabase.auth.signOut();
   window.location.href="login.html";
