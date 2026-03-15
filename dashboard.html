@@ -1,30 +1,42 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <title>لوحة التحكم</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body{
 font-family:Arial;
+background:#f4f6f8;
 text-align:center;
-background:#f5f5f5;
-padding-top:100px;
+padding:40px;
 }
+
 .box{
 background:white;
-padding:40px;
+padding:30px;
 border-radius:10px;
-width:400px;
+max-width:450px;
 margin:auto;
 box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
+
+.plan{
+font-size:22px;
+color:#1a7f64;
+margin-top:10px;
+margin-bottom:20px;
+}
+
 button{
-padding:10px 20px;
+padding:10px 18px;
+border:none;
 background:#1a7f64;
 color:white;
-border:none;
 border-radius:5px;
 cursor:pointer;
+margin-top:10px;
 }
 </style>
 </head>
@@ -33,26 +45,33 @@ cursor:pointer;
 
 <div class="box">
 <h2>مرحبا بك في صندوق ساهل</h2>
-<p>تم تسجيل الدخول بنجاح</p>
-<button onclick="window.location.href='plans.html'">اختيار الباقة</button>
-<button onclick="logout()">تسجيل الخروج</button>
+
+<p>الباقة التي اخترتها:</p>
+
+<div class="plan" id="planName"></div>
+
+<button onclick="window.location.href='plans.html'">تغيير الباقة</button>
+
 </div>
 
-<script type="module">
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+<script>
+const plan = localStorage.getItem("selectedPlan");
 
-const SUPABASE_URL = "https://qxyrpnexybxmftrnzpg.supabase.co";
-const SUPABASE_KEY = "sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT";
+let name = "";
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-async function checkUser() {
-async function logout(){
-  await supabase.auth.signOut();
-  window.location.href="login.html";
+if(plan == 1){
+  name = "الباقة الأساسية";
 }
 
-window.logout = logout;
+if(plan == 2){
+  name = "الباقة المتقدمة";
+}
+
+if(plan == 3){
+  name = "الباقة الاحترافية";
+}
+
+document.getElementById("planName").innerText = name || "لم يتم اختيار باقة بعد";
 </script>
 
 </body>
