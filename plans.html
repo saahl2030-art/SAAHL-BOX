@@ -14,8 +14,8 @@ padding:40px;
 text-align:center;
 }
 
-h1{
-margin-bottom:30px;
+h2{
+margin-bottom:10px;
 }
 
 .plans{
@@ -23,6 +23,7 @@ display:flex;
 gap:20px;
 justify-content:center;
 flex-wrap:wrap;
+margin-top:30px;
 }
 
 .plan{
@@ -47,6 +48,22 @@ color:white;
 border-radius:5px;
 cursor:pointer;
 }
+
+.popular{
+border:2px solid #1a7f64;
+position:relative;
+}
+
+.badge{
+position:absolute;
+top:-12px;
+right:10px;
+background:#1a7f64;
+color:white;
+padding:4px 10px;
+border-radius:6px;
+font-size:12px;
+}
 </style>
 </head>
 
@@ -68,29 +85,11 @@ cursor:pointer;
   <button onclick="selectPlan(1)">اختيار</button>
 </div>
 
-<style>
-.popular{
-  border:2px solid #1a7f64;
-  position:relative;
-}
-
-.badge{
-  position:absolute;
-  top:-12px;
-  right:10px;
-  background:#1a7f64;
-  color:white;
-  padding:4px 10px;
-  border-radius:6px;
-  font-size:12px;
-}
-</style>
-
 <div class="plan popular">
   <span class="badge">الأكثر اختياراً</span>
   <h3>الباقة المتقدمة</h3>
-  <p> 3 مجموعات</p>
-  <p> 9 أعضاء لكل مجموعة</p>
+  <p>3 مجموعات</p>
+  <p>9 أعضاء لكل مجموعة</p>
   <p>إدارة متعددة للمجموعات</p>
   <p>تنظيم أفضل للأعضاء</p>
   <p class="price">79 درهم</p>
@@ -110,44 +109,18 @@ cursor:pointer;
 </div>
 
 <script type="module">
-
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
 const SUPABASE_URL = "https://qxyrpnexybxmftrnzpg.supabase.co";
 const SUPABASE_KEY = "sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT";
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+createClient(SUPABASE_URL, SUPABASE_KEY);
 
-window.selectPlan = async function(planId){
-
-const { data } = await supabase.auth.getUser();
-
-const user = data.user;
-
-if(!user){
-alert("يجب تسجيل الدخول أولاً");
-window.location.href="login.html";
-return;
+window.selectPlan = function(planId){
+  localStorage.setItem("selectedPlan", planId);
+  alert("تم اختيار الباقة بنجاح");
+  window.location.href = "dashboard.html";
 }
-
-const now = new Date();
-const expire = new Date();
-expire.setMonth(expire.getMonth()+1);
-
-await supabase.from("subscriptions").insert({
-user_id:user.id,
-plan_id:planId,
-status:"active",
-started_at:now,
-expires_at:expire
-});
-
-alert("تم تفعيل الباقة بنجاح");
-
-window.location.href="dashboard.html";
-
-}
-
 </script>
 
 </body>
