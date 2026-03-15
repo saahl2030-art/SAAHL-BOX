@@ -36,6 +36,7 @@ background:#1a7f64;
 color:white;
 border-radius:5px;
 cursor:pointer;
+margin-top:10px;
 }
 </style>
 </head>
@@ -54,25 +55,23 @@ cursor:pointer;
 </div>
 
 <script>
-
 const plan = localStorage.getItem("selectedPlan");
 
-let name="";
+let name = "";
 
-if(plan==1){
-name="الباقة الأساسية";
+if(plan == 1){
+  name = "الباقة الأساسية";
 }
 
-if(plan==2){
-name="الباقة المتقدمة";
+if(plan == 2){
+  name = "الباقة المتقدمة";
 }
 
-if(plan==3){
-name="الباقة الاحترافية";
+if(plan == 3){
+  name = "الباقة الاحترافية";
 }
 
-document.getElementById("planName").innerText=name || "لم يتم اختيار باقة بعد";
-
+document.getElementById("planName").innerText = name || "لم يتم اختيار باقة بعد";
 </script>
 
 </body>
