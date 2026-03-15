@@ -94,7 +94,7 @@
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
     const SUPABASE_URL = "https://qxyrpnexybxmfmtrnzpg.supabase.co";
-    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT_auth.html";
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
@@ -105,7 +105,7 @@
 
     function showMessage(text, type = "") {
       msg.textContent = text;
-      msg.className = "msg";
+      msg.className = "msg " + type;
     }
 
     async function login() {
