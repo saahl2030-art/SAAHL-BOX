@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+
 body{
 font-family:Tahoma;
 background:#f5f7fb;
@@ -35,6 +36,7 @@ padding:10px;
 margin-bottom:12px;
 border:1px solid #ddd;
 border-radius:6px;
+font-size:14px;
 }
 
 button{
@@ -53,10 +55,12 @@ background:#115e59;
 }
 
 .msg{
-margin-top:10px;
+margin-top:12px;
 text-align:center;
 font-size:14px;
+color:#333;
 }
+
 </style>
 </head>
 
@@ -92,10 +96,19 @@ const supabase = createClient(
 
 async function signup(){
 
-const name=document.getElementById("name").value
-const phone=document.getElementById("phone").value
-const email=document.getElementById("email").value
-const password=document.getElementById("password").value
+const name=document.getElementById("name").value.trim()
+const phone=document.getElementById("phone").value.trim()
+const email=document.getElementById("email").value.trim()
+const password=document.getElementById("password").value.trim()
+
+const msg=document.getElementById("msg")
+
+if(!name || !phone || !email || !password){
+msg.innerText="الرجاء تعبئة جميع الحقول"
+return
+}
+
+msg.innerText="جارٍ إنشاء الحساب..."
 
 const {data,error}=await supabase.auth.signUp({
 email:email,
@@ -109,13 +122,20 @@ phone:phone
 })
 
 if(error){
-document.getElementById("msg").innerText=error.message
-}else{
-document.getElementById("msg").innerText="تم إنشاء الحساب بنجاح"
+msg.innerText=error.message
+return
 }
 
+msg.innerText="تم إنشاء الحساب بنجاح... جارٍ الانتقال إلى تسجيل الدخول"
+
+setTimeout(()=>{
+window.location.href="login.html"
+},1500)
+
 }
+
 document.getElementById("signupBtn").addEventListener("click", signup)
+
 </script>
 
 </body>
