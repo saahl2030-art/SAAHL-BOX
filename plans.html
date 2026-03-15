@@ -58,20 +58,58 @@ cursor:pointer;
 
 <div class="plan">
 <h3>الباقة الأساسية</h3>
-<div class="price">49 درهم</div>
-<button onclick="selectPlan(1)">اختيار</button>
+<p>1 مجموعة</p>
+<p>حتى 5 أعضاء</p>
+<p>رسائل الطمأنينة الأساسية</p>
+<p class="price">49 درهم</p>
+<button>اختيار</button>
 </div>
 
-<div class="plan">
+<style>
+.popular{
+  border:2px solid #1a7f64;
+  position:relative;
+}
+
+.badge{
+  position:absolute;
+  top:-12px;
+  right:10px;
+  background:#1a7f64;
+  color:white;
+  padding:4px 10px;
+  border-radius:6px;
+  font-size:12px;
+}
+</style>
+
+<div class="plan popular">
+
+<span class="badge">الأكثر اختياراً</span>
+
 <h3>الباقة المتقدمة</h3>
-<div class="price">79 درهم</div>
-<button onclick="selectPlan(2)">اختيار</button>
+
+<p>حتى <strong>3 مجموعات</strong></p>
+<p>حتى <strong>9 أعضاء لكل مجموعة</strong></p>
+<p>إشعارات فورية لجميع الأعضاء</p>
+<p>متابعة حالة الطمأنينة لكل عضو</p>
+<p>تنبيه تلقائي عند عدم الاستجابة</p>
+
+<p class="price">79 درهم</p>
+
+<button>اختيار</button>
+
 </div>
 
 <div class="plan">
 <h3>الباقة الاحترافية</h3>
-<div class="price">129 درهم</div>
-<button onclick="selectPlan(3)">اختيار</button>
+<p>مجموعات غير محدودة</p>
+<p>أعضاء غير محدودين</p>
+<p>إشعارات فورية</p>
+<p>لوحة تحكم كاملة</p>
+<p>أولوية الدعم</p>
+<p class="price">129 درهم</p>
+<button>اختيار</button>
 </div>
 
 </div>
