@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>إنشاء حساب - صندوق ساهل</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+font-family:Tahoma;
+background:#f5f7fb;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.box{
+background:white;
+padding:30px;
+width:350px;
+border-radius:10px;
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:10px;
+margin-bottom:12px;
+border:1px solid #ddd;
+border-radius:6px;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#0f766e;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-size:15px;
+}
+
+button:hover{
+background:#115e59;
+}
+
+.msg{
+margin-top:10px;
+text-align:center;
+font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>إنشاء حساب</h2>
+
+<input id="name" placeholder="الاسم الكامل">
+
+<input id="phone" placeholder="رقم الهاتف">
+
+<input id="email" placeholder="البريد الإلكتروني">
+
+<input id="password" type="password" placeholder="كلمة المرور">
+
+<button onclick="signup()">إنشاء الحساب</button>
+
+<div class="msg" id="msg"></div>
+
+</div>
+
+
+<script type="module">
+
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"
+
+const supabase = createClient(
+"https://qxyrpnexybxmfmtrnzpg.supabase.co",
+"sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT"
+)
+
+async function signup(){
+
+const name=document.getElementById("name").value
+const phone=document.getElementById("phone").value
+const email=document.getElementById("email").value
+const password=document.getElementById("password").value
+
+const {data,error}=await supabase.auth.signUp({
+email:email,
+password:password,
+options:{
+data:{
+name:name,
+phone:phone
+}
+}
+})
+
+if(error){
+document.getElementById("msg").innerText=error.message
+}else{
+document.getElementById("msg").innerText="تم إنشاء الحساب بنجاح"
+}
+
+}
+
+</script>
+
+</body>
+</html>
