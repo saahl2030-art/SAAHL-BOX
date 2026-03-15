@@ -25,7 +25,7 @@ box-shadow:0 0 10px rgba(0,0,0,0.1);
 .plan{
 font-size:22px;
 color:#1a7f64;
-margin-top:10px;
+margin-top:15px;
 margin-bottom:20px;
 }
 
@@ -36,7 +36,6 @@ background:#1a7f64;
 color:white;
 border-radius:5px;
 cursor:pointer;
-margin-top:10px;
 }
 </style>
 </head>
@@ -55,23 +54,25 @@ margin-top:10px;
 </div>
 
 <script>
+
 const plan = localStorage.getItem("selectedPlan");
 
-let name = "";
+let name="";
 
-if(plan == 1){
-  name = "الباقة الأساسية";
+if(plan==1){
+name="الباقة الأساسية";
 }
 
-if(plan == 2){
-  name = "الباقة المتقدمة";
+if(plan==2){
+name="الباقة المتقدمة";
 }
 
-if(plan == 3){
-  name = "الباقة الاحترافية";
+if(plan==3){
+name="الباقة الاحترافية";
 }
 
-document.getElementById("planName").innerText = name || "لم يتم اختيار باقة بعد";
+document.getElementById("planName").innerText=name || "لم يتم اختيار باقة بعد";
+
 </script>
 
 </body>
