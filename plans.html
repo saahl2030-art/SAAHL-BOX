@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>باقات صندوق ساهل</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+font-family:Arial;
+background:#f4f6f8;
+margin:0;
+padding:40px;
+text-align:center;
+}
+
+h1{
+margin-bottom:30px;
+}
+
+.plans{
+display:flex;
+gap:20px;
+justify-content:center;
+flex-wrap:wrap;
+}
+
+.plan{
+background:white;
+padding:25px;
+border-radius:10px;
+width:220px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.price{
+font-size:28px;
+margin:15px 0;
+color:#1a7f64;
+}
+
+button{
+padding:10px 18px;
+border:none;
+background:#1a7f64;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>اختر باقة صندوق ساهل</h1>
+
+<div class="plans">
+
+<div class="plan">
+<h3>الباقة الأساسية</h3>
+<div class="price">49 درهم</div>
+<button onclick="selectPlan(1)">اختيار</button>
+</div>
+
+<div class="plan">
+<h3>الباقة المتقدمة</h3>
+<div class="price">79 درهم</div>
+<button onclick="selectPlan(2)">اختيار</button>
+</div>
+
+<div class="plan">
+<h3>الباقة الاحترافية</h3>
+<div class="price">129 درهم</div>
+<button onclick="selectPlan(3)">اختيار</button>
+</div>
+
+</div>
+
+<script type="module">
+
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const SUPABASE_URL = "https://qxyrpnexybxmftrnzpg.supabase.co";
+const SUPABASE_KEY = "ضع نفس المفتاح الموجود في login.html";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+window.selectPlan = async function(planId){
+
+const { data } = await supabase.auth.getUser();
+
+const user = data.user;
+
+if(!user){
+alert("يجب تسجيل الدخول أولاً");
+window.location.href="login.html";
+return;
+}
+
+const now = new Date();
+const expire = new Date();
+expire.setMonth(expire.getMonth()+1);
+
+await supabase.from("subscriptions").insert({
+user_id:user.id,
+plan_id:planId,
+status:"active",
+started_at:now,
+expires_at:expire
+});
+
+alert("تم تفعيل الباقة بنجاح");
+
+window.location.href="dashboard.html";
+
+}
+
+</script>
+
+</body>
+</html>
