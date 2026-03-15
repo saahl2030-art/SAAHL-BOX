@@ -34,7 +34,7 @@ cursor:pointer;
 <div class="box">
 <h2>مرحبا بك في صندوق ساهل</h2>
 <p>تم تسجيل الدخول بنجاح</p>
-
+<button onclick="window.location.href='plans.html'">اختيار الباقة</button>
 <button onclick="logout()">تسجيل الخروج</button>
 </div>
 
@@ -42,7 +42,7 @@ cursor:pointer;
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
 const SUPABASE_URL = "https://qxyrpnexybxmftrnzpg.supabase.co";
-const SUPABASE_KEY = "ضع هنا نفس المفتاح الموجود في login.html";
+const SUPABASE_KEY = "sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
