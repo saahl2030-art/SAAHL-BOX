@@ -178,3 +178,70 @@ function createGroup(){
   const msg = document.getElementById("message");
   const result = document.getElementById("result");
   msg.innerHTML = "";
+  result.innerHTML = "";
+
+  if(!currentPlan){
+    msg.innerHTML = '<div class="warn">يجب اختيار خطة أولًا من صفحة الخطط</div>';
+    return;
+  }
+
+  const groupName = document.getElementById("groupName").value.trim();
+  const amount = Number(document.getElementById("amount").value);
+  const members = Number(document.getElementById("members").value);
+
+  if(!groupName || !amount || !members){
+    msg.innerHTML = '<div class="warn">يرجى إدخال جميع البيانات</div>';
+    return;
+  }
+
+  if(members < 1){
+    msg.innerHTML = '<div class="warn">عدد الأعضاء يجب أن يكون أكبر من صفر</div>';
+    return;
+  }
+
+  if(members > currentPlan.maxMembers){
+    msg.innerHTML = <div class="warn">هذه الخطة تسمح بحد أقصى ${currentPlan.maxMembers} أعضاء فقط</div>;
+    return;
+  }
+
+  const inviteCode = createInviteCode();
+
+  // الرابط الصحيح داخل GitHub Pages للمستودع SAAHL-BOX
+  const inviteLink = ${window.location.origin}/SAAHL-BOX/join.html?code=${inviteCode};
+
+  // حفظ بيانات مؤقتة محليًا لحين ربط الصفحة مع Supabase فعليًا
+  const tempGroup = {
+    groupName,
+    amount,
+    members,
+    inviteCode,
+    inviteLink,
+    selectedPlan,
+    selectedPlanName: currentPlan.name
+  };
+
+  localStorage.setItem("lastCreatedGroup", JSON.stringify(tempGroup));
+
+  msg.innerHTML = '<div class="success">تم إنشاء الجمعية بنجاح</div>';
+
+  result.innerHTML = `
+    <div class="result">
+      <div>اسم الجمعية: <strong>${groupName}</strong></div>
+      <div>الخطة: <strong>${currentPlan.name}</strong></div>
+      <div>عدد الأعضاء: <strong>${members}</strong></div>
+      <div>كود الدعوة:</div>
+      <div class="code">${inviteCode}</div>
+      <div>رابط الدعوة:</div>
+      <div class="linkbox">${inviteLink}</div>
+      <div class="actions">
+        <button onclick="copyInviteLink('${inviteLink}')">نسخ الرابط</button>
+        <button class="secondary" onclick="shareInviteLink('${inviteLink}')">مشاركة الرابط</button>
+      </div>
+      <div class="small">ملاحظة: صفحة join.html سننشئها في الخطوة التالية، لذلك الرابط لن يعمل الآن حتى ننشئ الملف.</div>
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>
