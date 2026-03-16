@@ -2,123 +2,180 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>باقات صندوق ساهل</title>
+<title>خطط صندوق ساهل</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
-font-family:Arial;
-background:#f4f6f8;
-margin:0;
-padding:40px;
-text-align:center;
+  font-family:Arial;
+  background:#f4f6f8;
+  margin:0;
+  padding:40px 20px;
+  text-align:center;
 }
 
 h2{
-margin-bottom:10px;
+  margin-bottom:10px;
+  color:#222;
+}
+
+.subtitle{
+  color:#666;
+  margin-bottom:30px;
+  line-height:1.8;
 }
 
 .plans{
-display:flex;
-gap:20px;
-justify-content:center;
-flex-wrap:wrap;
-margin-top:30px;
+  display:flex;
+  gap:20px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:20px;
 }
 
 .plan{
-background:white;
-padding:25px;
-border-radius:10px;
-width:220px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
+  background:white;
+  padding:25px;
+  border-radius:14px;
+  width:240px;
+  box-shadow:0 0 12px rgba(0,0,0,0.08);
+  position:relative;
+}
+
+.plan h3{
+  margin-top:0;
+  color:#222;
+}
+
+.plan p{
+  margin:10px 0;
+  color:#555;
 }
 
 .price{
-font-size:28px;
-margin:15px 0;
-color:#1a7f64;
+  font-size:30px;
+  margin:18px 0;
+  color:#1a7f64;
+  font-weight:bold;
 }
 
 button{
-padding:10px 18px;
-border:none;
-background:#1a7f64;
-color:white;
-border-radius:5px;
-cursor:pointer;
+  padding:12px 20px;
+  border:none;
+  background:#1a7f64;
+  color:white;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:15px;
+  width:100%;
+}
+
+button:hover{
+  background:#146c55;
 }
 
 .popular{
-border:2px solid #1a7f64;
-position:relative;
+  border:2px solid #1a7f64;
 }
 
 .badge{
-position:absolute;
-top:-12px;
-right:10px;
-background:#1a7f64;
-color:white;
-padding:4px 10px;
-border-radius:6px;
-font-size:12px;
+  position:absolute;
+  top:-12px;
+  right:12px;
+  background:#1a7f64;
+  color:white;
+  padding:5px 12px;
+  border-radius:8px;
+  font-size:12px;
+}
+
+.note{
+  max-width:900px;
+  margin:30px auto 0;
+  color:#666;
+  line-height:1.9;
+  background:#fff;
+  padding:16px;
+  border-radius:12px;
+  box-shadow:0 0 8px rgba(0,0,0,0.05);
 }
 </style>
 </head>
 
 <body>
 
-<h2>اختر باقة صندوق ساهل</h2>
-<p style="text-align:center;color:#666;margin-top:-10px;">
-اختر الباقة المناسبة لإدارة مجموعاتك وأعضائك بسهولة
+<h2>اختر خطة الجمعية المناسبة</h2>
+
+<p class="subtitle">
+ابدأ بالخطة المجانية للتجربة، ثم اختر حجم الجمعية المناسب حسب عدد الأعضاء.<br>
+جميع الأسعار تُدفع مرة واحدة عند إنشاء الجمعية، ومدير الجمعية محسوب ضمن العدد.
 </p>
 
 <div class="plans">
 
-<div class="plan">
-  <h3>الباقة الأساسية</h3>
-  <p>1 مجموعة</p>
-  <p>حتى 5 أعضاء</p>
-  <p>إدارة أساسية للمجموعة</p>
-  <p class="price">49 درهم</p>
-  <button onclick="selectPlan(1)">اختيار</button>
+  <div class="plan">
+    <h3>الخطة المجانية</h3>
+    <p>جمعية واحدة</p>
+    <p>حتى 4 أعضاء</p>
+    <p>تجربة أولية للنظام</p>
+    <p>مناسبة لاختبار المنصة</p>
+    <div class="price">مجانًا</div>
+    <button onclick="selectPlan(4, 'الخطة المجانية')">اختيار</button>
+  </div>
+
+  <div class="plan popular">
+    <span class="badge">الأكثر طلبًا</span>
+    <h3>جمعية صغيرة</h3>
+    <p>حتى 3 جمعيات</p>
+    <p>حتى 9 أعضاء</p>
+    <p>مناسبة للجمعيات الصغيرة</p>
+    <p>تنظيم أسهل وإدارة أوضح</p>
+    <div class="price">149 درهم</div>
+    <button onclick="selectPlan(1, 'جمعية صغيرة')">اختيار</button>
+  </div>
+
+  <div class="plan">
+    <h3>جمعية متوسطة</h3>
+    <p>حتى 5 جمعيات</p>
+    <p>حتى 18 عضو</p>
+    <p>مرونة أعلى في التوسع</p>
+    <p>مناسبة للعائلة والأصدقاء</p>
+    <div class="price">199 درهم</div>
+    <button onclick="selectPlan(2, 'جمعية متوسطة')">اختيار</button>
+  </div>
+
+  <div class="plan">
+    <h3>جمعية كبيرة</h3>
+    <p>حتى 10 جمعيات</p>
+    <p>حتى 30 عضو</p>
+    <p>إدارة أوسع لعدة مجموعات</p>
+    <p>مناسبة للاستخدام المتكرر</p>
+    <div class="price">249 درهم</div>
+    <button onclick="selectPlan(3, 'جمعية كبيرة')">اختيار</button>
+  </div>
+
+  <div class="plan">
+    <h3>جمعية موسعة</h3>
+    <p>حتى 20 جمعية</p>
+    <p>حتى 50 عضو</p>
+    <p>للجمعيات الكبيرة والمتعددة</p>
+    <p>سعة أعلى وتنظيم موسع</p>
+    <div class="price">349 درهم</div>
+    <button onclick="selectPlan(5, 'جمعية موسعة')">اختيار</button>
+  </div>
+
 </div>
 
-<div class="plan popular">
-  <span class="badge">الأكثر اختياراً</span>
-  <h3>الباقة المتقدمة</h3>
-  <p>3 مجموعات</p>
-  <p>9 أعضاء لكل مجموعة</p>
-  <p>إدارة متعددة للمجموعات</p>
-  <p>تنظيم أفضل للأعضاء</p>
-  <p class="price">79 درهم</p>
-  <button onclick="selectPlan(2)">اختيار</button>
+<div class="note">
+الخطة المجانية مخصصة للتجربة الأولية فقط. عند الحاجة إلى عدد أعضاء أكبر أو إنشاء جمعيات إضافية،
+يمكنك الترقية إلى الخطة المناسبة مباشرة.
 </div>
 
-<div class="plan">
-  <h3>الباقة الاحترافية</h3>
-  <p>مجموعات غير محدودة</p>
-  <p>أعضاء غير محدودين</p>
-  <p>إدارة كاملة ومرنة</p>
-  <p>مناسبة للاستخدام الموسع</p>
-  <p class="price">129 درهم</p>
-  <button onclick="selectPlan(3)">اختيار</button>
-</div>
-
-</div>
-
-<script type="module">
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-
-const SUPABASE_URL = "https://qxyrpnexybxmftrnzpg.supabase.co";
-const SUPABASE_KEY = "sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT";
-
-createClient(SUPABASE_URL, SUPABASE_KEY);
-
-window.selectPlan = function(planId){
+<script>
+window.selectPlan = function(planId, planName){
   localStorage.setItem("selectedPlan", planId);
-  alert("تم اختيار الباقة بنجاح");
+  localStorage.setItem("selectedPlanName", planName);
+  alert("تم اختيار الخطة بنجاح");
   window.location.href = "dashboard.html";
 }
 </script>
