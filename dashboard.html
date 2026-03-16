@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+
 body{
 font-family:Arial;
 background:#f4f6f8;
@@ -17,7 +18,7 @@ padding:40px;
 background:white;
 padding:30px;
 border-radius:10px;
-max-width:450px;
+max-width:500px;
 margin:auto;
 box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
@@ -25,8 +26,16 @@ box-shadow:0 0 10px rgba(0,0,0,0.1);
 .plan{
 font-size:22px;
 color:#1a7f64;
-margin-top:15px;
+margin-top:10px;
 margin-bottom:20px;
+}
+
+input{
+width:90%;
+padding:10px;
+margin:10px;
+border:1px solid #ddd;
+border-radius:6px;
 }
 
 button{
@@ -38,40 +47,106 @@ border-radius:5px;
 cursor:pointer;
 margin-top:10px;
 }
+
+.result{
+margin-top:20px;
+font-size:18px;
+color:#333;
+}
+
+.link{
+color:#1a7f64;
+font-weight:bold;
+}
+
 </style>
 </head>
 
 <body>
 
 <div class="box">
-<h2>مرحبا بك في صندوق ساهل</h2>
 
-<p>الباقة التي اخترتها:</p>
+<h2>صندوق ساهل</h2>
+
+<p>الباقة الحالية</p>
 
 <div class="plan" id="planName"></div>
 
-<button onclick="window.location.href='plans.html'">تغيير الباقة</button>
+<hr>
+
+<h3>إنشاء جمعية جديدة</h3>
+
+<input id="groupName" placeholder="اسم الجمعية">
+
+<input id="amount" type="number" placeholder="مبلغ الجمعية">
+
+<input id="members" type="number" placeholder="عدد الأعضاء">
+
+<br>
+
+<button onclick="createGroup()">إنشاء الجمعية</button>
+
+<div class="result" id="result"></div>
 
 </div>
 
 <script>
+
 const plan = localStorage.getItem("selectedPlan");
 
 let name = "";
 
 if(plan == 1){
-  name = "الباقة الأساسية";
+name = "الباقة المجانية";
 }
 
 if(plan == 2){
-  name = "الباقة المتقدمة";
+name = "الباقة المتقدمة";
 }
 
 if(plan == 3){
-  name = "الباقة الاحترافية";
+name = "الباقة الاحترافية";
 }
 
-document.getElementById("planName").innerText = name || "لم يتم اختيار باقة بعد";
+document.getElementById("planName").innerText = name || "لم يتم اختيار باقة";
+
+function createGroup(){
+
+const groupName = document.getElementById("groupName").value;
+const amount = document.getElementById("amount").value;
+const members = document.getElementById("members").value;
+
+if(!groupName || !amount || !members){
+alert("يرجى إدخال جميع البيانات");
+return;
+}
+
+const inviteCode = Math.random().toString(36).substring(2,8).toUpperCase();
+
+const inviteLink = window.location.origin + "/join.html?code=" + inviteCode;
+
+document.getElementById("result").innerHTML = `
+
+تم إنشاء الجمعية بنجاح
+
+<br><br>
+
+كود الدعوة:
+
+<div class="link">${inviteCode}</div>
+
+<br>
+
+رابط الدعوة:
+
+<br>
+
+<div class="link">${inviteLink}</div>
+
+`;
+
+}
+
 </script>
 
 </body>
