@@ -4,34 +4,43 @@
 <meta charset="UTF-8">
 <title>لوحة التحكم - صندوق ساهل</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body{
-  font-family:Arial;
+  font-family:Arial, sans-serif;
   background:#f4f6f8;
   text-align:center;
   padding:40px 20px;
   margin:0;
 }
+
 .box{
   background:white;
   padding:30px;
   border-radius:14px;
-  max-width:560px;
+  max-width:600px;
   margin:auto;
   box-shadow:0 0 12px rgba(0,0,0,0.08);
 }
-h2{margin-bottom:8px;}
+
+h2{
+  margin-bottom:8px;
+  color:#1f2937;
+}
+
 .plan{
-  font-size:24px;
+  font-size:26px;
   color:#1a7f64;
   margin:10px 0 20px;
   font-weight:bold;
 }
+
 .small{
   color:#666;
-  margin-bottom:20px;
+  margin-bottom:16px;
   line-height:1.8;
 }
+
 input{
   width:92%;
   padding:12px;
@@ -40,6 +49,7 @@ input{
   border-radius:8px;
   font-size:15px;
 }
+
 button{
   padding:12px 18px;
   border:none;
@@ -50,27 +60,42 @@ button{
   margin-top:10px;
   font-size:15px;
 }
+
 button:hover{
   background:#146c55;
 }
+
 .secondary{
-  background:#2d3748;
+  background:#374151;
 }
+
 .secondary:hover{
   background:#1f2937;
 }
+
+.light{
+  background:#0ea5a4;
+}
+
+.light:hover{
+  background:#0b8a89;
+}
+
 .result{
   margin-top:25px;
   padding:18px;
   background:#f9fafb;
   border-radius:12px;
   line-height:2;
+  text-align:center;
 }
+
 .code{
   font-size:28px;
   color:#1a7f64;
   font-weight:bold;
 }
+
 .linkbox{
   direction:ltr;
   background:#eef7f4;
@@ -81,16 +106,19 @@ button:hover{
   color:#0f766e;
   font-weight:bold;
 }
+
 .warn{
   color:#b91c1c;
   margin-top:10px;
   font-weight:bold;
 }
+
 .success{
   color:#166534;
   margin-top:10px;
   font-weight:bold;
 }
+
 .actions{
   display:flex;
   gap:10px;
@@ -98,6 +126,7 @@ button:hover{
   flex-wrap:wrap;
   margin-top:12px;
 }
+
 hr{
   margin:25px 0;
   border:none;
@@ -105,13 +134,17 @@ hr{
 }
 </style>
 </head>
+
 <body>
 
 <div class="box">
   <h2>صندوق ساهل</h2>
+
   <div class="small">الخطة الحالية</div>
   <div class="plan" id="planName">لم يتم اختيار خطة</div>
   <div class="small" id="planDetails"></div>
+
+  <button class="secondary" onclick="window.location.href='plans.html'">تغيير الخطة</button>
 
   <hr>
 
@@ -131,7 +164,7 @@ hr{
 
 <script>
 const selectedPlan = localStorage.getItem("selectedPlan");
-const selectedPlanName = localStorage.getItem("selectedPlanName") || "لم يتم اختيار خطة";
+const selectedPlanName = localStorage.getItem("selectedPlanName");
 
 const planConfig = {
   "4": { name: "الخطة المجانية", maxMembers: 4, maxGroups: 1, price: 0 },
@@ -141,16 +174,27 @@ const planConfig = {
   "5": { name: "جمعية موسعة", maxMembers: 50, maxGroups: 20, price: 349 }
 };
 
-const currentPlan = planConfig[selectedPlan];
+let currentPlan = null;
 
-document.getElementById("planName").innerText = currentPlan ? currentPlan.name : "لم يتم اختيار خطة";
+if (selectedPlan && planConfig[selectedPlan]) {
+  currentPlan = planConfig[selectedPlan];
+} else if (selectedPlanName) {
+  // احتياط إضافي لو ضاع رقم الخطة وبقي الاسم
+  const fallbackPlan = Object.values(planConfig).find(p => p.name === selectedPlanName);
+  if (fallbackPlan) currentPlan = fallbackPlan;
+}
+
+document.getElementById("planName").innerText = currentPlan
+  ? currentPlan.name
+  : "لم يتم اختيار خطة";
+
 document.getElementById("planDetails").innerText = currentPlan
   ? الحد الأقصى للأعضاء: ${currentPlan.maxMembers} — الحد الأقصى للجمعيات: ${currentPlan.maxGroups}
   : "يجب اختيار خطة أولًا من صفحة الخطط";
 
 document.getElementById("limitText").innerText = currentPlan
   ? مسموح لك في هذه الخطة إنشاء جمعية بعدد أعضاء لا يتجاوز ${currentPlan.maxMembers} أعضاء
-  : "";
+  : "اذهب إلى صفحة الخطط واختر الخطة أولًا";
 
 function createInviteCode(){
   return Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -159,6 +203,8 @@ function createInviteCode(){
 function copyInviteLink(link){
   navigator.clipboard.writeText(link).then(() => {
     alert("تم نسخ رابط الدعوة");
+  }).catch(() => {
+    alert("تعذر نسخ الرابط، انسخه يدويًا");
   });
 }
 
@@ -168,7 +214,7 @@ function shareInviteLink(link){
       title: "رابط الانضمام إلى الجمعية",
       text: "اضغط على الرابط للانضمام إلى الجمعية",
       url: link
-    });
+    }).catch(() => {});
   } else {
     copyInviteLink(link);
   }
@@ -177,6 +223,7 @@ function shareInviteLink(link){
 function createGroup(){
   const msg = document.getElementById("message");
   const result = document.getElementById("result");
+
   msg.innerHTML = "";
   result.innerHTML = "";
 
@@ -206,18 +253,18 @@ function createGroup(){
 
   const inviteCode = createInviteCode();
 
-  // الرابط الصحيح داخل GitHub Pages للمستودع SAAHL-BOX
+  // الرابط الصحيح داخل المستودع SAAHL-BOX
   const inviteLink = ${window.location.origin}/SAAHL-BOX/join.html?code=${inviteCode};
 
-  // حفظ بيانات مؤقتة محليًا لحين ربط الصفحة مع Supabase فعليًا
   const tempGroup = {
-    groupName,
-    amount,
-    members,
-    inviteCode,
-    inviteLink,
-    selectedPlan,
-    selectedPlanName: currentPlan.name
+    groupName: groupName,
+    amount: amount,
+    members: members,
+    inviteCode: inviteCode,
+    inviteLink: inviteLink,
+    selectedPlan: selectedPlan,
+    selectedPlanName: currentPlan.name,
+    createdAt: new Date().toISOString()
   };
 
   localStorage.setItem("lastCreatedGroup", JSON.stringify(tempGroup));
@@ -229,15 +276,22 @@ function createGroup(){
       <div>اسم الجمعية: <strong>${groupName}</strong></div>
       <div>الخطة: <strong>${currentPlan.name}</strong></div>
       <div>عدد الأعضاء: <strong>${members}</strong></div>
+      <div>قيمة الجمعية: <strong>${amount}</strong></div>
       <div>كود الدعوة:</div>
       <div class="code">${inviteCode}</div>
+
       <div>رابط الدعوة:</div>
       <div class="linkbox">${inviteLink}</div>
+
       <div class="actions">
         <button onclick="copyInviteLink('${inviteLink}')">نسخ الرابط</button>
         <button class="secondary" onclick="shareInviteLink('${inviteLink}')">مشاركة الرابط</button>
+        <button class="light" onclick="window.location.href='join.html?code=${inviteCode}'">الانتقال لصفحة الانضمام</button>
       </div>
-      <div class="small">ملاحظة: صفحة join.html سننشئها في الخطوة التالية، لذلك الرابط لن يعمل الآن حتى ننشئ الملف.</div>
+
+      <div class="small">
+        إذا ظهرت صفحة 404 فهذا طبيعي الآن لأن ملف <strong>join.html</strong> لم ننشئه بعد.
+      </div>
     </div>
   `;
 }
