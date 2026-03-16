@@ -2,152 +2,179 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>لوحة التحكم</title>
+<title>لوحة التحكم - صندوق ساهل</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
-
 body{
-font-family:Arial;
-background:#f4f6f8;
-text-align:center;
-padding:40px;
+  font-family:Arial;
+  background:#f4f6f8;
+  text-align:center;
+  padding:40px 20px;
+  margin:0;
 }
-
 .box{
-background:white;
-padding:30px;
-border-radius:10px;
-max-width:500px;
-margin:auto;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
+  background:white;
+  padding:30px;
+  border-radius:14px;
+  max-width:560px;
+  margin:auto;
+  box-shadow:0 0 12px rgba(0,0,0,0.08);
 }
-
+h2{margin-bottom:8px;}
 .plan{
-font-size:22px;
-color:#1a7f64;
-margin-top:10px;
-margin-bottom:20px;
+  font-size:24px;
+  color:#1a7f64;
+  margin:10px 0 20px;
+  font-weight:bold;
 }
-
+.small{
+  color:#666;
+  margin-bottom:20px;
+  line-height:1.8;
+}
 input{
-width:90%;
-padding:10px;
-margin:10px;
-border:1px solid #ddd;
-border-radius:6px;
+  width:92%;
+  padding:12px;
+  margin:10px 0;
+  border:1px solid #ddd;
+  border-radius:8px;
+  font-size:15px;
 }
-
 button{
-padding:10px 18px;
-border:none;
-background:#1a7f64;
-color:white;
-border-radius:5px;
-cursor:pointer;
-margin-top:10px;
+  padding:12px 18px;
+  border:none;
+  background:#1a7f64;
+  color:white;
+  border-radius:8px;
+  cursor:pointer;
+  margin-top:10px;
+  font-size:15px;
 }
-
+button:hover{
+  background:#146c55;
+}
+.secondary{
+  background:#2d3748;
+}
+.secondary:hover{
+  background:#1f2937;
+}
 .result{
-margin-top:20px;
-font-size:18px;
-color:#333;
+  margin-top:25px;
+  padding:18px;
+  background:#f9fafb;
+  border-radius:12px;
+  line-height:2;
 }
-
-.link{
-color:#1a7f64;
-font-weight:bold;
+.code{
+  font-size:28px;
+  color:#1a7f64;
+  font-weight:bold;
 }
-
+.linkbox{
+  direction:ltr;
+  background:#eef7f4;
+  padding:10px;
+  border-radius:8px;
+  word-break:break-all;
+  margin-top:8px;
+  color:#0f766e;
+  font-weight:bold;
+}
+.warn{
+  color:#b91c1c;
+  margin-top:10px;
+  font-weight:bold;
+}
+.success{
+  color:#166534;
+  margin-top:10px;
+  font-weight:bold;
+}
+.actions{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+hr{
+  margin:25px 0;
+  border:none;
+  border-top:1px solid #ddd;
+}
 </style>
 </head>
-
 <body>
 
 <div class="box">
+  <h2>صندوق ساهل</h2>
+  <div class="small">الخطة الحالية</div>
+  <div class="plan" id="planName">لم يتم اختيار خطة</div>
+  <div class="small" id="planDetails"></div>
 
-<h2>صندوق ساهل</h2>
+  <hr>
 
-<p>الباقة الحالية</p>
+  <h3>إنشاء جمعية جديدة</h3>
 
-<div class="plan" id="planName"></div>
+  <input id="groupName" placeholder="اسم الجمعية">
+  <input id="amount" type="number" placeholder="مبلغ الجمعية">
+  <input id="members" type="number" placeholder="عدد الأعضاء">
 
-<hr>
+  <div class="small" id="limitText"></div>
 
-<h3>إنشاء جمعية جديدة</h3>
+  <button onclick="createGroup()">إنشاء الجمعية</button>
 
-<input id="groupName" placeholder="اسم الجمعية">
-
-<input id="amount" type="number" placeholder="مبلغ الجمعية">
-
-<input id="members" type="number" placeholder="عدد الأعضاء">
-
-<br>
-
-<button onclick="createGroup()">إنشاء الجمعية</button>
-
-<div class="result" id="result"></div>
-
+  <div id="message"></div>
+  <div id="result"></div>
 </div>
 
 <script>
+const selectedPlan = localStorage.getItem("selectedPlan");
+const selectedPlanName = localStorage.getItem("selectedPlanName") || "لم يتم اختيار خطة";
 
-const plan = localStorage.getItem("selectedPlan");
+const planConfig = {
+  "4": { name: "الخطة المجانية", maxMembers: 4, maxGroups: 1, price: 0 },
+  "1": { name: "جمعية صغيرة", maxMembers: 9, maxGroups: 3, price: 149 },
+  "2": { name: "جمعية متوسطة", maxMembers: 18, maxGroups: 5, price: 199 },
+  "3": { name: "جمعية كبيرة", maxMembers: 30, maxGroups: 10, price: 249 },
+  "5": { name: "جمعية موسعة", maxMembers: 50, maxGroups: 20, price: 349 }
+};
 
-let name = "";
+const currentPlan = planConfig[selectedPlan];
 
-if(plan == 1){
-name = "الباقة المجانية";
+document.getElementById("planName").innerText = currentPlan ? currentPlan.name : "لم يتم اختيار خطة";
+document.getElementById("planDetails").innerText = currentPlan
+  ? الحد الأقصى للأعضاء: ${currentPlan.maxMembers} — الحد الأقصى للجمعيات: ${currentPlan.maxGroups}
+  : "يجب اختيار خطة أولًا من صفحة الخطط";
+
+document.getElementById("limitText").innerText = currentPlan
+  ? مسموح لك في هذه الخطة إنشاء جمعية بعدد أعضاء لا يتجاوز ${currentPlan.maxMembers} أعضاء
+  : "";
+
+function createInviteCode(){
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 
-if(plan == 2){
-name = "الباقة المتقدمة";
+function copyInviteLink(link){
+  navigator.clipboard.writeText(link).then(() => {
+    alert("تم نسخ رابط الدعوة");
+  });
 }
 
-if(plan == 3){
-name = "الباقة الاحترافية";
+function shareInviteLink(link){
+  if(navigator.share){
+    navigator.share({
+      title: "رابط الانضمام إلى الجمعية",
+      text: "اضغط على الرابط للانضمام إلى الجمعية",
+      url: link
+    });
+  } else {
+    copyInviteLink(link);
+  }
 }
-
-document.getElementById("planName").innerText = name || "لم يتم اختيار باقة";
 
 function createGroup(){
-
-const groupName = document.getElementById("groupName").value;
-const amount = document.getElementById("amount").value;
-const members = document.getElementById("members").value;
-
-if(!groupName || !amount || !members){
-alert("يرجى إدخال جميع البيانات");
-return;
-}
-
-const inviteCode = Math.random().toString(36).substring(2,8).toUpperCase();
-
-const inviteLink = window.location.origin + "/join.html?code=" + inviteCode;
-
-document.getElementById("result").innerHTML = `
-
-تم إنشاء الجمعية بنجاح
-
-<br><br>
-
-كود الدعوة:
-
-<div class="link">${inviteCode}</div>
-
-<br>
-
-رابط الدعوة:
-
-<br>
-
-<div class="link">${inviteLink}</div>
-
-`;
-
-}
-
-</script>
-
-</body>
-</html>
+  const msg = document.getElementById("message");
+  const result = document.getElementById("result");
+  msg.innerHTML = "";
