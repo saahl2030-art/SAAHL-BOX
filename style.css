@@ -1,1 +1,65 @@
+:root{
+  --primary:#1a6b8a;
+  --primary2:#155972;
+  --bg:#f4f8fb;
+  --white:#ffffff;
+  --border:#d4e4ee;
+  --dark:#0d2233;
+  --muted:#5a7a90;
+  --radius:12px;
+}
 
+body{
+  font-family:'Tajawal',sans-serif;
+  background:var(--bg);
+  margin:0;
+  color:var(--dark);
+}
+
+/* كروت */
+.card{
+  background:var(--white);
+  padding:25px;
+  border-radius:var(--radius);
+  box-shadow:0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* أزرار */
+.btn{
+  padding:12px 18px;
+  border:none;
+  border-radius:var(--radius);
+  cursor:pointer;
+  font-weight:700;
+}
+
+.btn-primary{
+  background:var(--primary);
+  color:#fff;
+}
+
+.btn-primary:hover{
+  background:var(--primary2);
+}
+
+/* حقول */
+input{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+}
+
+/* عناوين */
+h2{
+  margin-bottom:15px;
+}
+
+/* محاذاة وسط */
+.center{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
