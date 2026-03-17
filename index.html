@@ -160,12 +160,12 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0
         <p style="font-size:13px;color:var(--muted)">ابدأ مجاناً — لا بطاقة ائتمان</p>
       </div>
       <div class="field"><label>الاسم الكامل *</label><input type="text" id="regName" placeholder="اسمك الكامل"></div>
-      <div class="field"><label>البريد الإلكتروني *</label><input type="email" id="regEmail" placeholder="example@email.com" style="direction:ltr;text-align:left"></div>
-      <div class="field"><label>كلمة المرور *</label><input type="password" id="regPass" placeholder="6 أحرف على الأقل"></div>
+      <div class="field"><label>البريد الإلكتروني *</label><input type="email" id="email" placeholder="example@email.com" style="direction:ltr;text-align:left"></div>
+      <div class="field"><label>كلمة المرور *</label><input type="password" id="password" placeholder="6 أحرف على الأقل"></div>
       <div class="field"><label>اسم جمعيتك</label><input type="text" id="regGroupName" placeholder="مثال: جمعية الأصدقاء"></div>
       <div class="field"><label>المبلغ الشهري (د.إ)</label><input type="number" id="regAmount" placeholder="500" min="1"></div>
       <p id="regErr" style="color:var(--red);font-size:13px;font-weight:700;margin-bottom:10px;display:none"></p>
-      <button class="btn btn-p btn-full" style="padding:13px;font-size:15px;margin-top:4px" onclick="doRegister()">إنشاء الحساب →</button>
+      <button class="btn btn-p btn-full" style="padding:13px;font-size:15px;margin-top:4px" onclick="handleRegister()">إنشاء الحساب →</button>
       <div style="text-align:center;margin-top:14px;font-size:13px;color:var(--muted)">لديك حساب؟ <span style="color:var(--primary);cursor:pointer;font-weight:700" onclick="show('pgLogin')">تسجيل الدخول</span></div>
     </div>
   </div>
@@ -347,6 +347,31 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0
   const supabaseUrl = "https://qaqmpuxyzmxcpmdszuez.supabase.co";
 const supabaseKey = "sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT";
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+async function registerUser(email, password){
+  const { data, error } = await supabase.auth.signUp({
+    email: email,
+    password: password
+  });
+
+  if (error){
+    alert("خطأ: " + error.message);
+    return;
+  }
+
+  alert("تم إنشاء الحساب");
+}
+
+async function handleRegister() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    alert("أدخل البريد وكلمة المرور");
+    return;
+  }
+
+  await registerUser(email, password);
+}
 const SK = 'saahl_box_v2';
 const MN = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
 const AVCOLORS = ['#1a6b8a','#0d9488','#ca8a04','#7c3aed','#dc2626','#2563eb','#db2777'];
