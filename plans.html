@@ -1,184 +1,335 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>خطط صندوق ساهل</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>خطط صندوق ساهل</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-body{
-  font-family:Arial;
-  background:#f4f6f8;
-  margin:0;
-  padding:40px 20px;
-  text-align:center;
-}
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
 
-h2{
-  margin-bottom:10px;
-  color:#222;
-}
+  <style>
+    :root{
+      --primary:#1a6b8a;
+      --primary2:#155972;
+      --primary3:#e0f4fa;
+      --teal:#0891b2;
+      --gold:#b45309;
+      --goldbg:#fef3c7;
+      --red:#be123c;
+      --redbg:#ffe4e6;
+      --bluebg:#e0f4fa;
+      --bg:#f4f8fb;
+      --white:#ffffff;
+      --s1:#eef4f8;
+      --s2:#dde8f0;
+      --border:#d4e4ee;
+      --dark:#0d2233;
+      --dark2:#163348;
+      --dark3:#2c4a61;
+      --muted:#5a7a90;
+      --muted2:#8aa8bc;
+      --r:12px;
+      --sh:0 1px 3px rgba(26,107,138,.08),0 1px 2px rgba(26,107,138,.06);
+      --sh2:0 4px 16px rgba(26,107,138,.12),0 2px 4px rgba(26,107,138,.06);
+      --sh3:0 20px 60px rgba(26,107,138,.15);
+    }
 
-.subtitle{
-  color:#666;
-  margin-bottom:30px;
-  line-height:1.8;
-}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Tajawal',sans-serif;
+      background:var(--bg);
+      color:var(--dark);
+      margin:0;
+    }
 
-.plans{
-  display:flex;
-  gap:20px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-top:20px;
-}
+    .nav{
+      position:sticky;
+      top:0;
+      z-index:200;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+      height:62px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 24px;
+      box-shadow:var(--sh);
+    }
 
-.plan{
-  background:white;
-  padding:25px;
-  border-radius:14px;
-  width:240px;
-  box-shadow:0 0 12px rgba(0,0,0,0.08);
-  position:relative;
-}
+    .nav-logo{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      font-size:18px;
+      font-weight:900;
+      color:var(--dark);
+      text-decoration:none;
+    }
 
-.plan h3{
-  margin-top:0;
-  color:#222;
-}
+    .nav-actions{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
 
-.plan p{
-  margin:10px 0;
-  color:#555;
-}
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      padding:10px 20px;
+      border:none;
+      border-radius:var(--r);
+      font-family:'Tajawal',sans-serif;
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+      transition:all .18s;
+      text-decoration:none;
+      white-space:nowrap;
+    }
 
-.price{
-  font-size:30px;
-  margin:18px 0;
-  color:#1a7f64;
-  font-weight:bold;
-}
+    .btn:hover{transform:translateY(-1px);box-shadow:var(--sh2)}
+    .btn:active{transform:scale(.97)}
+    .btn-p{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(26,107,138,.3)}
+    .btn-w{background:#fff;border:1px solid var(--border);color:var(--dark3);box-shadow:var(--sh)}
+    .btn-sm{padding:7px 14px;font-size:13px;border-radius:9px}
+    .btn-full{width:100%}
 
-button{
-  padding:12px 20px;
-  border:none;
-  background:#1a7f64;
-  color:white;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:15px;
-  width:100%;
-}
+    .wrap{
+      max-width:1200px;
+      margin:0 auto;
+      padding:32px 20px 80px;
+    }
 
-button:hover{
-  background:#146c55;
-}
+    .hero{
+      text-align:center;
+      margin-bottom:28px;
+    }
 
-.popular{
-  border:2px solid #1a7f64;
-}
+    .hero h1{
+      font-size:42px;
+      font-weight:900;
+      color:var(--dark);
+      margin-bottom:14px;
+    }
 
-.badge{
-  position:absolute;
-  top:-12px;
-  right:12px;
-  background:#1a7f64;
-  color:white;
-  padding:5px 12px;
-  border-radius:8px;
-  font-size:12px;
-}
+    .subtitle{
+      color:var(--muted);
+      line-height:2;
+      font-size:19px;
+      max-width:980px;
+      margin:0 auto;
+    }
 
-.note{
-  max-width:900px;
-  margin:30px auto 0;
-  color:#666;
-  line-height:1.9;
-  background:#fff;
-  padding:16px;
-  border-radius:12px;
-  box-shadow:0 0 8px rgba(0,0,0,0.05);
-}
-</style>
+    .plans{
+      display:grid;
+      grid-template-columns:repeat(5, 1fr);
+      gap:18px;
+      margin-top:34px;
+      align-items:stretch;
+    }
+
+    .plan{
+      background:var(--white);
+      padding:28px 22px;
+      border-radius:18px;
+      box-shadow:var(--sh);
+      border:1px solid var(--border);
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      min-height:430px;
+      transition:all .2s ease;
+    }
+
+    .plan:hover{
+      transform:translateY(-4px);
+      box-shadow:var(--sh3);
+      border-color:var(--primary);
+    }
+
+    .plan.popular{
+      border:2px solid #4d8f74;
+      box-shadow:0 0 0 3px rgba(77,143,116,.12);
+    }
+
+    .badge{
+      position:absolute;
+      top:-12px;
+      right:14px;
+      background:#4d8f74;
+      color:white;
+      padding:6px 14px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .plan h3{
+      margin:0 0 18px;
+      color:var(--dark);
+      font-size:24px;
+      font-weight:900;
+    }
+
+    .plan p{
+      margin:10px 0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.9;
+    }
+
+    .price{
+      font-size:30px;
+      margin:24px 0 18px;
+      color:#4d8f74;
+      font-weight:900;
+    }
+
+    .note{
+      max-width:1000px;
+      margin:26px auto 0;
+      color:var(--muted);
+      line-height:2;
+      background:#fff;
+      padding:18px;
+      border-radius:14px;
+      box-shadow:var(--sh);
+      border:1px solid var(--border);
+      text-align:center;
+      font-size:14px;
+    }
+
+    @media(max-width:1200px){
+      .plans{grid-template-columns:repeat(3,1fr)}
+    }
+
+    @media(max-width:860px){
+      .hero h1{font-size:32px}
+      .subtitle{font-size:16px}
+      .plans{grid-template-columns:repeat(2,1fr)}
+    }
+
+    @media(max-width:640px){
+      .nav{padding:0 14px}
+      .wrap{padding:24px 14px 60px}
+      .hero h1{font-size:22px}
+      .subtitle{font-size:14px}
+      .plans{grid-template-columns:1fr}
+      .plan{min-height:auto}
+    }
+  </style>
 </head>
-
 <body>
 
-<h2>اختر خطة الجمعية المناسبة</h2>
+  <nav class="nav">
+    <div class="nav-logo">🏦 صندوق ساهل</div>
+    <div class="nav-actions">
+      <a class="btn btn-w btn-sm" href="index.html">← الرئيسية</a>
+      <a class="btn btn-p btn-sm" href="auth.html">ابدأ مجاناً</a>
+    </div>
+  </nav>
 
-<p class="subtitle">
-ابدأ بالخطة المجانية للتجربة، ثم اختر حجم الجمعية المناسب حسب عدد الأعضاء.<br>
-جميع الأسعار تُدفع مرة واحدة عند إنشاء الجمعية، ومدير الجمعية محسوب ضمن العدد.
-</p>
+  <div class="wrap">
+    <div class="hero">
+      <h1>اختر خطة الجمعية المناسبة</h1>
+      <p class="subtitle">
+        ابدأ بالخطة المجانية للتجربة، ثم اختر حجم الجمعية المناسب حسب عدد الأعضاء.<br>
+        جميع الأسعار تُدفع مرة واحدة عند إنشاء الجمعية، ومدير الجمعية محسوب ضمن العدد.
+      </p>
+    </div>
 
-<div class="plans">
+    <div class="plans">
+      <div class="plan">
+        <div>
+          <h3>الخطة المجانية</h3>
+          <p>جمعية واحدة</p>
+          <p>حتى 4 أعضاء</p>
+          <p>تجربة أولية للنظام</p>
+          <p>مناسبة لاختبار المنصة</p>
+        </div>
+        <div>
+          <div class="price">مجانًا</div>
+          <button class="btn btn-p btn-full" onclick="selectPlan(4, 'الخطة المجانية')">اختيار</button>
+        </div>
+      </div>
 
-  <div class="plan">
-    <h3>الخطة المجانية</h3>
-    <p>جمعية واحدة</p>
-    <p>حتى 4 أعضاء</p>
-    <p>تجربة أولية للنظام</p>
-    <p>مناسبة لاختبار المنصة</p>
-    <div class="price">مجانًا</div>
-    <button onclick="selectPlan(4, 'الخطة المجانية')">اختيار</button>
+      <div class="plan popular">
+        <span class="badge">الأكثر طلبًا</span>
+        <div>
+          <h3>جمعية صغيرة</h3>
+          <p>حتى 3 جمعيات</p>
+          <p>حتى 9 أعضاء</p>
+          <p>مناسبة للجمعيات الصغيرة</p>
+          <p>تنظيم أسهل وإدارة أوضح</p>
+        </div>
+        <div>
+          <div class="price">149 درهم</div>
+          <button class="btn btn-p btn-full" onclick="selectPlan(1, 'جمعية صغيرة')">اختيار</button>
+        </div>
+      </div>
+
+      <div class="plan">
+        <div>
+          <h3>جمعية متوسطة</h3>
+          <p>حتى 5 جمعيات</p>
+          <p>حتى 18 عضو</p>
+          <p>مرونة أعلى في التوسع</p>
+          <p>مناسبة للعائلة والأصدقاء</p>
+        </div>
+        <div>
+          <div class="price">199 درهم</div>
+          <button class="btn btn-p btn-full" onclick="selectPlan(2, 'جمعية متوسطة')">اختيار</button>
+        </div>
+      </div>
+
+      <div class="plan">
+        <div>
+          <h3>جمعية كبيرة</h3>
+          <p>حتى 10 جمعيات</p>
+          <p>حتى 30 عضو</p>
+          <p>إدارة أوسع لعدة مجموعات</p>
+          <p>مناسبة للاستخدام المتكرر</p>
+        </div>
+        <div>
+          <div class="price">249 درهم</div>
+          <button class="btn btn-p btn-full" onclick="selectPlan(3, 'جمعية كبيرة')">اختيار</button>
+        </div>
+      </div>
+
+      <div class="plan">
+        <div>
+          <h3>جمعية موسعة</h3>
+          <p>حتى 20 جمعية</p>
+          <p>حتى 50 عضو</p>
+          <p>للجمعيات الكبيرة والمتعددة</p>
+          <p>سعة أعلى وتنظيم موسع</p>
+        </div>
+        <div>
+          <div class="price">349 درهم</div>
+          <button class="btn btn-p btn-full" onclick="selectPlan(5, 'جمعية موسعة')">اختيار</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      الخطة المجانية مخصصة للتجربة الأولية فقط. عند الحاجة إلى عدد أعضاء أكبر أو إنشاء جمعيات إضافية،
+      يمكنك الترقية إلى الخطة المناسبة مباشرة.
+    </div>
   </div>
 
-  <div class="plan popular">
-    <span class="badge">الأكثر طلبًا</span>
-    <h3>جمعية صغيرة</h3>
-    <p>حتى 3 جمعيات</p>
-    <p>حتى 9 أعضاء</p>
-    <p>مناسبة للجمعيات الصغيرة</p>
-    <p>تنظيم أسهل وإدارة أوضح</p>
-    <div class="price">149 درهم</div>
-    <button onclick="selectPlan(1, 'جمعية صغيرة')">اختيار</button>
-  </div>
-
-  <div class="plan">
-    <h3>جمعية متوسطة</h3>
-    <p>حتى 5 جمعيات</p>
-    <p>حتى 18 عضو</p>
-    <p>مرونة أعلى في التوسع</p>
-    <p>مناسبة للعائلة والأصدقاء</p>
-    <div class="price">199 درهم</div>
-    <button onclick="selectPlan(2, 'جمعية متوسطة')">اختيار</button>
-  </div>
-
-  <div class="plan">
-    <h3>جمعية كبيرة</h3>
-    <p>حتى 10 جمعيات</p>
-    <p>حتى 30 عضو</p>
-    <p>إدارة أوسع لعدة مجموعات</p>
-    <p>مناسبة للاستخدام المتكرر</p>
-    <div class="price">249 درهم</div>
-    <button onclick="selectPlan(3, 'جمعية كبيرة')">اختيار</button>
-  </div>
-
-  <div class="plan">
-    <h3>جمعية موسعة</h3>
-    <p>حتى 20 جمعية</p>
-    <p>حتى 50 عضو</p>
-    <p>للجمعيات الكبيرة والمتعددة</p>
-    <p>سعة أعلى وتنظيم موسع</p>
-    <div class="price">349 درهم</div>
-    <button onclick="selectPlan(5, 'جمعية موسعة')">اختيار</button>
-  </div>
-
-</div>
-
-<div class="note">
-الخطة المجانية مخصصة للتجربة الأولية فقط. عند الحاجة إلى عدد أعضاء أكبر أو إنشاء جمعيات إضافية،
-يمكنك الترقية إلى الخطة المناسبة مباشرة.
-</div>
-
-<script>
-window.selectPlan = function(planId, planName){
-  localStorage.setItem("selectedPlan", planId);
-  localStorage.setItem("selectedPlanName", planName);
-  alert("تم اختيار الخطة بنجاح");
-  window.location.href = "dashboard.html";
-}
-</script>
+  <script>
+    window.selectPlan = function(planId, planName){
+      localStorage.setItem("selectedPlan", planId);
+      localStorage.setItem("selectedPlanName", planName);
+      alert("تم اختيار الخطة بنجاح");
+      window.location.href = "dashboard.html";
+    }
+  </script>
 
 </body>
 </html>
