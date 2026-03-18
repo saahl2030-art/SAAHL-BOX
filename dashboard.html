@@ -716,7 +716,15 @@
     }
 
 function openMemberModal(){
-  alert("الدالة openMemberModal تعمل");
+  const modal = document.getElementById("memberModalBg");
+
+  if (!modal) {
+    alert("لم أجد العنصر: memberModalBg");
+    return;
+  }
+
+  alert("وجدت العنصر: memberModalBg");
+  modal.classList.add("show");
 }
 
       document.getElementById("memberNameInput").value = "";
