@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>لوحة إدارة الجمعية - صندوق ساهل</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
 
   <style>
@@ -13,24 +12,16 @@
       --primary2:#155972;
       --primary3:#e0f4fa;
       --teal:#0891b2;
-      --gold:#b45309;
-      --goldbg:#fef3c7;
       --red:#be123c;
       --redbg:#ffe4e6;
       --green:#15803d;
       --greenbg:#dcfce7;
-      --graybg:#f3f4f6;
       --bg:#f4f8fb;
-      --white:#ffffff;
-      --s1:#eef4f8;
-      --s2:#dde8f0;
       --border:#d4e4ee;
       --dark:#0d2233;
       --dark2:#163348;
-      --dark3:#2c4a61;
       --muted:#5a7a90;
-      --muted2:#8aa8bc;
-      --r:14px;
+      --s1:#eef4f8;
       --sh:0 1px 3px rgba(26,107,138,.08),0 1px 2px rgba(26,107,138,.06);
       --sh2:0 4px 16px rgba(26,107,138,.12),0 2px 4px rgba(26,107,138,.06);
       --sh3:0 20px 60px rgba(26,107,138,.15);
@@ -98,14 +89,14 @@
     .btn:active{transform:scale(.98)}
     .btn-p{background:var(--primary);color:#fff}
     .btn-d{background:var(--dark2);color:#fff}
-    .btn-w{background:#fff;border:1px solid var(--border);color:var(--dark3);box-shadow:var(--sh)}
+    .btn-w{background:#fff;border:1px solid var(--border);color:var(--dark2);box-shadow:var(--sh)}
     .btn-t{background:var(--teal);color:#fff}
     .btn-r{background:var(--red);color:#fff}
     .btn-sm{padding:7px 12px;font-size:13px;border-radius:10px}
     .btn-full{width:100%}
 
     .page{
-      max-width:1320px;
+      max-width:1280px;
       margin:0 auto;
       padding:24px 20px 80px;
     }
@@ -117,21 +108,16 @@
       padding:28px;
       box-shadow:var(--sh3);
       margin-bottom:20px;
-      display:flex;
-      justify-content:space-between;
-      gap:16px;
-      flex-wrap:wrap;
-      align-items:flex-start;
     }
 
     .hero h1{
       font-size:36px;
       font-weight:900;
-      margin-bottom:8px;
+      margin-bottom:10px;
     }
 
     .hero p{
-      color:rgba(255,255,255,.84);
+      color:rgba(255,255,255,.85);
       line-height:1.9;
       font-size:15px;
       max-width:760px;
@@ -141,7 +127,7 @@
       display:flex;
       gap:10px;
       flex-wrap:wrap;
-      margin-top:14px;
+      margin-top:16px;
     }
 
     .stats{
@@ -167,15 +153,15 @@
     }
 
     .stat .value{
-      font-size:30px;
+      font-size:28px;
       font-weight:900;
-      line-height:1;
+      line-height:1.2;
       color:var(--dark);
     }
 
     .layout{
       display:grid;
-      grid-template-columns:340px 1fr;
+      grid-template-columns:360px 1fr;
       gap:18px;
       align-items:start;
     }
@@ -222,14 +208,8 @@
       font-size:14px;
       font-family:'Tajawal',sans-serif;
       outline:none;
-      transition:border-color .2s,box-shadow .2s;
       background:#fff;
       color:var(--dark);
-    }
-
-    input:focus,select:focus{
-      border-color:var(--primary);
-      box-shadow:0 0 0 3px rgba(26,107,138,.12);
     }
 
     .badge{
@@ -241,12 +221,9 @@
       font-size:12px;
       font-weight:800;
       white-space:nowrap;
+      background:var(--primary3);
+      color:var(--primary2);
     }
-
-    .b-plan{background:var(--primary3);color:var(--primary2)}
-    .b-paid{background:var(--greenbg);color:var(--green)}
-    .b-late{background:var(--redbg);color:#991b1b}
-    .b-upcoming{background:#eef2ff;color:#3730a3}
 
     .group-box{
       border:1px solid var(--border);
@@ -312,23 +289,14 @@
       vertical-align:middle;
     }
 
-    tbody tr:hover{
-      background:#fbfdff;
-    }
-
     .name-strong{
       font-weight:900;
       color:var(--dark);
     }
 
-    .toolbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:14px;
-    }
+    .status-paid{color:var(--green);font-weight:800}
+    .status-late{color:var(--red);font-weight:800}
+    .status-upcoming{color:var(--primary2);font-weight:800}
 
     .empty{
       text-align:center;
@@ -336,6 +304,20 @@
       padding:30px 14px;
       font-size:14px;
     }
+
+    .notice{
+      margin-top:12px;
+      padding:12px;
+      border-radius:12px;
+      font-size:13px;
+      line-height:1.9;
+      font-weight:700;
+      display:none;
+    }
+
+    .notice.show{display:block}
+    .notice.ok{background:var(--primary3);color:var(--primary2);border:1px solid #b6e1f0}
+    .notice.err{background:var(--redbg);color:#991b1b;border:1px solid #fecdd3}
 
     .modal-bg{
       position:fixed;
@@ -348,9 +330,7 @@
       z-index:300;
     }
 
-    .modal-bg.show{
-      display:flex;
-    }
+    .modal-bg.show{display:flex}
 
     .modal{
       width:100%;
@@ -375,20 +355,6 @@
       margin-top:12px;
       flex-wrap:wrap;
     }
-
-    .notice{
-      margin-top:12px;
-      padding:12px;
-      border-radius:12px;
-      font-size:13px;
-      line-height:1.9;
-      font-weight:700;
-      display:none;
-    }
-
-    .notice.show{display:block}
-    .notice.ok{background:var(--primary3);color:var(--primary2);border:1px solid #b6e1f0}
-    .notice.err{background:var(--redbg);color:#991b1b;border:1px solid #fecdd3}
 
     @media(max-width:1100px){
       .stats{grid-template-columns:repeat(2,1fr)}
@@ -415,28 +381,26 @@
 
   <div class="page">
     <section class="hero">
-      <div>
-        <h1>لوحة إدارة الجمعية</h1>
-        <p>
-          إدارة واضحة للجمعية والأعضاء والاستحقاقات والدعوات من مكان واحد، مع عرض الخطة الحالية ورابط الانضمام بشكل مباشر.
-        </p>
+      <h1>لوحة إدارة الجمعية</h1>
+      <p>
+        إدارة واضحة للجمعية والأعضاء والاستحقاقات من مكان واحد، مع إظهار الخطة الحالية ورابط الدعوة بشكل مباشر وقابل للنسخ.
+      </p>
 
-        <div class="hero-actions">
-          <button class="btn btn-p" onclick="openMemberModal()">➕ إضافة عضو</button>
-          <button class="btn btn-t" onclick="copyMembersSchedule()">📋 نسخ جدول الأعضاء</button>
-          <button class="btn btn-d" onclick="copyInviteLink()">🔗 نسخ رابط الدعوة</button>
-        </div>
+      <div class="hero-actions">
+        <button class="btn btn-p" onclick="openMemberModal()">➕ إضافة عضو</button>
+        <button class="btn btn-t" onclick="copyMembersSchedule()">📋 نسخ جدول الأعضاء</button>
+        <button class="btn btn-d" onclick="copyInviteLink()">🔗 نسخ رابط الدعوة</button>
       </div>
     </section>
 
     <section class="stats">
       <div class="stat">
         <div class="label">اسم الجمعية</div>
-        <div class="value" id="statCurrentGroup" style="font-size:20px">—</div>
+        <div class="value" id="statCurrentGroup">—</div>
       </div>
       <div class="stat">
         <div class="label">الخطة الحالية</div>
-        <div class="value" id="statPlan" style="font-size:20px">—</div>
+        <div class="value" id="statPlan">—</div>
       </div>
       <div class="stat">
         <div class="label">عدد الأعضاء</div>
@@ -456,7 +420,7 @@
             <h3 id="groupNameBox">—</h3>
             <p id="groupMetaBox">—</p>
             <p id="groupCodeBox">—</p>
-            <div class="badge b-plan" id="planBadge">الخطة: —</div>
+            <div class="badge" id="planBadge">الخطة: —</div>
             <div class="invite-link" id="inviteLinkBox">—</div>
           </div>
           <div class="notice" id="noticeBox"></div>
@@ -478,11 +442,7 @@
 
       <main>
         <div class="card">
-          <div class="toolbar">
-            <div class="card-title" style="margin:0">جدول الأعضاء</div>
-            <button class="btn btn-w btn-sm" onclick="renderMembersTable()">تحديث</button>
-          </div>
-
+          <div class="card-title">جدول الأعضاء</div>
           <div class="table-wrap">
             <table>
               <thead>
@@ -549,23 +509,23 @@
   </div>
 
   <script>
-    const STORAGE_GROUPS = "managerGroups";
-    const STORAGE_LAST = "lastCreatedGroup";
+    const STORAGE_LAST_GROUP = "lastCreatedGroup";
+    const STORAGE_MANAGER_GROUPS = "managerGroups";
 
     const MONTH_NAMES = [
       "يناير","فبراير","مارس","أبريل","مايو","يونيو",
       "يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"
     ];
 
-    let groups = [];
     let currentGroup = null;
+    let groups = [];
 
     function showNotice(text, type="ok"){
       const box = document.getElementById("noticeBox");
       box.textContent = text;
       box.className = "notice show " + type;
-      clearTimeout(window.noticeTimer);
-      window.noticeTimer = setTimeout(() => {
+      clearTimeout(window.__noticeTimer);
+      window.__noticeTimer = setTimeout(()=> {
         box.className = "notice";
       }, 2500);
     }
@@ -578,14 +538,10 @@
       return `${MONTH_NAMES[m-1] || "—"} ${y}`;
     }
 
-    function statusBadge(status){
-      if(status === "paid") return '<span class="badge b-paid">✓ مدفوع</span>';
-      if(status === "late") return '<span class="badge b-late">⚠ متأخر</span>';
-      return '<span class="badge b-upcoming">⏳ قادم</span>';
-    }
-
-    function saveGroups(){
-      localStorage.setItem(STORAGE_GROUPS, JSON.stringify(groups));
+    function getStatusText(status){
+      if(status === "paid") return '<span class="status-paid">مدفوع</span>';
+      if(status === "late") return '<span class="status-late">متأخر</span>';
+      return '<span class="status-upcoming">قادم</span>';
     }
 
     function fillMonthOptions(){
@@ -603,72 +559,85 @@
     }
 
     function buildInviteLink(code){
-      const basePath = window.location.pathname.replace(/\/dashboard\.html$/,'/');
-      return `${window.location.origin}${basePath}join.html?code=${code}`;
+      const path = window.location.pathname;
+      const baseFolder = path.substring(0, path.lastIndexOf("/") + 1);
+      return `${window.location.origin}${baseFolder}join.html?code=${code}`;
     }
 
-    function migrateData(){
-      groups = JSON.parse(localStorage.getItem(STORAGE_GROUPS) || "[]");
+    function saveGroups(){
+      localStorage.setItem(STORAGE_MANAGER_GROUPS, JSON.stringify(groups));
+    }
 
-      const lastRaw = localStorage.getItem(STORAGE_LAST);
+    function loadGroupData(){
+      groups = JSON.parse(localStorage.getItem(STORAGE_MANAGER_GROUPS) || "[]");
+
+      const lastRaw = localStorage.getItem(STORAGE_LAST_GROUP);
+      let lastGroup = null;
+
       if(lastRaw){
         try{
-          const last = JSON.parse(lastRaw);
-          let existing = groups.find(g => g.inviteCode === last.inviteCode);
-
-          if(!existing){
-            existing = {
-              id: "group_" + Date.now(),
-              groupName: last.groupName || "جمعيتي",
-              amount: Number(last.amount) || 0,
-              membersLimit: Number(last.members) || 0,
-              selectedPlanName: last.selectedPlanName || "الخطة المجانية",
-              inviteCode: last.inviteCode || "CODE01",
-              members: []
-            };
-            groups.push(existing);
-            saveGroups();
-          }
-
-          currentGroup = existing;
+          lastGroup = JSON.parse(lastRaw);
         }catch(e){}
       }
 
-      if(!currentGroup && groups.length){
+      if(lastGroup){
+        const existing = groups.find(g => g.inviteCode === lastGroup.inviteCode);
+
+        if(existing){
+          currentGroup = existing;
+        } else {
+          currentGroup = {
+            id: "g_" + Date.now(),
+            groupName: lastGroup.groupName || "جمعيتي",
+            amount: Number(lastGroup.amount) || 0,
+            membersLimit: Number(lastGroup.members) || 0,
+            selectedPlanName: lastGroup.selectedPlanName || "الخطة المجانية",
+            inviteCode: lastGroup.inviteCode || "CODE01",
+            members: []
+          };
+          groups.push(currentGroup);
+          saveGroups();
+        }
+      } else if(groups.length){
         currentGroup = groups[0];
+      } else {
+        currentGroup = {
+          id: "g_" + Date.now(),
+          groupName: "لم يتم إنشاء جمعية بعد",
+          amount: 0,
+          membersLimit: 0,
+          selectedPlanName: localStorage.getItem("selectedPlanName") || "لم يتم اختيار خطة",
+          inviteCode: "NO-CODE",
+          members: []
+        };
       }
     }
 
     function renderStats(){
-      if(!currentGroup) return;
-
-      const lateCount = currentGroup.members.filter(m => m.status === "late").length;
-
-      document.getElementById("statCurrentGroup").textContent = currentGroup.groupName || "—";
-      document.getElementById("statPlan").textContent = currentGroup.selectedPlanName || "—";
-      document.getElementById("statMembers").textContent = currentGroup.members.length || 0;
-      document.getElementById("statLate").textContent = lateCount;
+      document.getElementById("statCurrentGroup").textContent = currentGroup?.groupName || "—";
+      document.getElementById("statPlan").textContent = currentGroup?.selectedPlanName || "—";
+      document.getElementById("statMembers").textContent = currentGroup?.members?.length || 0;
+      document.getElementById("statLate").textContent =
+        (currentGroup?.members || []).filter(m => m.status === "late").length;
     }
 
     function renderGroupBox(){
-      if(!currentGroup) return;
-
-      document.getElementById("groupNameBox").textContent = currentGroup.groupName || "—";
+      document.getElementById("groupNameBox").textContent = currentGroup?.groupName || "—";
       document.getElementById("groupMetaBox").textContent =
-        `مبلغ الجمعية: ${currentGroup.amount || 0} — الحد الحالي للأعضاء: ${currentGroup.membersLimit || 0}`;
+        `مبلغ الجمعية: ${currentGroup?.amount || 0} — الحد الأقصى للأعضاء: ${currentGroup?.membersLimit || 0}`;
       document.getElementById("groupCodeBox").textContent =
-        `كود الدعوة: ${currentGroup.inviteCode || "—"}`;
+        `كود الدعوة: ${currentGroup?.inviteCode || "—"}`;
       document.getElementById("planBadge").textContent =
-        `الخطة: ${currentGroup.selectedPlanName || "—"}`;
+        `الخطة: ${currentGroup?.selectedPlanName || "—"}`;
       document.getElementById("inviteLinkBox").textContent =
-        buildInviteLink(currentGroup.inviteCode || "");
+        buildInviteLink(currentGroup?.inviteCode || "NO-CODE");
     }
 
     function getFilteredMembers(){
-      if(!currentGroup) return [];
       const filter = document.getElementById("statusFilter").value;
-      if(filter === "all") return currentGroup.members;
-      return currentGroup.members.filter(m => m.status === filter);
+      const all = currentGroup?.members || [];
+      if(filter === "all") return all;
+      return all.filter(m => m.status === filter);
     }
 
     function renderMembersTable(){
@@ -686,17 +655,18 @@
           <td>${m.phone || "—"}</td>
           <td>${m.email || "—"}</td>
           <td>${monthLabel(m.selectedMonth)}</td>
-          <td>${statusBadge(m.status)}</td>
+          <td>${getStatusText(m.status)}</td>
           <td>${m.note || "—"}</td>
         </tr>
       `).join("");
     }
 
     function openMemberModal(){
-      if(!currentGroup){
-        showNotice("لا توجد جمعية حالية", "err");
+      if(!currentGroup || currentGroup.groupName === "لم يتم إنشاء جمعية بعد"){
+        showNotice("أنشئ جمعية أولًا ثم أضف الأعضاء", "err");
         return;
       }
+
       document.getElementById("memberNameInput").value = "";
       document.getElementById("memberPhoneInput").value = "";
       document.getElementById("memberEmailInput").value = "";
@@ -711,11 +681,6 @@
     }
 
     function saveMember(){
-      if(!currentGroup){
-        showNotice("لا توجد جمعية حالية", "err");
-        return;
-      }
-
       const name = document.getElementById("memberNameInput").value.trim();
       const phone = document.getElementById("memberPhoneInput").value.trim();
       const email = document.getElementById("memberEmailInput").value.trim();
@@ -733,7 +698,7 @@
         return;
       }
 
-      const conflict = currentGroup.members.find(m => m.selectedMonth === selectedMonth);
+      const conflict = (currentGroup.members || []).find(m => m.selectedMonth === selectedMonth);
       if(conflict){
         showNotice(`هذا الشهر محجوز باسم ${conflict.name}`, "err");
         return;
@@ -748,4 +713,22 @@
         note
       });
 
-      saveGro
+      const idx = groups.findIndex(g => g.id === currentGroup.id);
+      if(idx !== -1) groups[idx] = currentGroup;
+      saveGroups();
+
+      closeMemberModal();
+      renderAll();
+      showNotice("تمت إضافة العضو");
+    }
+
+    function copyInviteLink(){
+      if(!currentGroup || !currentGroup.inviteCode || currentGroup.inviteCode === "NO-CODE"){
+        showNotice("لا يوجد رابط دعوة حقيقي بعد", "err");
+        return;
+      }
+
+      const link = buildInviteLink(currentGroup.inviteCode);
+      navigator.clipboard.writeText(link)
+        .then(() => showNotice("تم نسخ رابط الدعوة"))
+        .catch(() => showNo
