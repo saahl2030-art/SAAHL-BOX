@@ -1,301 +1,431 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>لوحة التحكم - صندوق ساهل</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>لوحة التحكم - صندوق ساهل</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-body{
-  font-family:Arial, sans-serif;
-  background:#f4f6f8;
-  text-align:center;
-  padding:40px 20px;
-  margin:0;
-}
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
 
-.box{
-  background:white;
-  padding:30px;
-  border-radius:14px;
-  max-width:600px;
-  margin:auto;
-  box-shadow:0 0 12px rgba(0,0,0,0.08);
-}
+  <style>
+    :root{
+      --primary:#1a6b8a;
+      --primary2:#155972;
+      --primary3:#e0f4fa;
+      --teal:#0891b2;
+      --gold:#b45309;
+      --goldbg:#fef3c7;
+      --red:#be123c;
+      --redbg:#ffe4e6;
+      --bluebg:#e0f4fa;
+      --bg:#f4f8fb;
+      --white:#ffffff;
+      --s1:#eef4f8;
+      --s2:#dde8f0;
+      --border:#d4e4ee;
+      --dark:#0d2233;
+      --dark2:#163348;
+      --dark3:#2c4a61;
+      --muted:#5a7a90;
+      --muted2:#8aa8bc;
+      --r:12px;
+      --sh:0 1px 3px rgba(26,107,138,.08),0 1px 2px rgba(26,107,138,.06);
+      --sh2:0 4px 16px rgba(26,107,138,.12),0 2px 4px rgba(26,107,138,.06);
+      --sh3:0 20px 60px rgba(26,107,138,.15);
+    }
 
-h2{
-  margin-bottom:8px;
-  color:#1f2937;
-}
+    *{box-sizing:border-box;margin:0;padding:0}
 
-.plan{
-  font-size:26px;
-  color:#1a7f64;
-  margin:10px 0 20px;
-  font-weight:bold;
-}
+    body{
+      font-family:'Tajawal',sans-serif;
+      background:var(--bg);
+      color:var(--dark);
+      margin:0;
+      min-height:100vh;
+    }
 
-.small{
-  color:#666;
-  margin-bottom:16px;
-  line-height:1.8;
-}
+    .nav{
+      position:sticky;
+      top:0;
+      z-index:200;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+      height:62px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 24px;
+      box-shadow:var(--sh);
+    }
 
-input{
-  width:92%;
-  padding:12px;
-  margin:10px 0;
-  border:1px solid #ddd;
-  border-radius:8px;
-  font-size:15px;
-}
+    .nav-logo{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      font-size:18px;
+      font-weight:900;
+      color:var(--dark);
+      text-decoration:none;
+    }
 
-button{
-  padding:12px 18px;
-  border:none;
-  background:#1a7f64;
-  color:white;
-  border-radius:8px;
-  cursor:pointer;
-  margin-top:10px;
-  font-size:15px;
-}
+    .nav-actions{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
 
-button:hover{
-  background:#146c55;
-}
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      padding:10px 20px;
+      border:none;
+      border-radius:var(--r);
+      font-family:'Tajawal',sans-serif;
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+      transition:all .18s;
+      text-decoration:none;
+      white-space:nowrap;
+    }
 
-.secondary{
-  background:#374151;
-}
+    .btn:hover{transform:translateY(-1px);box-shadow:var(--sh2)}
+    .btn:active{transform:scale(.97)}
+    .btn-p{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(26,107,138,.3)}
+    .btn-d{background:var(--dark2);color:#fff}
+    .btn-w{background:#fff;border:1px solid var(--border);color:var(--dark3);box-shadow:var(--sh)}
+    .btn-t{background:var(--teal);color:#fff}
+    .btn-sm{padding:7px 14px;font-size:13px;border-radius:9px}
 
-.secondary:hover{
-  background:#1f2937;
-}
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:28px 20px 80px;
+    }
 
-.light{
-  background:#0ea5a4;
-}
+    .box{
+      background:var(--white);
+      padding:30px;
+      border-radius:20px;
+      box-shadow:var(--sh3);
+      border:1px solid var(--border);
+    }
 
-.light:hover{
-  background:#0b8a89;
-}
+    h2{
+      margin-bottom:8px;
+      color:var(--dark);
+      font-size:34px;
+      font-weight:900;
+      text-align:center;
+    }
 
-.result{
-  margin-top:25px;
-  padding:18px;
-  background:#f9fafb;
-  border-radius:12px;
-  line-height:2;
-  text-align:center;
-}
+    h3{
+      color:var(--dark);
+      font-size:28px;
+      font-weight:900;
+      text-align:center;
+      margin-bottom:22px;
+    }
 
-.code{
-  font-size:28px;
-  color:#1a7f64;
-  font-weight:bold;
-}
+    .plan{
+      font-size:44px;
+      color:var(--primary);
+      margin:8px 0 18px;
+      font-weight:900;
+      text-align:center;
+    }
 
-.linkbox{
-  direction:ltr;
-  background:#eef7f4;
-  padding:10px;
-  border-radius:8px;
-  word-break:break-all;
-  margin-top:8px;
-  color:#0f766e;
-  font-weight:bold;
-}
+    .small{
+      color:var(--muted);
+      margin-bottom:16px;
+      line-height:1.9;
+      text-align:center;
+      font-size:15px;
+    }
 
-.warn{
-  color:#b91c1c;
-  margin-top:10px;
-  font-weight:bold;
-}
+    .section-title{
+      font-size:18px;
+      font-weight:800;
+      color:var(--dark);
+      text-align:center;
+      margin-bottom:18px;
+    }
 
-.success{
-  color:#166534;
-  margin-top:10px;
-  font-weight:bold;
-}
+    input{
+      width:100%;
+      padding:13px 14px;
+      margin:10px 0;
+      border:1.5px solid var(--border);
+      border-radius:10px;
+      font-size:15px;
+      font-family:'Tajawal',sans-serif;
+      background:#fff;
+      color:var(--dark);
+      outline:none;
+      transition:border-color .2s, box-shadow .2s;
+    }
 
-.actions{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-top:12px;
-}
+    input:focus{
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px rgba(26,107,138,.12);
+    }
 
-hr{
-  margin:25px 0;
-  border:none;
-  border-top:1px solid #ddd;
-}
-</style>
+    .center{
+      text-align:center;
+    }
+
+    .result{
+      margin-top:25px;
+      padding:20px;
+      background:#f9fcfe;
+      border:1px solid var(--border);
+      border-radius:14px;
+      line-height:2;
+      text-align:center;
+      box-shadow:var(--sh);
+    }
+
+    .code{
+      font-size:34px;
+      color:var(--primary);
+      font-weight:900;
+      letter-spacing:2px;
+      margin:6px 0;
+    }
+
+    .linkbox{
+      direction:ltr;
+      background:var(--primary3);
+      padding:12px;
+      border-radius:10px;
+      word-break:break-all;
+      margin-top:8px;
+      color:var(--primary2);
+      font-weight:700;
+      border:1px solid var(--border);
+    }
+
+    .warn{
+      color:#991b1b;
+      margin-top:14px;
+      font-weight:800;
+      background:var(--redbg);
+      border:1px solid #fecdd3;
+      border-radius:10px;
+      padding:12px;
+    }
+
+    .success{
+      color:#155972;
+      margin-top:14px;
+      font-weight:800;
+      background:var(--primary3);
+      border:1px solid #bae6fd;
+      border-radius:10px;
+      padding:12px;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    hr{
+      margin:28px 0;
+      border:none;
+      border-top:1px solid var(--border);
+    }
+
+    @media(max-width:640px){
+      .nav{padding:0 14px}
+      .wrap{padding:20px 14px 60px}
+      .box{padding:22px 16px}
+      h2{font-size:28px}
+      h3{font-size:22px}
+      .plan{font-size:34px}
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="box">
-  <h2>صندوق ساهل</h2>
-
-  <div class="small">الخطة الحالية</div>
-  <div class="plan" id="planName">لم يتم اختيار خطة</div>
-  <div class="small" id="planDetails"></div>
-
-  <button class="secondary" onclick="window.location.href='plans.html'">تغيير الخطة</button>
-
-  <hr>
-
-  <h3>إنشاء جمعية جديدة</h3>
-
-  <input id="groupName" placeholder="اسم الجمعية">
-  <input id="amount" type="number" placeholder="مبلغ الجمعية">
-  <input id="members" type="number" placeholder="عدد الأعضاء">
-
-  <div class="small" id="limitText"></div>
-
-  <button onclick="createGroup()">إنشاء الجمعية</button>
-
-  <div id="message"></div>
-  <div id="result"></div>
-</div>
-
-<script>
-const selectedPlan = localStorage.getItem("selectedPlan");
-const selectedPlanName = localStorage.getItem("selectedPlanName");
-
-const planConfig = {
-  "4": { name: "الخطة المجانية", maxMembers: 4, maxGroups: 1, price: 0 },
-  "1": { name: "جمعية صغيرة", maxMembers: 9, maxGroups: 3, price: 149 },
-  "2": { name: "جمعية متوسطة", maxMembers: 18, maxGroups: 5, price: 199 },
-  "3": { name: "جمعية كبيرة", maxMembers: 30, maxGroups: 10, price: 249 },
-  "5": { name: "جمعية موسعة", maxMembers: 50, maxGroups: 20, price: 349 }
-};
-
-let currentPlan = null;
-
-if (selectedPlan && planConfig[selectedPlan]) {
-  currentPlan = planConfig[selectedPlan];
-} else if (selectedPlanName) {
-  // احتياط إضافي لو ضاع رقم الخطة وبقي الاسم
-  const fallbackPlan = Object.values(planConfig).find(p => p.name === selectedPlanName);
-  if (fallbackPlan) currentPlan = fallbackPlan;
-}
-
-document.getElementById("planName").innerText = currentPlan
-  ? currentPlan.name
-  : "لم يتم اختيار خطة";
-
-document.getElementById("planDetails").innerText = currentPlan
-  ? الحد الأقصى للأعضاء: ${currentPlan.maxMembers} — الحد الأقصى للجمعيات: ${currentPlan.maxGroups}
-  : "يجب اختيار خطة أولًا من صفحة الخطط";
-
-document.getElementById("limitText").innerText = currentPlan
-  ? مسموح لك في هذه الخطة إنشاء جمعية بعدد أعضاء لا يتجاوز ${currentPlan.maxMembers} أعضاء
-  : "اذهب إلى صفحة الخطط واختر الخطة أولًا";
-
-function createInviteCode(){
-  return Math.random().toString(36).substring(2, 8).toUpperCase();
-}
-
-function copyInviteLink(link){
-  navigator.clipboard.writeText(link).then(() => {
-    alert("تم نسخ رابط الدعوة");
-  }).catch(() => {
-    alert("تعذر نسخ الرابط، انسخه يدويًا");
-  });
-}
-
-function shareInviteLink(link){
-  if(navigator.share){
-    navigator.share({
-      title: "رابط الانضمام إلى الجمعية",
-      text: "اضغط على الرابط للانضمام إلى الجمعية",
-      url: link
-    }).catch(() => {});
-  } else {
-    copyInviteLink(link);
-  }
-}
-
-function createGroup(){
-  const msg = document.getElementById("message");
-  const result = document.getElementById("result");
-
-  msg.innerHTML = "";
-  result.innerHTML = "";
-
-  if(!currentPlan){
-    msg.innerHTML = '<div class="warn">يجب اختيار خطة أولًا من صفحة الخطط</div>';
-    return;
-  }
-
-  const groupName = document.getElementById("groupName").value.trim();
-  const amount = Number(document.getElementById("amount").value);
-  const members = Number(document.getElementById("members").value);
-
-  if(!groupName || !amount || !members){
-    msg.innerHTML = '<div class="warn">يرجى إدخال جميع البيانات</div>';
-    return;
-  }
-
-  if(members < 1){
-    msg.innerHTML = '<div class="warn">عدد الأعضاء يجب أن يكون أكبر من صفر</div>';
-    return;
-  }
-
-  if(members > currentPlan.maxMembers){
-    msg.innerHTML = <div class="warn">هذه الخطة تسمح بحد أقصى ${currentPlan.maxMembers} أعضاء فقط</div>;
-    return;
-  }
-
-  const inviteCode = createInviteCode();
-
-  // الرابط الصحيح داخل المستودع SAAHL-BOX
-  const inviteLink = ${window.location.origin}/SAAHL-BOX/join.html?code=${inviteCode};
-
-  const tempGroup = {
-    groupName: groupName,
-    amount: amount,
-    members: members,
-    inviteCode: inviteCode,
-    inviteLink: inviteLink,
-    selectedPlan: selectedPlan,
-    selectedPlanName: currentPlan.name,
-    createdAt: new Date().toISOString()
-  };
-
-  localStorage.setItem("lastCreatedGroup", JSON.stringify(tempGroup));
-
-  msg.innerHTML = '<div class="success">تم إنشاء الجمعية بنجاح</div>';
-
-  result.innerHTML = `
-    <div class="result">
-      <div>اسم الجمعية: <strong>${groupName}</strong></div>
-      <div>الخطة: <strong>${currentPlan.name}</strong></div>
-      <div>عدد الأعضاء: <strong>${members}</strong></div>
-      <div>قيمة الجمعية: <strong>${amount}</strong></div>
-      <div>كود الدعوة:</div>
-      <div class="code">${inviteCode}</div>
-
-      <div>رابط الدعوة:</div>
-      <div class="linkbox">${inviteLink}</div>
-
-      <div class="actions">
-        <button onclick="copyInviteLink('${inviteLink}')">نسخ الرابط</button>
-        <button class="secondary" onclick="shareInviteLink('${inviteLink}')">مشاركة الرابط</button>
-        <button class="light" onclick="window.location.href='join.html?code=${inviteCode}'">الانتقال لصفحة الانضمام</button>
-      </div>
-
-      <div class="small">
-        إذا ظهرت صفحة 404 فهذا طبيعي الآن لأن ملف <strong>join.html</strong> لم ننشئه بعد.
-      </div>
+  <nav class="nav">
+    <div class="nav-logo">🏦 صندوق ساهل</div>
+    <div class="nav-actions">
+      <a class="btn btn-w btn-sm" href="index.html">← الرئيسية</a>
+      <a class="btn btn-p btn-sm" href="plans.html">الخطط</a>
     </div>
-  `;
-}
-</script>
+  </nav>
+
+  <div class="wrap">
+    <div class="box">
+      <h2>صندوق ساهل</h2>
+
+      <div class="small">الخطة الحالية</div>
+      <div class="plan" id="planName">لم يتم اختيار خطة</div>
+      <div class="small" id="planDetails"></div>
+
+      <div class="center">
+        <button class="btn btn-d" onclick="window.location.href='plans.html'">تغيير الخطة</button>
+      </div>
+
+      <hr>
+
+      <div class="section-title">إنشاء جمعية جديدة</div>
+
+      <input id="groupName" placeholder="اسم الجمعية" />
+      <input id="amount" type="number" placeholder="مبلغ الجمعية" />
+      <input id="members" type="number" placeholder="عدد الأعضاء" />
+
+      <div class="small" id="limitText"></div>
+
+      <div class="center">
+        <button class="btn btn-p" onclick="createGroup()">إنشاء الجمعية</button>
+      </div>
+
+      <div id="message"></div>
+      <div id="result"></div>
+    </div>
+  </div>
+
+  <script>
+    const selectedPlan = localStorage.getItem("selectedPlan");
+    const selectedPlanName = localStorage.getItem("selectedPlanName");
+
+    const planConfig = {
+      "4": { name: "الخطة المجانية", maxMembers: 4, maxGroups: 1, price: 0 },
+      "1": { name: "جمعية صغيرة", maxMembers: 9, maxGroups: 3, price: 149 },
+      "2": { name: "جمعية متوسطة", maxMembers: 18, maxGroups: 5, price: 199 },
+      "3": { name: "جمعية كبيرة", maxMembers: 30, maxGroups: 10, price: 249 },
+      "5": { name: "جمعية موسعة", maxMembers: 50, maxGroups: 20, price: 349 }
+    };
+
+    let currentPlan = null;
+
+    if (selectedPlan && planConfig[selectedPlan]) {
+      currentPlan = planConfig[selectedPlan];
+    } else if (selectedPlanName) {
+      const fallbackPlan = Object.values(planConfig).find(p => p.name === selectedPlanName);
+      if (fallbackPlan) currentPlan = fallbackPlan;
+    }
+
+    document.getElementById("planName").innerText = currentPlan
+      ? currentPlan.name
+      : "لم يتم اختيار خطة";
+
+    document.getElementById("planDetails").innerText = currentPlan
+      ? `الحد الأقصى للأعضاء: ${currentPlan.maxMembers} — الحد الأقصى للجمعيات: ${currentPlan.maxGroups}`
+      : "يجب اختيار خطة أولًا من صفحة الخطط";
+
+    document.getElementById("limitText").innerText = currentPlan
+      ? `مسموح لك في هذه الخطة إنشاء جمعية بعدد أعضاء لا يتجاوز ${currentPlan.maxMembers} أعضاء`
+      : "اذهب إلى صفحة الخطط واختر الخطة أولًا";
+
+    function createInviteCode() {
+      return Math.random().toString(36).substring(2, 8).toUpperCase();
+    }
+
+    function copyInviteLink(link) {
+      navigator.clipboard.writeText(link).then(() => {
+        alert("تم نسخ رابط الدعوة");
+      }).catch(() => {
+        alert("تعذر نسخ الرابط، انسخه يدويًا");
+      });
+    }
+
+    function shareInviteLink(link) {
+      if (navigator.share) {
+        navigator.share({
+          title: "رابط الانضمام إلى الجمعية",
+          text: "اضغط على الرابط للانضمام إلى الجمعية",
+          url: link
+        }).catch(() => {});
+      } else {
+        copyInviteLink(link);
+      }
+    }
+
+    function createGroup() {
+      const msg = document.getElementById("message");
+      const result = document.getElementById("result");
+
+      msg.innerHTML = "";
+      result.innerHTML = "";
+
+      if (!currentPlan) {
+        msg.innerHTML = '<div class="warn">يجب اختيار خطة أولًا من صفحة الخطط</div>';
+        return;
+      }
+
+      const groupName = document.getElementById("groupName").value.trim();
+      const amount = Number(document.getElementById("amount").value);
+      const members = Number(document.getElementById("members").value);
+
+      if (!groupName || !amount || !members) {
+        msg.innerHTML = '<div class="warn">يرجى إدخال جميع البيانات</div>';
+        return;
+      }
+
+      if (members < 1) {
+        msg.innerHTML = '<div class="warn">عدد الأعضاء يجب أن يكون أكبر من صفر</div>';
+        return;
+      }
+
+      if (members > currentPlan.maxMembers) {
+        msg.innerHTML = `<div class="warn">هذه الخطة تسمح بحد أقصى ${currentPlan.maxMembers} أعضاء فقط</div>`;
+        return;
+      }
+
+      const inviteCode = createInviteCode();
+      const inviteLink = `${window.location.origin}/SAAHL-BOX/join.html?code=${inviteCode}`;
+
+      const tempGroup = {
+        groupName: groupName,
+        amount: amount,
+        members: members,
+        inviteCode: inviteCode,
+        inviteLink: inviteLink,
+        selectedPlan: selectedPlan,
+        selectedPlanName: currentPlan.name,
+        createdAt: new Date().toISOString()
+      };
+
+      localStorage.setItem("lastCreatedGroup", JSON.stringify(tempGroup));
+
+      msg.innerHTML = '<div class="success">تم إنشاء الجمعية بنجاح</div>';
+
+      result.innerHTML = `
+        <div class="result">
+          <div>اسم الجمعية: <strong>${groupName}</strong></div>
+          <div>الخطة: <strong>${currentPlan.name}</strong></div>
+          <div>عدد الأعضاء: <strong>${members}</strong></div>
+          <div>قيمة الجمعية: <strong>${amount}</strong></div>
+
+          <div style="margin-top:10px">كود الدعوة:</div>
+          <div class="code">${inviteCode}</div>
+
+          <div>رابط الدعوة:</div>
+          <div class="linkbox">${inviteLink}</div>
+
+          <div class="actions">
+            <button class="btn btn-p" onclick="copyInviteLink('${inviteLink}')">نسخ الرابط</button>
+            <button class="btn btn-d" onclick="shareInviteLink('${inviteLink}')">مشاركة الرابط</button>
+            <button class="btn btn-t" onclick="window.location.href='join.html?code=${inviteCode}'">الانتقال لصفحة الانضمام</button>
+          </div>
+
+          <div class="small" style="margin-top:14px">
+            إذا ظهرت صفحة 404 فهذا طبيعي الآن لأن ملف <strong>join.html</strong> لم ننشئه بعد.
+          </div>
+        </div>
+      `;
+    }
+  </script>
 
 </body>
 </html>
