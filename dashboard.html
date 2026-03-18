@@ -715,7 +715,7 @@
       `).join("");
     }
 
-    function openMemberModal(){
+  function openMemberModal(){
       if(!hasCoreData()){
         showNotice("احفظ بيانات المدير والجمعية أولًا من بطاقة الإعداد", "err");
         return;
@@ -723,4 +723,113 @@
 
       document.getElementById("memberNameInput").value = "";
       document.getElementById("memberPhoneInput").value = "";
-      document.getElementById("memberE
+      document.getElementById("memberEmailInput").value = "";
+      document.getElementById("memberMonthInput").value = "";
+      document.getElementById("memberStatusInput").value = "upcoming";
+      document.getElementById("memberNoteInput").value = "";
+      document.getElementById("memberModalBg").classList.add("show");
+    }
+
+    function closeMemberModal(){
+      document.getElementById("memberModalBg").classList.remove("show");
+    }
+
+    function saveMember(){
+      const name = document.getElementById("memberNameInput").value.trim();
+      const phone = document.getElementById("memberPhoneInput").value.trim();
+      const email = document.getElementById("memberEmailInput").value.trim();
+      const selectedMonth = document.getElementById("memberMonthInput").value;
+      const status = document.getElementById("memberStatusInput").value;
+      const note = document.getElementById("memberNoteInput").value.trim();
+
+      if(!name){
+        showNotice("أدخل اسم العضو", "err");
+        return;
+      }
+
+      if(!selectedMonth){
+        showNotice("اختر شهر الاستحقاق", "err");
+        return;
+      }
+
+      const conflict = dashboardData.members.find(m => m.selectedMonth === selectedMonth);
+      if(conflict){
+        showNotice(هذا الشهر محجوز باسم ${conflict.name}, "err");
+        return;
+      }
+
+      dashboardData.members.push({
+        name,
+        phone,
+        email,
+        selectedMonth,
+        status,
+        note
+      });
+
+      saveData();
+      closeMemberModal();
+      renderAll();
+      showNotice("تمت إضافة العضو");
+    }
+
+    function copyInviteLink(){
+      if(!hasCoreData()){
+        showNotice("احفظ بيانات الجمعية أولًا", "err");
+        return;
+      }
+
+      const link = buildInviteLink(dashboardData.inviteCode);
+      navigator.clipboard.writeText(link)
+        .then(() => showNotice("تم نسخ رابط الدعوة"))
+        .catch(() => showNotice("تعذر نسخ الرابط", "err"));
+    }
+
+    function copyMembersSchedule(){
+      if(!hasCoreData()){
+        showNotice("احفظ بيانات الجمعية أولًا", "err");
+        return;
+      }
+
+      if(!dashboardData.members.length){
+        showNotice("لا يوجد أعضاء لنسخ الجدول", "err");
+        return;
+      }
+
+      const text = `جدول أعضاء جمعية ${dashboardData.groupName}
+
+مسؤول الجمعية: ${dashboardData.managerName}
+الخطة الحالية: ${dashboardData.selectedPlanName}
+
+${dashboardData.members.map((m, i) => ${i+1}- ${m.name} | ${monthLabel(m.selectedMonth)} | ${m.status === "paid" ? "مدفوع" : m.status === "late" ? "متأخر" : "قادم"}).join("\n")}
+
+رابط الدعوة:
+${buildInviteLink(dashboardData.inviteCode)}`;
+
+      navigator.clipboard.writeText(text)
+        .then(() => showNotice("تم نسخ جدول الأعضاء"))
+        .catch(() => showNotice("تعذر نسخ الجدول", "err"));
+    }
+
+    function openJoinPage(){
+      if(!hasCoreData()){
+        showNotice("احفظ بيانات الجمعية أولًا", "err");
+        return;
+      }
+
+      window.location.href = buildInviteLink(dashboardData.inviteCode);
+    }
+
+    function renderAll(){
+      updateSetupVisibility();
+      renderStats();
+      renderGroupBox();
+      renderMembersTable();
+    }
+
+    fillMonthOptions();
+    loadData();
+    renderAll();
+  </script>
+</body>
+</html> 
