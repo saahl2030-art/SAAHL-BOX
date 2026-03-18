@@ -92,8 +92,8 @@
     .btn-w{background:#fff;border:1px solid var(--border);color:var(--dark2);box-shadow:var(--sh)}
     .btn-t{background:var(--teal);color:#fff}
     .btn-r{background:var(--red);color:#fff}
-    .btn-sm{padding:7px 12px;font-size:13px;border-radius:10px}
     .btn-full{width:100%}
+    .btn-sm{padding:7px 12px;font-size:13px;border-radius:10px}
 
     .page{
       max-width:1280px;
@@ -120,7 +120,7 @@
       color:rgba(255,255,255,.85);
       line-height:1.9;
       font-size:15px;
-      max-width:760px;
+      max-width:820px;
     }
 
     .hero-actions{
@@ -132,7 +132,7 @@
 
     .stats{
       display:grid;
-      grid-template-columns:repeat(4,1fr);
+      grid-template-columns:repeat(5,1fr);
       gap:14px;
       margin-bottom:18px;
     }
@@ -153,7 +153,7 @@
     }
 
     .stat .value{
-      font-size:28px;
+      font-size:26px;
       font-weight:900;
       line-height:1.2;
       color:var(--dark);
@@ -182,12 +182,6 @@
       color:var(--dark);
     }
 
-    .mini{
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.8;
-    }
-
     .field{
       margin-bottom:12px;
     }
@@ -210,19 +204,6 @@
       outline:none;
       background:#fff;
       color:var(--dark);
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:5px;
-      padding:4px 10px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:800;
-      white-space:nowrap;
-      background:var(--primary3);
-      color:var(--primary2);
     }
 
     .group-box{
@@ -257,6 +238,19 @@
       font-weight:800;
       word-break:break-all;
       margin-top:10px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:5px;
+      padding:5px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      background:var(--primary3);
+      color:var(--primary2);
+      margin-top:6px;
     }
 
     .table-wrap{
@@ -356,6 +350,10 @@
       flex-wrap:wrap;
     }
 
+    #setupCard{
+      display:none;
+    }
+
     @media(max-width:1100px){
       .stats{grid-template-columns:repeat(2,1fr)}
       .layout{grid-template-columns:1fr}
@@ -383,7 +381,7 @@
     <section class="hero">
       <h1>لوحة إدارة الجمعية</h1>
       <p>
-        إدارة واضحة للجمعية والأعضاء والاستحقاقات من مكان واحد، مع إظهار الخطة الحالية ورابط الدعوة بشكل مباشر وقابل للنسخ.
+        إدارة كاملة للجمعية والأعضاء والخطة الحالية ورابط الدعوة من مكان واحد. إذا لم تُحمَّل البيانات تلقائيًا، يمكنك إعدادها من بطاقة الإعداد الأولي أسفل الصفحة.
       </p>
 
       <div class="hero-actions">
@@ -394,6 +392,10 @@
     </section>
 
     <section class="stats">
+      <div class="stat">
+        <div class="label">اسم المدير</div>
+        <div class="value" id="statManager">—</div>
+      </div>
       <div class="stat">
         <div class="label">اسم الجمعية</div>
         <div class="value" id="statCurrentGroup">—</div>
@@ -412,6 +414,44 @@
       </div>
     </section>
 
+    <div class="card" id="setupCard">
+      <div class="card-title">الإعداد الأولي للوحة المدير</div>
+
+      <div class="field">
+        <label>اسم المدير</label>
+        <input id="setupManagerName" type="text" placeholder="مثال: محمد عبدالله">
+      </div>
+
+      <div class="field">
+        <label>اسم الجمعية</label>
+        <input id="setupGroupName" type="text" placeholder="مثال: جمعية الأهل">
+      </div>
+
+      <div class="field">
+        <label>نوع الخطة الحالية</label>
+        <select id="setupPlanName">
+          <option value="الخطة المجانية">الخطة المجانية</option>
+          <option value="جمعية صغيرة">جمعية صغيرة</option>
+          <option value="جمعية متوسطة">جمعية متوسطة</option>
+          <option value="جمعية كبيرة">جمعية كبيرة</option>
+          <option value="جمعية موسعة">جمعية موسعة</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>مبلغ الجمعية</label>
+        <input id="setupAmount" type="number" placeholder="مثال: 2000">
+      </div>
+
+      <div class="field">
+        <label>الحد الأقصى للأعضاء</label>
+        <input id="setupMembersLimit" type="number" placeholder="مثال: 4">
+      </div>
+
+      <button class="btn btn-p" onclick="saveInitialSetup()">حفظ البيانات</button>
+      <div class="notice" id="setupNotice"></div>
+    </div>
+
     <section class="layout">
       <aside>
         <div class="card">
@@ -427,9 +467,9 @@
         </div>
 
         <div class="card">
-          <div class="card-title">إعدادات سريعة</div>
+          <div class="card-title">فلتر الأعضاء</div>
           <div class="field">
-            <label>فلتر الأعضاء</label>
+            <label>الحالة</label>
             <select id="statusFilter" onchange="renderMembersTable()">
               <option value="all">الكل</option>
               <option value="paid">المدفوعون</option>
@@ -509,25 +549,34 @@
   </div>
 
   <script>
-    const STORAGE_LAST_GROUP = "lastCreatedGroup";
-    const STORAGE_MANAGER_GROUPS = "managerGroups";
-
+    const STORAGE_DASHBOARD = "saahl_dashboard_data_v1";
     const MONTH_NAMES = [
       "يناير","فبراير","مارس","أبريل","مايو","يونيو",
       "يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"
     ];
 
-    let currentGroup = null;
-    let groups = [];
+    let dashboardData = {
+      managerName: "",
+      groupName: "",
+      selectedPlanName: "",
+      amount: 0,
+      membersLimit: 0,
+      inviteCode: "",
+      members: []
+    };
 
-    function showNotice(text, type="ok"){
-      const box = document.getElementById("noticeBox");
+    function createCode(){
+      return Math.random().toString(36).substring(2,8).toUpperCase();
+    }
+
+    function showNotice(text, type="ok", target="noticeBox"){
+      const box = document.getElementById(target);
       box.textContent = text;
       box.className = "notice show " + type;
-      clearTimeout(window.__noticeTimer);
-      window.__noticeTimer = setTimeout(()=> {
+      clearTimeout(box._timer);
+      box._timer = setTimeout(()=> {
         box.className = "notice";
-      }, 2500);
+      }, 2800);
     }
 
     function monthLabel(value){
@@ -564,80 +613,85 @@
       return `${window.location.origin}${baseFolder}join.html?code=${code}`;
     }
 
-    function saveGroups(){
-      localStorage.setItem(STORAGE_MANAGER_GROUPS, JSON.stringify(groups));
+    function saveData(){
+      localStorage.setItem(STORAGE_DASHBOARD, JSON.stringify(dashboardData));
     }
 
-    function loadGroupData(){
-      groups = JSON.parse(localStorage.getItem(STORAGE_MANAGER_GROUPS) || "[]");
-
-      const lastRaw = localStorage.getItem(STORAGE_LAST_GROUP);
-      let lastGroup = null;
-
-      if(lastRaw){
-        try{
-          lastGroup = JSON.parse(lastRaw);
-        }catch(e){}
-      }
-
-      if(lastGroup){
-        const existing = groups.find(g => g.inviteCode === lastGroup.inviteCode);
-
-        if(existing){
-          currentGroup = existing;
-        } else {
-          currentGroup = {
-            id: "g_" + Date.now(),
-            groupName: lastGroup.groupName || "جمعيتي",
-            amount: Number(lastGroup.amount) || 0,
-            membersLimit: Number(lastGroup.members) || 0,
-            selectedPlanName: lastGroup.selectedPlanName || "الخطة المجانية",
-            inviteCode: lastGroup.inviteCode || "CODE01",
-            members: []
-          };
-          groups.push(currentGroup);
-          saveGroups();
+    function loadData(){
+      try{
+        const raw = localStorage.getItem(STORAGE_DASHBOARD);
+        if(raw){
+          dashboardData = JSON.parse(raw);
         }
-      } else if(groups.length){
-        currentGroup = groups[0];
-      } else {
-        currentGroup = {
-          id: "g_" + Date.now(),
-          groupName: "لم يتم إنشاء جمعية بعد",
-          amount: 0,
-          membersLimit: 0,
-          selectedPlanName: localStorage.getItem("selectedPlanName") || "لم يتم اختيار خطة",
-          inviteCode: "NO-CODE",
-          members: []
-        };
+      }catch(e){}
+
+      if(!dashboardData.inviteCode){
+        dashboardData.inviteCode = createCode();
       }
+    }
+
+    function hasCoreData(){
+      return !!(dashboardData.managerName && dashboardData.groupName && dashboardData.selectedPlanName);
+    }
+
+    function updateSetupVisibility(){
+      document.getElementById("setupCard").style.display = hasCoreData() ? "none" : "block";
+    }
+
+    function saveInitialSetup(){
+      const managerName = document.getElementById("setupManagerName").value.trim();
+      const groupName = document.getElementById("setupGroupName").value.trim();
+      const selectedPlanName = document.getElementById("setupPlanName").value;
+      const amount = Number(document.getElementById("setupAmount").value);
+      const membersLimit = Number(document.getElementById("setupMembersLimit").value);
+
+      if(!managerName || !groupName || !selectedPlanName){
+        showNotice("أدخل اسم المدير واسم الجمعية والخطة الحالية", "err", "setupNotice");
+        return;
+      }
+
+      dashboardData.managerName = managerName;
+      dashboardData.groupName = groupName;
+      dashboardData.selectedPlanName = selectedPlanName;
+      dashboardData.amount = amount || 0;
+      dashboardData.membersLimit = membersLimit || 0;
+
+      if(!dashboardData.inviteCode){
+        dashboardData.inviteCode = createCode();
+      }
+
+      saveData();
+      updateSetupVisibility();
+      renderAll();
+      showNotice("تم حفظ البيانات الأساسية", "ok", "setupNotice");
+      showNotice("تم تفعيل لوحة المدير");
     }
 
     function renderStats(){
-      document.getElementById("statCurrentGroup").textContent = currentGroup?.groupName || "—";
-      document.getElementById("statPlan").textContent = currentGroup?.selectedPlanName || "—";
-      document.getElementById("statMembers").textContent = currentGroup?.members?.length || 0;
+      document.getElementById("statManager").textContent = dashboardData.managerName || "—";
+      document.getElementById("statCurrentGroup").textContent = dashboardData.groupName || "—";
+      document.getElementById("statPlan").textContent = dashboardData.selectedPlanName || "—";
+      document.getElementById("statMembers").textContent = dashboardData.members.length || 0;
       document.getElementById("statLate").textContent =
-        (currentGroup?.members || []).filter(m => m.status === "late").length;
+        dashboardData.members.filter(m => m.status === "late").length;
     }
 
     function renderGroupBox(){
-      document.getElementById("groupNameBox").textContent = currentGroup?.groupName || "—";
+      document.getElementById("groupNameBox").textContent = dashboardData.groupName || "—";
       document.getElementById("groupMetaBox").textContent =
-        `مبلغ الجمعية: ${currentGroup?.amount || 0} — الحد الأقصى للأعضاء: ${currentGroup?.membersLimit || 0}`;
+        `مسؤول الجمعية: ${dashboardData.managerName || "—"} — مبلغ الجمعية: ${dashboardData.amount || 0} — الحد الأقصى للأعضاء: ${dashboardData.membersLimit || 0}`;
       document.getElementById("groupCodeBox").textContent =
-        `كود الدعوة: ${currentGroup?.inviteCode || "—"}`;
+        `كود الدعوة: ${dashboardData.inviteCode || "—"}`;
       document.getElementById("planBadge").textContent =
-        `الخطة: ${currentGroup?.selectedPlanName || "—"}`;
+        `الخطة: ${dashboardData.selectedPlanName || "—"}`;
       document.getElementById("inviteLinkBox").textContent =
-        buildInviteLink(currentGroup?.inviteCode || "NO-CODE");
+        dashboardData.inviteCode ? buildInviteLink(dashboardData.inviteCode) : "—";
     }
 
     function getFilteredMembers(){
       const filter = document.getElementById("statusFilter").value;
-      const all = currentGroup?.members || [];
-      if(filter === "all") return all;
-      return all.filter(m => m.status === filter);
+      if(filter === "all") return dashboardData.members;
+      return dashboardData.members.filter(m => m.status === filter);
     }
 
     function renderMembersTable(){
@@ -662,73 +716,11 @@
     }
 
     function openMemberModal(){
-      if(!currentGroup || currentGroup.groupName === "لم يتم إنشاء جمعية بعد"){
-        showNotice("أنشئ جمعية أولًا ثم أضف الأعضاء", "err");
+      if(!hasCoreData()){
+        showNotice("احفظ بيانات المدير والجمعية أولًا من بطاقة الإعداد", "err");
         return;
       }
 
       document.getElementById("memberNameInput").value = "";
       document.getElementById("memberPhoneInput").value = "";
-      document.getElementById("memberEmailInput").value = "";
-      document.getElementById("memberMonthInput").value = "";
-      document.getElementById("memberStatusInput").value = "upcoming";
-      document.getElementById("memberNoteInput").value = "";
-      document.getElementById("memberModalBg").classList.add("show");
-    }
-
-    function closeMemberModal(){
-      document.getElementById("memberModalBg").classList.remove("show");
-    }
-
-    function saveMember(){
-      const name = document.getElementById("memberNameInput").value.trim();
-      const phone = document.getElementById("memberPhoneInput").value.trim();
-      const email = document.getElementById("memberEmailInput").value.trim();
-      const selectedMonth = document.getElementById("memberMonthInput").value;
-      const status = document.getElementById("memberStatusInput").value;
-      const note = document.getElementById("memberNoteInput").value.trim();
-
-      if(!name){
-        showNotice("أدخل اسم العضو", "err");
-        return;
-      }
-
-      if(!selectedMonth){
-        showNotice("اختر شهر الاستحقاق", "err");
-        return;
-      }
-
-      const conflict = (currentGroup.members || []).find(m => m.selectedMonth === selectedMonth);
-      if(conflict){
-        showNotice(`هذا الشهر محجوز باسم ${conflict.name}`, "err");
-        return;
-      }
-
-      currentGroup.members.push({
-        name,
-        phone,
-        email,
-        selectedMonth,
-        status,
-        note
-      });
-
-      const idx = groups.findIndex(g => g.id === currentGroup.id);
-      if(idx !== -1) groups[idx] = currentGroup;
-      saveGroups();
-
-      closeMemberModal();
-      renderAll();
-      showNotice("تمت إضافة العضو");
-    }
-
-    function copyInviteLink(){
-      if(!currentGroup || !currentGroup.inviteCode || currentGroup.inviteCode === "NO-CODE"){
-        showNotice("لا يوجد رابط دعوة حقيقي بعد", "err");
-        return;
-      }
-
-      const link = buildInviteLink(currentGroup.inviteCode);
-      navigator.clipboard.writeText(link)
-        .then(() => showNotice("تم نسخ رابط الدعوة"))
-        .catch(() => showNo
+      document.getElementById("memberE
