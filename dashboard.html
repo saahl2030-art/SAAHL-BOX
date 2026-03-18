@@ -1,765 +1,246 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>لوحة مدير الجمعية - صندوق ساهل</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم - صندوق ساهل</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
+<style>
+body{
+  font-family:Tahoma;
+  background:#eef3f7;
+  margin:0;
+  padding:20px;
+}
 
-  <style>
-    :root{
-      --primary:#1a6b8a;
-      --primary2:#155972;
-      --primary3:#e0f4fa;
-      --teal:#0891b2;
-      --gold:#b45309;
-      --goldbg:#fef3c7;
-      --red:#be123c;
-      --redbg:#ffe4e6;
-      --green:#15803d;
-      --greenbg:#dcfce7;
-      --graybg:#f3f4f6;
-      --bg:#f4f8fb;
-      --white:#ffffff;
-      --s1:#eef4f8;
-      --s2:#dde8f0;
-      --border:#d4e4ee;
-      --dark:#0d2233;
-      --dark2:#163348;
-      --dark3:#2c4a61;
-      --muted:#5a7a90;
-      --muted2:#8aa8bc;
-      --r:12px;
-      --sh:0 1px 3px rgba(26,107,138,.08),0 1px 2px rgba(26,107,138,.06);
-      --sh2:0 4px 16px rgba(26,107,138,.12),0 2px 4px rgba(26,107,138,.06);
-      --sh3:0 20px 60px rgba(26,107,138,.15);
-    }
+/* HEADER */
+.header{
+  background:linear-gradient(135deg,#0f172a,#1e3a5f);
+  color:white;
+  padding:25px;
+  border-radius:16px;
+  margin-bottom:20px;
+}
 
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:'Tajawal',sans-serif;
-      background:var(--bg);
-      color:var(--dark);
-      min-height:100vh;
-    }
+.header h1{
+  margin:0;
+  font-size:24px;
+}
 
-    .nav{
-      position:sticky;
-      top:0;
-      z-index:200;
-      background:rgba(255,255,255,.92);
-      backdrop-filter:blur(20px);
-      border-bottom:1px solid var(--border);
-      height:64px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:0 24px;
-      box-shadow:var(--sh);
-    }
+.header p{
+  margin-top:8px;
+  color:#cbd5e1;
+}
 
-    .nav-logo{
-      display:flex;
-      align-items:center;
-      gap:9px;
-      font-size:20px;
-      font-weight:900;
-      color:var(--dark);
-      text-decoration:none;
-    }
+/* BUTTONS */
+.actions{
+  margin-top:15px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
 
-    .nav-actions{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
+.btn{
+  padding:10px 14px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:14px;
+}
 
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      padding:10px 18px;
-      border:none;
-      border-radius:12px;
-      font-family:'Tajawal',sans-serif;
-      font-size:14px;
-      font-weight:800;
-      cursor:pointer;
-      transition:all .18s;
-      text-decoration:none;
-      white-space:nowrap;
-    }
+.primary{
+  background:#0ea5e9;
+  color:white;
+}
 
-    .btn:hover{transform:translateY(-1px);box-shadow:var(--sh2)}
-    .btn:active{transform:scale(.98)}
-    .btn-p{background:var(--primary);color:#fff}
-    .btn-d{background:var(--dark2);color:#fff}
-    .btn-w{background:#fff;border:1px solid var(--border);color:var(--dark3);box-shadow:var(--sh)}
-    .btn-t{background:var(--teal);color:#fff}
-    .btn-r{background:var(--red);color:#fff}
-    .btn-sm{padding:7px 12px;font-size:13px;border-radius:10px}
-    .btn-full{width:100%}
+.secondary{
+  background:#334155;
+  color:white;
+}
 
-    .page{
-      max-width:1320px;
-      margin:0 auto;
-      padding:24px 20px 80px;
-    }
+/* CARDS */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:15px;
+  margin-top:20px;
+}
 
-    .hero{
-      background:linear-gradient(135deg,#0d2233 0%,#1a3d52 50%,#0d2233 100%);
-      color:#fff;
-      border-radius:24px;
-      padding:28px;
-      box-shadow:var(--sh3);
-      margin-bottom:20px;
-      display:flex;
-      justify-content:space-between;
-      gap:16px;
-      flex-wrap:wrap;
-      align-items:flex-start;
-    }
+.card{
+  background:white;
+  padding:15px;
+  border-radius:12px;
+  text-align:center;
+  box-shadow:0 0 10px rgba(0,0,0,0.05);
+}
 
-    .hero h1{
-      font-size:34px;
-      font-weight:900;
-      margin-bottom:8px;
-    }
+.card h3{
+  margin:0;
+  font-size:14px;
+  color:#555;
+}
 
-    .hero p{
-      color:rgba(255,255,255,.82);
-      line-height:1.9;
-      font-size:14px;
-      max-width:760px;
-    }
+.card p{
+  font-size:22px;
+  margin:8px 0 0;
+  font-weight:bold;
+}
 
-    .hero-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
+/* TABLE */
+.table-box{
+  margin-top:25px;
+  background:white;
+  padding:15px;
+  border-radius:12px;
+}
 
-    .stats{
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:14px;
-      margin-bottom:18px;
-    }
+table{
+  width:100%;
+  border-collapse:collapse;
+}
 
-    .stat{
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius:18px;
-      padding:18px;
-      box-shadow:var(--sh);
-    }
+th,td{
+  padding:10px;
+  border-bottom:1px solid #eee;
+  text-align:center;
+}
 
-    .stat .label{
-      color:var(--muted);
-      font-size:12px;
-      font-weight:700;
-      margin-bottom:8px;
-    }
-
-    .stat .value{
-      font-size:30px;
-      font-weight:900;
-      line-height:1;
-      color:var(--dark);
-    }
-
-    .layout{
-      display:grid;
-      grid-template-columns:320px 1fr;
-      gap:18px;
-      align-items:start;
-    }
-
-    .card{
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius:20px;
-      box-shadow:var(--sh);
-      padding:20px;
-      margin-bottom:18px;
-    }
-
-    .card-title{
-      font-size:18px;
-      font-weight:900;
-      margin-bottom:14px;
-      color:var(--dark);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-
-    .mini{
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.8;
-    }
-
-    .field{
-      margin-bottom:12px;
-    }
-
-    .field label{
-      display:block;
-      font-size:12px;
-      color:var(--dark2);
-      font-weight:800;
-      margin-bottom:6px;
-    }
-
-    input, select{
-      width:100%;
-      padding:12px 13px;
-      border:1.5px solid var(--border);
-      border-radius:10px;
-      font-size:14px;
-      font-family:'Tajawal',sans-serif;
-      outline:none;
-      transition:border-color .2s,box-shadow .2s;
-      background:#fff;
-      color:var(--dark);
-    }
-
-    input:focus,select:focus{
-      border-color:var(--primary);
-      box-shadow:0 0 0 3px rgba(26,107,138,.12);
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:5px;
-      padding:4px 10px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:800;
-      white-space:nowrap;
-    }
-
-    .b-pending{background:var(--goldbg);color:#92400e}
-    .b-paid{background:var(--greenbg);color:var(--green)}
-    .b-late{background:var(--redbg);color:#991b1b}
-    .b-upcoming{background:var(--primary3);color:var(--primary2)}
-    .b-neutral{background:var(--graybg);color:#4b5563}
-
-    .table-wrap{
-      overflow:auto;
-      border:1px solid var(--border);
-      border-radius:16px;
-    }
-
-    table{
-      width:100%;
-      border-collapse:collapse;
-      min-width:980px;
-      background:#fff;
-    }
-
-    thead th{
-      background:var(--s1);
-      color:var(--muted);
-      font-size:12px;
-      font-weight:800;
-      padding:12px 10px;
-      text-align:right;
-      border-bottom:1px solid var(--border);
-    }
-
-    tbody td{
-      padding:13px 10px;
-      border-bottom:1px solid var(--border);
-      font-size:14px;
-      vertical-align:middle;
-    }
-
-    tbody tr:hover{
-      background:#fbfdff;
-    }
-
-    .name-strong{
-      font-weight:900;
-      color:var(--dark);
-    }
-
-    .toolbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:14px;
-    }
-
-    .toolbar-left,.toolbar-right{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    .empty{
-      text-align:center;
-      color:var(--muted);
-      padding:30px 14px;
-      font-size:14px;
-    }
-
-    .list{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-
-    .req{
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:14px;
-      background:#fff;
-    }
-
-    .req-top{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:8px;
-    }
-
-    .req-name{
-      font-size:16px;
-      font-weight:900;
-      color:var(--dark);
-    }
-
-    .req-meta{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.8;
-    }
-
-    .req-actions{
-      margin-top:10px;
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-
-    .modal-bg{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.45);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:16px;
-      z-index:300;
-    }
-
-    .modal-bg.show{
-      display:flex;
-    }
-
-    .modal{
-      width:100%;
-      max-width:520px;
-      background:#fff;
-      border-radius:20px;
-      box-shadow:var(--sh3);
-      border:1px solid var(--border);
-      padding:22px;
-    }
-
-    .modal-title{
-      font-size:22px;
-      font-weight:900;
-      margin-bottom:14px;
-    }
-
-    .modal-actions{
-      display:flex;
-      gap:8px;
-      justify-content:flex-end;
-      margin-top:12px;
-      flex-wrap:wrap;
-    }
-
-    .group-box{
-      border:1px solid var(--border);
-      background:#fbfdff;
-      border-radius:16px;
-      padding:14px;
-    }
-
-    .group-box h3{
-      font-size:18px;
-      font-weight:900;
-      margin-bottom:6px;
-    }
-
-    .group-box p{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.8;
-    }
-
-    .notice{
-      margin-top:12px;
-      padding:12px;
-      border-radius:12px;
-      font-size:13px;
-      line-height:1.9;
-      font-weight:700;
-      display:none;
-    }
-
-    .notice.show{display:block}
-    .notice.ok{background:var(--primary3);color:var(--primary2);border:1px solid #b6e1f0}
-    .notice.err{background:var(--redbg);color:#991b1b;border:1px solid #fecdd3}
-
-    @media(max-width:1100px){
-      .stats{grid-template-columns:repeat(2,1fr)}
-      .layout{grid-template-columns:1fr}
-    }
-
-    @media(max-width:640px){
-      .nav{padding:0 14px}
-      .page{padding:16px 14px 60px}
-      .hero h1{font-size:26px}
-      .stats{grid-template-columns:1fr}
-    }
-  </style>
+.overdue{
+  color:red;
+  font-weight:bold;
+}
+</style>
 </head>
+
 <body>
-  <nav class="nav">
-    <div class="nav-logo">🏦 صندوق ساهل</div>
-    <div class="nav-actions">
-      <a class="btn btn-w btn-sm" href="index.html">← الرئيسية</a>
-      <a class="btn btn-p btn-sm" href="plans.html">الخطط</a>
-      <a class="btn btn-d btn-sm" href="join.html">صفحة الانضمام</a>
-    </div>
-  </nav>
 
-  <div class="page">
-    <section class="hero">
-      <div>
-        <h1>لوحة مدير الجمعية</h1>
-        <p>
-          لوحة تشغيل واضحة لإدارة الجمعية والأعضاء وطلبات الانضمام وحالة الاستحقاق.
-          هذه النسخة مبنية لتكون قابلة للتطوير لاحقًا إلى نظام كامل متعدد الجمعيات.
-        </p>
-      </div>
-      <div class="hero-actions">
-        <button class="btn btn-p" onclick="openMemberModal()">➕ إضافة عضو</button>
-        <button class="btn btn-t" onclick="copyMembersSchedule()">📋 نسخ جدول الأعضاء</button>
-      </div>
-    </section>
+<!-- HEADER -->
+<div class="header">
+  <h1>لوحة إدارة الجمعية</h1>
+  <p>
+  تحكم كامل في الجمعية: إدارة الأعضاء، متابعة الاستحقاقات، وإرسال الدعوات بسهولة.
+  </p>
 
-    <section class="stats">
-      <div class="stat">
-        <div class="label">عدد الجمعيات</div>
-        <div class="value" id="statGroups">0</div>
-      </div>
-      <div class="stat">
-        <div class="label">الجمعية الحالية</div>
-        <div class="value" id="statCurrentGroup" style="font-size:20px">—</div>
-      </div>
-      <div class="stat">
-        <div class="label">عدد الأعضاء</div>
-        <div class="value" id="statMembers">0</div>
-      </div>
-      <div class="stat">
-        <div class="label">طلبات الانضمام</div>
-        <div class="value" id="statPending">0</div>
-      </div>
-      <div class="stat">
-        <div class="label">المتأخرون</div>
-        <div class="value" id="statLate">0</div>
-      </div>
-    </section>
+  <div class="actions">
+    <button class="btn primary" onclick="addMember()">➕ إضافة عضو</button>
+    <button class="btn secondary" onclick="copyTable()">📋 نسخ الجدول</button>
+    <button class="btn secondary" onclick="shareInvite()">🔗 دعوة الأعضاء</button>
+  </div>
+</div>
 
-    <section class="layout">
-      <aside>
-        <div class="card">
-          <div class="card-title">بيانات الجمعية</div>
-          <div class="group-box">
-            <h3 id="groupNameBox">—</h3>
-            <p id="groupMetaBox">—</p>
-            <p id="groupCodeBox">—</p>
-          </div>
-          <div class="notice" id="noticeBox"></div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">إعدادات سريعة</div>
-
-          <div class="field">
-            <label>فلتر الأعضاء</label>
-            <select id="statusFilter" onchange="renderMembersTable()">
-              <option value="all">الكل</option>
-              <option value="paid">المدفوعون</option>
-              <option value="late">المتأخرون</option>
-              <option value="upcoming">القادمون</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>تاريخ استحقاق الجمعية (اليوم من الشهر)</label>
-            <input id="dueDayInput" type="number" min="1" max="28" placeholder="مثال: 5">
-          </div>
-
-          <button class="btn btn-p btn-full" onclick="saveGroupSettings()">حفظ الإعدادات</button>
-        </div>
-
-        <div class="card">
-          <div class="card-title">طلبات الانضمام</div>
-          <div id="joinRequestsList" class="list"></div>
-        </div>
-      </aside>
-
-      <main>
-        <div class="card">
-          <div class="toolbar">
-            <div class="toolbar-left">
-              <div class="card-title" style="margin:0">جدول الأعضاء</div>
-            </div>
-            <div class="toolbar-right">
-              <button class="btn btn-w btn-sm" onclick="renderMembersTable()">تحديث</button>
-            </div>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>الاسم</th>
-                  <th>الهاتف</th>
-                  <th>البريد</th>
-                  <th>شهر الاستحقاق</th>
-                  <th>الحالة</th>
-                  <th>تاريخ السداد</th>
-                  <th>ملاحظات</th>
-                  <th>إجراءات</th>
-                </tr>
-              </thead>
-              <tbody id="membersTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </main>
-    </section>
+<!-- STATS -->
+<div class="stats">
+  <div class="card">
+    <h3>اسم الجمعية</h3>
+    <p id="groupName">الأهل</p>
   </div>
 
-  <div class="modal-bg" id="memberModalBg">
-    <div class="modal">
-      <div class="modal-title" id="memberModalTitle">إضافة عضو</div>
-
-      <input type="hidden" id="editMemberId">
-
-      <div class="field">
-        <label>الاسم الكامل</label>
-        <input id="memberNameInput" type="text" placeholder="اسم العضو">
-      </div>
-
-      <div class="field">
-        <label>رقم الهاتف</label>
-        <input id="memberPhoneInput" type="tel" placeholder="05xxxxxxxx">
-      </div>
-
-      <div class="field">
-        <label>البريد الإلكتروني</label>
-        <input id="memberEmailInput" type="email" placeholder="example@email.com" style="direction:ltr;text-align:left">
-      </div>
-
-      <div class="field">
-        <label>شهر الاستحقاق</label>
-        <select id="memberMonthInput"></select>
-      </div>
-
-      <div class="field">
-        <label>الحالة</label>
-        <select id="memberStatusInput">
-          <option value="upcoming">قادم</option>
-          <option value="paid">مدفوع</option>
-          <option value="late">متأخر</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label>تاريخ السداد</label>
-        <input id="memberPaidAtInput" type="date">
-      </div>
-
-      <div class="field">
-        <label>ملاحظات</label>
-        <input id="memberNoteInput" type="text" placeholder="اختياري">
-      </div>
-
-      <div class="modal-actions">
-        <button class="btn btn-w" onclick="closeMemberModal()">إلغاء</button>
-        <button class="btn btn-p" onclick="saveMember()">حفظ</button>
-      </div>
-    </div>
+  <div class="card">
+    <h3>عدد الأعضاء</h3>
+    <p id="count">0</p>
   </div>
 
-  <script>
-    const STORAGE_GROUPS = "managerGroups";
-    const STORAGE_LAST = "lastCreatedGroup";
-    const STORAGE_REQUESTS = "joinRequests";
+  <div class="card">
+    <h3>المتأخرون</h3>
+    <p id="late">0</p>
+  </div>
+</div>
 
-    const MONTH_NAMES = [
-      "يناير","فبراير","مارس","أبريل","مايو","يونيو",
-      "يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"
-    ];
+<!-- TABLE -->
+<div class="table-box">
+  <h3>جدول الأعضاء</h3>
 
-    let groups = [];
-    let currentGroup = null;
+  <table id="membersTable">
+    <thead>
+      <tr>
+        <th>الاسم</th>
+        <th>الشهر</th>
+        <th>الحالة</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
 
-    function generateId(prefix="id"){
-      return prefix + "_" + Date.now() + "_" + Math.floor(Math.random()*10000);
+<script>
+let members = [];
+
+function render(){
+  const tbody = document.querySelector("tbody");
+  tbody.innerHTML = "";
+
+  let lateCount = 0;
+
+  members.forEach(m=>{
+    const tr = document.createElement("tr");
+
+    if(m.status === "متأخر"){
+      tr.classList.add("overdue");
+      lateCount++;
     }
 
-    function monthLabel(monthValue){
-      if(!monthValue) return "—";
-      const parts = String(monthValue).split("-");
-      const m = parseInt(parts[0],10);
-      const y = parts[1];
-      return (MONTH_NAMES[m-1] || "—") + " " + y;
-    }
+    tr.innerHTML = `
+      <td>${m.name}</td>
+      <td>${m.month}</td>
+      <td>${m.status}</td>
+    `;
 
-    function statusBadge(status){
-      if(status === "paid") return '<span class="badge b-paid">✓ مدفوع</span>';
-      if(status === "late") return '<span class="badge b-late">⚠ متأخر</span>';
-      return '<span class="badge b-upcoming">⏳ قادم</span>';
-    }
+    tbody.appendChild(tr);
+  });
 
-    function showNotice(text, type="ok"){
-      const box = document.getElementById("noticeBox");
-      box.textContent = text;
-      box.className = "notice show " + type;
-      clearTimeout(window.__noticeTimer);
-      window.__noticeTimer = setTimeout(() => {
-        box.className = "notice";
-      }, 2500);
-    }
+  document.getElementById("count").textContent = members.length;
+  document.getElementById("late").textContent = lateCount;
+}
 
-    function saveGroups(){
-      localStorage.setItem(STORAGE_GROUPS, JSON.stringify(groups));
-    }
+/* ADD MEMBER */
+function addMember(){
+  const name = prompt("اسم العضو:");
+  if(!name) return;
 
-    function getJoinRequests(){
-      return JSON.parse(localStorage.getItem(STORAGE_REQUESTS) || "[]");
-    }
+  const month = prompt("شهر الاستحقاق:");
+  if(!month) return;
 
-    function saveJoinRequests(reqs){
-      localStorage.setItem(STORAGE_REQUESTS, JSON.stringify(reqs));
-    }
+  members.push({
+    name,
+    month,
+    status:"منتظم"
+  });
 
-    function migrateData(){
-      groups = JSON.parse(localStorage.getItem(STORAGE_GROUPS) || "[]");
+  render();
+}
 
-      const lastGroupRaw = localStorage.getItem(STORAGE_LAST);
-      if(lastGroupRaw){
-        try{
-          const lastGroup = JSON.parse(lastGroupRaw);
-          const exists = groups.find(g => g.inviteCode === lastGroup.inviteCode);
+/* COPY TABLE */
+function copyTable(){
+  let text = "جدول الجمعية:\n\n";
 
-          if(!exists){
-            groups.push({
-              id: generateId("group"),
-              groupName: lastGroup.groupName || "جمعيتي",
-              amount: Number(lastGroup.amount) || 0,
-              membersLimit: Number(lastGroup.members) || 0,
-              selectedPlanName: lastGroup.selectedPlanName || "الخطة المجانية",
-              inviteCode: lastGroup.inviteCode || generateId("code"),
-              dueDay: 5,
-              createdAt: lastGroup.createdAt || new Date().toISOString(),
-              members: []
-            });
-            saveGroups();
-          }
-        }catch(e){}
-      }
+  members.forEach(m=>{
+    text += `${m.name} - ${m.month} - ${m.status}\n`;
+  });
 
-      if(!groups.length){
-        groups.push({
-          id: generateId("group"),
-          groupName: "جمعيتي",
-          amount: 0,
-          membersLimit: 0,
-          selectedPlanName: "غير محدد",
-          inviteCode: generateId("code"),
-          dueDay: 5,
-          createdAt: new Date().toISOString(),
-          members: []
-        });
-        saveGroups();
-      }
+  navigator.clipboard.writeText(text);
+  alert("تم نسخ الجدول");
+}
 
-      currentGroup = groups[0];
-    }
+/* SHARE LINK */
+function shareInvite(){
+  const code = "NNH5LZ";
+  const link = `https://saahl2030-art.github.io/join.html?code=${code}`;
 
-    function fillMonthOptions(){
-      const select = document.getElementById("memberMonthInput");
-      const nowYear = new Date().getFullYear();
-      let html = '<option value="">اختر الشهر</option>';
+  navigator.clipboard.writeText(link);
 
-      for(let year = nowYear; year <= nowYear + 1; year++){
-        for(let i = 0; i < 12; i++){
-          const value = `${i+1}-${year}`;
-          html += `<option value="${value}">${MONTH_NAMES[i]} ${year}</option>`;
-        }
-      }
+  window.open(`https://wa.me/?text=${encodeURIComponent("انضم للجمعية:\n" + link)}`);
 
-      select.innerHTML = html;
-    }
+  alert("تم نسخ رابط الدعوة وفتح واتساب");
+}
 
-    function renderStats(){
-      const reqs = getJoinRequests().filter(r => r.inviteCode === currentGroup.inviteCode);
-      const lateCount = currentGroup.members.filter(m => m.status === "late").length;
+/* DEMO */
+members = [
+  {name:"محمد", month:"يناير", status:"منتظم"},
+  {name:"أحمد", month:"فبراير", status:"متأخر"}
+];
 
-      document.getElementById("statGroups").textContent = groups.length;
-      document.getElementById("statCurrentGroup").textContent = currentGroup.groupName || "—";
-      document.getElementById("statMembers").textContent = currentGroup.members.length;
-      document.getElementById("statPending").textContent = reqs.length;
-      document.getElementById("statLate").textContent = lateCount;
-    }
+render();
+</script>
 
-    function renderGroupBox(){
-      document.getElementById("groupNameBox").textContent = currentGroup.groupName || "—";
-      document.getElementById("groupMetaBox").textContent =
-        `الخطة: ${currentGroup.selectedPlanName || "—"} — مبلغ الجمعية: ${currentGroup.amount || 0} — عدد الأعضاء الحالي: ${currentGroup.members.length}`;
-      document.getElementById("groupCodeBox").textContent =
-        `كود الدعوة: ${currentGroup.inviteCode || "—"} — يوم الاستحقاق: ${currentGroup.dueDay || 5}`;
-      document.getElementById("dueDayInput").value = currentGroup.dueDay || 5;
-    }
-
-    function renderJoinRequests(){
-      const box = document.getElementById("joinRequestsList");
-      const reqs = getJoinRequests().filter(r => r.inviteCode === currentGroup.inviteCode);
-
-      if(!reqs.length){
-        box.innerHTML = '<div class="empty">لا توجد طلبات انضمام حالياً</div>';
-        return;
-      }
-
-      box.innerHTML = reqs.map((r, idx) => `
-        <div class="req">
-          <div class="req-top">
-            <div>
-              <div class="req-name">${r.memberName}</div>
-              <div class="req-meta">
-                ${r.memberPhone || "—"}<br>
-                ${r.memberEmail || "—"}<br>
-                الشهر المطلوب: ${monthLabel(r.selectedMonth)}
-              </div>
-            </div>
-          
+</body>
+</html>
