@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>لوحة التحكم - صندوق ساهل</title>
+  <title>لوحة مدير الجمعية - صندوق ساهل</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
@@ -17,7 +17,9 @@
       --goldbg:#fef3c7;
       --red:#be123c;
       --redbg:#ffe4e6;
-      --bluebg:#e0f4fa;
+      --green:#15803d;
+      --greenbg:#dcfce7;
+      --graybg:#f3f4f6;
       --bg:#f4f8fb;
       --white:#ffffff;
       --s1:#eef4f8;
@@ -35,12 +37,10 @@
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
-
     body{
       font-family:'Tajawal',sans-serif;
       background:var(--bg);
       color:var(--dark);
-      margin:0;
       min-height:100vh;
     }
 
@@ -51,7 +51,7 @@
       background:rgba(255,255,255,.92);
       backdrop-filter:blur(20px);
       border-bottom:1px solid var(--border);
-      height:62px;
+      height:64px;
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -63,7 +63,7 @@
       display:flex;
       align-items:center;
       gap:9px;
-      font-size:18px;
+      font-size:20px;
       font-weight:900;
       color:var(--dark);
       text-decoration:none;
@@ -81,12 +81,12 @@
       align-items:center;
       justify-content:center;
       gap:6px;
-      padding:10px 20px;
+      padding:10px 18px;
       border:none;
-      border-radius:var(--r);
+      border-radius:12px;
       font-family:'Tajawal',sans-serif;
       font-size:14px;
-      font-weight:700;
+      font-weight:800;
       cursor:pointer;
       transition:all .18s;
       text-decoration:none;
@@ -94,338 +94,384 @@
     }
 
     .btn:hover{transform:translateY(-1px);box-shadow:var(--sh2)}
-    .btn:active{transform:scale(.97)}
-    .btn-p{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(26,107,138,.3)}
+    .btn:active{transform:scale(.98)}
+    .btn-p{background:var(--primary);color:#fff}
     .btn-d{background:var(--dark2);color:#fff}
     .btn-w{background:#fff;border:1px solid var(--border);color:var(--dark3);box-shadow:var(--sh)}
     .btn-t{background:var(--teal);color:#fff}
-    .btn-sm{padding:7px 14px;font-size:13px;border-radius:9px}
+    .btn-r{background:var(--red);color:#fff}
+    .btn-sm{padding:7px 12px;font-size:13px;border-radius:10px}
+    .btn-full{width:100%}
 
-    .wrap{
-      max-width:980px;
+    .page{
+      max-width:1320px;
       margin:0 auto;
-      padding:28px 20px 80px;
+      padding:24px 20px 80px;
     }
 
-    .box{
-      background:var(--white);
-      padding:30px;
-      border-radius:20px;
+    .hero{
+      background:linear-gradient(135deg,#0d2233 0%,#1a3d52 50%,#0d2233 100%);
+      color:#fff;
+      border-radius:24px;
+      padding:28px;
       box-shadow:var(--sh3);
-      border:1px solid var(--border);
+      margin-bottom:20px;
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+      align-items:flex-start;
     }
 
-    h2{
-      margin-bottom:8px;
-      color:var(--dark);
+    .hero h1{
       font-size:34px;
       font-weight:900;
-      text-align:center;
+      margin-bottom:8px;
     }
 
-    h3{
-      color:var(--dark);
-      font-size:28px;
-      font-weight:900;
-      text-align:center;
-      margin-bottom:22px;
-    }
-
-    .plan{
-      font-size:44px;
-      color:var(--primary);
-      margin:8px 0 18px;
-      font-weight:900;
-      text-align:center;
-    }
-
-    .small{
-      color:var(--muted);
-      margin-bottom:16px;
+    .hero p{
+      color:rgba(255,255,255,.82);
       line-height:1.9;
-      text-align:center;
-      font-size:15px;
+      font-size:14px;
+      max-width:760px;
     }
 
-    .section-title{
-      font-size:18px;
-      font-weight:800;
-      color:var(--dark);
-      text-align:center;
+    .hero-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:14px;
       margin-bottom:18px;
     }
 
-    input{
-      width:100%;
-      padding:13px 14px;
-      margin:10px 0;
-      border:1.5px solid var(--border);
-      border-radius:10px;
-      font-size:15px;
-      font-family:'Tajawal',sans-serif;
+    .stat{
       background:#fff;
-      color:var(--dark);
-      outline:none;
-      transition:border-color .2s, box-shadow .2s;
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:18px;
+      box-shadow:var(--sh);
     }
 
-    input:focus{
+    .stat .label{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:8px;
+    }
+
+    .stat .value{
+      font-size:30px;
+      font-weight:900;
+      line-height:1;
+      color:var(--dark);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:320px 1fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:20px;
+      box-shadow:var(--sh);
+      padding:20px;
+      margin-bottom:18px;
+    }
+
+    .card-title{
+      font-size:18px;
+      font-weight:900;
+      margin-bottom:14px;
+      color:var(--dark);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .mini{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.8;
+    }
+
+    .field{
+      margin-bottom:12px;
+    }
+
+    .field label{
+      display:block;
+      font-size:12px;
+      color:var(--dark2);
+      font-weight:800;
+      margin-bottom:6px;
+    }
+
+    input, select{
+      width:100%;
+      padding:12px 13px;
+      border:1.5px solid var(--border);
+      border-radius:10px;
+      font-size:14px;
+      font-family:'Tajawal',sans-serif;
+      outline:none;
+      transition:border-color .2s,box-shadow .2s;
+      background:#fff;
+      color:var(--dark);
+    }
+
+    input:focus,select:focus{
       border-color:var(--primary);
       box-shadow:0 0 0 3px rgba(26,107,138,.12);
     }
 
-    .center{
-      text-align:center;
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:5px;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      white-space:nowrap;
     }
 
-    .result{
-      margin-top:25px;
-      padding:20px;
-      background:#f9fcfe;
+    .b-pending{background:var(--goldbg);color:#92400e}
+    .b-paid{background:var(--greenbg);color:var(--green)}
+    .b-late{background:var(--redbg);color:#991b1b}
+    .b-upcoming{background:var(--primary3);color:var(--primary2)}
+    .b-neutral{background:var(--graybg);color:#4b5563}
+
+    .table-wrap{
+      overflow:auto;
+      border:1px solid var(--border);
+      border-radius:16px;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:980px;
+      background:#fff;
+    }
+
+    thead th{
+      background:var(--s1);
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      padding:12px 10px;
+      text-align:right;
+      border-bottom:1px solid var(--border);
+    }
+
+    tbody td{
+      padding:13px 10px;
+      border-bottom:1px solid var(--border);
+      font-size:14px;
+      vertical-align:middle;
+    }
+
+    tbody tr:hover{
+      background:#fbfdff;
+    }
+
+    .name-strong{
+      font-weight:900;
+      color:var(--dark);
+    }
+
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .toolbar-left,.toolbar-right{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .empty{
+      text-align:center;
+      color:var(--muted);
+      padding:30px 14px;
+      font-size:14px;
+    }
+
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .req{
       border:1px solid var(--border);
       border-radius:14px;
-      line-height:2;
-      text-align:center;
-      box-shadow:var(--sh);
+      padding:14px;
+      background:#fff;
     }
 
-    .code{
-      font-size:34px;
-      color:var(--primary);
-      font-weight:900;
-      letter-spacing:2px;
-      margin:6px 0;
-    }
-
-    .linkbox{
-      direction:ltr;
-      background:var(--primary3);
-      padding:12px;
-      border-radius:10px;
-      word-break:break-all;
-      margin-top:8px;
-      color:var(--primary2);
-      font-weight:700;
-      border:1px solid var(--border);
-    }
-
-    .warn{
-      color:#991b1b;
-      margin-top:14px;
-      font-weight:800;
-      background:var(--redbg);
-      border:1px solid #fecdd3;
-      border-radius:10px;
-      padding:12px;
-    }
-
-    .success{
-      color:#155972;
-      margin-top:14px;
-      font-weight:800;
-      background:var(--primary3);
-      border:1px solid #bae6fd;
-      border-radius:10px;
-      padding:12px;
-    }
-
-    .actions{
+    .req-top{
       display:flex;
+      justify-content:space-between;
       gap:10px;
-      justify-content:center;
       flex-wrap:wrap;
-      margin-top:16px;
+      margin-bottom:8px;
     }
 
-    hr{
-      margin:28px 0;
-      border:none;
-      border-top:1px solid var(--border);
+    .req-name{
+      font-size:16px;
+      font-weight:900;
+      color:var(--dark);
+    }
+
+    .req-meta{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+    }
+
+    .req-actions{
+      margin-top:10px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .modal-bg{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:300;
+    }
+
+    .modal-bg.show{
+      display:flex;
+    }
+
+    .modal{
+      width:100%;
+      max-width:520px;
+      background:#fff;
+      border-radius:20px;
+      box-shadow:var(--sh3);
+      border:1px solid var(--border);
+      padding:22px;
+    }
+
+    .modal-title{
+      font-size:22px;
+      font-weight:900;
+      margin-bottom:14px;
+    }
+
+    .modal-actions{
+      display:flex;
+      gap:8px;
+      justify-content:flex-end;
+      margin-top:12px;
+      flex-wrap:wrap;
+    }
+
+    .group-box{
+      border:1px solid var(--border);
+      background:#fbfdff;
+      border-radius:16px;
+      padding:14px;
+    }
+
+    .group-box h3{
+      font-size:18px;
+      font-weight:900;
+      margin-bottom:6px;
+    }
+
+    .group-box p{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+    }
+
+    .notice{
+      margin-top:12px;
+      padding:12px;
+      border-radius:12px;
+      font-size:13px;
+      line-height:1.9;
+      font-weight:700;
+      display:none;
+    }
+
+    .notice.show{display:block}
+    .notice.ok{background:var(--primary3);color:var(--primary2);border:1px solid #b6e1f0}
+    .notice.err{background:var(--redbg);color:#991b1b;border:1px solid #fecdd3}
+
+    @media(max-width:1100px){
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .layout{grid-template-columns:1fr}
     }
 
     @media(max-width:640px){
       .nav{padding:0 14px}
-      .wrap{padding:20px 14px 60px}
-      .box{padding:22px 16px}
-      h2{font-size:28px}
-      h3{font-size:22px}
-      .plan{font-size:34px}
+      .page{padding:16px 14px 60px}
+      .hero h1{font-size:26px}
+      .stats{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
-
   <nav class="nav">
     <div class="nav-logo">🏦 صندوق ساهل</div>
     <div class="nav-actions">
       <a class="btn btn-w btn-sm" href="index.html">← الرئيسية</a>
       <a class="btn btn-p btn-sm" href="plans.html">الخطط</a>
+      <a class="btn btn-d btn-sm" href="join.html">صفحة الانضمام</a>
     </div>
   </nav>
 
-  <div class="wrap">
-    <div class="box">
-      <h2>صندوق ساهل</h2>
-
-      <div class="small">الخطة الحالية</div>
-      <div class="plan" id="planName">لم يتم اختيار خطة</div>
-      <div class="small" id="planDetails"></div>
-
-      <div class="center">
-        <button class="btn btn-d" onclick="window.location.href='plans.html'">تغيير الخطة</button>
+  <div class="page">
+    <section class="hero">
+      <div>
+        <h1>لوحة مدير الجمعية</h1>
+        <p>
+          لوحة تشغيل واضحة لإدارة الجمعية والأعضاء وطلبات الانضمام وحالة الاستحقاق.
+          هذه النسخة مبنية لتكون قابلة للتطوير لاحقًا إلى نظام كامل متعدد الجمعيات.
+        </p>
       </div>
-
-      <hr>
-
-      <div class="section-title">إنشاء جمعية جديدة</div>
-
-      <input id="groupName" placeholder="اسم الجمعية" />
-      <input id="amount" type="number" placeholder="مبلغ الجمعية" />
-      <input id="members" type="number" placeholder="عدد الأعضاء" />
-
-      <div class="small" id="limitText"></div>
-
-      <div class="center">
-        <button class="btn btn-p" onclick="createGroup()">إنشاء الجمعية</button>
+      <div class="hero-actions">
+        <button class="btn btn-p" onclick="openMemberModal()">➕ إضافة عضو</button>
+        <button class="btn btn-t" onclick="copyMembersSchedule()">📋 نسخ جدول الأعضاء</button>
       </div>
+    </section>
 
-      <div id="message"></div>
-      <div id="result"></div>
-    </div>
-  </div>
-
-  <script>
-    const selectedPlan = localStorage.getItem("selectedPlan");
-    const selectedPlanName = localStorage.getItem("selectedPlanName");
-
-    const planConfig = {
-      "4": { name: "الخطة المجانية", maxMembers: 4, maxGroups: 1, price: 0 },
-      "1": { name: "جمعية صغيرة", maxMembers: 9, maxGroups: 3, price: 149 },
-      "2": { name: "جمعية متوسطة", maxMembers: 18, maxGroups: 5, price: 199 },
-      "3": { name: "جمعية كبيرة", maxMembers: 30, maxGroups: 10, price: 249 },
-      "5": { name: "جمعية موسعة", maxMembers: 50, maxGroups: 20, price: 349 }
-    };
-
-    let currentPlan = null;
-
-    if (selectedPlan && planConfig[selectedPlan]) {
-      currentPlan = planConfig[selectedPlan];
-    } else if (selectedPlanName) {
-      const fallbackPlan = Object.values(planConfig).find(p => p.name === selectedPlanName);
-      if (fallbackPlan) currentPlan = fallbackPlan;
-    }
-
-    document.getElementById("planName").innerText = currentPlan
-      ? currentPlan.name
-      : "لم يتم اختيار خطة";
-
-    document.getElementById("planDetails").innerText = currentPlan
-      ? `الحد الأقصى للأعضاء: ${currentPlan.maxMembers} — الحد الأقصى للجمعيات: ${currentPlan.maxGroups}`
-      : "يجب اختيار خطة أولًا من صفحة الخطط";
-
-    document.getElementById("limitText").innerText = currentPlan
-      ? `مسموح لك في هذه الخطة إنشاء جمعية بعدد أعضاء لا يتجاوز ${currentPlan.maxMembers} أعضاء`
-      : "اذهب إلى صفحة الخطط واختر الخطة أولًا";
-
-    function createInviteCode() {
-      return Math.random().toString(36).substring(2, 8).toUpperCase();
-    }
-
-    function copyInviteLink(link) {
-      navigator.clipboard.writeText(link).then(() => {
-        alert("تم نسخ رابط الدعوة");
-      }).catch(() => {
-        alert("تعذر نسخ الرابط، انسخه يدويًا");
-      });
-    }
-
-    function shareInviteLink(link) {
-      if (navigator.share) {
-        navigator.share({
-          title: "رابط الانضمام إلى الجمعية",
-          text: "اضغط على الرابط للانضمام إلى الجمعية",
-          url: link
-        }).catch(() => {});
-      } else {
-        copyInviteLink(link);
-      }
-    }
-
-    function createGroup() {
-      const msg = document.getElementById("message");
-      const result = document.getElementById("result");
-
-      msg.innerHTML = "";
-      result.innerHTML = "";
-
-      if (!currentPlan) {
-        msg.innerHTML = '<div class="warn">يجب اختيار خطة أولًا من صفحة الخطط</div>';
-        return;
-      }
-
-      const groupName = document.getElementById("groupName").value.trim();
-      const amount = Number(document.getElementById("amount").value);
-      const members = Number(document.getElementById("members").value);
-
-      if (!groupName || !amount || !members) {
-        msg.innerHTML = '<div class="warn">يرجى إدخال جميع البيانات</div>';
-        return;
-      }
-
-      if (members < 1) {
-        msg.innerHTML = '<div class="warn">عدد الأعضاء يجب أن يكون أكبر من صفر</div>';
-        return;
-      }
-
-      if (members > currentPlan.maxMembers) {
-        msg.innerHTML = `<div class="warn">هذه الخطة تسمح بحد أقصى ${currentPlan.maxMembers} أعضاء فقط</div>`;
-        return;
-      }
-
-      const inviteCode = createInviteCode();
-      const inviteLink = `${window.location.origin}/SAAHL-BOX/join.html?code=${inviteCode}`;
-
-      const tempGroup = {
-        groupName: groupName,
-        amount: amount,
-        members: members,
-        inviteCode: inviteCode,
-        inviteLink: inviteLink,
-        selectedPlan: selectedPlan,
-        selectedPlanName: currentPlan.name,
-        createdAt: new Date().toISOString()
-      };
-
-      localStorage.setItem("lastCreatedGroup", JSON.stringify(tempGroup));
-
-      msg.innerHTML = '<div class="success">تم إنشاء الجمعية بنجاح</div>';
-
-      result.innerHTML = `
-        <div class="result">
-          <div>اسم الجمعية: <strong>${groupName}</strong></div>
-          <div>الخطة: <strong>${currentPlan.name}</strong></div>
-          <div>عدد الأعضاء: <strong>${members}</strong></div>
-          <div>قيمة الجمعية: <strong>${amount}</strong></div>
-
-          <div style="margin-top:10px">كود الدعوة:</div>
-          <div class="code">${inviteCode}</div>
-
-          <div>رابط الدعوة:</div>
-          <div class="linkbox">${inviteLink}</div>
-
-          <div class="actions">
-            <button class="btn btn-p" onclick="copyInviteLink('${inviteLink}')">نسخ الرابط</button>
-            <button class="btn btn-d" onclick="shareInviteLink('${inviteLink}')">مشاركة الرابط</button>
-            <button class="btn btn-t" onclick="window.location.href='join.html?code=${inviteCode}'">الانتقال لصفحة الانضمام</button>
-          </div>
-
-          <div class="small" style="margin-top:14px">
-            إذا ظهرت صفحة 404 فهذا طبيعي الآن لأن ملف <strong>join.html</strong> لم ننشئه بعد.
-          </div>
-        </div>
-      `;
-    }
-  </script>
-
-</body>
-</html>
+    <section class="stats">
+      <div class="stat">
+        <div class="label">عدد الجمعيات</div>
+        <div class="value" id="statGroups">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">الجمعية الحالية</div>
+        <div class="value" id="statCurrentGroup" style="font-size:20px">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">عدد الأعضاء</div>
+        <div class="
