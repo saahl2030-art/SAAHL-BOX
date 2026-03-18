@@ -631,8 +631,8 @@
     }
 
     function hasCoreData(){
-      return !!(dashboardData.managerName && dashboardData.groupName && dashboardData.selectedPlanName);
-    }
+  return true;
+}
 
     function updateSetupVisibility(){
       document.getElementById("setupCard").style.display = hasCoreData() ? "none" : "block";
