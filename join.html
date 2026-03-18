@@ -245,12 +245,69 @@
 
     .hidden{display:none}
 
+    .months-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .month-card{
+      border:1.5px solid var(--border);
+      background:#fff;
+      border-radius:14px;
+      padding:14px 10px;
+      text-align:center;
+      cursor:pointer;
+      transition:all .18s;
+      font-weight:800;
+      color:var(--dark2);
+      box-shadow:var(--sh);
+    }
+
+    .month-card:hover{
+      transform:translateY(-1px);
+      border-color:var(--primary);
+      box-shadow:var(--sh2);
+    }
+
+    .month-card.selected{
+      background:var(--primary3);
+      border-color:var(--primary);
+      color:var(--primary2);
+    }
+
+    .month-card.taken{
+      background:#f3f4f6;
+      border-color:#e5e7eb;
+      color:#9ca3af;
+      cursor:not-allowed;
+      box-shadow:none;
+    }
+
+    .month-card small{
+      display:block;
+      margin-top:6px;
+      font-size:11px;
+      font-weight:700;
+      color:var(--muted);
+    }
+
+    .picked-month{
+      margin-top:14px;
+      text-align:center;
+      color:var(--primary2);
+      font-size:14px;
+      font-weight:800;
+    }
+
     @media(max-width:640px){
       .nav{padding:0 14px}
       .wrap{padding:20px 14px 60px}
       .hero h1{font-size:28px}
       .info-grid{grid-template-columns:1fr}
       .card{padding:18px}
+      .months-grid{grid-template-columns:repeat(2,1fr)}
     }
   </style>
 </head>
@@ -269,7 +326,7 @@
       <h1>الانضمام إلى الجمعية</h1>
       <p>
         هذه الصفحة مخصصة لاستقبال الأعضاء الجدد عبر رابط الدعوة.
-        أدخل بياناتك، وسيتم حفظ طلب الانضمام محليًا في هذه النسخة الحالية.
+        أدخل بياناتك، ثم اختر شهرًا واحدًا مناسبًا لك لإرسال طلب الانضمام.
       </p>
     </div>
 
@@ -302,6 +359,14 @@
       </div>
 
       <div id="inviteError" class="warn hidden"></div>
+    </div>
+
+    <div class="card">
+      <div class="title">اختيار الشهر</div>
+      <p class="muted">اختر شهرًا واحدًا فقط من الأشهر المتاحة.</p>
+
+      <div id="monthsGrid" class="months-grid"></div>
+      <div id="pickedMonthText" class="picked-month">لم يتم اختيار شهر بعد</div>
     </div>
 
     <div class="card">
@@ -340,6 +405,12 @@
     const lastCreatedGroupRaw = localStorage.getItem("lastCreatedGroup");
 
     let currentGroup = null;
+    let selectedMonth = "";
+
+    const MONTHS = [
+      "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
+      "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
+    ];
 
     function showInviteError(msg){
       const el = document.getElementById("inviteError");
@@ -353,6 +424,52 @@
       document.getElementById("amountView").textContent = group.amount || "—";
       document.getElementById("planView").textContent = group.selectedPlanName || "—";
       document.getElementById("codeView").textContent = group.inviteCode || "—";
+    }
+
+    function getTakenMonths() {
+      const joinRequests = JSON.parse(localStorage.getItem("joinRequests") || "[]");
+      return joinRequests
+        .filter(item => item.inviteCode === inviteCode)
+        .map(item => item.selectedMonth);
+    }
+
+    function renderMonths() {
+      const grid = document.getElementById("monthsGrid");
+      const pickedText = document.getElementById("pickedMonthText");
+      const takenMonths = getTakenMonths();
+
+      grid.innerHTML = "";
+
+      MONTHS.forEach((monthName, index) => {
+        const monthNumber = index + 1;
+        const monthValue = `${monthNumber}-${new Date().getFullYear()}`;
+        const isTaken = takenMonths.includes(monthValue);
+
+        const div = document.createElement("div");
+        div.className = "month-card" + (isTaken ? " taken" : "") + (selectedMonth === monthValue ? " selected" : "");
+        div.innerHTML = `
+          ${monthName}
+          <small>${new Date().getFullYear()}</small>
+        `;
+
+        if (!isTaken) {
+          div.addEventListener("click", () => {
+            selectedMonth = monthValue;
+            renderMonths();
+          });
+        }
+
+        grid.appendChild(div);
+      });
+
+      if (selectedMonth) {
+        const parts = selectedMonth.split("-");
+        const monthIndex = parseInt(parts[0], 10) - 1;
+        const year = parts[1];
+        pickedText.textContent = `الشهر المختار: ${MONTHS[monthIndex]} ${year}`;
+      } else {
+        pickedText.textContent = "لم يتم اختيار شهر بعد";
+      }
     }
 
     function loadInvite(){
@@ -378,6 +495,7 @@
 
         currentGroup = savedGroup;
         renderGroupInfo(savedGroup);
+        renderMonths();
       }catch(e){
         showInviteError("تعذر قراءة بيانات الدعوة.");
         document.getElementById("codeView").textContent = inviteCode || "—";
@@ -403,7 +521,18 @@
         return;
       }
 
+      if(!selectedMonth){
+        msg.innerHTML = '<div class="warn">يجب اختيار شهر واحد قبل إرسال الطلب.</div>';
+        return;
+      }
+
       const joinRequests = JSON.parse(localStorage.getItem("joinRequests") || "[]");
+
+      if (joinRequests.some(item => item.inviteCode === inviteCode && item.selectedMonth === selectedMonth)) {
+        msg.innerHTML = '<div class="warn">هذا الشهر تم اختياره بالفعل، اختر شهرًا آخر.</div>';
+        renderMonths();
+        return;
+      }
 
       joinRequests.push({
         groupName: currentGroup.groupName,
@@ -412,16 +541,22 @@
         memberPhone,
         memberEmail,
         memberNote,
+        selectedMonth,
         createdAt: new Date().toISOString()
       });
 
       localStorage.setItem("joinRequests", JSON.stringify(joinRequests));
 
+      const parts = selectedMonth.split("-");
+      const monthIndex = parseInt(parts[0], 10) - 1;
+      const year = parts[1];
+
       msg.innerHTML = `
         <div class="success">
           تم إرسال طلب الانضمام بنجاح.<br>
           الاسم: <strong>${memberName}</strong><br>
-          الجمعية: <strong>${currentGroup.groupName}</strong>
+          الجمعية: <strong>${currentGroup.groupName}</strong><br>
+          الشهر المختار: <strong>${MONTHS[monthIndex]} ${year}</strong>
         </div>
       `;
 
@@ -429,6 +564,8 @@
       document.getElementById("memberPhone").value = "";
       document.getElementById("memberEmail").value = "";
       document.getElementById("memberNote").value = "";
+      selectedMonth = "";
+      renderMonths();
     }
 
     loadInvite();
