@@ -474,4 +474,292 @@
       </div>
       <div class="stat">
         <div class="label">عدد الأعضاء</div>
-        <div class="
+        <div class="value" id="statMembers">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">طلبات الانضمام</div>
+        <div class="value" id="statPending">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">المتأخرون</div>
+        <div class="value" id="statLate">0</div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <aside>
+        <div class="card">
+          <div class="card-title">بيانات الجمعية</div>
+          <div class="group-box">
+            <h3 id="groupNameBox">—</h3>
+            <p id="groupMetaBox">—</p>
+            <p id="groupCodeBox">—</p>
+          </div>
+          <div class="notice" id="noticeBox"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">إعدادات سريعة</div>
+
+          <div class="field">
+            <label>فلتر الأعضاء</label>
+            <select id="statusFilter" onchange="renderMembersTable()">
+              <option value="all">الكل</option>
+              <option value="paid">المدفوعون</option>
+              <option value="late">المتأخرون</option>
+              <option value="upcoming">القادمون</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>تاريخ استحقاق الجمعية (اليوم من الشهر)</label>
+            <input id="dueDayInput" type="number" min="1" max="28" placeholder="مثال: 5">
+          </div>
+
+          <button class="btn btn-p btn-full" onclick="saveGroupSettings()">حفظ الإعدادات</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">طلبات الانضمام</div>
+          <div id="joinRequestsList" class="list"></div>
+        </div>
+      </aside>
+
+      <main>
+        <div class="card">
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <div class="card-title" style="margin:0">جدول الأعضاء</div>
+            </div>
+            <div class="toolbar-right">
+              <button class="btn btn-w btn-sm" onclick="renderMembersTable()">تحديث</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>الاسم</th>
+                  <th>الهاتف</th>
+                  <th>البريد</th>
+                  <th>شهر الاستحقاق</th>
+                  <th>الحالة</th>
+                  <th>تاريخ السداد</th>
+                  <th>ملاحظات</th>
+                  <th>إجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="membersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <div class="modal-bg" id="memberModalBg">
+    <div class="modal">
+      <div class="modal-title" id="memberModalTitle">إضافة عضو</div>
+
+      <input type="hidden" id="editMemberId">
+
+      <div class="field">
+        <label>الاسم الكامل</label>
+        <input id="memberNameInput" type="text" placeholder="اسم العضو">
+      </div>
+
+      <div class="field">
+        <label>رقم الهاتف</label>
+        <input id="memberPhoneInput" type="tel" placeholder="05xxxxxxxx">
+      </div>
+
+      <div class="field">
+        <label>البريد الإلكتروني</label>
+        <input id="memberEmailInput" type="email" placeholder="example@email.com" style="direction:ltr;text-align:left">
+      </div>
+
+      <div class="field">
+        <label>شهر الاستحقاق</label>
+        <select id="memberMonthInput"></select>
+      </div>
+
+      <div class="field">
+        <label>الحالة</label>
+        <select id="memberStatusInput">
+          <option value="upcoming">قادم</option>
+          <option value="paid">مدفوع</option>
+          <option value="late">متأخر</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>تاريخ السداد</label>
+        <input id="memberPaidAtInput" type="date">
+      </div>
+
+      <div class="field">
+        <label>ملاحظات</label>
+        <input id="memberNoteInput" type="text" placeholder="اختياري">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-w" onclick="closeMemberModal()">إلغاء</button>
+        <button class="btn btn-p" onclick="saveMember()">حفظ</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_GROUPS = "managerGroups";
+    const STORAGE_LAST = "lastCreatedGroup";
+    const STORAGE_REQUESTS = "joinRequests";
+
+    const MONTH_NAMES = [
+      "يناير","فبراير","مارس","أبريل","مايو","يونيو",
+      "يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"
+    ];
+
+    let groups = [];
+    let currentGroup = null;
+
+    function generateId(prefix="id"){
+      return prefix + "_" + Date.now() + "_" + Math.floor(Math.random()*10000);
+    }
+
+    function monthLabel(monthValue){
+      if(!monthValue) return "—";
+      const parts = String(monthValue).split("-");
+      const m = parseInt(parts[0],10);
+      const y = parts[1];
+      return (MONTH_NAMES[m-1] || "—") + " " + y;
+    }
+
+    function statusBadge(status){
+      if(status === "paid") return '<span class="badge b-paid">✓ مدفوع</span>';
+      if(status === "late") return '<span class="badge b-late">⚠ متأخر</span>';
+      return '<span class="badge b-upcoming">⏳ قادم</span>';
+    }
+
+    function showNotice(text, type="ok"){
+      const box = document.getElementById("noticeBox");
+      box.textContent = text;
+      box.className = "notice show " + type;
+      clearTimeout(window.__noticeTimer);
+      window.__noticeTimer = setTimeout(() => {
+        box.className = "notice";
+      }, 2500);
+    }
+
+    function saveGroups(){
+      localStorage.setItem(STORAGE_GROUPS, JSON.stringify(groups));
+    }
+
+    function getJoinRequests(){
+      return JSON.parse(localStorage.getItem(STORAGE_REQUESTS) || "[]");
+    }
+
+    function saveJoinRequests(reqs){
+      localStorage.setItem(STORAGE_REQUESTS, JSON.stringify(reqs));
+    }
+
+    function migrateData(){
+      groups = JSON.parse(localStorage.getItem(STORAGE_GROUPS) || "[]");
+
+      const lastGroupRaw = localStorage.getItem(STORAGE_LAST);
+      if(lastGroupRaw){
+        try{
+          const lastGroup = JSON.parse(lastGroupRaw);
+          const exists = groups.find(g => g.inviteCode === lastGroup.inviteCode);
+
+          if(!exists){
+            groups.push({
+              id: generateId("group"),
+              groupName: lastGroup.groupName || "جمعيتي",
+              amount: Number(lastGroup.amount) || 0,
+              membersLimit: Number(lastGroup.members) || 0,
+              selectedPlanName: lastGroup.selectedPlanName || "الخطة المجانية",
+              inviteCode: lastGroup.inviteCode || generateId("code"),
+              dueDay: 5,
+              createdAt: lastGroup.createdAt || new Date().toISOString(),
+              members: []
+            });
+            saveGroups();
+          }
+        }catch(e){}
+      }
+
+      if(!groups.length){
+        groups.push({
+          id: generateId("group"),
+          groupName: "جمعيتي",
+          amount: 0,
+          membersLimit: 0,
+          selectedPlanName: "غير محدد",
+          inviteCode: generateId("code"),
+          dueDay: 5,
+          createdAt: new Date().toISOString(),
+          members: []
+        });
+        saveGroups();
+      }
+
+      currentGroup = groups[0];
+    }
+
+    function fillMonthOptions(){
+      const select = document.getElementById("memberMonthInput");
+      const nowYear = new Date().getFullYear();
+      let html = '<option value="">اختر الشهر</option>';
+
+      for(let year = nowYear; year <= nowYear + 1; year++){
+        for(let i = 0; i < 12; i++){
+          const value = `${i+1}-${year}`;
+          html += `<option value="${value}">${MONTH_NAMES[i]} ${year}</option>`;
+        }
+      }
+
+      select.innerHTML = html;
+    }
+
+    function renderStats(){
+      const reqs = getJoinRequests().filter(r => r.inviteCode === currentGroup.inviteCode);
+      const lateCount = currentGroup.members.filter(m => m.status === "late").length;
+
+      document.getElementById("statGroups").textContent = groups.length;
+      document.getElementById("statCurrentGroup").textContent = currentGroup.groupName || "—";
+      document.getElementById("statMembers").textContent = currentGroup.members.length;
+      document.getElementById("statPending").textContent = reqs.length;
+      document.getElementById("statLate").textContent = lateCount;
+    }
+
+    function renderGroupBox(){
+      document.getElementById("groupNameBox").textContent = currentGroup.groupName || "—";
+      document.getElementById("groupMetaBox").textContent =
+        `الخطة: ${currentGroup.selectedPlanName || "—"} — مبلغ الجمعية: ${currentGroup.amount || 0} — عدد الأعضاء الحالي: ${currentGroup.members.length}`;
+      document.getElementById("groupCodeBox").textContent =
+        `كود الدعوة: ${currentGroup.inviteCode || "—"} — يوم الاستحقاق: ${currentGroup.dueDay || 5}`;
+      document.getElementById("dueDayInput").value = currentGroup.dueDay || 5;
+    }
+
+    function renderJoinRequests(){
+      const box = document.getElementById("joinRequestsList");
+      const reqs = getJoinRequests().filter(r => r.inviteCode === currentGroup.inviteCode);
+
+      if(!reqs.length){
+        box.innerHTML = '<div class="empty">لا توجد طلبات انضمام حالياً</div>';
+        return;
+      }
+
+      box.innerHTML = reqs.map((r, idx) => `
+        <div class="req">
+          <div class="req-top">
+            <div>
+              <div class="req-name">${r.memberName}</div>
+              <div class="req-meta">
+                ${r.memberPhone || "—"}<br>
+                ${r.memberEmail || "—"}<br>
+                الشهر المطلوب: ${monthLabel(r.selectedMonth)}
+              </div>
+            </div>
+          
