@@ -524,16 +524,16 @@
 
       <div class="field">
         <label>شهر الاستحقاق</label>
-        <select id="memberMonthInput"></select>
+<select id="memberMonthInput"></select>
       </div>
 
       <div class="field">
         <label>الحالة</label>
         <select id="memberStatusInput">
-          <option value="upcoming">قادم</option>
-          <option value="paid">مدفوع</option>
-          <option value="late">متأخر</option>
-        </select>
+  <option value="upcoming">قادم</option>
+  <option value="paid">مدفوع</option>
+  <option value="late">متأخر</option>
+</select>
       </div>
 
       <div class="field">
@@ -542,8 +542,8 @@
       </div>
 
       <div class="modal-actions">
-        <button class="btn btn-w" onclick="closeMemberModal()">إلغاء</button>
-        <button class="btn btn-p" onclick="saveMember()">حفظ</button>
+<button type="button" onclick="closeMemberModal()">إلغاء</button>
+        <button type="button" onclick="saveMember()">حفظ</button>
       </div>
     </div>
   </div>
@@ -838,14 +838,105 @@ ${buildInviteLink(dashboardData.inviteCode)}`;
     renderAll();
   </script>
 <script>
+function getMonthOptions(){
+  return [
+    "يناير","فبراير","مارس","أبريل","مايو","يونيو",
+    "يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"
+  ];
+}
+
+function fillMemberMonths(){
+  const monthSelect = document.getElementById("memberMonthInput");
+  if (!monthSelect) return;
+
+  monthSelect.innerHTML = '<option value="">اختر الشهر</option>';
+
+  getMonthOptions().forEach((month, index) => {
+    const option = document.createElement("option");
+    option.value = month;
+    option.textContent = month;
+    monthSelect.appendChild(option);
+  });
+}
+
 function openMemberModal(){
+  fillMemberMonths();
+
+  const modal = document.getElementById("memberModalBg");
+  if (!modal) {
+    alert("نافذة إضافة العضو غير موجودة في الصفحة");
+    return;
+  }
+
+  document.getElementById("memberNameInput").value = "";
+  document.getElementById("memberPhoneInput").value = "";
+  document.getElementById("memberEmailInput").value = "";
+  document.getElementById("memberMonthInput").value = "";
+  document.getElementById("memberStatusInput").value = "upcoming";
+  document.getElementById("memberNoteInput").value = "";
+
+  modal.classList.add("show");
+}
+
+function closeMemberModal(){
   const modal = document.getElementById("memberModalBg");
   if (modal) {
-    modal.classList.add("show");
-  } else {
-    alert("نافذة إضافة العضو غير موجودة في الصفحة");
+    modal.classList.remove("show");
   }
 }
+
+function saveMember(){
+  const name = document.getElementById("memberNameInput")?.value.trim() || "";
+  const phone = document.getElementById("memberPhoneInput")?.value.trim() || "";
+  const email = document.getElementById("memberEmailInput")?.value.trim() || "";
+  const selectedMonth = document.getElementById("memberMonthInput")?.value || "";
+  const status = document.getElementById("memberStatusInput")?.value || "upcoming";
+  const note = document.getElementById("memberNoteInput")?.value.trim() || "";
+
+  if (!name) {
+    alert("أدخل اسم العضو");
+    return;
+  }
+
+  if (!selectedMonth) {
+    alert("اختر شهر الاستحقاق");
+    return;
+  }
+
+  if (typeof dashboardData === "undefined") {
+    alert("بيانات اللوحة غير متوفرة");
+    return;
+  }
+
+  if (!dashboardData.members) {
+    dashboardData.members = [];
+  }
+
+  const monthTaken = dashboardData.members.some(member => member.selectedMonth === selectedMonth);
+  if (monthTaken) {
+    alert("هذا الشهر محجوز بالفعل لعضو آخر");
+    return;
+  }
+
+  dashboardData.members.push({
+    name,
+    phone,
+    email,
+    selectedMonth,
+    status,
+    note
+  });
+
+  if (typeof saveData === "function") saveData();
+  if (typeof renderAll === "function") renderAll();
+
+  closeMemberModal();
+  alert("تمت إضافة العضو بنجاح");
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+  fillMemberMonths();
+});
 </script>
 </body>
 </html> 
