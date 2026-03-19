@@ -837,12 +837,15 @@ ${buildInviteLink(dashboardData.inviteCode)}`;
     loadData();
     renderAll();
   </script>
-  <script>
-console.log("JS يعمل");
-
+<script>
 function openMemberModal(){
-  alert("اشتغل زر إضافة عضو");
+  const modal = document.getElementById("memberModalBg");
+  if (modal) {
+    modal.classList.add("show");
+  } else {
+    alert("نافذة إضافة العضو غير موجودة في الصفحة");
+  }
 }
-  </script>
+</script>
 </body>
 </html> 
