@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>الانضمام إلى الجمعية - صندوق ساهل</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
 
   <style>
@@ -13,11 +12,9 @@
       --primary2:#155972;
       --primary3:#e0f4fa;
       --teal:#0891b2;
-      --gold:#b45309;
       --red:#be123c;
       --redbg:#ffe4e6;
       --bg:#f4f8fb;
-      --white:#ffffff;
       --border:#d4e4ee;
       --dark:#0d2233;
       --dark2:#163348;
@@ -89,13 +86,12 @@
     .btn:hover{transform:translateY(-1px);box-shadow:var(--sh2)}
     .btn:active{transform:scale(.97)}
     .btn-p{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(26,107,138,.3)}
-    .btn-d{background:var(--dark2);color:#fff}
     .btn-w{background:#fff;border:1px solid var(--border);color:var(--dark2);box-shadow:var(--sh)}
     .btn-sm{padding:7px 14px;font-size:13px;border-radius:9px}
     .btn-full{width:100%}
 
     .wrap{
-      max-width:860px;
+      max-width:920px;
       margin:0 auto;
       padding:30px 20px 80px;
     }
@@ -119,8 +115,8 @@
     .hero p{
       font-size:15px;
       line-height:1.9;
-      opacity:.9;
-      max-width:600px;
+      opacity:.92;
+      max-width:680px;
       margin:0 auto;
     }
 
@@ -174,6 +170,7 @@
       font-size:20px;
       color:var(--dark);
       font-weight:900;
+      word-break:break-word;
     }
 
     .field{
@@ -229,6 +226,7 @@
       border-radius:10px;
       padding:12px;
       text-align:center;
+      line-height:1.8;
     }
 
     .success{
@@ -291,6 +289,7 @@
       font-size:11px;
       font-weight:700;
       color:var(--muted);
+      line-height:1.6;
     }
 
     .picked-month{
@@ -326,7 +325,7 @@
       <h1>الانضمام إلى الجمعية</h1>
       <p>
         هذه الصفحة مخصصة لاستقبال الأعضاء الجدد عبر رابط الدعوة.
-        أدخل بياناتك، ثم اختر شهرًا واحدًا مناسبًا لك لإرسال طلب الانضمام.
+        أدخل بياناتك، ثم اختر شهرًا واحدًا مناسبًا لك للانضمام مباشرة.
       </p>
     </div>
 
@@ -339,14 +338,22 @@
           <div class="info-label">اسم الجمعية</div>
           <div class="info-value" id="groupNameView">—</div>
         </div>
+
         <div class="info-box">
-          <div class="info-label">عدد الأعضاء</div>
+          <div class="info-label">اسم المدير</div>
+          <div class="info-value" id="managerNameView">—</div>
+        </div>
+
+        <div class="info-box">
+          <div class="info-label">عدد الأعضاء الحالي</div>
           <div class="info-value" id="membersView">—</div>
         </div>
+
         <div class="info-box">
           <div class="info-label">قيمة الجمعية</div>
           <div class="info-value" id="amountView">—</div>
         </div>
+
         <div class="info-box">
           <div class="info-label">الخطة</div>
           <div class="info-value" id="planView">—</div>
@@ -363,7 +370,7 @@
 
     <div class="card">
       <div class="title">اختيار الشهر</div>
-      <p class="muted">اختر شهرًا واحدًا فقط من الأشهر المتاحة.</p>
+      <p class="muted">اختر شهرًا واحدًا فقط من الأشهر المتاحة. الأشهر الرمادية محجوزة.</p>
 
       <div id="monthsGrid" class="months-grid"></div>
       <div id="pickedMonthText" class="picked-month">لم يتم اختيار شهر بعد</div>
@@ -371,7 +378,7 @@
 
     <div class="card">
       <div class="title">نموذج الانضمام</div>
-      <p class="muted">املأ البيانات التالية لإرسال طلب الانضمام.</p>
+      <p class="muted">املأ البيانات التالية لإتمام الانضمام.</p>
 
       <div class="field">
         <label>الاسم الكامل</label>
@@ -393,16 +400,20 @@
         <input id="memberNote" type="text" placeholder="اختياري">
       </div>
 
-      <button class="btn btn-p btn-full" onclick="submitJoinRequest()">إرسال طلب الانضمام</button>
+      <button type="button" class="btn btn-p btn-full" onclick="submitJoinRequest()">إرسال طلب الانضمام</button>
 
       <div id="joinMessage"></div>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    const SUPABASE_URL = "PUT_YOUR_SUPABASE_URL_HERE";
+    const SUPABASE_ANON_KEY = "PUT_YOUR_SUPABASE_ANON_KEY_HERE";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     const urlParams = new URLSearchParams(window.location.search);
     const inviteCode = urlParams.get("code");
-    const lastCreatedGroupRaw = localStorage.getItem("lastCreatedGroup");
 
     let currentGroup = null;
     let selectedMonth = "";
@@ -418,48 +429,69 @@
       el.classList.remove("hidden");
     }
 
-    function renderGroupInfo(group){
-      document.getElementById("groupNameView").textContent = group.groupName || "—";
-      document.getElementById("membersView").textContent = group.members || "—";
+    function renderGroupInfo(group, membersCount = 0){
+      document.getElementById("groupNameView").textContent = group.group_name || "—";
+      document.getElementById("managerNameView").textContent = group.manager_name || "—";
+      document.getElementById("membersView").textContent = membersCount || 0;
       document.getElementById("amountView").textContent = group.amount || "—";
-      document.getElementById("planView").textContent = group.selectedPlanName || "—";
-      document.getElementById("codeView").textContent = group.inviteCode || "—";
+      document.getElementById("planView").textContent = group.plan_name || "—";
+      document.getElementById("codeView").textContent = group.invite_code || "—";
     }
 
-    function getTakenMonths() {
-      const joinRequests = JSON.parse(localStorage.getItem("joinRequests") || "[]");
-      return joinRequests
-        .filter(item => item.inviteCode === inviteCode)
-        .map(item => item.selectedMonth);
+    async function getReservedMonths() {
+      if (!currentGroup) return [];
+
+      const { data, error } = await supabaseClient
+        .from("members")
+        .select("name, selected_month, selected_year")
+        .eq("group_id", currentGroup.id);
+
+      if (error) {
+        console.error(error);
+        return [];
+      }
+
+      return data || [];
     }
 
-    function renderMonths() {
+    async function renderMonths() {
       const grid = document.getElementById("monthsGrid");
       const pickedText = document.getElementById("pickedMonthText");
-      const takenMonths = getTakenMonths();
 
       grid.innerHTML = "";
 
-      MONTHS.forEach((monthName, index) => {
-        const monthNumber = index + 1;
-        const monthValue = `${monthNumber}-${new Date().getFullYear()}`;
-        const isTaken = takenMonths.includes(monthValue);
+      const reserved = await getReservedMonths();
+      const reservedMap = new Map(
+        reserved.map(item => [`${item.selected_month}-${item.selected_year}`, item.name])
+      );
 
-        const div = document.createElement("div");
-        div.className = "month-card" + (isTaken ? " taken" : "") + (selectedMonth === monthValue ? " selected" : "");
-        div.innerHTML = `
-          ${monthName}
-          <small>${new Date().getFullYear()}</small>
-        `;
+      const startYear = new Date().getFullYear();
+      const years = [startYear, startYear + 1, startYear + 2];
 
-        if (!isTaken) {
-          div.addEventListener("click", () => {
-            selectedMonth = monthValue;
-            renderMonths();
-          });
-        }
+      years.forEach(year => {
+        MONTHS.forEach((monthName, index) => {
+          const monthNumber = index + 1;
+          const monthValue = `${monthNumber}-${year}`;
+          const isTaken = reservedMap.has(monthValue);
+          const ownerName = reservedMap.get(monthValue);
 
-        grid.appendChild(div);
+          const div = document.createElement("div");
+          div.className = "month-card" + (isTaken ? " taken" : "") + (selectedMonth === monthValue ? " selected" : "");
+
+          div.innerHTML = `
+            ${monthName}
+            <small>${year}${isTaken ? ` • محجوز لـ ${ownerName}` : ""}</small>
+          `;
+
+          if (!isTaken) {
+            div.addEventListener("click", () => {
+              selectedMonth = monthValue;
+              renderMonths();
+            });
+          }
+
+          grid.appendChild(div);
+        });
       });
 
       if (selectedMonth) {
@@ -472,42 +504,47 @@
       }
     }
 
-    function loadInvite(){
+    async function loadInvite(){
       if(!inviteCode){
         showInviteError("لا يوجد كود دعوة في الرابط.");
         return;
       }
 
-      if(!lastCreatedGroupRaw){
-        showInviteError("لا توجد بيانات جمعية محفوظة على هذا الجهاز حاليًا.");
+      const { data: group, error } = await supabaseClient
+        .from("groups")
+        .select("*")
+        .eq("invite_code", inviteCode)
+        .maybeSingle();
+
+      if (error) {
+        console.error(error);
+        showInviteError("حدث خطأ أثناء تحميل بيانات الدعوة.");
+        return;
+      }
+
+      if (!group) {
+        showInviteError("رابط الدعوة غير صالح أو الجمعية غير موجودة.");
         document.getElementById("codeView").textContent = inviteCode;
         return;
       }
 
-      try{
-        const savedGroup = JSON.parse(lastCreatedGroupRaw);
+      currentGroup = group;
 
-        if(savedGroup.inviteCode !== inviteCode){
-          showInviteError("كود الدعوة غير مطابق لآخر جمعية محفوظة على هذا الجهاز.");
-          document.getElementById("codeView").textContent = inviteCode;
-          return;
-        }
+      const { count } = await supabaseClient
+        .from("members")
+        .select("*", { count: "exact", head: true })
+        .eq("group_id", currentGroup.id);
 
-        currentGroup = savedGroup;
-        renderGroupInfo(savedGroup);
-        renderMonths();
-      }catch(e){
-        showInviteError("تعذر قراءة بيانات الدعوة.");
-        document.getElementById("codeView").textContent = inviteCode || "—";
-      }
+      renderGroupInfo(currentGroup, count || 0);
+      await renderMonths();
     }
 
-    function submitJoinRequest(){
+    async function submitJoinRequest(){
       const msg = document.getElementById("joinMessage");
       msg.innerHTML = "";
 
       if(!currentGroup){
-        msg.innerHTML = '<div class="warn">لا يمكن إرسال الطلب لأن بيانات الجمعية غير متاحة على هذا الجهاز.</div>';
+        msg.innerHTML = '<div class="warn">بيانات الجمعية غير متاحة حاليًا.</div>';
         return;
       }
 
@@ -526,37 +563,57 @@
         return;
       }
 
-      const joinRequests = JSON.parse(localStorage.getItem("joinRequests") || "[]");
+      const parts = selectedMonth.split("-");
+      const selectedMonthNumber = parseInt(parts[0], 10);
+      const selectedYear = parseInt(parts[1], 10);
 
-      if (joinRequests.some(item => item.inviteCode === inviteCode && item.selectedMonth === selectedMonth)) {
-        msg.innerHTML = '<div class="warn">هذا الشهر تم اختياره بالفعل، اختر شهرًا آخر.</div>';
-        renderMonths();
+      const { data: existingSlot, error: checkError } = await supabaseClient
+        .from("members")
+        .select("id,name")
+        .eq("group_id", currentGroup.id)
+        .eq("selected_month", selectedMonthNumber)
+        .eq("selected_year", selectedYear)
+        .maybeSingle();
+
+      if (checkError) {
+        console.error(checkError);
+        msg.innerHTML = '<div class="warn">تعذر التحقق من الشهر المختار.</div>';
         return;
       }
 
-      joinRequests.push({
-        groupName: currentGroup.groupName,
-        inviteCode: currentGroup.inviteCode,
-        memberName,
-        memberPhone,
-        memberEmail,
-        memberNote,
-        selectedMonth,
-        createdAt: new Date().toISOString()
-      });
+      if (existingSlot) {
+        msg.innerHTML = `<div class="warn">هذا الشهر محجوز بالفعل باسم ${existingSlot.name}.</div>`;
+        await renderMonths();
+        return;
+      }
 
-      localStorage.setItem("joinRequests", JSON.stringify(joinRequests));
+      const { error: insertError } = await supabaseClient
+        .from("members")
+        .insert([
+          {
+            group_id: currentGroup.id,
+            name: memberName,
+            phone: memberPhone,
+            email: memberEmail,
+            selected_month: selectedMonthNumber,
+            selected_year: selectedYear,
+            payment_status: "pending",
+            note: memberNote
+          }
+        ]);
 
-      const parts = selectedMonth.split("-");
-      const monthIndex = parseInt(parts[0], 10) - 1;
-      const year = parts[1];
+      if (insertError) {
+        console.error(insertError);
+        msg.innerHTML = '<div class="warn">حدث خطأ أثناء إرسال الطلب.</div>';
+        return;
+      }
 
       msg.innerHTML = `
         <div class="success">
-          تم إرسال طلب الانضمام بنجاح.<br>
+          تم الانضمام بنجاح.<br>
           الاسم: <strong>${memberName}</strong><br>
-          الجمعية: <strong>${currentGroup.groupName}</strong><br>
-          الشهر المختار: <strong>${MONTHS[monthIndex]} ${year}</strong>
+          الجمعية: <strong>${currentGroup.group_name}</strong><br>
+          الشهر المختار: <strong>${MONTHS[selectedMonthNumber - 1]} ${selectedYear}</strong>
         </div>
       `;
 
@@ -565,7 +622,14 @@
       document.getElementById("memberEmail").value = "";
       document.getElementById("memberNote").value = "";
       selectedMonth = "";
-      renderMonths();
+
+      const { count } = await supabaseClient
+        .from("members")
+        .select("*", { count: "exact", head: true })
+        .eq("group_id", currentGroup.id);
+
+      renderGroupInfo(currentGroup, count || 0);
+      await renderMonths();
     }
 
     loadInvite();
