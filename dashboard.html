@@ -650,9 +650,14 @@
     </div>
   </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const STORAGE_DASHBOARD = "saahl_dashboard_data_v2";
+    const STORAGE_GROUP_ID = "saahl_group_id_v1";
+
+    const SUPABASE_URL = "PUT_YOUR_SUPABASE_URL_HERE";
+    const SUPABASE_ANON_KEY = "PUT_YOUR_SUPABASE_ANON_KEY_HERE";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const MONTH_NAMES = [
       "يناير","فبراير","مارس","أبريل","مايو","يونيو",
@@ -669,7 +674,8 @@
       members: []
     };
 
-    let editingMemberIndex = null;
+    let editingMemberId = null;
+    let syncTimer = null;
 
     function createCode(){
       return Math.random().toString(36).substring(2,8).toUpperCase();
@@ -686,11 +692,11 @@
       }, 3000);
     }
 
-    function saveData(){
+    function saveLocalData(){
       localStorage.setItem(STORAGE_DASHBOARD, JSON.stringify(dashboardData));
     }
 
-    function loadData(){
+    function loadLocalData(){
       try{
         const raw = localStorage.getItem(STORAGE_DASHBOARD);
         if(raw){
@@ -715,34 +721,12 @@
       document.getElementById("setupCard").style.display = hasCoreData() ? "none" : "block";
     }
 
-    function saveInitialSetup(){
-      const managerName = document.getElementById("setupManagerName").value.trim();
-      const groupName = document.getElementById("setupGroupName").value.trim();
-      const selectedPlanName = document.getElementById("setupPlanName").value;
-      const amount = Number(document.getElementById("setupAmount").value || 0);
-      const membersLimit = Number(document.getElementById("setupMembersLimit").value || 0);
-
-      if(!managerName || !groupName || !selectedPlanName){
-        showNotice("أدخل اسم المدير واسم الجمعية والخطة الحالية", "err", "setupNotice");
-        return;
-      }
-
-      dashboardData.managerName = managerName;
-      dashboardData.groupName = groupName;
-      dashboardData.selectedPlanName = selectedPlanName;
-      dashboardData.amount = amount;
-      dashboardData.membersLimit = membersLimit;
-
-      if(!dashboardData.inviteCode){
-        dashboardData.inviteCode = createCode();
-      }
-
-      saveData();
-      updateSetupVisibility();
-      renderAll();
-
-      showNotice("تم حفظ البيانات الأساسية", "ok", "setupNotice");
-      showNotice("تم تحديث بيانات الجمعية");
+    function hydrateSetupFields(){
+      document.getElementById("setupManagerName").value = dashboardData.managerName || "";
+      document.getElementById("setupGroupName").value = dashboardData.groupName || "";
+      document.getElementById("setupPlanName").value = dashboardData.selectedPlanName || "الخطة المجانية";
+      document.getElementById("setupAmount").value = dashboardData.amount || "";
+      document.getElementById("setupMembersLimit").value = dashboardData.membersLimit || "";
     }
 
     function buildInviteLink(code){
@@ -778,7 +762,7 @@
       });
     }
 
-        function renderStats(){
+    function renderStats(){
       document.getElementById("statManager").textContent = dashboardData.managerName || "—";
       document.getElementById("statCurrentGroup").textContent = dashboardData.groupName || "—";
       document.getElementById("statPlan").textContent = dashboardData.selectedPlanName || "—";
@@ -816,7 +800,7 @@
         return;
       }
 
-      body.innerHTML = members.map((m, index) => `
+      body.innerHTML = members.map((m) => `
         <tr>
           <td class="name-strong">${m.name || "—"}</td>
           <td>${m.phone || "—"}</td>
@@ -827,10 +811,10 @@
           <td>${m.note || "—"}</td>
           <td>
             <div class="table-actions">
-              <button type="button" class="btn btn-w btn-sm" onclick="editMember(${index})">تعديل</button>
-              <button type="button" class="btn btn-r btn-sm" onclick="deleteMember(${index})">حذف</button>
-              <button type="button" class="btn btn-g btn-sm" onclick="markMemberPaid(${index})">مدفوع</button>
-              <button type="button" class="btn btn-a btn-sm" onclick="markMemberLate(${index})">متأخر</button>
+              <button type="button" class="btn btn-w btn-sm" onclick="editMember('${m.id}')">تعديل</button>
+              <button type="button" class="btn btn-r btn-sm" onclick="deleteMember('${m.id}')">حذف</button>
+              <button type="button" class="btn btn-g btn-sm" onclick="markMemberPaid('${m.id}')">مدفوع</button>
+              <button type="button" class="btn btn-a btn-sm" onclick="markMemberLate('${m.id}')">متأخر</button>
             </div>
           </td>
         </tr>
@@ -844,7 +828,7 @@
       document.getElementById("memberMonthInput").value = "";
       document.getElementById("memberYearInput").value = "2026";
       document.getElementById("memberNoteInput").value = "";
-      editingMemberIndex = null;
+      editingMemberId = null;
     }
 
     function openMemberModal(){
@@ -863,14 +847,142 @@
       }
     }
 
-    function monthYearTaken(month, year, ignoreIndex = null){
-      return dashboardData.members.findIndex((member, idx) => {
-        if(ignoreIndex !== null && idx === ignoreIndex) return false;
-        return String(member.selectedMonth) === String(month) && String(member.selectedYear) === String(year);
-      });
+    async function syncGroupFromSupabase(){
+      const groupId = localStorage.getItem(STORAGE_GROUP_ID);
+
+      if(groupId){
+        const { data, error } = await supabaseClient
+          .from("groups")
+          .select("*")
+          .eq("id", groupId)
+          .maybeSingle();
+
+        if(!error && data){
+          dashboardData.managerName = data.manager_name || "";
+          dashboardData.groupName = data.group_name || "";
+          dashboardData.selectedPlanName = data.plan_name || "";
+          dashboardData.amount = data.amount || 0;
+          dashboardData.membersLimit = data.members_limit || 0;
+          dashboardData.inviteCode = data.invite_code || dashboardData.inviteCode;
+          saveLocalData();
+        }
+      }
     }
 
-    function saveMember(){
+    async function syncMembersFromSupabase(){
+      const groupId = localStorage.getItem(STORAGE_GROUP_ID);
+      if(!groupId) return;
+
+      const { data, error } = await supabaseClient
+        .from("members")
+        .select("*")
+        .eq("group_id", groupId)
+        .order("selected_year", { ascending: true })
+        .order("selected_month", { ascending: true });
+
+      if(error){
+        console.error(error);
+        return;
+      }
+
+      dashboardData.members = (data || []).map(member => ({
+        id: member.id,
+        name: member.name,
+        phone: member.phone,
+        email: member.email,
+        selectedMonth: String(member.selected_month),
+        selectedYear: String(member.selected_year),
+        paymentStatus: member.payment_status || "pending",
+        note: member.note || ""
+      }));
+
+      saveLocalData();
+      renderAll();
+    }
+
+    async function saveInitialSetup(){
+      const managerName = document.getElementById("setupManagerName").value.trim();
+      const groupName = document.getElementById("setupGroupName").value.trim();
+      const selectedPlanName = document.getElementById("setupPlanName").value;
+      const amount = Number(document.getElementById("setupAmount").value || 0);
+      const membersLimit = Number(document.getElementById("setupMembersLimit").value || 0);
+
+      if(!managerName || !groupName || !selectedPlanName){
+        showNotice("أدخل اسم المدير واسم الجمعية والخطة الحالية", "err", "setupNotice");
+        return;
+      }
+
+      dashboardData.managerName = managerName;
+      dashboardData.groupName = groupName;
+      dashboardData.selectedPlanName = selectedPlanName;
+      dashboardData.amount = amount;
+      dashboardData.membersLimit = membersLimit;
+
+      if(!dashboardData.inviteCode){
+        dashboardData.inviteCode = createCode();
+      }
+
+      const existingGroupId = localStorage.getItem(STORAGE_GROUP_ID);
+
+      try {
+        if(existingGroupId){
+          const { error } = await supabaseClient
+            .from("groups")
+            .update({
+              manager_name: managerName,
+              group_name: groupName,
+              plan_name: selectedPlanName,
+              amount: amount,
+              members_limit: membersLimit,
+              invite_code: dashboardData.inviteCode
+            })
+            .eq("id", existingGroupId);
+
+          if(error) throw error;
+        } else {
+          const { data, error } = await supabaseClient
+            .from("groups")
+            .insert([
+              {
+                manager_name: managerName,
+                manager_email: "",
+                group_name: groupName,
+                plan_name: selectedPlanName,
+                amount: amount,
+                members_limit: membersLimit,
+                invite_code: dashboardData.inviteCode
+              }
+            ])
+            .select()
+            .single();
+
+          if(error) throw error;
+
+          localStorage.setItem(STORAGE_GROUP_ID, data.id);
+          dashboardData.inviteCode = data.invite_code;
+        }
+
+        saveLocalData();
+        updateSetupVisibility();
+        renderAll();
+        await syncMembersFromSupabase();
+
+        showNotice("تم حفظ بيانات الجمعية بنجاح", "ok", "setupNotice");
+        showNotice("تم تحديث بيانات الجمعية");
+      } catch (err) {
+        console.error(err);
+        showNotice("حدث خطأ أثناء حفظ بيانات الجمعية", "err", "setupNotice");
+      }
+    }
+
+    async function saveMember(){
+      const groupId = localStorage.getItem(STORAGE_GROUP_ID);
+
+      if(!groupId){
+        showNotice("احفظ بيانات الجمعية أولًا", "err");
+        return;
+      }
+
       const name = document.getElementById("memberNameInput").value.trim();
       const phone = document.getElementById("memberPhoneInput").value.trim();
       const email = document.getElementById("memberEmailInput").value.trim();
@@ -888,43 +1000,77 @@
         return;
       }
 
-      const conflictIndex = monthYearTaken(selectedMonth, selectedYear, editingMemberIndex);
-      if(conflictIndex !== -1){
-        const holder = dashboardData.members[conflictIndex];
-        showNotice(`هذا الشهر محجوز باسم ${holder.name}`, "err");
-        return;
-      }
+      try {
+        const { data: conflictRows, error: conflictError } = await supabaseClient
+          .from("members")
+          .select("id,name")
+          .eq("group_id", groupId)
+          .eq("selected_month", Number(selectedMonth))
+          .eq("selected_year", Number(selectedYear));
 
-      const memberData = {
-        name,
-        phone,
-        email,
-        selectedMonth,
-        selectedYear,
-        paymentStatus: "pending",
-        note
-      };
+        if(conflictError) throw conflictError;
 
-      if(editingMemberIndex !== null){
-        memberData.paymentStatus = dashboardData.members[editingMemberIndex].paymentStatus || "pending";
-        dashboardData.members[editingMemberIndex] = memberData;
-        showNotice("تم تعديل بيانات العضو");
-      } else {
-        if(dashboardData.membersLimit && dashboardData.members.length >= dashboardData.membersLimit){
-          showNotice("وصلت إلى الحد الأقصى من الأعضاء في هذه الخطة", "err");
+        const conflict = (conflictRows || []).find(row => row.id !== editingMemberId);
+        if(conflict){
+          showNotice(`هذا الشهر محجوز باسم ${conflict.name}`, "err");
           return;
         }
-        dashboardData.members.push(memberData);
-        showNotice("تمت إضافة العضو بنجاح");
-      }
 
-      saveData();
-      renderAll();
-      closeMemberModal();
+        if(editingMemberId){
+          const currentMember = dashboardData.members.find(m => m.id === editingMemberId);
+
+          const { error } = await supabaseClient
+            .from("members")
+            .update({
+              name: name,
+              phone: phone,
+              email: email,
+              selected_month: Number(selectedMonth),
+              selected_year: Number(selectedYear),
+              payment_status: currentMember?.paymentStatus || "pending",
+              note: note
+            })
+            .eq("id", editingMemberId);
+
+          if(error) throw error;
+
+          showNotice("تم تعديل بيانات العضو");
+        } else {
+          if(dashboardData.membersLimit && dashboardData.members.length >= dashboardData.membersLimit){
+            showNotice("وصلت إلى الحد الأقصى من الأعضاء في هذه الخطة", "err");
+            return;
+          }
+
+          const { error } = await supabaseClient
+            .from("members")
+            .insert([
+              {
+                group_id: groupId,
+                name: name,
+                phone: phone,
+                email: email,
+                selected_month: Number(selectedMonth),
+                selected_year: Number(selectedYear),
+                payment_status: "pending",
+                note: note
+              }
+            ]);
+
+          if(error) throw error;
+
+          showNotice("تمت إضافة العضو بنجاح");
+        }
+
+        closeMemberModal();
+        await syncMembersFromSupabase();
+      } catch (err) {
+        console.error(err);
+        showNotice("حدث خطأ أثناء حفظ العضو", "err");
+      }
     }
 
-    function editMember(index){
-      const member = dashboardData.members[index];
+    function editMember(id){
+      const member = dashboardData.members.find(m => m.id === id);
       if(!member) return;
 
       fillMemberMonths();
@@ -936,37 +1082,59 @@
       document.getElementById("memberYearInput").value = member.selectedYear || "2026";
       document.getElementById("memberNoteInput").value = member.note || "";
 
-      editingMemberIndex = index;
+      editingMemberId = id;
       document.getElementById("memberModalBg").classList.add("show");
     }
 
-    function deleteMember(index){
-      const member = dashboardData.members[index];
+    async function deleteMember(id){
+      const member = dashboardData.members.find(m => m.id === id);
       if(!member) return;
 
       const yes = confirm(`هل تريد حذف العضو ${member.name}؟`);
       if(!yes) return;
 
-      dashboardData.members.splice(index, 1);
-      saveData();
-      renderAll();
-      showNotice("تم حذف العضو");
+      try {
+        const { error } = await supabaseClient
+          .from("members")
+          .delete()
+          .eq("id", id);
+
+        if(error) throw error;
+
+        await syncMembersFromSupabase();
+        showNotice("تم حذف العضو");
+      } catch (err) {
+        console.error(err);
+        showNotice("حدث خطأ أثناء حذف العضو", "err");
+      }
     }
 
-    function markMemberPaid(index){
-      if(!dashboardData.members[index]) return;
-      dashboardData.members[index].paymentStatus = "paid";
-      saveData();
-      renderAll();
-      showNotice("تم تحديث حالة العضو إلى مدفوع");
+    async function updateMemberStatus(id, status){
+      try {
+        const { error } = await supabaseClient
+          .from("members")
+          .update({ payment_status: status })
+          .eq("id", id);
+
+        if(error) throw error;
+
+        await syncMembersFromSupabase();
+        showNotice(
+          status === "paid" ? "تم تحديث حالة العضو إلى مدفوع" : "تم تحديث حالة العضو إلى متأخر",
+          status === "late" ? "err" : "ok"
+        );
+      } catch (err) {
+        console.error(err);
+        showNotice("حدث خطأ أثناء تحديث الحالة", "err");
+      }
     }
 
-    function markMemberLate(index){
-      if(!dashboardData.members[index]) return;
-      dashboardData.members[index].paymentStatus = "late";
-      saveData();
-      renderAll();
-      showNotice("تم تحديث حالة العضو إلى متأخر", "err");
+    function markMemberPaid(id){
+      updateMemberStatus(id, "paid");
+    }
+
+    function markMemberLate(id){
+      updateMemberStatus(id, "late");
     }
 
     function copyInviteLink(){
@@ -1023,14 +1191,37 @@ ${buildInviteLink(dashboardData.inviteCode)}`;
 
     function renderAll(){
       updateSetupVisibility();
+      hydrateSetupFields();
       renderStats();
       renderGroupBox();
       renderMembersTable();
     }
 
-    fillMemberMonths();
-    loadData();
-    renderAll();
+    function startAutoSync(){
+      clearInterval(syncTimer);
+      const groupId = localStorage.getItem(STORAGE_GROUP_ID);
+      if(!groupId) return;
+
+      syncTimer = setInterval(() => {
+        syncMembersFromSupabase();
+        syncGroupFromSupabase();
+      }, 2000);
+    }
+
+    async function initDashboard(){
+      fillMemberMonths();
+      loadLocalData();
+      hydrateSetupFields();
+      updateSetupVisibility();
+      renderAll();
+
+      await syncGroupFromSupabase();
+      await syncMembersFromSupabase();
+      renderAll();
+      startAutoSync();
+    }
+
+    initDashboard();
   </script>
 </body>
 </html>
