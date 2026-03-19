@@ -649,12 +649,11 @@
       </div>
     </div>
   </div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const STORAGE_DASHBOARD = "saahl_dashboard_data_v2";
-const SUPABASE_URL = "https://qxyrpnexybxmfmtrnzpg.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT";
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     const MONTH_NAMES = [
       "يناير","فبراير","مارس","أبريل","مايو","يونيو",
       "يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"
@@ -871,100 +870,57 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       });
     }
 
-    async function saveMember() {
-  const name = document.getElementById("memberNameInput").value.trim();
-  const phone = document.getElementById("memberPhoneInput").value.trim();
-  const email = document.getElementById("memberEmailInput").value.trim();
-  const selectedMonth = parseInt(document.getElementById("memberMonthInput").value);
-  const selectedYear = parseInt(document.getElementById("memberYearInput").value);
-  const note = document.getElementById("memberNoteInput").value.trim();
+    function saveMember(){
+      const name = document.getElementById("memberNameInput").value.trim();
+      const phone = document.getElementById("memberPhoneInput").value.trim();
+      const email = document.getElementById("memberEmailInput").value.trim();
+      const selectedMonth = document.getElementById("memberMonthInput").value;
+      const selectedYear = document.getElementById("memberYearInput").value;
+      const note = document.getElementById("memberNoteInput").value.trim();
 
-  if (!name || !selectedMonth || !selectedYear) {
-    showNotice("يرجى تعبئة اسم العضو واختيار الشهر والسنة", "err");
-    return;
-  }
+      if(!name){
+        showNotice("أدخل اسم العضو", "err");
+        return;
+      }
 
-  try {
-    let groupId = localStorage.getItem("group_id");
+      if(!selectedMonth || !selectedYear){
+        showNotice("اختر شهر وسنة الاستحقاق", "err");
+        return;
+      }
 
-    if (!groupId) {
-      const inviteCode = dashboardData.inviteCode || Math.random().toString(36).substring(2, 8).toUpperCase();
+      const conflictIndex = monthYearTaken(selectedMonth, selectedYear, editingMemberIndex);
+      if(conflictIndex !== -1){
+        const holder = dashboardData.members[conflictIndex];
+        showNotice(`هذا الشهر محجوز باسم ${holder.name}`, "err");
+        return;
+      }
 
-      const { data: group, error: groupError } = await supabaseClient
-        .from("groups")
-        .insert([
-          {
-            manager_name: dashboardData.managerName || "",
-            manager_email: "",
-            group_name: dashboardData.groupName || "",
-            plan_name: dashboardData.selectedPlanName || "",
-            amount: dashboardData.amount || 0,
-            members_limit: dashboardData.membersLimit || 0,
-            invite_code: inviteCode
-          }
-        ])
-        .select()
-        .single();
+      const memberData = {
+        name,
+        phone,
+        email,
+        selectedMonth,
+        selectedYear,
+        paymentStatus: "pending",
+        note
+      };
 
-      if (groupError) throw groupError;
-
-      groupId = group.id;
-      dashboardData.inviteCode = inviteCode;
-      localStorage.setItem("group_id", groupId);
-    }
-
-    const { data: existingMembers, error: existingError } = await supabaseClient
-      .from("members")
-      .select("id,name,selected_month,selected_year")
-      .eq("group_id", groupId);
-
-    if (existingError) throw existingError;
-
-    const conflict = (existingMembers || []).find(
-      m => Number(m.selected_month) === selectedMonth && Number(m.selected_year) === selectedYear
-    );
-
-    if (conflict) {
-      showNotice(هذا الشهر محجوز باسم ${conflict.name}, "err");
-      return;
-    }
-
-    const { error: insertError } = await supabaseClient
-      .from("members")
-      .insert([
-        {
-          group_id: groupId,
-          name: name,
-          phone: phone,
-          email: email,
-          selected_month: selectedMonth,
-          selected_year: selectedYear,
-          payment_status: "pending",
-          note: note
+      if(editingMemberIndex !== null){
+        memberData.paymentStatus = dashboardData.members[editingMemberIndex].paymentStatus || "pending";
+        dashboardData.members[editingMemberIndex] = memberData;
+        showNotice("تم تعديل بيانات العضو");
+      } else {
+        if(dashboardData.membersLimit && dashboardData.members.length >= dashboardData.membersLimit){
+          showNotice("وصلت إلى الحد الأقصى من الأعضاء في هذه الخطة", "err");
+          return;
         }
-      ]);
+        dashboardData.members.push(memberData);
+        showNotice("تمت إضافة العضو بنجاح");
+      }
 
-    if (insertError) throw insertError;
-
-    dashboardData.members.push({
-      name: name,
-      phone: phone,
-      email: email,
-      selectedMonth: selectedMonth,
-      selectedYear: selectedYear,
-      paymentStatus: "pending",
-      note: note
-    });
-
-    saveData();
-    closeMemberModal();
-    renderAll();
-    showNotice("تمت إضافة العضو بنجاح");
-  } catch (err) {
-    console.error(err);
-    showNotice("حدث خطأ أثناء حفظ العضو", "err");
-  }
-}
+      saveData();
+      renderAll();
+      closeMemberModal();
     }
 
     function editMember(index){
