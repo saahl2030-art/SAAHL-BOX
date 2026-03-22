@@ -45,12 +45,14 @@
       background:rgba(255,255,255,.92);
       backdrop-filter:blur(20px);
       border-bottom:1px solid var(--border);
-      height:64px;
+      min-height:64px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      padding:0 24px;
+      padding:10px 24px;
       box-shadow:var(--sh);
+      gap:12px;
+      flex-wrap:wrap;
     }
 
     .nav-logo{
@@ -89,13 +91,15 @@
 
     .btn:hover{transform:translateY(-1px);box-shadow:var(--sh2)}
     .btn:active{transform:scale(.98)}
+    .btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+
     .btn-p{background:var(--primary);color:#fff}
     .btn-w{background:#fff;border:1px solid var(--border);color:var(--dark2);box-shadow:var(--sh)}
     .btn-sm{padding:7px 12px;font-size:13px;border-radius:10px}
     .btn-full{width:100%}
 
     .wrap{
-      max-width:980px;
+      max-width:1040px;
       margin:0 auto;
       padding:30px 20px 80px;
     }
@@ -120,7 +124,7 @@
       font-size:15px;
       line-height:1.9;
       opacity:.92;
-      max-width:720px;
+      max-width:760px;
       margin:0 auto;
     }
 
@@ -189,7 +193,7 @@
       margin-bottom:6px;
     }
 
-    input, textarea{
+    input, select, textarea{
       width:100%;
       padding:13px 14px;
       border:1.5px solid var(--border);
@@ -208,7 +212,7 @@
       line-height:1.8;
     }
 
-    input:focus, textarea:focus{
+    input:focus, select:focus, textarea:focus{
       border-color:var(--primary);
       box-shadow:0 0 0 3px rgba(26,107,138,.12);
     }
@@ -262,6 +266,12 @@
 
     .hidden{display:none}
 
+    .field-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
     .months-grid{
       display:grid;
       grid-template-columns:repeat(3,1fr);
@@ -280,6 +290,11 @@
       font-weight:800;
       color:var(--dark2);
       box-shadow:var(--sh);
+      min-height:82px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
     }
 
     .month-card:hover{
@@ -317,15 +332,88 @@
       color:var(--primary2);
       font-size:14px;
       font-weight:800;
+      line-height:1.8;
     }
 
-    @media(max-width:640px){
-      .nav{padding:0 14px}
-      .wrap{padding:20px 14px 60px}
-      .hero h1{font-size:28px}
-      .info-grid{grid-template-columns:1fr}
-      .card{padding:18px}
-      .months-grid{grid-template-columns:repeat(2,1fr)}
+    .section-helper{
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      margin-top:10px;
+    }
+
+    .year-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      margin:10px auto 0;
+      padding:6px 12px;
+      border-radius:999px;
+      background:var(--primary3);
+      color:var(--primary2);
+      font-size:13px;
+      font-weight:800;
+    }
+
+    @media(max-width:760px){
+      .nav{
+        padding:10px 14px;
+        justify-content:center;
+      }
+
+      .nav-logo{
+        width:100%;
+        justify-content:center;
+      }
+
+      .nav-actions{
+        width:100%;
+        justify-content:center;
+      }
+
+      .nav-actions .btn{
+        flex:1 1 calc(50% - 8px);
+      }
+
+      .wrap{
+        padding:20px 14px 60px;
+      }
+
+      .hero h1{
+        font-size:28px;
+      }
+
+      .info-grid{
+        grid-template-columns:1fr;
+      }
+
+      .field-row{
+        grid-template-columns:1fr;
+      }
+
+      .card{
+        padding:18px;
+      }
+
+      .months-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .btn-full{
+        width:100%;
+      }
+    }
+
+    @media(max-width:480px){
+      .months-grid{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .month-card{
+        min-height:76px;
+        padding:12px 8px;
+      }
     }
   </style>
 </head>
@@ -342,8 +430,7 @@
     <div class="hero">
       <h1>الانضمام إلى الجمعية</h1>
       <p>
-        هذه الصفحة مخصصة لاستقبال الأعضاء الجدد عبر رابط الدعوة.
-        اختر شهرًا غير محجوز، وأدخل بياناتك، ويمكنك رفع الإيصال وإرسال ملاحظتك مباشرة.
+        هذه الصفحة مخصصة لاستقبال الأعضاء الجدد عبر رابط الدعوة. اختر السنة أولًا ثم اختر شهرًا متاحًا فقط، وبعدها أكمل بياناتك وأرسل الطلب.
       </p>
     </div>
 
@@ -376,6 +463,11 @@
           <div class="info-label">الخطة</div>
           <div class="info-value" id="planView">—</div>
         </div>
+
+        <div class="info-box">
+          <div class="info-label">الحد الأقصى للأعضاء</div>
+          <div class="info-value" id="membersLimitView">—</div>
+        </div>
       </div>
 
       <div style="margin-top:18px">
@@ -387,11 +479,25 @@
     </div>
 
     <div class="card">
-      <div class="title">اختيار الشهر</div>
-      <p class="muted">اختر شهرًا واحدًا فقط من الأشهر المتاحة. الأشهر الرمادية محجوزة.</p>
+      <div class="title">اختيار سنة وشهر الاستحقاق</div>
+      <p class="muted">اختر السنة أولًا، ثم اختر شهرًا واحدًا فقط من الأشهر المتاحة داخل تلك السنة.</p>
 
+      <div class="field-row" style="margin-top:16px">
+        <div class="field">
+          <label>السنة</label>
+          <select id="yearSelect"></select>
+        </div>
+
+        <div class="field">
+          <label>الشهر المختار</label>
+          <input id="selectedMonthDisplay" type="text" readonly placeholder="لم يتم الاختيار بعد">
+        </div>
+      </div>
+
+      <div class="year-badge" id="yearBadge">السنة الحالية: —</div>
       <div id="monthsGrid" class="months-grid"></div>
       <div id="pickedMonthText" class="picked-month">لم يتم اختيار شهر بعد</div>
+      <div class="section-helper">الأشهر الرمادية محجوزة، ولا يمكن اختيارها.</div>
     </div>
 
     <div class="card">
@@ -403,14 +509,16 @@
         <input id="memberName" type="text" placeholder="اكتب اسمك الكامل">
       </div>
 
-      <div class="field">
-        <label>رقم الهاتف</label>
-        <input id="memberPhone" type="tel" placeholder="05xxxxxxxx">
-      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>رقم الهاتف</label>
+          <input id="memberPhone" type="tel" placeholder="05xxxxxxxx">
+        </div>
 
-      <div class="field">
-        <label>البريد الإلكتروني</label>
-        <input id="memberEmail" type="email" placeholder="example@email.com" style="direction:ltr;text-align:left">
+        <div class="field">
+          <label>البريد الإلكتروني</label>
+          <input id="memberEmail" type="email" placeholder="example@email.com" style="direction:ltr;text-align:left">
+        </div>
       </div>
 
       <div class="field">
@@ -440,6 +548,7 @@
 
     let currentGroup = null;
     let selectedMonth = "";
+    let selectedYear = "";
 
     const MONTHS = [
       "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
@@ -456,22 +565,77 @@
       document.getElementById("joinMessage").innerHTML = html;
     }
 
+    function escapeHtml(value){
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function generateYears(count = 6){
+      const currentYear = new Date().getFullYear();
+      return Array.from({ length: count }, (_, i) => String(currentYear + i));
+    }
+
+    function fillYearSelect(){
+      const yearSelect = document.getElementById("yearSelect");
+      const years = generateYears(6);
+      selectedYear = years[0];
+
+      yearSelect.innerHTML = years.map(year => `
+        <option value="${year}">${year}</option>
+      `).join("");
+
+      yearSelect.value = selectedYear;
+      updateYearBadge();
+      updateSelectedMonthDisplay();
+
+      yearSelect.addEventListener("change", async function(){
+        selectedYear = this.value;
+        selectedMonth = "";
+        updateYearBadge();
+        updateSelectedMonthDisplay();
+        await renderMonths();
+      });
+    }
+
+    function updateYearBadge(){
+      document.getElementById("yearBadge").textContent = `السنة المختارة: ${selectedYear || "—"}`;
+    }
+
+    function updateSelectedMonthDisplay(){
+      const display = document.getElementById("selectedMonthDisplay");
+      const pickedText = document.getElementById("pickedMonthText");
+
+      if(selectedMonth && selectedYear){
+        display.value = `${MONTHS[Number(selectedMonth) - 1]} ${selectedYear}`;
+        pickedText.textContent = `الشهر المختار: ${MONTHS[Number(selectedMonth) - 1]} ${selectedYear}`;
+      } else {
+        display.value = "";
+        pickedText.textContent = "لم يتم اختيار شهر بعد";
+      }
+    }
+
     function renderGroupInfo(group, membersCount = 0){
       document.getElementById("groupNameView").textContent = group.group_name || "—";
       document.getElementById("managerNameView").textContent = group.manager_name || "—";
       document.getElementById("membersView").textContent = membersCount || 0;
       document.getElementById("amountView").textContent = Number(group.amount || 0);
       document.getElementById("planView").textContent = group.plan_name || "—";
+      document.getElementById("membersLimitView").textContent = group.members_limit || "—";
       document.getElementById("codeView").textContent = group.invite_code || "—";
     }
 
-    async function getReservedMonths() {
-      if (!currentGroup) return [];
+    async function getReservedMonthsForSelectedYear() {
+      if (!currentGroup || !selectedYear) return [];
 
       const { data, error } = await supabaseClient
         .from("members")
         .select("name, selected_month, selected_year")
-        .eq("group_id", currentGroup.id);
+        .eq("group_id", currentGroup.id)
+        .eq("selected_year", Number(selectedYear));
 
       if (error) {
         console.error(error);
@@ -483,52 +647,39 @@
 
     async function renderMonths() {
       const grid = document.getElementById("monthsGrid");
-      const pickedText = document.getElementById("pickedMonthText");
-
       grid.innerHTML = "";
 
-      const reserved = await getReservedMonths();
+      const reserved = await getReservedMonthsForSelectedYear();
       const reservedMap = new Map(
-        reserved.map(item => [`${item.selected_month}-${item.selected_year}`, item.name])
+        reserved.map(item => [String(item.selected_month), item.name])
       );
 
-      const startYear = new Date().getFullYear();
-      const years = [startYear, startYear + 1, startYear + 2];
+      MONTHS.forEach((monthName, index) => {
+        const monthNumber = index + 1;
+        const monthKey = String(monthNumber);
+        const isTaken = reservedMap.has(monthKey);
+        const ownerName = reservedMap.get(monthKey);
 
-      years.forEach(year => {
-        MONTHS.forEach((monthName, index) => {
-          const monthNumber = index + 1;
-          const monthValue = `${monthNumber}-${year}`;
-          const isTaken = reservedMap.has(monthValue);
-          const ownerName = reservedMap.get(monthValue);
+        const div = document.createElement("div");
+        div.className = "month-card" + (isTaken ? " taken" : "") + (selectedMonth === monthKey ? " selected" : "");
 
-          const div = document.createElement("div");
-          div.className = "month-card" + (isTaken ? " taken" : "") + (selectedMonth === monthValue ? " selected" : "");
+        div.innerHTML = `
+          ${monthName}
+          <small>${selectedYear}${isTaken ? ` • محجوز لـ ${escapeHtml(ownerName)}` : " • متاح"}</small>
+        `;
 
-          div.innerHTML = `
-            ${monthName}
-            <small>${year}${isTaken ? ` • محجوز لـ ${ownerName}` : ""}</small>
-          `;
+        if (!isTaken) {
+          div.addEventListener("click", () => {
+            selectedMonth = monthKey;
+            updateSelectedMonthDisplay();
+            renderMonths();
+          });
+        }
 
-          if (!isTaken) {
-            div.addEventListener("click", () => {
-              selectedMonth = monthValue;
-              renderMonths();
-            });
-          }
-
-          grid.appendChild(div);
-        });
+        grid.appendChild(div);
       });
 
-      if (selectedMonth) {
-        const parts = selectedMonth.split("-");
-        const monthIndex = parseInt(parts[0], 10) - 1;
-        const year = parts[1];
-        pickedText.textContent = `الشهر المختار: ${MONTHS[monthIndex]} ${year}`;
-      } else {
-        pickedText.textContent = "لم يتم اختيار شهر بعد";
-      }
+      updateSelectedMonthDisplay();
     }
 
     async function loadInvite(){
@@ -564,6 +715,7 @@
         .eq("group_id", currentGroup.id);
 
       renderGroupInfo(currentGroup, count || 0);
+      fillYearSelect();
       await renderMonths();
     }
 
@@ -635,6 +787,11 @@
         return;
       }
 
+      if(!selectedYear){
+        showJoinMessage('<div class="warn">اختر السنة أولًا.</div>');
+        return;
+      }
+
       if(!selectedMonth){
         showJoinMessage('<div class="warn">يجب اختيار شهر واحد قبل إرسال الطلب.</div>');
         return;
@@ -645,21 +802,23 @@
         .select("*", { count: "exact", head: true })
         .eq("group_id", currentGroup.id);
 
-      if (Number(currentGroup.members_limit || 0) > 0 && Number(currentMembersCount || 0) >= Number(currentGroup.members_limit || 0)) {
+      if (
+        Number(currentGroup.members_limit || 0) > 0 &&
+        Number(currentMembersCount || 0) >= Number(currentGroup.members_limit || 0)
+      ) {
         showJoinMessage('<div class="warn">هذه الجمعية وصلت إلى الحد الأقصى من الأعضاء.</div>');
         return;
       }
 
-      const parts = selectedMonth.split("-");
-      const selectedMonthNumber = parseInt(parts[0], 10);
-      const selectedYear = parseInt(parts[1], 10);
+      const selectedMonthNumber = parseInt(selectedMonth, 10);
+      const selectedYearNumber = parseInt(selectedYear, 10);
 
       const { data: existingSlot, error: checkError } = await supabaseClient
         .from("members")
         .select("id,name")
         .eq("group_id", currentGroup.id)
         .eq("selected_month", selectedMonthNumber)
-        .eq("selected_year", selectedYear)
+        .eq("selected_year", selectedYearNumber)
         .maybeSingle();
 
       if (checkError) {
@@ -669,7 +828,7 @@
       }
 
       if (existingSlot) {
-        showJoinMessage(`<div class="warn">هذا الشهر محجوز بالفعل باسم ${existingSlot.name}.</div>`);
+        showJoinMessage(`<div class="warn">هذا الشهر محجوز بالفعل باسم ${escapeHtml(existingSlot.name)}.</div>`);
         await renderMonths();
         return;
       }
@@ -686,7 +845,7 @@
               phone: memberPhone,
               email: memberEmail,
               selected_month: selectedMonthNumber,
-              selected_year: selectedYear,
+              selected_year: selectedYearNumber,
               payment_status: "pending",
               note: memberNote
             }
@@ -713,13 +872,13 @@
         showJoinMessage(`
           <div class="success">
             تم الانضمام بنجاح.<br>
-            الاسم: <strong>${memberName}</strong><br>
-            الجمعية: <strong>${currentGroup.group_name}</strong><br>
-            الشهر المختار: <strong>${MONTHS[selectedMonthNumber - 1]} ${selectedYear}</strong>
+            الاسم: <strong>${escapeHtml(memberName)}</strong><br>
+            الجمعية: <strong>${escapeHtml(currentGroup.group_name || "")}</strong><br>
+            الشهر المختار: <strong>${MONTHS[selectedMonthNumber - 1]} ${selectedYearNumber}</strong>
           </div>
         `);
 
-             document.getElementById("memberName").value = "";
+        document.getElementById("memberName").value = "";
         document.getElementById("memberPhone").value = "";
         document.getElementById("memberEmail").value = "";
         document.getElementById("memberNote").value = "";
@@ -732,6 +891,7 @@
           .eq("group_id", currentGroup.id);
 
         renderGroupInfo(currentGroup, count || 0);
+        updateSelectedMonthDisplay();
         await renderMonths();
       } catch(err){
         console.error(err);
@@ -742,4 +902,4 @@
     loadInvite();
   </script>
 </body>
-</html
+</html>
