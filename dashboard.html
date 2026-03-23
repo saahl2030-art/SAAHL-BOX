@@ -1,99 +1,381 @@
 <! DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
- <meta charset="UTF-8" />
- <title>لوحة إدارة الجمعية - صندوق ساهل</عنوان>
-  <الاسم الذهبي="العرض" المحتوى="عرض=عرض الجهاز، المقياس الأولي=1.0" />
- <رابط href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="Stylesheet" />
+<html lang="ar" dir="rtl"><head> <meta charset="UTF-8" /> <meta name="viewport" content="width=عرض الجهاز، المقياس الأولي=1.0" /> <title>Dashboard - صندوق ساهل</title>
 
- <style>
- :root{
- --primary:#1a6b8a;
- --primary2:#155972;
- --primary3:#e0f4fa;
- --تيل #0891b2;
- --أحمر:#be123c;
- --redbg:#ffe4e6;
- --أخضر:#15803d;
- --greenbg:#dcfce7;
- --كهربان:#b45309;
- --amberbg:#fef3c7;
- --bg:#f4f8fb;
- --الحدود:#d4e4ee;
- --دارك:#0d2233;
- --دارك2:#163348;
- --مكتوم:#5a7a90;
- --s1:#eef4f8;
- --أبيض:#ffffff;
- --shadow:0 1بكسل 3بكسل RGB (26,107,138,.08),0 1بكسل 2بكسل rgba (26,107,138,06);
- --shadow2:0 4بكسل 16بكسل RGB (26,107,138,<b1192 <b1186>>.12),0 2بكسل 4بكسل RGB (26,107,138,.06);
- --shadow3:0 20بكسل 60بكسل rgba (26,107,138,.15);
+ <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet"> <style> :root{
+ --panel:#ffffff; --لوحة-2:#f8fbff; --سطر:#e3ebf4; --السطر-2:#d7e2ee; --نص:#16324a; --مكتوم:#6c8197;
+ --primary:#1c6ca1; --primary-dark:#15557f;
+ --أخضر:#138a59; --أخضر-ناعم:#e8f8f1; --كهرباء:#b7791f; --كهرماني ناعم:#fff6e6; --أحمر:#c53939;
+ --blue:#2563eb; --blue-soft:#eef4ff; --shadow:0 10px 30px rgba (18، 50، 82، 0.08); --نصف القطر: 18 بكسل؛ --نصف القطر sm:12px; }
+ *{box-sizing:border-box} html{scroll-behavior:smooth} body{ margin:0; عائلة الخطوط اللحوفية: "تجوال"، بدون خط خطي؛ الخلفية: تدرج خطي (180°G,#f7fbff 0٪, #f3f7fb 100٪); اللون:var(--text);
+
+
+ button,input,select,textarea{font-family:"Tajawal", sans-serif}
+ .app{
+ display:grid; grid-template-columns:280px 1fr;
+ الحد الأدنى للارتفاع: 100 في الساعة؛ }
+ .sidebar{
+ الحافة اليسرى: 1px solid var(--line);
+ الموقع: لاصق;
+ الارتفاع: 100 في وهب;
+ مؤشر z:10;
+ .brand{
+ display:flex; محاذاة العناصر: المركز؛
+ الفجوة: 12 بكسل؛ الحشوة: 8 بكسل، 8 بكسل، 20 بكسل؛
+ الحافة السفلى: 1px صلب var(--line); الهامش السفلي: 18px;
  }
-
- *{صندوق-مقاس:border-box; الهامش: 0; الحشوة:0}
-
- body{
- font-family:'Tajawal', sans-serif;
- الخلفية: VAR(--BG);
- اللون: var(--داكن)؛
- الحد الأدنى للارتفاع: 100VH؛
- }
-
- .nav{
- position:sticky;
- الأعلى: 0؛
- مؤشر z:200;
- الخلفية: RGBA (255، 255، 255، .92);
- فلتر الخلفية: ضبابية (20بكسل)؛
- الحافة القاعية: 1بكسل صلب فار(--الإطار);
- الحد الأدنى للارتفاع: 64بكسل؛
- display:flex;
- محاذاة العناصر: المركز؛
- تبرير المحتوى: المسافة بين؛
- الحشو: 10بكسل 24 بكسل؛
- ظل-صندوق:var(--ظل);
- الفجوة: 12بكسل؛
- لف-مرن:لف;
- }
-
- .nav-logo{
- display:flex;
- محاذاة العناصر: المركز؛
- الفجوة: 9بكسل؛
- حجم الخط: 20صورة;
- وزن الخط:900;
- اللون: var(--داكن)؛
- زخرفة النص: لا شيء؛
- }
-
- .nav-actions{
- display:flex;
- الفجوة: 8بكسل؛
- محاذاة العناصر: المركز؛
- لف-مرن:لف;
- }
-
- .BTN{
- display:inline-flex;
- محاذاة العناصر: المركز؛
- تبرير المحتوى: المركز؛
- الفجوة: 6نقطة؛
- الحشو: 10بكسل 18 بكسل؛
- الحدود: لا شيء؛
- نصف قطر الحدود: 12بكسل؛
- عائلة الخط: 'تجوال'، بدون خط خطي؛
- حجم الخط: 14بكسل؛
+ عرض:48px;
+ نصف قطر الحدود: 16px;
+ display:grid;
+ اللون: #fff;
  وزن الخط: 800;
- المؤشر: المؤشر؛
- الانتقال: جميع طلقات .18ثوان؛
- زخرفة النص: لا شيء؛
- المسافة البيضاء: nowrap;
+ } .brand h1{ margin:0; حجم الخط:20px; وزن الخط: 800; ارتفاع الخط: 1.1؛ } .brand p{ margin:4px 0 0;
+ حجم الخط: 13 بكسل؛ }
+ display:flex; الاتجاه المرن: عمود؛ الفجوة:8px;
  }
 
- .btn:hover{transform:translateY(-1px); box-shadow:var(--shadow2)}
-.BTN:Active {transform:scale(.98)}
-.BTN:Disabled{Opacity:.6; المؤشر: غير مسموح به؛ transform:none; ظل الصندوق: لا شيء}
+ .menu-btn{ border:none; الخلفية: شفافة؛
+ العرض: 100٪؛ display:flex; محاذاة العناصر: المركز؛
+ تبرير المحتوى: المسافة بين؛ الفجوة: 12 بكسل؛
+ الحشو: 14 بكسل، 14 بكسل؛ نصف قطر الحدود: 14px;
+ المؤشر: المؤشر؛ اللون:var(--text); حجم الخط: 15px;
+ وزن الخط:700; الانتقال: 0.2 ثانية سهلة؛ } .menu-btn:hover{ background:var(--panel-2); }
+ .menu-btn.active{ background:var(--primary-soft);
 
-.btn-p{خلفية:var(--primary); اللون:#fff}
-.BTN-D{خلفية:VAR(--dark2)؛ اللون:#fff}
-.BTN-W{خلفية:#fff; الحدود 1 نقطة <</b1568>B1570>var             255,255,255 
+
+ } .menu-right{ display:flex;
+ الفجوة: 12 بكسل؛ } .menu-icon{ width:34px; الارتفاع: 34 بكسل؛ نصف قطر الحدود: 10 بكسل؛
+ display:grid; المكان-العناصر: المركز؛ الخلفية: #f3f7fb؛ حجم الخط: 16 بكسل؛
+
+ .menu-btn.active .menu-icon{
+ background:#d9eefb; }
+ .content{ padding:24px; }
+ .topbar{ الشاشة: مرنة؛
+
+
+ الفجوة: 14 بكسل؛ الهامش السفلي: 18px;
+ لف-مرن:لف;
+ } .topbar-left h2{ margin:0; حجم الخط: 28 بكسل؛ وزن الخط:900;
+ } .topbar-left p{ margin:6px 0 0;
+ حجم الخط: 14 بكسل؛
+ .topbar-right{
+ display:flex; الفجوة:10 بكسل;
+ } .btn{
+ border:none; نصف قطر الحدود: 14px;
+ الحشو: 12 بكسل، 16 بكسل؛
+
+ وزن الخط: 800;
+ الانتقال: 0.2 ثانية سهلة؛
+ .btn-primary{
+ خلفية:var(--primary); اللون:#fff;
+ } .btn-primary:hover{ background:var(--primary-dark); transform:translateY(-1px);
+ .btn-soft{ خلفية:#fff; اللون:var(--text); الحدود: 1px صلبة var(--line-2);
+ .btn-soft:hover{
+
+
+ .btn-danger{
+ اللون:#fff; }
+ .btn-success{ background:var(--green);
+ اللون:#fff; }
+ .btn-warning{ background:var(--amber); اللون:#fff; } .page{ display:none; الرسوم المتحركة: Fade .22s Ease; }
+ .page.active{
+ }
+ @keyframes يتلاشى {
+ من{عتامة:0; transform:translateY(6px)} إلى{عتامة:1; transform:translateY(0)}
+ .grid{
+ display:grid; الفاصل: 16 بكسل؛ } .grid-4{ grid-template-columns:Repeat(4,1fr); } .grid-3{ grid-template-columns:Repeat(3,1fr); }
+
+
+ grid-template-columns:Repeat(2,1fr); }
+ background:var(--panel);
+ نصف قطر الحدود: var(--نصف القطر); ظل-صندوق:var(--ظل);
+ الحشو: 18 بكسل؛ }
+ .card-head{
+
+
+ تبرير المحتوى: المسافة بين؛ الفجوة: 12 بكسل؛ الهامش السفلي: 14 بكسل؛
+ لف-مرن:لف; } .card-title{ margin:0;
+ حجم الخط: 18px; وزن الخط:900; }
+ .card-sub{ margin:6px 0 0;
+ حجم الخط: 13 بكسل؛
+
+ }
+ .stat{ position:relative;
+ الفائض: مخفي؛ }
+ .stat::after{ content:"";
+ الموقع: المطلق؛
+
+ الأسفل: -30 بكسل؛
+ الارتفاع: 90 بكسل؛
+ نصف قطر الحدود: 50٪؛
+ .stat-top{
+ محاذاة العناصر: المركز؛
+ الهامش السفلي: 12 بكسل؛
+ .stat-icon{
+ width:48px; الارتفاع: 48 بكسل؛
+ display:grid; المكان-العناصر: المركز؛ الخلفية: var(--primary-soft);
+ حجم الخط:20px; وزن الخط:900;
+ }
+ color:var(--muted); حجم الخط: 14 بكسل؛
+ }
+ font-size:30px;
+ الهامش: 6 بكسل 0 2 بكسل؛ }
+
+
+ حجم الخط: 13 بكسل؛ }
+ display:inline-flex; محاذاة العناصر: المركز؛
+
+
+ نصف قطر الحدود: 999px; حجم الخط: 12px; وزن الخط: 800;
+ المسافة البيضاء: nowrap; }
+ .badge-amber{خلفية:var(--amber-ناعمة)؛ اللون:var(--amber)} .badge-red{background:var(--red-soft)؛ color:var(--red)}
+ .badge-primary{background:var(--primary-soft); color:var(--primary-dark)} .filters{
+
+
+ لف-مرن:لف; }
+ .field،
+ .textarea{
+ الحدود: 1px صلبة var(--line-2); الخلفية: #fff؛
+ نصف قطر الحدود: 14px;
+
+ الملخص: لا شيء؛
+ اللون:var(--text); }
+ .field:focus، .select:focus،
+ .textarea:focus{ border-color:#8cb8d7;
+ }
+ .form-grid{ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ الفجوة: 12 بكسل؛ }
+ .label{
+
+ الهامش السفلي: 7px; حجم الخط: 13 بكسل؛ اللون: var(--مكتوم)؛
+
+
+
+ width:100٪;
+ الحدود: 1px solid var(--line); نصف قطر الحدود: 16px;
+ }
+
+ table{ width:100٪;
+ انهيار الحدود: انهيار؛ الحد الأدنى للعرض: 1200 بكسل؛
+ الخلفية: #fff; }
+ thead{
+ }
+ الحشو: 14px 12px; محاذاة النص: الصحيح؛
+ الحافة السفلى: 1px صلب var(--line); حجم الخط: 14 بكسل؛
+ المحاذاة الرأسية: الوسط؛
+
+ th{ color:#557187;
+ وزن الخط:900; المسافة البيضاء: nowrap;
+ } td{
+ color:var(--text); وزن الخط: 600؛
+ }
+
+ tr:hover td{ background:#fcfeff; }
+ .actions{ display:flex; الفجوة:8px; لف-مرن:لف;
+ } .action-btn{
+ نصف قطر الحدود: 10 بكسل؛ الحشوة: 8 بكسل، 10 بكسل؛
+ المؤشر: المؤشر؛
+
+ وزن الخط: 800;
+ }
+ .action-blue{background:var(--blue-soft)؛ color:var(--blue)} .action-green{background:var(--green-soft)} color:var(--green)}
+ .action-amber{background:var(--amber-soft)} color:var(--amber)}
+
+
+ display:grid;
+ }
+ .notice{ border:1px solid var(--line);
+ الحشوة: 14 بكسل؛ الخلفية: #fff؛ display:flex;
+ محاذاة العناصر: مرن-البدء؛
+ .notice-icon{
+ width:42px; الارتفاع: 42 بكسل؛
+ flex:0 0 42px; display:grid; المكان-العناصر: المركز؛
+ وزن الخط:900;
+
+ .إشعار h4{
+ margin:0 0 6px; حجم الخط: 15px; وزن الخط:900;
+ }
+ .notice p{ margin:0; اللون: var(--مكتوم)؛ حجم الخط: 13 بكسل؛ ارتفاع الخط: 1.7; } .progress-wrap{ display:grid; الفجوة:10 بكسل;
+ }
+
+ .progress-head{ display:flex; محاذاة العناصر: المركز؛
+ تبرير المحتوى: المسافة بين؛ الفجوة:10 بكسل; حجم الخط: 14 بكسل؛
+ وزن الخط: 800; } .progress{
+ ارتفاع:12px;
+
+ نصف قطر الحدود: 999px;
+
+ .progress > span{ display:block;
+ الطول: 100٪؛ نصف قطر الحدود: 999px; الخلفية: تدرج خطي (90 درجة، فار(--أساسي)، #4ca8d9); } .chart-box{
+ display:grid;
+
+ الفجوة: 18 بكسل؛ محاذاة العناصر: المركز؛
+
+ .donut-wrap{
+
+ محاذاة العناصر: المركز؛
+ } .donut{
+ العرض:180px;
+ الارتفاع: 180 بكسل؛
+
+ الخلفية: تدرج مخروطي (var(--green) 0 72٪، #ebf1f6 72٪ 100٪);
+ المكان-العناصر: المركز؛ الموقع: نسبي؛
+
+ .donut::before{
+
+ العرض: 115 بكسل؛
+ خلفية: #fff؛ نصف قطر الحدود: 50٪؛
+
+
+
+ position:relative;
+ حجم الخط: 28 بكسل؛
+ } .bar-chart{ display:grid;
+
+
+ .bar-row{ display:grid;
+ الفجوة:10 بكسل;<ب11071>
+
+
+ وزن الخط: 800; }
+ ارتفاع:12px; الخلفية: #edf3f8؛ نصف قطر الحدود: 999px; الفائض: مخفي؛ }
+ .bar span{ display:block; الطول: 100٪؛ نصف قطر الحدود: 999px;
+
+
+ .bar-amber span{background:var(--amber)}
+ .package-grid{
+ display:grid; الشبكة-قالب-الأعمدة:تكرار (4,1fr);
+
+
+ .plan{
+ الحدود: 1px solid var(--line); نصف قطر الحدود: 22px; الحشوة: 20 بكسل؛ ظل-صندوق:var(--ظل);
+ الموقع: نسبي؛
+
+ }
+ .plan.highlight{ border:2px solid #cfe7f7; الخلفية: تدرج خطي (180°G,#ffffff٪ 0٪#f6fbff 100٪); }
+ .plan h3{
+
+ حجم الخط:22px;
+ } .price{ font-size:34px;
+
+
+ }
+ font-size:14px; اللون: var(--مكتوم)؛
+ } .plan ul{ list-style:none; الحشو: 0;
+ display:grid; الفجوة:10 بكسل;
+ .plan li{ حشرة:10px 12px;
+ نصف قطر الحدود: 12 بكسل؛ الخلفية: #f8fbff؛
+حجم الخط: 14 بكسل؛ }
+ .archive-list،
+ .mini-list{
+ الفجوة: 12 بكسل؛
+ .list-item{
+ نصف قطر الحدود: 16px; الحشوة: 14 بكسل؛
+ الخلفية: #fff؛ display:flex;
+ محاذاة العناصر: مرن-البدء؛
+
+ الفجوة: 12 بكسل؛
+ }
+ .list-item h4{ margin:0 0 6px;
+ وزن الخط:900;
+
+
+ margin:0;
+ اللون: var(--مكتوم)؛ ارتفاع الخط: 1.7; }
+ display:flex; الفجوة:10 بكسل;
+ لف-مرن:لف; }
+
+
+ الشبكة-قالب-الأعمدة:تكرار (4,1fr); الفجوة: 12 بكسل؛
+ }
+ border:1px solid var(--line);
+
+
+ الخلفية: #fff; }
+ display:block;
+ حجم الخط: 13 بكسل؛
+ الهامش السفلي: 8px; }
+ .mini-card strong{ display:block;
+ حجم الخط: 24 بكسل؛ وزن الخط:900;
+ .current-plan-box{
+ محاذاة العناصر: المركز؛ تبرير المحتوى: المسافة بين؛ الفجوة: 14 بكسل؛ لف-مرن:لف; الحشو: 16 بكسل؛ نصف قطر الحدود: 18px; الخلفية: تدرج خطي (135 درجة، #f7fbff 0٪، #eef7fd 100٪)؛ الحدود:1px صلبة #d7e9f6; } .tag{ display:inline-block; الحشو: 5 بكسل 10 بكسل؛ نصف قطر الحدود: 999px; الخلفية: #fff؛ الحدود: 1px solid var(--line);
+ حجم الخط: 12px; وزن الخط: 800;
+
+
+ .foot-note{
+ حجم الخط: 12px;
+ ارتفاع الخط: 1.8;
+ @media (أقصى عرض:1200px){
+ .grid-4, .package-grid,
+
+
+ }
+ .grid-3{ grid-template-columns:1fr;
+ } }
+ @media (أقصى عرض:980px){ .app{
+ }
+ .sidebar{ position:relative;
+ الارتفاع: auto; الحدود على اليسار: لا شيء؛ الحافة السفلى: 1px صلب var(--line);
+ } .menu{
+ grid-template-columns:repeat(2,1fr); }
+ .content{
+
+
+ .grid-2,
+ grid-template-columns:1fr; }
+ @media (أقصى عرض:640px){
+ grid-template-columns:1fr;
+
+
+ .package-grid،
+ grid-template-columns:1fr; }
+ .topbar-left h2{
+ } .stat-value{ font-size:24px; }
+
+
+ عرض:150px; الارتفاع: 150 بكسل;
+ } .دونut::before{
+ الارتفاع: 95 بكسل؛ }
+ }
+
+</head>
+ <div class="app">
+ <!-- الشريط الجانبي --> <aside class="sidebar">
+ <div class="brand">  <div class="brand-logo">س</div>
+ <h1>صندوق ساهل</h1> <p>لوحة تحكم الجمعيات</p> </div>
+ <div class="menu">
+ <div class="menu-right"> <div class="menu-icon">📊</div>
+ <span>لوحة الإدارة العامة</span> </div>
+ <span>›</span> </button>
+
+
+ <div class="menu-right"> <div class="menu-icon">👤</div> <span>صفحة مدير المجموعة</span> </div> <span>›</span> </ button>
+ <button class="menu-btn" data-page="member-page"> <div class="menu-right"> <div class="menu-icon">📝</div> <span>صفحة العضو</span> </div>
+ </button> <button class="menu-btn" data-page="plans-page"> <div class="menu-right"> <div class="menu-icon">💼</div> <span>الباقات</span>
+ </div> <span>›</span>  </button> <button class="menu-btn" data-page="payments-page"> <div class="menu-right">
+ <span>الدفعات</span> </div> <span>›</span> </button> <button class="menu-btn" data-page="alerts-page">
+
+ <div class="menu-icon">🔔</div>
+ </div>
+ </button>
+ <div class="menu-right">
+
+
+ </div> <span>›</span>
+ </button> </div>
+ </جانب>
+ <main class="content"> <div class="topbar">
+ <div class="topbar-left"> <h2 id="page-title">لوحة الإدارة العامة</h2> <p>نسخة واجهة احترافية نظيفة لصندوق ساهل — بدون قاعدة بيانات حالياً</p> </div> <div class="topbar-right">
+
+ </div> </div>
+ <!-- صفحة المسؤول --> <section class="page active" id="admin-page"> <div class="grid grid-4">
+ <div class="stat-top">
+ <span class="badge badge-blue">نشطة 12</span> </div>
+ <div class="stat-label">إجمالي الجمعيات</div> <div class="stat-value">18</div> <div class="stat-note">12 نشطة / 4 مكتملة / 2 متأخرة</div>
+ </div>
+
+ <div class="card stat"> <div class="stat-top"> <div class="stat-icon"> 🧑 🤝 🧑 </div>
+ <span class="badge badge-primary">مدراء + أعضاء</span> </div> <div class="stat-label">إجمالي المستخدمين</div>
+ <div class="stat-value">146</div> <div class="stat-note">24 مدير مجموعة + 122 חבר</div> </div>
+
+          
