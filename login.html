@@ -2,297 +2,177 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>تسجيل الدخول - صندوق ساهل</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تسجيل الدخول - صندوق ساهل</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --primary:#1a6b8a;
-      --primary2:#155972;
-      --primary3:#e0f4fa;
-      --teal:#0891b2;
-      --red:#be123c;
-      --redbg:#ffe4e6;
-      --bg:#f4f8fb;
-      --white:#ffffff;
-      --border:#d4e4ee;
-      --dark:#0d2233;
-      --dark2:#163348;
-      --muted:#5a7a90;
-      --sh:0 1px 3px rgba(26,107,138,.08),0 1px 2px rgba(26,107,138,.06);
-      --sh2:0 4px 16px rgba(26,107,138,.12),0 2px 4px rgba(26,107,138,.06);
-      --sh3:0 20px 60px rgba(26,107,138,.15);
-      --r:12px;
+      --primary:#1f6fa5;
+      --bg:#f4f8fc;
+      --line:#dfe8f1;
+      --text:#16324a;
+      --muted:#6e8498;
     }
 
-    *{box-sizing:border-box;margin:0;padding:0}
+    *{box-sizing:border-box}
 
     body{
-      font-family:'Tajawal',sans-serif;
-      background:linear-gradient(135deg,#e8f5fb,#f4f8fb 60%,#e0f0f8);
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      min-height:100vh;
       margin:0;
-      padding:20px;
-      color:var(--dark);
+      font-family:"Tajawal", sans-serif;
+      background:linear-gradient(180deg,#f8fbff,#f3f7fb);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
     }
 
     .box{
-      background:var(--white);
-      padding:34px 28px;
       width:100%;
-      max-width:430px;
-      border-radius:22px;
-      box-shadow:var(--sh3);
-      border:1px solid var(--border);
+      max-width:420px;
+      background:#fff;
+      padding:24px;
+      border-radius:20px;
+      box-shadow:0 15px 40px rgba(0,0,0,0.08);
+      border:1px solid var(--line);
     }
 
     h2{
-      text-align:center;
-      margin-bottom:10px;
-      font-size:34px;
+      margin:0 0 10px;
+      font-size:26px;
       font-weight:900;
-      color:var(--dark);
+      color:var(--text);
     }
 
-    .sub{
-      text-align:center;
+    p{
+      margin:0 0 18px;
       color:var(--muted);
       font-size:14px;
-      margin-bottom:24px;
-      line-height:1.9;
     }
 
     .field{
+      width:100%;
+      padding:13px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      margin-bottom:12px;
+      font-size:14px;
+    }
+
+    .field:focus{
+      outline:none;
+      border-color:var(--primary);
+    }
+
+    .type-box{
+      display:flex;
+      gap:10px;
       margin-bottom:14px;
     }
 
-    .field label{
-      display:block;
-      font-size:13px;
-      color:var(--dark2);
-      font-weight:800;
-      margin-bottom:6px;
-    }
-
-    input{
-      width:100%;
-      padding:13px 14px;
-      border:1.5px solid var(--border);
-      border-radius:10px;
-      box-sizing:border-box;
-      font-size:15px;
-      font-family:'Tajawal',sans-serif;
-      color:var(--dark);
+    .type-btn{
+      flex:1;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      cursor:pointer;
+      text-align:center;
+      font-weight:900;
       background:#fff;
-      outline:none;
-      transition:border-color .2s, box-shadow .2s;
     }
 
-    input:focus{
+    .type-btn.active{
+      background:var(--primary);
+      color:#fff;
       border-color:var(--primary);
-      box-shadow:0 0 0 3px rgba(26,107,138,.12);
-    }
-
-    .ltr{
-      direction:ltr;
-      text-align:left;
     }
 
     .btn{
       width:100%;
-      padding:13px;
-      background:var(--primary);
-      color:white;
+      padding:14px;
       border:none;
-      border-radius:12px;
+      border-radius:14px;
+      background:var(--primary);
+      color:#fff;
+      font-size:15px;
+      font-weight:900;
       cursor:pointer;
-      font-size:18px;
-      font-weight:800;
-      font-family:'Tajawal',sans-serif;
-      transition:all .18s;
-      box-shadow:0 2px 8px rgba(26,107,138,.25);
     }
 
     .btn:hover{
-      background:var(--primary2);
-      transform:translateY(-1px);
-      box-shadow:var(--sh2);
-    }
-
-    .btn:disabled{
-      opacity:.7;
-      cursor:not-allowed;
-      transform:none;
-    }
-
-    .msg{
-      margin-top:14px;
-      text-align:center;
-      font-size:14px;
-      line-height:1.9;
-      min-height:24px;
-      font-weight:700;
-      border-radius:10px;
-      padding:0;
-    }
-
-    .msg.success{
-      color:#155972;
-      background:var(--primary3);
-      border:1px solid #bae6fd;
-      padding:12px;
-    }
-
-    .msg.error{
-      color:#991b1b;
-      background:var(--redbg);
-      border:1px solid #fecdd3;
-      padding:12px;
+      opacity:.9;
     }
 
     .links{
-      margin-top:18px;
+      margin-top:14px;
       display:flex;
-      flex-direction:column;
-      gap:10px;
-      align-items:center;
+      justify-content:space-between;
+      font-size:13px;
     }
 
-    .link{
+    .links a{
       color:var(--primary);
-      text-decoration:none;
-      font-size:14px;
-      font-weight:800;
-    }
-
-    .link:hover{
-      text-decoration:underline;
-    }
-
-    .ghost{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:100%;
-      padding:11px;
-      border:1px solid var(--border);
-      border-radius:12px;
-      color:var(--dark2);
-      text-decoration:none;
-      background:#fff;
-      font-size:14px;
       font-weight:700;
-      box-shadow:var(--sh);
     }
 
-    .ghost:hover{
-      box-shadow:var(--sh2);
-    }
-
-    @media(max-width:480px){
-      .box{
-        padding:26px 18px;
-      }
-
-      h2{
-        font-size:28px;
-      }
-    }
   </style>
 </head>
 <body>
+
   <div class="box">
     <h2>تسجيل الدخول</h2>
-    <div class="sub">أدخل البريد الإلكتروني وكلمة المرور للدخول إلى حسابك</div>
+    <p>أدخل بياناتك للوصول إلى حسابك</p>
 
-    <div class="field">
-      <label>البريد الإلكتروني</label>
-      <input id="email" class="ltr" type="email" placeholder="example@email.com" />
+    <!-- اختيار نوع الحساب -->
+    <div class="type-box">
+      <div class="type-btn active" id="managerBtn">مدير جمعية</div>
+      <div class="type-btn" id="adminBtn">أدمن</div>
     </div>
 
-    <div class="field">
-      <label>كلمة المرور</label>
-      <input id="password" type="password" placeholder="كلمة المرور" />
-    </div>
+    <form id="loginForm">
+      <input class="field" type="text" placeholder="البريد أو رقم الهاتف" required>
+      <input class="field" type="password" placeholder="كلمة المرور" required>
 
-    <button id="loginBtn" class="btn" type="button">تسجيل الدخول</button>
-
-    <div class="msg" id="msg"></div>
+      <button class="btn" type="submit">دخول</button>
+    </form>
 
     <div class="links">
-      <a class="link" href="auth.html">ليس لديك حساب؟ إنشاء حساب جديد</a>
-      <a class="ghost" href="index.html">← العودة إلى الرئيسية</a>
+      <a href="auth.html">إنشاء حساب</a>
+      <a href="index.html">العودة للرئيسية</a>
     </div>
   </div>
 
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+  <script>
+    let accountType = "manager";
 
-    const SUPABASE_URL = "https://qxyrpnexybxmfmtrnzpg.supabase.co";
-    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT";
+    const managerBtn = document.getElementById("managerBtn");
+    const adminBtn = document.getElementById("adminBtn");
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    managerBtn.onclick = () => {
+      accountType = "manager";
+      managerBtn.classList.add("active");
+      adminBtn.classList.remove("active");
+    };
 
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const loginBtn = document.getElementById("loginBtn");
-    const msg = document.getElementById("msg");
+    adminBtn.onclick = () => {
+      accountType = "admin";
+      adminBtn.classList.add("active");
+      managerBtn.classList.remove("active");
+    };
 
-    function showMessage(text, type = "") {
-      msg.textContent = text;
-      msg.className = "msg" + (type ? " " + type : "");
-    }
+    document.getElementById("loginForm").addEventListener("submit", function(e){
+      e.preventDefault();
 
-    async function login() {
-      showMessage("");
-
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
-
-      if (!email || !password) {
-        showMessage("أدخل البريد الإلكتروني وكلمة المرور.", "error");
-        return;
+      // توجيه حسب نوع الحساب
+      if(accountType === "admin"){
+        window.location.href = "admin.html";
+      } else {
+        window.location.href = "dashboard.html";
       }
-
-      loginBtn.disabled = true;
-      loginBtn.textContent = "جارٍ تسجيل الدخول...";
-
-      try {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password
-        });
-
-        if (error) throw error;
-
-        showMessage("تم تسجيل الدخول بنجاح", "success");
-
-        setTimeout(() => {
-          window.location.href = "dashboard.html";
-        }, 1200);
-
-      } catch (err) {
-        showMessage(err.message || "فشل تسجيل الدخول.", "error");
-      } finally {
-        loginBtn.disabled = false;
-        loginBtn.textContent = "تسجيل الدخول";
-      }
-    }
-
-    loginBtn.addEventListener("click", login);
-
-    emailInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") login();
-    });
-
-    passwordInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") login();
     });
   </script>
+
 </body>
 </html>
