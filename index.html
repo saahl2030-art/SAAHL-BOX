@@ -2,291 +2,250 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>صندوق ساهل — الجمعيات المالية</title>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>صندوق ساهل</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --primary:#1a6b8a;
-      --primary2:#155972;
-      --primary3:#e0f4fa;
-      --teal:#0891b2;
-      --gold:#b45309;
-      --goldbg:#fef3c7;
-      --red:#be123c;
-      --redbg:#ffe4e6;
-      --bluebg:#e0f4fa;
-      --bg:#f4f8fb;
-      --white:#ffffff;
-      --s1:#eef4f8;
-      --s2:#dde8f0;
-      --border:#d4e4ee;
-      --dark:#0d2233;
-      --dark2:#163348;
-      --dark3:#2c4a61;
-      --muted:#5a7a90;
-      --muted2:#8aa8bc;
-      --r:12px;
-      --sh:0 1px 3px rgba(26,107,138,.08),0 1px 2px rgba(26,107,138,.06);
-      --sh2:0 4px 16px rgba(26,107,138,.12),0 2px 4px rgba(26,107,138,.06);
-      --sh3:0 20px 60px rgba(26,107,138,.15);
+      --primary:#1f6fa5;
+      --primary-dark:#185781;
+      --bg:#f4f8fc;
+      --text:#16324a;
+      --muted:#6e8498;
+      --line:#e3edf5;
     }
 
-    *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
+    *{box-sizing:border-box}
+
     body{
-      font-family:'Tajawal',sans-serif;
-      background:var(--bg);
-      color:var(--dark);
-      min-height:100vh;
-      line-height:1.6;
-      -webkit-font-smoothing:antialiased
+      margin:0;
+      font-family:"Tajawal", sans-serif;
+      background:linear-gradient(180deg,#f8fbff,#f3f7fb);
+      color:var(--text);
     }
 
+    a{text-decoration:none;color:inherit}
+
+    .container{
+      width:min(1100px, calc(100% - 32px));
+      margin:auto;
+    }
+
+    /* NAV */
     .nav{
-      position:sticky;
-      top:0;
-      z-index:200;
-      background:rgba(255,255,255,.92);
-      backdrop-filter:blur(20px);
-      border-bottom:1px solid var(--border);
-      height:62px;
+      padding:18px 0;
+    }
+
+    .nav-inner{
       display:flex;
-      align-items:center;
       justify-content:space-between;
-      padding:0 24px;
-      box-shadow:var(--sh);
-    }
-
-    .nav-logo{
-      display:flex;
       align-items:center;
-      gap:9px;
-      font-size:18px;
-      font-weight:900;
-      color:var(--dark);
-      text-decoration:none;
+      background:#fff;
+      padding:14px 16px;
+      border-radius:16px;
+      border:1px solid var(--line);
     }
 
-    .logo-badge{
-      background:var(--teal);
-      color:#fff;
-      font-size:11px;
-      font-weight:700;
-      padding:2px 7px;
-      border-radius:99px;
-      letter-spacing:.3px
+    .logo{
+      font-weight:900;
+      font-size:20px;
     }
 
     .nav-actions{
       display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap:wrap
+      gap:10px;
     }
 
     .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      padding:10px 20px;
+      padding:10px 16px;
+      border-radius:12px;
       border:none;
-      border-radius:var(--r);
-      font-family:'Tajawal',sans-serif;
-      font-size:14px;
-      font-weight:700;
+      font-weight:800;
       cursor:pointer;
-      transition:all .18s;
-      text-decoration:none;
-      white-space:nowrap;
+      font-size:14px;
     }
 
-    .btn:hover{transform:translateY(-1px);box-shadow:var(--sh2)}
-    .btn:active{transform:scale(.97)}
-    .btn-p{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(26,107,138,.3)}
-    .btn-o{background:transparent;border:1.5px solid var(--primary);color:var(--primary)}
-    .btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--muted)}
-    .btn-sm{padding:7px 14px;font-size:13px;border-radius:9px}
-    .btn-lg{padding:14px 28px;font-size:16px;border-radius:14px}
-
-    .hero{
-      background:linear-gradient(135deg,#0d2233 0%,#1a3d52 50%,#0d2233 100%);
+    .btn-primary{
+      background:var(--primary);
       color:#fff;
-      padding:72px 20px 56px;
+    }
+
+    .btn-soft{
+      background:#fff;
+      border:1px solid var(--line);
+    }
+
+    /* HERO */
+    .hero{
+      padding:60px 0;
       text-align:center;
-      overflow:hidden;
     }
 
-    .hero-kicker{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      background:rgba(26,107,138,.2);
-      border:1px solid rgba(26,107,138,.35);
-      color:#7dd3ee;
-      font-size:12px;
-      font-weight:700;
-      padding:5px 14px;
-      border-radius:99px;
-      margin-bottom:20px;
-    }
-
-    .hero-title{
-      font-size:clamp(28px,5vw,52px);
+    .hero h1{
+      font-size:42px;
+      margin:0;
       font-weight:900;
-      line-height:1.15;
-      margin-bottom:16px;
-      background:linear-gradient(135deg,#fff 40%,#93d4ee);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
     }
 
-    .hero-sub{
-      font-size:clamp(14px,2vw,17px);
-      opacity:.85;
-      max-width:700px;
-      margin:0 auto 32px;
-      line-height:1.9;
+    .hero p{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.8;
     }
 
-    .hero-btns{
+    .hero-actions{
+      margin-top:24px;
       display:flex;
-      gap:12px;
       justify-content:center;
+      gap:12px;
       flex-wrap:wrap;
     }
 
-    .wrap-md{
-      max-width:900px;
-      margin:0 auto;
-      padding:24px 20px 90px;
+    /* FEATURES */
+    .section{
+      padding:40px 0;
     }
 
-    .feat-grid{
+    .section h2{
+      text-align:center;
+      font-size:28px;
+      margin-bottom:20px;
+    }
+
+    .features{
       display:grid;
-      grid-template-columns:1fr;
-      gap:14px;
-      margin-bottom:36px;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
     }
 
-    @media(min-width:480px){
-      .feat-grid{grid-template-columns:1fr 1fr}
-    }
-
-    @media(min-width:800px){
-      .feat-grid{grid-template-columns:repeat(3,1fr)}
-    }
-
-    .feat-c{
+    .card{
       background:#fff;
-      border:1px solid var(--border);
-      border-radius:16px;
       padding:20px;
-      box-shadow:var(--sh);
+      border-radius:18px;
+      border:1px solid var(--line);
     }
 
-    .feat-ico{
-      font-size:30px;
-      margin-bottom:10px;
+    .card h3{
+      margin:0 0 8px;
+      font-size:18px;
     }
 
-    .feat-title{
-      font-size:14px;
-      font-weight:800;
-      margin-bottom:6px;
-    }
-
-    .feat-desc{
-      font-size:12px;
+    .card p{
+      margin:0;
       color:var(--muted);
+      font-size:14px;
       line-height:1.7;
     }
 
-    @media(max-width:640px){
-      .nav{padding:0 14px}
-      .wrap-md{padding:16px 14px 80px}
+    /* CTA */
+    .cta{
+      text-align:center;
+      padding:50px 0;
+    }
+
+    .cta-box{
+      background:#fff;
+      padding:30px;
+      border-radius:20px;
+      border:1px solid var(--line);
+    }
+
+    .cta-box h3{
+      margin:0 0 10px;
+      font-size:26px;
+    }
+
+    .cta-box p{
+      margin:0 0 16px;
+      color:var(--muted);
+    }
+
+    /* MOBILE */
+    @media (max-width:800px){
+      .features{
+        grid-template-columns:1fr;
+      }
+
+      .hero h1{
+        font-size:30px;
+      }
+
+      .hero p{
+        font-size:15px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <nav class="nav">
-    <div class="nav-logo">
-      🏦 صندوق ساهل
-      <span class="logo-badge">BETA</span>
-    </div>
+  <!-- NAV -->
+  <div class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <div class="logo">صندوق ساهل</div>
 
-    <div class="nav-actions">
-      <a class="btn btn-ghost btn-sm" href="plans.html">الخطط</a>
-      <a class="btn btn-o btn-sm" href="login.html">تسجيل الدخول</a>
-      <a class="btn btn-p btn-sm" href="auth.html">ابدأ مجاناً →</a>
-    </div>
-  </nav>
-
-  <section class="hero">
-    <div class="hero-kicker">✦ منصة الجمعيات المالية الذكية</div>
-    <h1 class="hero-title">أدِر جمعيتك المالية<br>باحترافية تامة</h1>
-    <p class="hero-sub">
-      منصة متكاملة لإنشاء الجمعيات المالية، إدارة الأعضاء، متابعة الدفعات،
-      وإرسال دعوات الانضمام — كل شيء في مكان واحد
-    </p>
-
-    <div class="hero-btns">
-      <a class="btn btn-lg" style="background:#fff;color:var(--primary);font-size:15px" href="auth.html">🚀 ابدأ مجاناً الآن</a>
-      <a class="btn btn-lg" style="background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.3)" href="plans.html">عرض الخطط والأسعار</a>
-    </div>
-  </section>
-
-  <div class="wrap-md">
-    <div style="text-align:center;padding:36px 0 24px">
-      <h2 style="font-size:24px;font-weight:900;margin-bottom:8px">كل ما تحتاجه في مكان واحد</h2>
-      <p style="color:var(--muted);font-size:14px">بدون تعقيد، بدون ورق، بدون أخطاء</p>
-    </div>
-
-    <div class="feat-grid">
-      <div class="feat-c">
-        <div class="feat-ico">📅</div>
-        <div class="feat-title">جدول تلقائي ذكي</div>
-        <div class="feat-desc">بمجرد إضافة الأعضاء يُبنى الجدول تلقائياً مع تتبع كل شهر</div>
-      </div>
-
-      <div class="feat-c">
-        <div class="feat-ico">🔗</div>
-        <div class="feat-title">دعوات فورية</div>
-        <div class="feat-desc">أرسل رابط الانضمام — يملأ العضو بياناته بنفسه في دقيقة</div>
-      </div>
-
-      <div class="feat-c">
-        <div class="feat-ico">✅</div>
-        <div class="feat-title">متابعة الدفعات</div>
-        <div class="feat-desc">اعرف من دفع ومن لم يدفع بضغطة واحدة</div>
-      </div>
-
-      <div class="feat-c">
-        <div class="feat-ico">📱</div>
-        <div class="feat-title">تذكيرات واتساب</div>
-        <div class="feat-desc">رسائل تذكير جاهزة للأعضاء المتأخرين</div>
-      </div>
-
-      <div class="feat-c">
-        <div class="feat-ico">📊</div>
-        <div class="feat-title">تقارير فورية</div>
-        <div class="feat-desc">إحصائيات مفصلة وسجل كامل لكل الدورات</div>
-      </div>
-
-      <div class="feat-c">
-        <div class="feat-ico">🔒</div>
-        <div class="feat-title">أمان تام</div>
-        <div class="feat-desc">بياناتك محفوظة بشكل خاص — لا يراها أحد غيرك</div>
+        <div class="nav-actions">
+          <a href="plans.html" class="btn btn-soft">الخطط</a>
+          <a href="login.html" class="btn btn-soft">تسجيل الدخول</a>
+          <a href="auth.html" class="btn btn-primary">ابدأ مجانًا</a>
+        </div>
       </div>
     </div>
+  </div>
 
-    <div style="background:linear-gradient(135deg,var(--dark2),#1a3d52);border-radius:20px;padding:32px;text-align:center;color:#fff;margin-bottom:24px">
-      <div style="font-size:22px;font-weight:900;margin-bottom:8px">جاهز تبدأ جمعيتك؟</div>
-      <div style="font-size:13px;opacity:.7;margin-bottom:20px">الخطة المجانية — حتى 4 أعضاء</div>
-      <a class="btn btn-lg" style="background:#1a6b8a;color:#fff" href="auth.html">إنشاء حساب مجاني →</a>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="container">
+      <h1>إدارة جمعياتك أصبحت أسهل</h1>
+      <p>
+        صندوق ساهل يساعدك على تنظيم الجمعيات، متابعة الأعضاء، إدارة الدفعات،
+        والتحكم الكامل بكل شيء من مكان واحد.
+      </p>
+
+      <div class="hero-actions">
+        <a href="auth.html" class="btn btn-primary">ابدأ الآن</a>
+        <a href="plans.html" class="btn btn-soft">عرض الخطط</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="section">
+    <div class="container">
+      <h2>ماذا يقدم لك ساهل؟</h2>
+
+      <div class="features">
+        <div class="card">
+          <h3>إدارة كاملة للجمعيات</h3>
+          <p>تحكم في الأعضاء، الأشهر، والدورات بسهولة وبدون تعقيد.</p>
+        </div>
+
+        <div class="card">
+          <h3>متابعة الدفعات</h3>
+          <p>اعرف من دفع ومن تأخر مع نظام واضح وسريع.</p>
+        </div>
+
+        <div class="card">
+          <h3>تنبيهات ذكية</h3>
+          <p>تنبيهات تلقائية للمتأخرين واقتراب المواعيد.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <div class="container">
+      <div class="cta-box">
+        <h3>ابدأ الآن بدون تعقيد</h3>
+        <p>أنشئ حسابك خلال ثواني وابدأ إدارة جمعيتك مباشرة.</p>
+
+        <a href="auth.html" class="btn btn-primary">إنشاء حساب</a>
+      </div>
     </div>
   </div>
 
