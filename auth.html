@@ -1,177 +1,678 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>إنشاء حساب - صندوق ساهل</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root{--primary:#1a6b8a;--primary2:#155972;--primary3:#e0f4fa;--teal:#0891b2;--red:#be123c;--redbg:#ffe4e6;--bg:#f4f8fb;--white:#fff;--border:#d4e4ee;--dark:#0d2233;--dark2:#163348;--muted:#5a7a90;--sh:0 1px 3px rgba(26,107,138,.08);--sh2:0 4px 16px rgba(26,107,138,.12);--sh3:0 20px 60px rgba(26,107,138,.15)}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Tajawal',sans-serif;background:linear-gradient(135deg,#e8f5fb,#f4f8fb 60%,#e0f0f8);display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;color:var(--dark)}
-.box{background:var(--white);padding:34px 28px;width:100%;max-width:430px;border-radius:22px;box-shadow:var(--sh3);border:1px solid var(--border)}
-h2{text-align:center;font-size:32px;font-weight:900;margin-bottom:6px;color:var(--dark)}
-.sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:24px;line-height:1.9}
-.field{margin-bottom:14px}
-.field label{display:block;font-size:13px;color:var(--dark2);font-weight:800;margin-bottom:6px}
-input{width:100%;padding:13px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;font-family:'Tajawal',sans-serif;color:var(--dark);background:#fff;outline:none;transition:border-color .2s,box-shadow .2s}
-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,107,138,.12)}
-.btn{width:100%;padding:13px;background:var(--primary);color:#fff;border:none;border-radius:12px;cursor:pointer;font-size:17px;font-weight:800;font-family:'Tajawal',sans-serif;transition:all .18s;box-shadow:0 2px 8px rgba(26,107,138,.25)}
-.btn:hover{background:var(--primary2);transform:translateY(-1px);box-shadow:var(--sh2)}
-.btn:disabled{opacity:.7;cursor:not-allowed;transform:none}
-.msg{margin-top:14px;text-align:center;font-size:14px;font-weight:700;border-radius:10px;padding:0;min-height:20px}
-.msg.ok{color:#155972;background:var(--primary3);border:1px solid #bae6fd;padding:12px}
-.msg.err{color:#991b1b;background:var(--redbg);border:1px solid #fecdd3;padding:12px}
-.links{margin-top:16px;text-align:center}
-.links a{color:var(--primary);font-size:14px;font-weight:700;text-decoration:none}
-.links a:hover{text-decoration:underline}
-.step-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:20px}
-.step{width:32px;height:4px;border-radius:99px;background:var(--border);transition:background .3s}
-.step.active{background:var(--primary)}
-</style>
-</head>
-<body>
-<div class="box">
-  <div style="text-align:center;font-size:40px;margin-bottom:10px">🏦</div>
-  <h2>إنشاء حساب</h2>
-  <div class="sub">أنشئ حسابك وجمعيتك في خطوة واحدة</div>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إنشاء حساب - صندوق ساهل</title>
 
-  <div class="step-indicator">
-    <div class="step active" id="step1ind"></div>
-    <div class="step" id="step2ind"></div>
-  </div>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Step 1: Account Info -->
-  <div id="step1">
-    <div class="field"><label>الاسم الكامل *</label><input id="name" type="text" placeholder="اسمك الكامل"></div>
-    <div class="field"><label>رقم الهاتف *</label><input id="phone" type="tel" placeholder="05xxxxxxxx"></div>
-    <div class="field"><label>البريد الإلكتروني *</label><input id="email" type="email" placeholder="example@email.com" style="direction:ltr;text-align:left"></div>
-    <div class="field"><label>كلمة المرور *</label><input id="password" type="password" placeholder="6 أحرف على الأقل"></div>
-    <button class="btn" onclick="goToStep2()">التالي — بيانات الجمعية →</button>
-  </div>
+  <style>
+    :root{
+      --bg:#f4f8fc;
+      --panel:#ffffff;
+      --panel-soft:#f8fbff;
+      --line:#dfe8f1;
+      --line-dark:#cfdbe7;
 
-  <!-- Step 2: Group Info -->
-  <div id="step2" style="display:none">
-    <div class="field"><label>اسم الجمعية *</label><input id="groupName" type="text" placeholder="مثال: جمعية الأهل 2026"></div>
-    <div class="field"><label>مبلغ الجمعية الشهري (د.إ) *</label><input id="groupAmount" type="number" placeholder="مثال: 1000" min="1"></div>
-    <div class="field"><label>الخطة</label>
-      <select id="planSelect" style="width:100%;padding:13px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;font-family:'Tajawal',sans-serif;background:#fff;color:var(--dark);outline:none">
-        <option value="الخطة المجانية" data-limit="4">الخطة المجانية — حتى 4 أعضاء</option>
-        <option value="جمعية صغيرة" data-limit="9">جمعية صغيرة — حتى 9 أعضاء (149 د.إ)</option>
-        <option value="جمعية متوسطة" data-limit="18">جمعية متوسطة — حتى 18 عضو (199 د.إ)</option>
-        <option value="جمعية كبيرة" data-limit="30">جمعية كبيرة — حتى 30 عضو (249 د.إ)</option>
-        <option value="جمعية موسعة" data-limit="50">جمعية موسعة — حتى 50 عضو (349 د.إ)</option>
-      </select>
-    </div>
-    <div style="display:flex;gap:10px">
-      <button class="btn" style="background:#fff;color:var(--dark2);border:1px solid var(--border);box-shadow:var(--sh)" onclick="backToStep1()">← رجوع</button>
-      <button class="btn" id="signupBtn" onclick="signup()">إنشاء الحساب والجمعية</button>
-    </div>
-  </div>
+      --text:#16324a;
+      --muted:#6e8498;
 
-  <div class="msg" id="msg"></div>
-  <div class="links" style="margin-top:16px">
-    <a href="login.html">لديك حساب؟ تسجيل الدخول</a>
-  </div>
-</div>
+      --primary:#1f6fa5;
+      --primary-dark:#185781;
+      --primary-soft:#eaf5fd;
 
-<script type="module">
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-const supabase = createClient(
-  "https://qxyrpnexybxmfmtrnzpg.supabase.co",
-  "sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT"
-);
+      --green:#138a59;
+      --green-soft:#e8f8f1;
 
-function showMsg(text, type) {
-  var el = document.getElementById("msg");
-  el.textContent = text;
-  el.className = "msg " + (type || "");
-}
-function makeCode() {
-  return Math.random().toString(36).substring(2,8).toUpperCase();
-}
+      --amber:#b7791f;
+      --amber-soft:#fff5e4;
 
-window.goToStep2 = function() {
-  var name = document.getElementById("name").value.trim();
-  var phone = document.getElementById("phone").value.trim();
-  var email = document.getElementById("email").value.trim();
-  var pass = document.getElementById("password").value;
-  if (!name || !phone || !email || !pass) { showMsg("أدخل جميع الحقول", "err"); return; }
-  if (pass.length < 6) { showMsg("كلمة المرور 6 أحرف على الأقل", "err"); return; }
-  showMsg("");
-  document.getElementById("step1").style.display = "none";
-  document.getElementById("step2").style.display = "block";
-  document.getElementById("step1ind").classList.remove("active");
-  document.getElementById("step2ind").classList.add("active");
-};
+      --red:#c53b3b;
+      --red-soft:#fdeeee;
 
-window.backToStep1 = function() {
-  document.getElementById("step2").style.display = "none";
-  document.getElementById("step1").style.display = "block";
-  document.getElementById("step2ind").classList.remove("active");
-  document.getElementById("step1ind").classList.add("active");
-};
+      --blue:#2563eb;
+      --blue-soft:#edf3ff;
 
-window.signup = async function() {
-  var name = document.getElementById("name").value.trim();
-  var phone = document.getElementById("phone").value.trim();
-  var email = document.getElementById("email").value.trim();
-  var pass = document.getElementById("password").value;
-  var groupName = document.getElementById("groupName").value.trim();
-  var amount = Number(document.getElementById("groupAmount").value || 0);
-  var planSelect = document.getElementById("planSelect");
-  var planName = planSelect.value;
-  var membersLimit = Number(planSelect.options[planSelect.selectedIndex].dataset.limit || 4);
-
-  if (!groupName || !amount) { showMsg("أدخل اسم الجمعية والمبلغ", "err"); return; }
-
-  var btn = document.getElementById("signupBtn");
-  btn.disabled = true;
-  btn.textContent = "جاري الإنشاء...";
-  showMsg("جاري إنشاء الحساب...", "");
-
-  try {
-    // 1. Create auth account
-    var { data: authData, error: authError } = await supabase.auth.signUp({
-      email, password: pass,
-      options: { data: { name, phone } }
-    });
-    if (authError) throw authError;
-
-    var userId = authData.user?.id;
-    if (!userId) throw new Error("لم يتم الحصول على معرف المستخدم");
-
-    // 2. Create group in Supabase
-    var inviteCode = makeCode();
-    var { error: groupError } = await supabase.from("groups").insert([{
-      user_id: userId,
-      manager_name: name,
-      group_name: groupName,
-      amount: amount,
-      plan_name: planName,
-      members_limit: membersLimit,
-      invite_code: inviteCode
-    }]);
-
-    if (groupError) {
-      console.error("Group error:", groupError);
-      // Still proceed - group can be created later
-      showMsg("تم إنشاء الحساب. يرجى إعداد بيانات الجمعية من لوحة التحكم.", "ok");
-    } else {
-      showMsg("✅ تم إنشاء الحساب والجمعية بنجاح! جاري الانتقال...", "ok");
+      --shadow:0 12px 30px rgba(15, 40, 64, 0.08);
+      --radius:22px;
     }
 
-    setTimeout(function() {
-      window.location.href = "login.html";
-    }, 2000);
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
 
-  } catch(err) {
-    showMsg(err.message || "حدث خطأ. حاول مجدداً.", "err");
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "إنشاء الحساب والجمعية";
-  }
-};
-</script>
+    body{
+      margin:0;
+      font-family:"Tajawal", sans-serif;
+      background:linear-gradient(180deg,#f8fbff 0%, #f3f7fb 100%);
+      color:var(--text);
+    }
+
+    a{text-decoration:none;color:inherit}
+    button,input,select{font-family:"Tajawal", sans-serif}
+
+    .container{
+      width:min(1180px, calc(100% - 32px));
+      margin:auto;
+    }
+
+    .topbar{
+      padding:18px 0;
+    }
+
+    .topbar-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:14px 16px;
+      box-shadow:var(--shadow);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .brand-logo{
+      width:48px;
+      height:48px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--primary) 0%, #46a8d8 100%);
+      color:#fff;
+      font-size:22px;
+      font-weight:900;
+      box-shadow:0 10px 20px rgba(31,111,165,.22);
+      flex:0 0 48px;
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:21px;
+      font-weight:900;
+      line-height:1.1;
+    }
+
+    .brand p{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .top-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:none;
+      border-radius:14px;
+      padding:12px 16px;
+      cursor:pointer;
+      font-size:14px;
+      font-weight:900;
+      transition:.2s ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+
+    .btn:hover{transform:translateY(-1px)}
+
+    .btn-primary{
+      background:var(--primary);
+      color:#fff;
+      box-shadow:0 10px 20px rgba(31,111,165,.18);
+    }
+
+    .btn-primary:hover{background:var(--primary-dark)}
+
+    .btn-soft{
+      background:#fff;
+      border:1px solid var(--line-dark);
+      color:var(--text);
+    }
+
+    .btn-soft:hover{background:#f8fbff}
+
+    .hero{
+      padding:26px 0 16px;
+      text-align:center;
+    }
+
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:var(--primary-soft);
+      color:var(--primary-dark);
+      font-size:13px;
+      font-weight:900;
+      margin-bottom:14px;
+    }
+
+    .hero h2{
+      margin:0;
+      font-size:38px;
+      font-weight:900;
+      line-height:1.2;
+    }
+
+    .hero p{
+      width:min(780px, 100%);
+      margin:14px auto 0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.9;
+    }
+
+    .layout{
+      padding:14px 0 34px;
+    }
+
+    .layout-grid{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+
+    .card h3{
+      margin:0;
+      font-size:24px;
+      font-weight:900;
+    }
+
+    .card-sub{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.8;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+      margin-top:18px;
+    }
+
+    .field-wrap.full{
+      grid-column:1 / -1;
+    }
+
+    .label{
+      display:block;
+      margin-bottom:8px;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .field,
+    .select{
+      width:100%;
+      border:1px solid var(--line-dark);
+      background:#fff;
+      color:var(--text);
+      border-radius:14px;
+      padding:13px 14px;
+      outline:none;
+      font-size:14px;
+    }
+
+    .field:focus,
+    .select:focus{
+      border-color:#96bdd8;
+      box-shadow:0 0 0 4px rgba(31,111,165,.08);
+    }
+
+    .plans-list{
+      display:grid;
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .plan-option{
+      position:relative;
+    }
+
+    .plan-option input{
+      position:absolute;
+      inset:0;
+      opacity:0;
+      cursor:pointer;
+    }
+
+    .plan-box{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      background:#fff;
+      transition:.2s ease;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .plan-option input:checked + .plan-box{
+      border-color:#9fcae4;
+      background:var(--primary-soft);
+      box-shadow:0 0 0 4px rgba(31,111,165,.06);
+    }
+
+    .plan-info h4{
+      margin:0 0 6px;
+      font-size:18px;
+      font-weight:900;
+    }
+
+    .plan-info p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+    }
+
+    .plan-meta{
+      text-align:left;
+    }
+
+    .plan-price{
+      font-size:28px;
+      font-weight:900;
+      line-height:1;
+      white-space:nowrap;
+    }
+
+    .plan-price small{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .plan-tag{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:900;
+      margin-top:8px;
+      white-space:nowrap;
+    }
+
+    .tag-primary{background:var(--primary-soft);color:var(--primary-dark)}
+    .tag-blue{background:var(--blue-soft);color:var(--blue)}
+    .tag-green{background:var(--green-soft);color:var(--green)}
+    .tag-amber{background:var(--amber-soft);color:var(--amber)}
+
+    .features{
+      margin-top:18px;
+      display:grid;
+      gap:12px;
+    }
+
+    .feature{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      background:#fff;
+    }
+
+    .feature h4{
+      margin:0 0 6px;
+      font-size:16px;
+      font-weight:900;
+    }
+
+    .feature p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.8;
+    }
+
+    .addons{
+      margin-top:18px;
+      padding:16px;
+      border-radius:18px;
+      background:linear-gradient(135deg,#f7fbff 0%, #eef7fd 100%);
+      border:1px solid #d8e9f7;
+    }
+
+    .addons h4{
+      margin:0 0 10px;
+      font-size:17px;
+      font-weight:900;
+    }
+
+    .addons ul{
+      list-style:none;
+      margin:0;
+      padding:0;
+      display:grid;
+      gap:10px;
+    }
+
+    .addons li{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px 14px;
+      font-size:14px;
+      font-weight:800;
+    }
+
+    .addons li span{
+      color:var(--green);
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .actions{
+      margin-top:18px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .notice{
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius:14px;
+      background:#f8fbff;
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+    }
+
+    .success-box{
+      display:none;
+      margin-top:16px;
+      padding:14px;
+      border-radius:16px;
+      background:var(--green-soft);
+      color:var(--green);
+      font-size:14px;
+      font-weight:900;
+      line-height:1.8;
+    }
+
+    .success-box.show{
+      display:block;
+    }
+
+    @media (max-width:980px){
+      .layout-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:700px){
+      .form-grid{
+        grid-template-columns:1fr;
+      }
+
+      .hero h2{
+        font-size:30px;
+      }
+
+      .hero p{
+        font-size:15px;
+      }
+
+      .plan-box{
+        flex-direction:column;
+      }
+
+      .plan-meta{
+        text-align:right;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="container">
+      <div class="topbar-inner">
+        <div class="brand">
+          <div class="brand-logo">س</div>
+          <div>
+            <h1>صندوق ساهل</h1>
+            <p>إنشاء حساب جديد</p>
+          </div>
+        </div>
+
+        <div class="top-actions">
+          <a class="btn btn-soft" href="index.html">العودة للرئيسية</a>
+          <a class="btn btn-soft" href="plans.html">عرض الباقات</a>
+          <a class="btn btn-primary" href="login.html">تسجيل الدخول</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badge">ابدأ الآن بخطة واضحة ومناسبة</div>
+        <h2>أنشئ حسابك واختر الباقة الأنسب لك</h2>
+        <p>
+          ابدأ مجانًا أو اختر الباقة التي تناسب عدد جمعياتك وأعضائك، ثم طوّر حسابك لاحقًا حسب احتياجك.
+        </p>
+      </div>
+    </section>
+
+    <section class="layout">
+      <div class="container">
+        <div class="layout-grid">
+          <!-- النموذج -->
+          <div class="card">
+            <h3>بيانات الحساب</h3>
+            <p class="card-sub">
+              أدخل بياناتك الأساسية ثم اختر الباقة المناسبة. بعد إنشاء الحساب سيتم تحويلك إلى صفحة تسجيل الدخول.
+            </p>
+
+            <form id="signupForm">
+              <div class="form-grid">
+                <div>
+                  <label class="label">الاسم الكامل</label>
+                  <input class="field" type="text" id="fullName" placeholder="اكتب الاسم الكامل" required>
+                </div>
+
+                <div>
+                  <label class="label">رقم الهاتف</label>
+                  <input class="field" type="tel" id="phone" placeholder="05xxxxxxxx" required>
+                </div>
+
+                <div>
+                  <label class="label">البريد الإلكتروني</label>
+                  <input class="field" type="email" id="email" placeholder="example@email.com" required>
+                </div>
+
+                <div>
+                  <label class="label">كلمة المرور</label>
+                  <input class="field" type="password" id="password" placeholder="********" required>
+                </div>
+
+                <div class="field-wrap full">
+                  <label class="label">نوع الحساب</label>
+                  <select class="select" id="accountType" required>
+                    <option value="manager">مدير جمعية</option>
+                    <option value="admin">أدمن عام</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="plans-list">
+                <label class="plan-option">
+                  <input type="radio" name="plan" value="Free" checked>
+                  <div class="plan-box">
+                    <div class="plan-info">
+                      <h4>Free</h4>
+                      <p>1 جمعية / 4 أعضاء / بدون توسعات</p>
+                    </div>
+                    <div class="plan-meta">
+                      <div class="plan-price">0 <small>درهم</small></div>
+                      <div class="plan-tag tag-primary">مجانًا</div>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="plan-option">
+                  <input type="radio" name="plan" value="Basic">
+                  <div class="plan-box">
+                    <div class="plan-info">
+                      <h4>Basic</h4>
+                      <p>3 جمعيات / 10 أعضاء / مناسب للبداية</p>
+                    </div>
+                    <div class="plan-meta">
+                      <div class="plan-price">39 <small>درهم</small></div>
+                      <div class="plan-tag tag-blue">للبداية</div>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="plan-option">
+                  <input type="radio" name="plan" value="Pro">
+                  <div class="plan-box">
+                    <div class="plan-info">
+                      <h4>Pro</h4>
+                      <p>6 جمعيات / 15 عضو / الأكثر استخدامًا</p>
+                    </div>
+                    <div class="plan-meta">
+                      <div class="plan-price">69 <small>درهم</small></div>
+                      <div class="plan-tag tag-green">الأكثر استخدامًا</div>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="plan-option">
+                  <input type="radio" name="plan" value="Business">
+                  <div class="plan-box">
+                    <div class="plan-info">
+                      <h4>Business</h4>
+                      <p>10 جمعيات / 25 عضو / أعلى سعة تشغيل</p>
+                    </div>
+                    <div class="plan-meta">
+                      <div class="plan-price">99 <small>درهم</small></div>
+                      <div class="plan-tag tag-amber">تشغيل أكبر</div>
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <div class="notice">
+                ملاحظة: الباقة المجانية تسمح بجمعية واحدة فقط و4 أعضاء كحد أقصى، ولا تسمح بشراء توسعات.
+              </div>
+
+              <div class="actions">
+                <button type="submit" class="btn btn-primary">إنشاء الحساب</button>
+                <a href="login.html" class="btn btn-soft">لدي حساب بالفعل</a>
+              </div>
+
+              <div class="success-box" id="successBox">
+                تم إنشاء الحساب بنجاح. سيتم تحويلك الآن إلى صفحة تسجيل الدخول...
+              </div>
+            </form>
+          </div>
+
+          <!-- ملخص جانبي -->
+          <div class="card">
+            <h3>ملخص الباقات</h3>
+            <p class="card-sub">
+              هذا ملخص سريع يساعدك على اختيار الخطة المناسبة قبل إنشاء الحساب.
+            </p>
+
+            <div class="features">
+              <div class="feature">
+                <h4>Free</h4>
+                <p>للتجربة الأولى أو إدارة جمعية صغيرة جدًا بشكل محدود.</p>
+              </div>
+
+              <div class="feature">
+                <h4>Basic</h4>
+                <p>خيار مناسب لمن يريد إدارة أكثر من جمعية بعدد أعضاء متوسط.</p>
+              </div>
+
+              <div class="feature">
+                <h4>Pro</h4>
+                <p>أفضل توازن بين السعر والسعة، ومناسب لمعظم الاستخدامات العملية.</p>
+              </div>
+
+              <div class="feature">
+                <h4>Business</h4>
+                <p>لمن يحتاج إدارة عدد أكبر من الجمعيات والأعضاء بسعة تشغيل أعلى.</p>
+              </div>
+            </div>
+
+            <div class="addons">
+              <h4>التوسعات</h4>
+              <ul>
+                <li>
+                  <strong>+5 أعضاء</strong>
+                  <span>5 دراهم</span>
+                </li>
+                <li>
+                  <strong>+1 جمعية</strong>
+                  <span>5 دراهم</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="notice">
+              بعد إنشاء الحساب يمكنك تسجيل الدخول، ثم يتم توجيهك لاحقًا حسب نوع حسابك إلى لوحة المدير أو لوحة الأدمن.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const signupForm = document.getElementById('signupForm');
+    const successBox = document.getElementById('successBox');
+
+    signupForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      successBox.classList.add('show');
+
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 2000);
+    });
+  </script>
 </body>
 </html>
