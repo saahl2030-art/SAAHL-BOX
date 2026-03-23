@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard - صندوق ساهل</title>
+  <title>لوحة مدير الجمعية - صندوق ساهل</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,18 +36,15 @@
       --blue:#2563eb;
       --blue-soft:#edf3ff;
 
+      --violet:#7c3aed;
+      --violet-soft:#f3edff;
+
       --shadow:0 12px 30px rgba(15, 40, 64, 0.08);
       --radius:18px;
-      --radius-sm:12px;
     }
 
-    *{
-      box-sizing:border-box;
-    }
-
-    html{
-      scroll-behavior:smooth;
-    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
 
     body{
       margin:0;
@@ -56,26 +53,13 @@
       color:var(--text);
     }
 
-    a{
-      color:inherit;
-      text-decoration:none;
-    }
-
-    button,
-    input,
-    select,
-    textarea{
-      font-family:"Tajawal", sans-serif;
-    }
-
-    .hidden{
-      display:none !important;
-    }
+    a{text-decoration:none;color:inherit}
+    button,input,select,textarea{font-family:"Tajawal", sans-serif}
 
     .app{
       min-height:100vh;
       display:grid;
-      grid-template-columns:280px 1fr;
+      grid-template-columns:295px 1fr;
     }
 
     .sidebar{
@@ -86,44 +70,57 @@
       top:0;
       height:100vh;
       box-shadow:var(--shadow);
-      z-index:30;
       overflow:auto;
+      z-index:20;
     }
 
     .brand{
       display:flex;
       align-items:center;
       gap:12px;
-      padding:6px 8px 18px;
+      padding:8px 8px 18px;
       border-bottom:1px solid var(--line);
       margin-bottom:18px;
     }
 
     .brand-logo{
-      width:48px;
-      height:48px;
+      width:50px;
+      height:50px;
       border-radius:16px;
       display:grid;
       place-items:center;
       background:linear-gradient(135deg,var(--primary) 0%, #46a8d8 100%);
       color:#fff;
-      font-weight:900;
       font-size:22px;
-      box-shadow:0 10px 20px rgba(31,111,165,.24);
-      flex:0 0 48px;
+      font-weight:900;
+      box-shadow:0 10px 20px rgba(31,111,165,.22);
+      flex:0 0 50px;
     }
 
     .brand h1{
       margin:0;
-      font-size:20px;
+      font-size:21px;
       font-weight:900;
       line-height:1.1;
     }
 
     .brand p{
       margin:4px 0 0;
-      font-size:13px;
       color:var(--muted);
+      font-size:13px;
+    }
+
+    .manager-chip{
+      margin-top:8px;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:var(--primary-soft);
+      color:var(--primary-dark);
+      font-size:12px;
+      font-weight:900;
     }
 
     .menu{
@@ -149,9 +146,7 @@
       transition:.2s ease;
     }
 
-    .menu-btn:hover{
-      background:var(--panel-soft);
-    }
+    .menu-btn:hover{background:var(--panel-soft)}
 
     .menu-btn.active{
       background:var(--primary-soft);
@@ -196,7 +191,7 @@
 
     .topbar h2{
       margin:0;
-      font-size:29px;
+      font-size:31px;
       font-weight:900;
     }
 
@@ -222,9 +217,7 @@
       transition:.2s ease;
     }
 
-    .btn:hover{
-      transform:translateY(-1px);
-    }
+    .btn:hover{transform:translateY(-1px)}
 
     .btn-primary{
       background:var(--primary);
@@ -232,9 +225,7 @@
       box-shadow:0 10px 20px rgba(31,111,165,.18);
     }
 
-    .btn-primary:hover{
-      background:var(--primary-dark);
-    }
+    .btn-primary:hover{background:var(--primary-dark)}
 
     .btn-soft{
       background:#fff;
@@ -242,61 +233,24 @@
       color:var(--text);
     }
 
-    .btn-soft:hover{
-      background:#f8fbff;
-    }
+    .btn-soft:hover{background:#f8fbff}
 
-    .btn-success{
-      background:var(--green);
-      color:#fff;
-    }
+    .btn-success{background:var(--green);color:#fff}
+    .btn-danger{background:var(--red);color:#fff}
+    .btn-warning{background:var(--amber);color:#fff}
 
-    .btn-danger{
-      background:var(--red);
-      color:#fff;
-    }
-
-    .btn-warning{
-      background:var(--amber);
-      color:#fff;
-    }
-
-    .page{
-      display:none;
-      animation:fade .22s ease;
-    }
-
-    .page.active{
-      display:block;
-    }
+    .page{display:none;animation:fade .22s ease}
+    .page.active{display:block}
 
     @keyframes fade{
-      from{
-        opacity:0;
-        transform:translateY(6px);
-      }
-      to{
-        opacity:1;
-        transform:translateY(0);
-      }
+      from{opacity:0;transform:translateY(6px)}
+      to{opacity:1;transform:translateY(0)}
     }
 
-    .grid{
-      display:grid;
-      gap:16px;
-    }
-
-    .grid-4{
-      grid-template-columns:repeat(4,1fr);
-    }
-
-    .grid-3{
-      grid-template-columns:repeat(3,1fr);
-    }
-
-    .grid-2{
-      grid-template-columns:repeat(2,1fr);
-    }
+    .grid{display:grid;gap:16px}
+    .grid-4{grid-template-columns:repeat(4,1fr)}
+    .grid-3{grid-template-columns:repeat(3,1fr)}
+    .grid-2{grid-template-columns:repeat(2,1fr)}
 
     .card{
       background:var(--panel);
@@ -330,6 +284,7 @@
     .stat{
       position:relative;
       overflow:hidden;
+      min-height:136px;
     }
 
     .stat::after{
@@ -378,6 +333,7 @@
     .stat-note{
       font-size:13px;
       color:var(--muted);
+      line-height:1.7;
     }
 
     .badge{
@@ -391,11 +347,70 @@
       white-space:nowrap;
     }
 
-    .badge-green{ background:var(--green-soft); color:var(--green); }
-    .badge-red{ background:var(--red-soft); color:var(--red); }
-    .badge-amber{ background:var(--amber-soft); color:var(--amber); }
-    .badge-blue{ background:var(--blue-soft); color:var(--blue); }
-    .badge-primary{ background:var(--primary-soft); color:var(--primary-dark); }
+    .badge-green{background:var(--green-soft);color:var(--green)}
+    .badge-red{background:var(--red-soft);color:var(--red)}
+    .badge-amber{background:var(--amber-soft);color:var(--amber)}
+    .badge-blue{background:var(--blue-soft);color:var(--blue)}
+    .badge-primary{background:var(--primary-soft);color:var(--primary-dark)}
+    .badge-violet{background:var(--violet-soft);color:var(--violet)}
+
+    .quick-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .mini-list,
+    .notice-list,
+    .payment-list,
+    .archive-list{
+      display:grid;
+      gap:12px;
+    }
+
+    .notice,
+    .list-item{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+    }
+
+    .notice-left{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+    }
+
+    .notice-icon{
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      flex:0 0 42px;
+      font-weight:900;
+    }
+
+    .notice h4,
+    .list-item h4{
+      margin:0 0 6px;
+      font-size:15px;
+      font-weight:900;
+    }
+
+    .notice p,
+    .list-item p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.7;
+    }
 
     .mini-cards{
       display:grid;
@@ -425,78 +440,6 @@
       line-height:1.2;
     }
 
-    .quick-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .notice-list,
-    .mini-list,
-    .archive-list,
-    .payment-list{
-      display:grid;
-      gap:12px;
-    }
-
-    .notice{
-      display:flex;
-      gap:12px;
-      align-items:flex-start;
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:14px;
-    }
-
-    .notice-icon{
-      width:42px;
-      height:42px;
-      border-radius:12px;
-      display:grid;
-      place-items:center;
-      font-weight:900;
-      flex:0 0 42px;
-    }
-
-    .notice h4{
-      margin:0 0 6px;
-      font-size:15px;
-      font-weight:900;
-    }
-
-    .notice p{
-      margin:0;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.7;
-    }
-
-    .list-item{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:14px;
-    }
-
-    .list-item h4{
-      margin:0 0 6px;
-      font-size:15px;
-      font-weight:900;
-    }
-
-    .list-item p{
-      margin:0;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.7;
-    }
-
     .table-wrap{
       width:100%;
       overflow:auto;
@@ -512,11 +455,9 @@
       background:#fff;
     }
 
-    thead{
-      background:#f7fbff;
-    }
+    thead{background:#f7fbff}
 
-    th, td{
+    th,td{
       padding:14px 12px;
       text-align:right;
       border-bottom:1px solid var(--line);
@@ -535,9 +476,7 @@
       font-weight:700;
     }
 
-    tr:hover td{
-      background:#fcfeff;
-    }
+    tr:hover td{background:#fcfeff}
 
     .actions{
       display:flex;
@@ -555,11 +494,11 @@
       white-space:nowrap;
     }
 
-    .action-blue{ background:var(--blue-soft); color:var(--blue); }
-    .action-green{ background:var(--green-soft); color:var(--green); }
-    .action-red{ background:var(--red-soft); color:var(--red); }
-    .action-amber{ background:var(--amber-soft); color:var(--amber); }
-    .action-primary{ background:var(--primary-soft); color:var(--primary-dark); }
+    .action-blue{background:var(--blue-soft);color:var(--blue)}
+    .action-green{background:var(--green-soft);color:var(--green)}
+    .action-red{background:var(--red-soft);color:var(--red)}
+    .action-amber{background:var(--amber-soft);color:var(--amber)}
+    .action-primary{background:var(--primary-soft);color:var(--primary-dark)}
 
     .filters{
       display:flex;
@@ -625,7 +564,6 @@
     .progress > span{
       display:block;
       height:100%;
-      width:0;
       border-radius:999px;
       background:linear-gradient(90deg,var(--primary),#54b0dd);
     }
@@ -696,9 +634,9 @@
       border-radius:999px;
     }
 
-    .bar-green span{ background:var(--green); }
-    .bar-red span{ background:var(--red); }
-    .bar-amber span{ background:var(--amber); }
+    .bar-green span{background:var(--green)}
+    .bar-red span{background:var(--red)}
+    .bar-amber span{background:var(--amber)}
 
     .package-grid{
       display:grid;
@@ -785,23 +723,21 @@
       line-height:1.8;
     }
 
-    @media (max-width:1200px){
+    @media (max-width:1280px){
       .grid-4,
-      .package-grid,
-      .mini-cards{
+      .mini-cards,
+      .package-grid{
         grid-template-columns:repeat(2,1fr);
       }
 
-      .chart-box,
-      .grid-3{
+      .grid-3,
+      .chart-box{
         grid-template-columns:1fr;
       }
     }
 
     @media (max-width:980px){
-      .app{
-        grid-template-columns:1fr;
-      }
+      .app{grid-template-columns:1fr}
 
       .sidebar{
         position:relative;
@@ -816,34 +752,18 @@
         grid-template-columns:repeat(2,1fr);
       }
 
-      .content{
-        padding:16px;
-      }
-
+      .content{padding:16px}
       .grid-2,
-      .form-grid{
-        grid-template-columns:1fr;
-      }
+      .form-grid{grid-template-columns:1fr}
     }
 
     @media (max-width:640px){
-      .menu{
-        grid-template-columns:1fr;
-      }
-
+      .menu{grid-template-columns:1fr}
       .grid-4,
-      .package-grid,
-      .mini-cards{
-        grid-template-columns:1fr;
-      }
-
-      .topbar h2{
-        font-size:22px;
-      }
-
-      .stat-value{
-        font-size:24px;
-      }
+      .mini-cards,
+      .package-grid{grid-template-columns:1fr}
+      .topbar h2{font-size:23px}
+      .stat-value{font-size:24px}
 
       .donut{
         width:150px;
@@ -865,39 +785,40 @@
         <div class="brand-logo">س</div>
         <div>
           <h1>صندوق ساهل</h1>
-          <p>لوحة التحكم الرئيسية</p>
+          <p>لوحة مدير الجمعية</p>
+          <div class="manager-chip">إدارة جمعية واحدة أو عدة جمعيات حسب الباقة</div>
         </div>
       </div>
 
       <div class="menu">
-        <button class="menu-btn active" data-page="admin-page">
+        <button class="menu-btn active" data-page="overview-page">
           <div class="menu-right">
-            <div class="menu-icon">📊</div>
-            <span>لوحة الإدارة العامة</span>
+            <div class="menu-icon">📋</div>
+            <span>نظرة عامة</span>
           </div>
           <span>‹</span>
         </button>
 
-        <button class="menu-btn" data-page="manager-page">
+        <button class="menu-btn" data-page="members-page">
           <div class="menu-right">
-            <div class="menu-icon">👤</div>
-            <span>صفحة مدير المجموعة</span>
+            <div class="menu-icon">👥</div>
+            <span>أعضاء الجمعية</span>
           </div>
           <span>‹</span>
         </button>
 
-        <button class="menu-btn" data-page="member-page">
+        <button class="menu-btn" data-page="requests-page">
           <div class="menu-right">
-            <div class="menu-icon">📝</div>
-            <span>صفحة العضو</span>
+            <div class="menu-icon">📨</div>
+            <span>طلبات الانضمام</span>
           </div>
           <span>‹</span>
         </button>
 
-        <button class="menu-btn" data-page="plans-page">
+        <button class="menu-btn" data-page="member-link-page">
           <div class="menu-right">
-            <div class="menu-icon">💼</div>
-            <span>الباقات</span>
+            <div class="menu-icon">🔗</div>
+            <span>رابط / صفحة العضو</span>
           </div>
           <span>‹</span>
         </button>
@@ -906,6 +827,14 @@
           <div class="menu-right">
             <div class="menu-icon">💳</div>
             <span>الدفعات</span>
+          </div>
+          <span>‹</span>
+        </button>
+
+        <button class="menu-btn" data-page="plan-page">
+          <div class="menu-right">
+            <div class="menu-icon">📦</div>
+            <span>الباقة الحالية</span>
           </div>
           <span>‹</span>
         </button>
@@ -925,14 +854,22 @@
           </div>
           <span>‹</span>
         </button>
+
+        <button class="menu-btn" data-page="notes-page">
+          <div class="menu-right">
+            <div class="menu-icon">📝</div>
+            <span>ملاحظات للإدارة</span>
+          </div>
+          <span>‹</span>
+        </button>
       </div>
     </aside>
 
     <main class="content">
       <div class="topbar">
         <div>
-          <h2 id="page-title">لوحة الإدارة العامة</h2>
-          <p>واجهة احترافية نظيفة لصندوق ساهل — UI فقط بدون قاعدة بيانات حالياً</p>
+          <h2 id="page-title">صفحة مدير المجموعة</h2>
+          <p>تحكم مباشر في الجمعية، الأعضاء، الطلبات، الدفعات، الباقة، والتنبيهات من مكان واحد.</p>
         </div>
 
         <div class="topbar-actions">
@@ -941,149 +878,14 @@
         </div>
       </div>
 
-      <!-- لوحة الإدارة العامة -->
-      <section class="page active" id="admin-page">
-        <div class="grid grid-4">
-          <div class="card stat">
-            <div class="stat-top">
-              <div class="stat-icon">👥</div>
-              <span class="badge badge-blue">نشطة 12</span>
-            </div>
-            <div class="stat-label">إجمالي الجمعيات</div>
-            <div class="stat-value">18</div>
-            <div class="stat-note">12 نشطة / 4 مكتملة / 2 متأخرة</div>
-          </div>
-
-          <div class="card stat">
-            <div class="stat-top">
-              <div class="stat-icon">🧑‍🤝‍🧑</div>
-              <span class="badge badge-primary">مدراء + أعضاء</span>
-            </div>
-            <div class="stat-label">إجمالي المستخدمين</div>
-            <div class="stat-value">146</div>
-            <div class="stat-note">24 مدير مجموعة + 122 عضو</div>
-          </div>
-
-          <div class="card stat">
-            <div class="stat-top">
-              <div class="stat-icon">📦</div>
-              <span class="badge badge-green">اشتراكات فعالة</span>
-            </div>
-            <div class="stat-label">الاشتراكات</div>
-            <div class="stat-value">61</div>
-            <div class="stat-note">Free / Basic / Pro / Business</div>
-          </div>
-
-          <div class="card stat">
-            <div class="stat-top">
-              <div class="stat-icon">💰</div>
-              <span class="badge badge-amber">هذا الشهر</span>
-            </div>
-            <div class="stat-label">الأرباح</div>
-            <div class="stat-value">4,890</div>
-            <div class="stat-note">درهم إماراتي</div>
-          </div>
-        </div>
-
-        <div class="grid grid-2" style="margin-top:16px;">
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3 class="card-title">تنبيهات مهمة</h3>
-                <p class="card-sub">أهم الحالات التي تحتاج متابعة من الإدارة</p>
-              </div>
-            </div>
-
-            <div class="notice-list">
-              <div class="notice">
-                <div class="notice-icon badge-red">!</div>
-                <div>
-                  <h4>2 جمعيات متأخرة</h4>
-                  <p>يوجد جمعيات فيها أعضاء لم يدفعوا في الوقت المحدد وتحتاج متابعة سريعة.</p>
-                </div>
-              </div>
-
-              <div class="notice">
-                <div class="notice-icon badge-amber">⏰</div>
-                <div>
-                  <h4>6 باقات ستنتهي قريباً</h4>
-                  <p>تنبيه مبكر لتجديد الاشتراك أو الترقية قبل توقف بعض الخصائص.</p>
-                </div>
-              </div>
-
-              <div class="notice">
-                <div class="notice-icon badge-blue">ℹ</div>
-                <div>
-                  <h4>4 طلبات انضمام جديدة</h4>
-                  <p>يوجد طلبات جديدة بانتظار مراجعة مدراء المجموعات.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3 class="card-title">الملاحظات والاقتراحات</h3>
-                <p class="card-sub">آخر ما تم إرساله من المستخدمين والإداريين</p>
-              </div>
-              <button class="btn btn-soft">عرض الكل</button>
-            </div>
-
-            <div class="mini-list">
-              <div class="list-item">
-                <div>
-                  <h4>اقتراح تحسين صفحة الانضمام</h4>
-                  <p>يفضل إظهار الأشهر المحجوزة بشكل أوضح ومنع الخطأ قبل الإرسال.</p>
-                </div>
-                <span class="badge badge-primary">اقتراح</span>
-              </div>
-
-              <div class="list-item">
-                <div>
-                  <h4>ملاحظة حول الإيصالات</h4>
-                  <p>بعض المستخدمين يريدون معاينة الإيصال قبل حفظه أو اعتماده.</p>
-                </div>
-                <span class="badge badge-amber">ملاحظة</span>
-              </div>
-
-              <div class="list-item">
-                <div>
-                  <h4>طلب تطوير التنبيهات</h4>
-                  <p>إضافة إرسال تذكير جماعي عبر واتساب لمدفوعات الشهر الحالي.</p>
-                </div>
-                <span class="badge badge-blue">تطوير</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-top:16px;">
-          <div class="card-head">
-            <div>
-              <h3 class="card-title">أزرار الإدارة السريعة</h3>
-              <p class="card-sub">وصول سريع إلى أهم أقسام التشغيل</p>
-            </div>
-          </div>
-
-          <div class="quick-actions">
-            <button class="btn btn-soft">الجمعيات</button>
-            <button class="btn btn-soft">المستخدمين</button>
-            <button class="btn btn-soft">الاشتراكات</button>
-            <button class="btn btn-soft">المدفوعات</button>
-            <button class="btn btn-soft">التقارير</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- صفحة مدير المجموعة -->
-      <section class="page" id="manager-page">
+      <!-- نظرة عامة -->
+      <section class="page active" id="overview-page">
         <div class="grid grid-2">
           <div class="card">
             <div class="card-head">
               <div>
                 <h3 class="card-title">معلومات الجمعية</h3>
-                <p class="card-sub">بيانات الجمعية الحالية الخاصة بمدير المجموعة</p>
+                <p class="card-sub">البيانات الأساسية الخاصة بجمعيتك الحالية</p>
               </div>
               <span class="badge badge-green">نشطة</span>
             </div>
@@ -1134,7 +936,7 @@
             <div class="card-head">
               <div>
                 <h3 class="card-title">الملخص السريع</h3>
-                <p class="card-sub">أرقام مهمة لمدير المجموعة</p>
+                <p class="card-sub">أرقام مهمة خاصة بجمعيتك الحالية</p>
               </div>
             </div>
 
@@ -1189,12 +991,15 @@
             </div>
           </div>
         </div>
+      </section>
 
-        <div class="card" style="margin-top:16px;">
+      <!-- أعضاء الجمعية -->
+      <section class="page" id="members-page">
+        <div class="card">
           <div class="card-head">
             <div>
-              <h3 class="card-title">فلترة الجدول</h3>
-              <p class="card-sub">اختيار الشهر والسنة وحالة الدفع</p>
+              <h3 class="card-title">أعضاء الجمعية</h3>
+              <p class="card-sub">إدارة أعضاء الجمعية وحالة الدفع والاستلام</p>
             </div>
 
             <div class="filters">
@@ -1249,8 +1054,6 @@
                   <td><button class="action-btn action-primary">عرض الإيصال</button></td>
                   <td>
                     <div class="actions">
-                      <button class="action-btn action-green">قبول</button>
-                      <button class="action-btn action-red">رفض</button>
                       <button class="action-btn action-blue">تعديل</button>
                       <button class="action-btn action-red">حذف</button>
                       <button class="action-btn action-amber">تغيير الشهر</button>
@@ -1273,8 +1076,6 @@
                   <td><button class="action-btn action-primary">عرض الإيصال</button></td>
                   <td>
                     <div class="actions">
-                      <button class="action-btn action-green">قبول</button>
-                      <button class="action-btn action-red">رفض</button>
                       <button class="action-btn action-blue">تعديل</button>
                       <button class="action-btn action-red">حذف</button>
                       <button class="action-btn action-amber">تغيير الشهر</button>
@@ -1297,8 +1098,6 @@
                   <td><button class="action-btn action-primary">عرض الإيصال</button></td>
                   <td>
                     <div class="actions">
-                      <button class="action-btn action-green">قبول</button>
-                      <button class="action-btn action-red">رفض</button>
                       <button class="action-btn action-blue">تعديل</button>
                       <button class="action-btn action-red">حذف</button>
                       <button class="action-btn action-amber">تغيير الشهر</button>
@@ -1312,74 +1111,52 @@
             </table>
           </div>
         </div>
+      </section>
 
-        <div class="grid grid-2" style="margin-top:16px;">
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3 class="card-title">طلبات الانضمام</h3>
-                <p class="card-sub">قائمة الانتظار قبل قبول الأعضاء في الجمعية</p>
-              </div>
-            </div>
-
-            <div class="mini-list">
-              <div class="list-item">
-                <div>
-                  <h4>فاطمة يوسف</h4>
-                  <p>الهاتف: 0501111111 — الشهر المطلوب: يوليو 2026</p>
-                </div>
-                <div class="actions">
-                  <button class="action-btn action-green">قبول</button>
-                  <button class="action-btn action-red">رفض</button>
-                </div>
-              </div>
-
-              <div class="list-item">
-                <div>
-                  <h4>عبدالله أحمد</h4>
-                  <p>الهاتف: 0502222222 — الشهر المطلوب: أغسطس 2026</p>
-                </div>
-                <div class="actions">
-                  <button class="action-btn action-green">قبول</button>
-                  <button class="action-btn action-red">رفض</button>
-                </div>
-              </div>
+      <!-- طلبات الانضمام -->
+      <section class="page" id="requests-page">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">طلبات الانضمام</h3>
+              <p class="card-sub">قائمة انتظار الأعضاء الجدد قبل القبول أو الرفض</p>
             </div>
           </div>
 
-          <div class="card">
-            <div class="card-head">
+          <div class="mini-list">
+            <div class="list-item">
               <div>
-                <h3 class="card-title">إرسال ملاحظات للإدارة</h3>
-                <p class="card-sub">قسم خاص بمدير المجموعة للتواصل مع إدارة المنصة</p>
+                <h4>فاطمة يوسف</h4>
+                <p>الهاتف: 0501111111 — الشهر المطلوب: يوليو 2026</p>
+              </div>
+              <div class="actions">
+                <button class="action-btn action-green">قبول</button>
+                <button class="action-btn action-red">رفض</button>
               </div>
             </div>
 
-            <div>
-              <label class="label">عنوان الملاحظة</label>
-              <input class="field" type="text" placeholder="مثال: مشكلة في اعتماد الإيصال">
-            </div>
-
-            <div style="margin-top:12px;">
-              <label class="label">التفاصيل</label>
-              <textarea class="textarea" rows="6" placeholder="اكتب الملاحظة أو الاقتراح هنا..."></textarea>
-            </div>
-
-            <div style="margin-top:14px;">
-              <button class="btn btn-primary">إرسال للإدارة</button>
+            <div class="list-item">
+              <div>
+                <h4>عبدالله أحمد</h4>
+                <p>الهاتف: 0502222222 — الشهر المطلوب: أغسطس 2026</p>
+              </div>
+              <div class="actions">
+                <button class="action-btn action-green">قبول</button>
+                <button class="action-btn action-red">رفض</button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- صفحة العضو -->
-      <section class="page" id="member-page">
+      <!-- رابط / صفحة العضو -->
+      <section class="page" id="member-link-page">
         <div class="grid grid-2">
           <div class="card">
             <div class="card-head">
               <div>
-                <h3 class="card-title">نموذج تسجيل العضو</h3>
-                <p class="card-sub">الطلب يدخل قائمة الانتظار ولا يتم القبول إلا من المدير</p>
+                <h3 class="card-title">رابط / صفحة العضو</h3>
+                <p class="card-sub">هذه الصفحة تمثل نموذج الانضمام الذي يصل للعضو من رابط الدعوة</p>
               </div>
               <span class="badge badge-blue">رابط الانضمام</span>
             </div>
@@ -1417,12 +1194,14 @@
               </div>
             </div>
 
-            <div style="margin-top:14px;">
+            <div style="margin-top:14px;" class="quick-actions">
               <button class="btn btn-primary">إرسال الطلب</button>
+              <button class="btn btn-soft">نسخ الرابط</button>
+              <button class="btn btn-soft">مشاركة واتساب</button>
             </div>
 
             <div class="foot-note">
-              الأشهر المحجوزة ظاهرة ومعطلة حتى لا يتم اختيارها. بعد الإرسال يدخل الطلب إلى قائمة الانتظار لدى مدير المجموعة.
+              الأشهر المحجوزة تكون معطلة ولا يمكن للعضو اختيارها. بعد الإرسال يدخل الطلب إلى قائمة الانتظار لدى مدير الجمعية.
             </div>
           </div>
 
@@ -1430,32 +1209,38 @@
             <div class="card-head">
               <div>
                 <h3 class="card-title">حالة الطلب</h3>
-                <p class="card-sub">مثال بصري لحالة انضمام العضو</p>
+                <p class="card-sub">مثال بصري لحالة انضمام العضو بعد الإرسال</p>
               </div>
             </div>
 
             <div class="notice-list">
               <div class="notice">
-                <div class="notice-icon badge-amber">⌛</div>
-                <div>
-                  <h4>بانتظار موافقة المدير</h4>
-                  <p>تم استلام طلبك بنجاح، وسيتم مراجعته قبل إضافتك إلى الجمعية.</p>
+                <div class="notice-left">
+                  <div class="notice-icon badge-amber">⌛</div>
+                  <div>
+                    <h4>بانتظار موافقة المدير</h4>
+                    <p>تم استلام الطلب بنجاح، وسيتم مراجعته قبل إضافته إلى الجمعية.</p>
+                  </div>
                 </div>
               </div>
 
               <div class="notice">
-                <div class="notice-icon badge-green">✓</div>
-                <div>
-                  <h4>تم القبول</h4>
-                  <p>سيتم إشعارك لاحقاً بالتفاصيل الخاصة بالشهر، الدفع، ودورك داخل الجمعية.</p>
+                <div class="notice-left">
+                  <div class="notice-icon badge-green">✓</div>
+                  <div>
+                    <h4>تم القبول</h4>
+                    <p>سيتم إشعار العضو لاحقًا بالتفاصيل الخاصة بالشهر، الدفع، والدور داخل الجمعية.</p>
+                  </div>
                 </div>
               </div>
 
               <div class="notice">
-                <div class="notice-icon badge-red">✕</div>
-                <div>
-                  <h4>تم الرفض</h4>
-                  <p>يمكنك إعادة التقديم لاحقاً عند توفر شهر مناسب أو مقعد شاغر.</p>
+                <div class="notice-left">
+                  <div class="notice-icon badge-red">✕</div>
+                  <div>
+                    <h4>تم الرفض</h4>
+                    <p>يمكن إعادة التقديم لاحقًا عند توفر شهر مناسب أو مقعد شاغر.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1463,8 +1248,64 @@
         </div>
       </section>
 
-      <!-- صفحة الباقات -->
-      <section class="page" id="plans-page">
+      <!-- الدفعات -->
+      <section class="page" id="payments-page">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">الدفعات</h3>
+              <p class="card-sub">جميع الدفعات الخاصة بجمعيتك الحالية</p>
+            </div>
+
+            <div class="filters">
+              <select class="select" style="width:160px;">
+                <option>كل الدفعات</option>
+                <option>مدفوعة</option>
+                <option>متأخرة</option>
+                <option>بانتظار المراجعة</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="payment-list">
+            <div class="list-item">
+              <div>
+                <h4>دفعة جمعية الأصدقاء - مارس 2026</h4>
+                <p>العضو: أحمد سالم — المبلغ: 700 درهم — تم رفع إيصال الدفع.</p>
+              </div>
+              <div class="actions">
+                <span class="badge badge-green">مدفوع</span>
+                <button class="action-btn action-primary">عرض الإيصال</button>
+              </div>
+            </div>
+
+            <div class="list-item">
+              <div>
+                <h4>دفعة جمعية الأصدقاء - مارس 2026</h4>
+                <p>العضو: سارة علي — المبلغ: 700 درهم — بانتظار اعتماد الإيصال.</p>
+              </div>
+              <div class="actions">
+                <span class="badge badge-amber">بانتظار</span>
+                <button class="action-btn action-primary">عرض الإيصال</button>
+              </div>
+            </div>
+
+            <div class="list-item">
+              <div>
+                <h4>دفعة جمعية الأصدقاء - مارس 2026</h4>
+                <p>العضو: خالد ناصر — المبلغ: 700 درهم — لم يكتمل الدفع.</p>
+              </div>
+              <div class="actions">
+                <span class="badge badge-red">متأخر</span>
+                <button class="action-btn action-primary">عرض الإيصال</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- الباقة الحالية -->
+      <section class="page" id="plan-page">
         <div class="card">
           <div class="current-plan-box">
             <div>
@@ -1493,7 +1334,7 @@
               <li>4 أعضاء</li>
               <li>بدون توسعات</li>
             </ul>
-            <button class="btn btn-soft" style="width:100%;">الباقة الحالية</button>
+            <button class="btn btn-soft" style="width:100%;">عرض</button>
           </div>
 
           <div class="plan">
@@ -1517,7 +1358,7 @@
               <li>15 عضو</li>
               <li>إدارة أفضل وسعة أعلى</li>
             </ul>
-            <button class="btn btn-primary" style="width:100%;">ترقية إلى Pro</button>
+            <button class="btn btn-primary" style="width:100%;">الباقة الحالية</button>
           </div>
 
           <div class="plan">
@@ -1564,33 +1405,39 @@
           <div class="card">
             <div class="card-head">
               <div>
-                <h3 class="card-title">منطق الباقات</h3>
-                <p class="card-sub">قواعد العرض داخل الواجهة</p>
+                <h3 class="card-title">منطق الباقة بالنسبة لمدير الجمعية</h3>
+                <p class="card-sub">كيف تؤثر الباقة على تحكمك في الجمعيات والأعضاء</p>
               </div>
             </div>
 
             <div class="notice-list">
               <div class="notice">
-                <div class="notice-icon badge-blue">1</div>
-                <div>
-                  <h4>الباقة المجانية</h4>
-                  <p>جمعية واحدة فقط و4 أعضاء كحد أقصى وبدون شراء توسعات.</p>
+                <div class="notice-left">
+                  <div class="notice-icon badge-blue">1</div>
+                  <div>
+                    <h4>الحدود التشغيلية</h4>
+                    <p>عدد الجمعيات والأعضاء المتاح لك يعتمد مباشرة على الباقة الحالية.</p>
+                  </div>
                 </div>
               </div>
 
               <div class="notice">
-                <div class="notice-icon badge-green">2</div>
-                <div>
-                  <h4>التجديد والترقية</h4>
-                  <p>التجديد يحافظ على الاستمرارية، والترقية ترفع السعة وعدد الجمعيات والأعضاء.</p>
+                <div class="notice-left">
+                  <div class="notice-icon badge-green">2</div>
+                  <div>
+                    <h4>التجديد والترقية</h4>
+                    <p>التجديد يحافظ على الاستمرارية، والترقية ترفع السعة والحدود.</p>
+                  </div>
                 </div>
               </div>
 
               <div class="notice">
-                <div class="notice-icon badge-red">3</div>
-                <div>
-                  <h4>انتهاء الاشتراك</h4>
-                  <p>إذا كانت الباقة منتهية فلا يمكن تجديد الجمعية من داخل لوحة المدير.</p>
+                <div class="notice-left">
+                  <div class="notice-icon badge-red">3</div>
+                  <div>
+                    <h4>إذا الاشتراك منتهي</h4>
+                    <p>لا يمكن تجديد الجمعية بعد اكتمال الدورة إلا بعد تفعيل الباقة أولًا.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1598,95 +1445,45 @@
         </div>
       </section>
 
-      <!-- صفحة الدفعات -->
-      <section class="page" id="payments-page">
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <h3 class="card-title">جميع الدفعات</h3>
-              <p class="card-sub">عرض حالة الدفع والإيصالات بشكل واضح</p>
-            </div>
-
-            <div class="filters">
-              <select class="select" style="width:160px;">
-                <option>كل الدفعات</option>
-                <option>مدفوعة</option>
-                <option>متأخرة</option>
-                <option>بانتظار المراجعة</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="payment-list">
-            <div class="list-item">
-              <div>
-                <h4>دفعة جمعية الأصدقاء - مارس 2026</h4>
-                <p>العضو: أحمد سالم — المبلغ: 700 درهم — تم رفع إيصال الدفع.</p>
-              </div>
-              <div class="actions">
-                <span class="badge badge-green">مدفوع</span>
-                <button class="action-btn action-primary">عرض الإيصال</button>
-              </div>
-            </div>
-
-            <div class="list-item">
-              <div>
-                <h4>دفعة جمعية الخير - مارس 2026</h4>
-                <p>العضو: سارة علي — المبلغ: 700 درهم — بانتظار اعتماد الإيصال.</p>
-              </div>
-              <div class="actions">
-                <span class="badge badge-amber">بانتظار</span>
-                <button class="action-btn action-primary">عرض الإيصال</button>
-              </div>
-            </div>
-
-            <div class="list-item">
-              <div>
-                <h4>دفعة جمعية الرواد - مارس 2026</h4>
-                <p>العضو: خالد ناصر — المبلغ: 700 درهم — لم يكتمل الدفع.</p>
-              </div>
-              <div class="actions">
-                <span class="badge badge-red">متأخر</span>
-                <button class="action-btn action-primary">عرض الإيصال</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- صفحة التنبيهات -->
+      <!-- التنبيهات -->
       <section class="page" id="alerts-page">
         <div class="grid grid-2">
           <div class="card">
             <div class="card-head">
               <div>
                 <h3 class="card-title">تنبيهات الجمعية</h3>
-                <p class="card-sub">الحالات التي تحتاج انتباه المدير أو الإدارة</p>
+                <p class="card-sub">الحالات التي تحتاج انتباه مدير الجمعية</p>
               </div>
             </div>
 
             <div class="notice-list">
               <div class="notice">
-                <div class="notice-icon badge-red">!</div>
-                <div>
-                  <h4>متأخرات دفع</h4>
-                  <p>3 أعضاء لم يكملوا السداد حتى الآن ويحتاجون متابعة أو تذكير.</p>
+                <div class="notice-left">
+                  <div class="notice-icon badge-red">!</div>
+                  <div>
+                    <h4>متأخرات دفع</h4>
+                    <p>3 أعضاء لم يكملوا السداد حتى الآن ويحتاجون متابعة أو تذكير.</p>
+                  </div>
                 </div>
               </div>
 
               <div class="notice">
-                <div class="notice-icon badge-amber">⏳</div>
-                <div>
-                  <h4>اقتراب موعد الدفع</h4>
-                  <p>5 أعضاء لديهم استحقاق خلال 3 أيام من الآن.</p>
+                <div class="notice-left">
+                  <div class="notice-icon badge-amber">⏳</div>
+                  <div>
+                    <h4>اقتراب موعد الدفع</h4>
+                    <p>5 أعضاء لديهم استحقاق خلال 3 أيام من الآن.</p>
+                  </div>
                 </div>
               </div>
 
               <div class="notice">
-                <div class="notice-icon badge-blue">📦</div>
-                <div>
-                  <h4>انتهاء الباقة قريباً</h4>
-                  <p>الباقة الحالية ستنتهي قريباً ويجب التجديد لتفادي تعطّل بعض الخصائص.</p>
+                <div class="notice-left">
+                  <div class="notice-icon badge-blue">📦</div>
+                  <div>
+                    <h4>انتهاء الباقة قريباً</h4>
+                    <p>الباقة الحالية ستنتهي قريباً ويجب التجديد لتفادي تعطّل بعض الخصائص.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1696,32 +1493,38 @@
             <div class="card-head">
               <div>
                 <h3 class="card-title">منطق انتهاء الجمعية</h3>
-                <p class="card-sub">عرض بصري للحالة بعد اكتمال الدورة</p>
+                <p class="card-sub">ماذا يحدث بعد اكتمال الدورة</p>
               </div>
             </div>
 
             <div class="notice-list">
               <div class="notice">
-                <div class="notice-icon badge-green">✓</div>
-                <div>
-                  <h4>عند انتهاء الدورة</h4>
-                  <p>تتحول حالة الجمعية إلى <strong>completed</strong> وتظهر خيارات الإدارة النهائية.</p>
+                <div class="notice-left">
+                  <div class="notice-icon badge-green">✓</div>
+                  <div>
+                    <h4>عند انتهاء الدورة</h4>
+                    <p>تتحول حالة الجمعية إلى <strong>completed</strong> وتظهر خيارات الإدارة النهائية.</p>
+                  </div>
                 </div>
               </div>
 
               <div class="notice">
-                <div class="notice-icon badge-amber">↻</div>
-                <div>
-                  <h4>خيارات ما بعد الاكتمال</h4>
-                  <p>يظهر خياران واضحان: <strong>تجديد الجمعية</strong> أو <strong>إيقاف الجمعية</strong>.</p>
+                <div class="notice-left">
+                  <div class="notice-icon badge-amber">↻</div>
+                  <div>
+                    <h4>خيارات ما بعد الاكتمال</h4>
+                    <p>يظهر خياران واضحان: <strong>تجديد الجمعية</strong> أو <strong>إيقاف الجمعية</strong>.</p>
+                  </div>
                 </div>
               </div>
 
               <div class="notice">
-                <div class="notice-icon badge-red">⛔</div>
-                <div>
-                  <h4>إذا الاشتراك منتهي</h4>
-                  <p>لا يمكن تنفيذ التجديد إلا بعد تفعيل الباقة أولاً.</p>
+                <div class="notice-left">
+                  <div class="notice-icon badge-red">⛔</div>
+                  <div>
+                    <h4>إذا الاشتراك منتهي</h4>
+                    <p>لا يمكن تنفيذ التجديد إلا بعد تفعيل الباقة أولًا.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1734,13 +1537,13 @@
         </div>
       </section>
 
-      <!-- صفحة الأرشيف -->
+      <!-- الأرشيف -->
       <section class="page" id="archive-page">
         <div class="card">
           <div class="card-head">
             <div>
-              <h3 class="card-title">الأرشيف</h3>
-              <p class="card-sub">الجمعيات المكتملة أو المتوقفة</p>
+              <h3 class="card-title">أرشيف الجمعية</h3>
+              <p class="card-sub">الجمعيات المكتملة أو المتوقفة التابعة لحسابك</p>
             </div>
           </div>
 
@@ -1759,24 +1562,40 @@
             <div class="list-item">
               <div>
                 <h4>جمعية الموظفين</h4>
-                <p>الحالة: متوقفة — تم إيقافها من المدير بعد انتهاء الدورة.</p>
+                <p>الحالة: متوقفة — تم إيقافها بعد انتهاء الدورة.</p>
               </div>
               <div class="actions">
                 <span class="badge badge-red">متوقفة</span>
                 <button class="action-btn action-primary">عرض التفاصيل</button>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <div class="list-item">
-              <div>
-                <h4>جمعية الرواد</h4>
-                <p>الحالة: مكتملة — لا يوجد عليها نشاط حالي ويمكن إعادة تفعيلها بتجديد جديد.</p>
-              </div>
-              <div class="actions">
-                <span class="badge badge-blue">مكتملة</span>
-                <button class="action-btn action-primary">عرض التفاصيل</button>
-              </div>
+      <!-- ملاحظات للإدارة -->
+      <section class="page" id="notes-page">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">إرسال ملاحظات للإدارة</h3>
+              <p class="card-sub">قسم خاص بمدير الجمعية للتواصل مع إدارة المنصة</p>
             </div>
+          </div>
+
+          <div>
+            <label class="label">عنوان الملاحظة</label>
+            <input class="field" type="text" placeholder="مثال: مشكلة في اعتماد الإيصال">
+          </div>
+
+          <div style="margin-top:12px;">
+            <label class="label">التفاصيل</label>
+            <textarea class="textarea" rows="7" placeholder="اكتب الملاحظة أو الاقتراح هنا..."></textarea>
+          </div>
+
+          <div style="margin-top:14px;" class="quick-actions">
+            <button class="btn btn-primary">إرسال للإدارة</button>
+            <button class="btn btn-soft">حفظ كمسودة</button>
           </div>
         </div>
       </section>
@@ -1789,13 +1608,15 @@
     const pageTitle = document.getElementById('page-title');
 
     const titles = {
-      'admin-page': 'لوحة الإدارة العامة',
-      'manager-page': 'صفحة مدير المجموعة',
-      'member-page': 'صفحة العضو',
-      'plans-page': 'الباقات',
+      'overview-page': 'صفحة مدير المجموعة',
+      'members-page': 'أعضاء الجمعية',
+      'requests-page': 'طلبات الانضمام',
+      'member-link-page': 'رابط / صفحة العضو',
       'payments-page': 'الدفعات',
+      'plan-page': 'الباقة الحالية',
       'alerts-page': 'التنبيهات',
-      'archive-page': 'الأرشيف'
+      'archive-page': 'الأرشيف',
+      'notes-page': 'ملاحظات للإدارة'
     };
 
     menuButtons.forEach((btn) => {
@@ -1811,7 +1632,7 @@
         const nextPage = document.getElementById(target);
         if (nextPage) {
           nextPage.classList.add('active');
-          pageTitle.textContent = titles[target] || 'Dashboard';
+          pageTitle.textContent = titles[target] || 'لوحة مدير الجمعية';
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       });
