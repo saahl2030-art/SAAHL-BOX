@@ -1616,6 +1616,12 @@ if (!user) {
   window.location.href = "login.html"
 } else {
   console.log("User:", user)
+
+  const managerNameEl = document.getElementById("manager-name")
+
+  if (managerNameEl) {
+    managerNameEl.textContent = user.email
+  }
 }
 </script>
   <script>
