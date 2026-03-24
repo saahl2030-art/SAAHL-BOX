@@ -1612,17 +1612,43 @@
   window.supabase = supabase
   const { data: { user }, error } = await supabase.auth.getUser()
 
+
 if (!user) {
   window.location.href = "login.html"
 } else {
   console.log("User:", user)
 
+  const { data: profile, error: profileError } = await supabase
+    .from('الملفات الشخصية')
+    .select('*')
+    .eq('user_id', user.id)
+    .single()
+
+  if (profile) {
+    console.log("Profile:", profile)
+
   const managerNameEl = document.getElementById("manager-name")
 
-  if (managerNameEl) {
-    managerNameEl.textContent = user.email
+ if (managerNameEl && profile.full_name) {
+   managerNameEl.textContent = profile.full_name
+      }
   }
 }
+const { data: society, error: societyError } = await supabase
+  .from('الجمعيات')
+  .select('*')
+  .eq('manager_id', user.id)
+  .single()
+
+if (society) {
+  console.log("Society:", society)
+
+  const societyNameEl = document.getElementById("society-name")
+
+  if (societyNameEl) {
+    societyNameEl.textContent = society.name
+  }
+}  
 </script>
   <script>
     const menuButtons = document.querySelectorAll('.menu-btn');
