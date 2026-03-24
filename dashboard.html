@@ -1601,7 +1601,16 @@
       </section>
     </main>
   </div>
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
+  const SUPABASE_URL = 'ضع_الرابط'
+  const SUPABASE_ANON_KEY = 'ضع_المفتاح'
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+  window.supabase = supabase
+</script>
   <script>
     const menuButtons = document.querySelectorAll('.menu-btn');
     const pages = document.querySelectorAll('.page');
