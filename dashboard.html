@@ -872,10 +872,11 @@
           <p>تحكم مباشر في الجمعية، الأعضاء، الطلبات، الدفعات، الباقة، والتنبيهات من مكان واحد.</p>
         </div>
 
-        <div class="topbar-actions">
-          <button class="btn btn-soft">الإعدادات</button>
-          <button class="btn btn-primary">+ إنشاء جمعية</button>
-        </div>
+      <div class="topbar-actions">
+  <button class="btn btn-soft">الإعدادات</button>
+  <button class="btn btn-primary" id="create-society-btn">+ إنشاء جمعية</button>
+  <span id="create-society-status"></span>
+</div>
       </div>
 
       <!-- نظرة عامة -->
@@ -1646,11 +1647,35 @@ if (society) {
   const societyNameEl = document.getElementById("society-name")
 
   if (societyNameEl) {
-    societyNameEl.textContent = society['الاسم']
-  }
+    const createBtn = document.getElementById("create-society-btn")
+const statusEl = document.getElementById("create-society-status")
+
+if (createBtn) {
+  createBtn.addEventListener("click", async () => {
+    const name = prompt("اكتب اسم الجمعية")
+
+    if (!name) return
+
+    statusEl.textContent = "جاري الإنشاء..."
+
+    const { data, error } = await supabase
+      .from('الجمعيات')
+      .insert([
+        {
+          'الاسم': name,
+          'manager_user_id': user.id
+        }
+      ])
+
+    if (error) {
+      console.error(error)
+      statusEl.textContent = "خطأ في إنشاء الجمعية"
+    } else {
+      statusEl.textContent = "تم إنشاء الجمعية بنجاح"
+      location.reload()
+    }
+  })
 }
-  }
-}  
 </script>
   <script>
     const menuButtons = document.querySelectorAll('.menu-btn');
