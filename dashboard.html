@@ -1637,7 +1637,7 @@ if (!user) {
 const { data: society, error: societyError } = await supabase
   .from('الجمعيات')
   .select('*')
-  .eq('manager_id', user.id)
+  .eq('manager_user_id', user.id)
   .single()
 
 if (society) {
@@ -1646,7 +1646,9 @@ if (society) {
   const societyNameEl = document.getElementById("society-name")
 
   if (societyNameEl) {
-    societyNameEl.textContent = society.name
+    societyNameEl.textContent = society['الاسم']
+  }
+}
   }
 }  
 </script>
