@@ -1604,8 +1604,8 @@
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-  const SUPABASE_URL = 'ضع_الرابط'
-  const SUPABASE_ANON_KEY = 'ضع_المفتاح'
+  const SUPABASE_URL = qxyrpnexybxmfmtrnzpg'
+  const SUPABASE_ANON_KEY = 'sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT'
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
@@ -1615,7 +1615,13 @@
     const menuButtons = document.querySelectorAll('.menu-btn');
     const pages = document.querySelectorAll('.page');
     const pageTitle = document.getElementById('page-title');
+const { data: { user }, error } = await supabase.auth.getUser()
 
+if (!user) {
+  window.location.href = "login.html"
+} else {
+  console.log("User:", user)
+}
     const titles = {
       'overview-page': 'صفحة مدير المجموعة',
       'members-page': 'أعضاء الجمعية',
