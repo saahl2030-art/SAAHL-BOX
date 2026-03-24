@@ -737,7 +737,7 @@
         }
 
         const { error: profileError } = await supabase
-          .from('الملفات الشخصية')
+          .from('profiles')
           .insert([
             {
               user_id: userId,
@@ -756,7 +756,7 @@
 
         if (planMeta) {
           const { data: subscriptionData, error: subscriptionError } = await supabase
-            .from('الاشتراكات')
+            .from('subscriptions')
             .insert([
               {
                 name: selectedPlan,
@@ -786,7 +786,7 @@
         }
 
         const { error: societyError } = await supabase
-          .from('الجمعيات')
+          .from('societies')
           .insert([societyPayload])
 
         if (societyError) {
