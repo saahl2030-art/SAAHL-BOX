@@ -16,26 +16,19 @@
       --panel-soft:#f8fbff;
       --line:#dfe8f1;
       --line-dark:#cfdbe7;
-
       --text:#16324a;
       --muted:#6e8498;
-
       --primary:#1f6fa5;
       --primary-dark:#185781;
       --primary-soft:#eaf5fd;
-
       --green:#138a59;
       --green-soft:#e8f8f1;
-
       --amber:#b7791f;
       --amber-soft:#fff5e4;
-
       --red:#c53b3b;
       --red-soft:#fdeeee;
-
       --blue:#2563eb;
       --blue-soft:#edf3ff;
-
       --shadow:0 12px 30px rgba(15, 40, 64, 0.08);
       --radius:22px;
     }
@@ -331,26 +324,26 @@
     .tag-green{background:var(--green-soft);color:var(--green)}
     .tag-amber{background:var(--amber-soft);color:var(--amber)}
 
-    .features{
+    .summary-list{
       margin-top:18px;
       display:grid;
       gap:12px;
     }
 
-    .feature{
+    .summary-item{
       border:1px solid var(--line);
       border-radius:16px;
       padding:14px;
       background:#fff;
     }
 
-    .feature h4{
+    .summary-item h4{
       margin:0 0 6px;
       font-size:16px;
       font-weight:900;
     }
 
-    .feature p{
+    .summary-item p{
       margin:0;
       color:var(--muted);
       font-size:14px;
@@ -416,20 +409,35 @@
       line-height:1.8;
     }
 
+    .error-box,
     .success-box{
       display:none;
       margin-top:16px;
       padding:14px;
       border-radius:16px;
-      background:var(--green-soft);
-      color:var(--green);
       font-size:14px;
       font-weight:900;
       line-height:1.8;
     }
 
+    .error-box{
+      background:var(--red-soft);
+      color:var(--red);
+    }
+
+    .success-box{
+      background:var(--green-soft);
+      color:var(--green);
+    }
+
+    .error-box.show,
     .success-box.show{
       display:block;
+    }
+
+    .loading{
+      opacity:.7;
+      pointer-events:none;
     }
 
     @media (max-width:980px){
@@ -470,7 +478,7 @@
           <div class="brand-logo">س</div>
           <div>
             <h1>صندوق ساهل</h1>
-            <p>إنشاء حساب جديد</p>
+            <p>إنشاء حساب مدير جمعية</p>
           </div>
         </div>
 
@@ -486,10 +494,10 @@
   <main>
     <section class="hero">
       <div class="container">
-        <div class="hero-badge">ابدأ الآن بخطة واضحة ومناسبة</div>
-        <h2>أنشئ حسابك واختر الباقة الأنسب لك</h2>
+        <div class="hero-badge">ابدأ الآن بخطة واضحة</div>
+        <h2>أنشئ حسابك وأنشئ جمعيتك من البداية</h2>
         <p>
-          ابدأ مجانًا أو اختر الباقة التي تناسب عدد جمعياتك وأعضائك، ثم طوّر حسابك لاحقًا حسب احتياجك.
+          هذه الصفحة مخصصة لمدير الجمعية فقط. اختر الباقة المناسبة، أدخل اسم الجمعية، ثم أنشئ الحساب ليتم ربط كل شيء بحسابك مباشرة.
         </p>
       </div>
     </section>
@@ -497,41 +505,37 @@
     <section class="layout">
       <div class="container">
         <div class="layout-grid">
-          <!-- النموذج -->
           <div class="card">
-            <h3>بيانات الحساب</h3>
+            <h3>بيانات الحساب والجمعية</h3>
             <p class="card-sub">
-              أدخل بياناتك الأساسية ثم اختر الباقة المناسبة. بعد إنشاء الحساب سيتم تحويلك إلى صفحة تسجيل الدخول.
+              بعد إنشاء الحساب سيتم حفظ بياناتك في النظام، وإنشاء الجمعية وربطها بحسابك.
             </p>
 
             <form id="signupForm">
               <div class="form-grid">
                 <div>
-                  <label class="label">الاسم الكامل</label>
+                  <label class="label" for="fullName">الاسم الكامل</label>
                   <input class="field" type="text" id="fullName" placeholder="اكتب الاسم الكامل" required>
                 </div>
 
                 <div>
-                  <label class="label">رقم الهاتف</label>
+                  <label class="label" for="phone">رقم الهاتف</label>
                   <input class="field" type="tel" id="phone" placeholder="05xxxxxxxx" required>
                 </div>
 
                 <div>
-                  <label class="label">البريد الإلكتروني</label>
+                  <label class="label" for="email">البريد الإلكتروني</label>
                   <input class="field" type="email" id="email" placeholder="example@email.com" required>
                 </div>
 
                 <div>
-                  <label class="label">كلمة المرور</label>
-                  <input class="field" type="password" id="password" placeholder="********" required>
+                  <label class="label" for="password">كلمة المرور</label>
+                  <input class="field" type="password" id="password" placeholder="********" required minlength="6">
                 </div>
 
                 <div class="field-wrap full">
-                  <label class="label">نوع الحساب</label>
-                  <select class="select" id="accountType" required>
-                    <option value="manager">مدير جمعية</option>
-                    <option value="admin">أدمن عام</option>
-                  </select>
+                  <label class="label" for="societyName">اسم الجمعية</label>
+                  <input class="field" type="text" id="societyName" placeholder="مثال: جمعية ساهل الأولى" required>
                 </div>
               </div>
 
@@ -594,46 +598,44 @@
               </div>
 
               <div class="notice">
-                ملاحظة: الباقة المجانية تسمح بجمعية واحدة فقط و4 أعضاء كحد أقصى، ولا تسمح بشراء توسعات.
+                الباقة المجانية تسمح بجمعية واحدة فقط. بعد التسجيل يمكن تطوير الباقة لاحقًا من داخل النظام.
               </div>
 
               <div class="actions">
-                <button type="submit" class="btn btn-primary">إنشاء الحساب</button>
+                <button type="submit" class="btn btn-primary" id="submitBtn">إنشاء الحساب</button>
                 <a href="login.html" class="btn btn-soft">لدي حساب بالفعل</a>
               </div>
 
-              <div class="success-box" id="successBox">
-                تم إنشاء الحساب بنجاح. سيتم تحويلك الآن إلى صفحة تسجيل الدخول...
-              </div>
+              <div class="error-box" id="errorBox"></div>
+              <div class="success-box" id="successBox"></div>
             </form>
           </div>
 
-          <!-- ملخص جانبي -->
           <div class="card">
-            <h3>ملخص الباقات</h3>
+            <h3>ملخص مناسب وسريع</h3>
             <p class="card-sub">
-              هذا ملخص سريع يساعدك على اختيار الخطة المناسبة قبل إنشاء الحساب.
+              هنا توضيح مختصر فقط، بدون تكرار مشتت، لمساعدتك على اختيار الباقة بسرعة.
             </p>
 
-            <div class="features">
-              <div class="feature">
+            <div class="summary-list">
+              <div class="summary-item">
                 <h4>Free</h4>
-                <p>للتجربة الأولى أو إدارة جمعية صغيرة جدًا بشكل محدود.</p>
+                <p>خيار بداية وتجربة أولى لإدارة جمعية واحدة صغيرة.</p>
               </div>
 
-              <div class="feature">
+              <div class="summary-item">
                 <h4>Basic</h4>
-                <p>خيار مناسب لمن يريد إدارة أكثر من جمعية بعدد أعضاء متوسط.</p>
+                <p>مناسب لمن يدير أكثر من جمعية ويريد سعة أولية عملية.</p>
               </div>
 
-              <div class="feature">
+              <div class="summary-item">
                 <h4>Pro</h4>
-                <p>أفضل توازن بين السعر والسعة، ومناسب لمعظم الاستخدامات العملية.</p>
+                <p>أفضل توازن بين السعر والسعة لمعظم مدراء الجمعيات.</p>
               </div>
 
-              <div class="feature">
+              <div class="summary-item">
                 <h4>Business</h4>
-                <p>لمن يحتاج إدارة عدد أكبر من الجمعيات والأعضاء بسعة تشغيل أعلى.</p>
+                <p>مناسب للتشغيل الأكبر وإدارة عدد أعلى من الجمعيات والأعضاء.</p>
               </div>
             </div>
 
@@ -652,7 +654,7 @@
             </div>
 
             <div class="notice">
-              بعد إنشاء الحساب يمكنك تسجيل الدخول، ثم يتم توجيهك لاحقًا حسب نوع حسابك إلى لوحة المدير أو لوحة الأدمن.
+              بعد إنشاء الحساب بنجاح سيتم نقلك إلى صفحة تسجيل الدخول، ثم إلى لوحة المدير المرتبطة بجمعيتك.
             </div>
           </div>
         </div>
@@ -660,19 +662,153 @@
     </section>
   </main>
 
-  <script>
-    const signupForm = document.getElementById('signupForm');
-    const successBox = document.getElementById('successBox');
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-    signupForm.addEventListener('submit', function(e) {
-      e.preventDefault();
+    const SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+    const SUPABASE_ANON_KEY = 'sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT'
 
-      successBox.classList.add('show');
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-      setTimeout(() => {
-        window.location.href = 'login.html';
-      }, 2000);
-    });
+    const signupForm = document.getElementById('signupForm')
+    const submitBtn = document.getElementById('submitBtn')
+    const successBox = document.getElementById('successBox')
+    const errorBox = document.getElementById('errorBox')
+
+    const planConfig = {
+      Free: { price: 0, societies_limit: 1, members_limit: 4 },
+      Basic: { price: 39, societies_limit: 3, members_limit: 10 },
+      Pro: { price: 69, societies_limit: 6, members_limit: 15 },
+      Business: { price: 99, societies_limit: 10, members_limit: 25 }
+    }
+
+    function showError(message) {
+      errorBox.textContent = message
+      errorBox.classList.add('show')
+      successBox.classList.remove('show')
+    }
+
+    function showSuccess(message) {
+      successBox.textContent = message
+      successBox.classList.add('show')
+      errorBox.classList.remove('show')
+    }
+
+    function clearMessages() {
+      errorBox.classList.remove('show')
+      successBox.classList.remove('show')
+      errorBox.textContent = ''
+      successBox.textContent = ''
+    }
+
+    signupForm.addEventListener('submit', async function(e) {
+      e.preventDefault()
+      clearMessages()
+
+      const fullName = document.getElementById('fullName').value.trim()
+      const phone = document.getElementById('phone').value.trim()
+      const email = document.getElementById('email').value.trim()
+      const password = document.getElementById('password').value.trim()
+      const societyName = document.getElementById('societyName').value.trim()
+      const selectedPlan = document.querySelector('input[name="plan"]:checked')?.value || 'Free'
+
+      if (!fullName || !phone || !email || !password || !societyName) {
+        showError('أكمل جميع الحقول المطلوبة.')
+        return
+      }
+
+      submitBtn.classList.add('loading')
+      submitBtn.disabled = true
+
+      try {
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password
+        })
+
+        if (signUpError) {
+          throw signUpError
+        }
+
+        const userId = signUpData?.user?.id
+
+        if (!userId) {
+          throw new Error('لم يتم الحصول على معرف المستخدم بعد إنشاء الحساب.')
+        }
+
+        const { error: profileError } = await supabase
+          .from('الملفات الشخصية')
+          .insert([
+            {
+              user_id: userId,
+              full_name: fullName,
+              phone: phone,
+              role: 'manager'
+            }
+          ])
+
+        if (profileError) {
+          throw profileError
+        }
+
+        let subscriptionId = null
+        const planMeta = planConfig[selectedPlan]
+
+        if (planMeta) {
+          const { data: subscriptionData, error: subscriptionError } = await supabase
+            .from('الاشتراكات')
+            .insert([
+              {
+                name: selectedPlan,
+                price: planMeta.price,
+                societies_limit: planMeta.societies_limit,
+                members_limit: planMeta.members_limit,
+                status: 'active'
+              }
+            ])
+            .select()
+            .single()
+
+          if (subscriptionError) {
+            console.error('Subscription creation failed:', subscriptionError)
+          } else if (subscriptionData) {
+            subscriptionId = subscriptionData.uid || subscriptionData.id || null
+          }
+        }
+
+        const societyPayload = {
+          'الاسم': societyName,
+          manager_user_id: userId
+        }
+
+        if (subscriptionId) {
+          societyPayload.subscription_id = subscriptionId
+        }
+
+        const { error: societyError } = await supabase
+          .from('الجمعيات')
+          .insert([societyPayload])
+
+        if (societyError) {
+          throw societyError
+        }
+
+        showSuccess('تم إنشاء الحساب والجمعية بنجاح. سيتم تحويلك الآن إلى تسجيل الدخول.')
+
+        signupForm.reset()
+
+        setTimeout(() => {
+          window.location.href = 'login.html'
+        }, 1800)
+
+      } catch (err) {
+        console.error(err)
+        showError(err.message || 'حدث خطأ أثناء إنشاء الحساب.')
+      } finally {
+        submitBtn.classList.remove('loading')
+        submitBtn.disabled = false
+      }
+    })
   </script>
 </body>
 </html>
