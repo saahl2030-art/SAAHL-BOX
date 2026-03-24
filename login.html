@@ -11,10 +11,17 @@
   <style>
     :root{
       --primary:#1f6fa5;
+      --primary-dark:#185781;
       --bg:#f4f8fc;
       --line:#dfe8f1;
       --text:#16324a;
       --muted:#6e8498;
+      --panel:#ffffff;
+      --green:#138a59;
+      --green-soft:#e8f8f1;
+      --red:#c53b3b;
+      --red-soft:#fdeeee;
+      --shadow:0 15px 40px rgba(0,0,0,0.08);
     }
 
     *{box-sizing:border-box}
@@ -27,15 +34,17 @@
       align-items:center;
       justify-content:center;
       min-height:100vh;
+      padding:20px;
+      color:var(--text);
     }
 
     .box{
       width:100%;
       max-width:420px;
-      background:#fff;
+      background:var(--panel);
       padding:24px;
       border-radius:20px;
-      box-shadow:0 15px 40px rgba(0,0,0,0.08);
+      box-shadow:var(--shadow);
       border:1px solid var(--line);
     }
 
@@ -52,20 +61,6 @@
       font-size:14px;
     }
 
-    .field{
-      width:100%;
-      padding:13px;
-      border-radius:12px;
-      border:1px solid var(--line);
-      margin-bottom:12px;
-      font-size:14px;
-    }
-
-    .field:focus{
-      outline:none;
-      border-color:var(--primary);
-    }
-
     .type-box{
       display:flex;
       gap:10px;
@@ -77,16 +72,28 @@
       padding:12px;
       border-radius:12px;
       border:1px solid var(--line);
-      cursor:pointer;
       text-align:center;
       font-weight:900;
-      background:#fff;
-    }
-
-    .type-btn.active{
       background:var(--primary);
       color:#fff;
       border-color:var(--primary);
+    }
+
+    .field{
+      width:100%;
+      padding:13px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      margin-bottom:12px;
+      font-size:14px;
+      background:#fff;
+      color:var(--text);
+    }
+
+    .field:focus{
+      outline:none;
+      border-color:var(--primary);
+      box-shadow:0 0 0 4px rgba(31,111,165,.08);
     }
 
     .btn{
@@ -99,44 +106,92 @@
       font-size:15px;
       font-weight:900;
       cursor:pointer;
+      transition:.2s ease;
     }
 
     .btn:hover{
-      opacity:.9;
+      background:var(--primary-dark);
+    }
+
+    .btn:disabled{
+      opacity:.7;
+      cursor:not-allowed;
     }
 
     .links{
       margin-top:14px;
       display:flex;
       justify-content:space-between;
+      gap:12px;
       font-size:13px;
+      flex-wrap:wrap;
     }
 
     .links a{
       color:var(--primary);
       font-weight:700;
+      text-decoration:none;
     }
 
+    .error-box,
+    .success-box{
+      display:none;
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius:14px;
+      font-size:14px;
+      font-weight:700;
+      line-height:1.8;
+    }
+
+    .error-box{
+      background:var(--red-soft);
+      color:var(--red);
+    }
+
+    .success-box{
+      background:var(--green-soft);
+      color:var(--green);
+    }
+
+    .error-box.show,
+    .success-box.show{
+      display:block;
+    }
   </style>
 </head>
 <body>
 
   <div class="box">
     <h2>تسجيل الدخول</h2>
-    <p>أدخل بياناتك للوصول إلى حسابك</p>
+    <p>أدخل بريدك الإلكتروني وكلمة المرور للوصول إلى لوحة مدير الجمعية</p>
 
-    <!-- اختيار نوع الحساب -->
     <div class="type-box">
-      <div class="type-btn active" id="managerBtn">مدير الجمعية</div>
-
+      <div class="type-btn">مدير الجمعية</div>
     </div>
 
     <form id="loginForm">
-      <input class="field" type="text" placeholder="البريد أو رقم الهاتف" required>
-      <input class="field" type="password" placeholder="كلمة المرور" required>
+      <input
+        class="field"
+        id="email"
+        type="email"
+        placeholder="البريد الإلكتروني"
+        required
+      >
 
-      <button class="btn" type="submit">دخول</button>
+      <input
+        class="field"
+        id="password"
+        type="password"
+        placeholder="كلمة المرور"
+        required
+      >
+
+      <button class="btn" id="loginBtn" type="submit">دخول</button>
     </form>
+
+    <div class="error-box" id="errorBox"></div>
+    <div class="success-box" id="successBox"></div>
 
     <div class="links">
       <a href="auth.html">إنشاء حساب</a>
@@ -144,34 +199,96 @@
     </div>
   </div>
 
-  <script>
-    let accountType = "manager";
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-    const managerBtn = document.getElementById("managerBtn");
-    const adminBtn = document.getElementById("adminBtn");
+    const SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+    const SUPABASE_ANON_KEY = 'sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT'
 
-    managerBtn.onclick = () => {
-      accountType = "manager";
-      managerBtn.classList.add("active");
-      adminBtn.classList.remove("active");
-    };
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-    adminBtn.onclick = () => {
-      accountType = "admin";
-      adminBtn.classList.add("active");
-      managerBtn.classList.remove("active");
-    };
+    const loginForm = document.getElementById('loginForm')
+    const loginBtn = document.getElementById('loginBtn')
+    const errorBox = document.getElementById('errorBox')
+    const successBox = document.getElementById('successBox')
 
-    document.getElementById("loginForm").addEventListener("submit", function(e){
-      e.preventDefault();
+    function showError(message) {
+      errorBox.textContent = message
+      errorBox.classList.add('show')
+      successBox.classList.remove('show')
+    }
 
-      // توجيه حسب نوع الحساب
-      if(accountType === "admin"){
-        window.location.href = "admin.html";
-      } else {
-        window.location.href = "dashboard.html";
+    function showSuccess(message) {
+      successBox.textContent = message
+      successBox.classList.add('show')
+      errorBox.classList.remove('show')
+    }
+
+    function clearMessages() {
+      errorBox.classList.remove('show')
+      successBox.classList.remove('show')
+      errorBox.textContent = ''
+      successBox.textContent = ''
+    }
+
+    loginForm.addEventListener('submit', async function(e) {
+      e.preventDefault()
+      clearMessages()
+
+      const email = document.getElementById('email').value.trim()
+      const password = document.getElementById('password').value
+
+      if (!email || !password) {
+        showError('أدخل البريد الإلكتروني وكلمة المرور.')
+        return
       }
-    });
+
+      loginBtn.disabled = true
+      loginBtn.textContent = 'جاري الدخول...'
+
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        })
+
+        if (error) {
+          throw error
+        }
+
+        if (!data.user) {
+          throw new Error('تعذر تسجيل الدخول.')
+        }
+
+        const { data: profile, error: profileError } = await supabase
+          .from('الملفات الشخصية')
+          .select('*')
+          .eq('user_id', data.user.id)
+          .maybeSingle()
+
+        if (profileError) {
+          console.error('Profile fetch error:', profileError)
+        }
+
+        if (profile && profile.role && profile.role !== 'manager') {
+          await supabase.auth.signOut()
+          throw new Error('هذا الدخول مخصص لمدير الجمعية فقط.')
+        }
+
+        showSuccess('تم تسجيل الدخول بنجاح. جاري تحويلك...')
+
+        setTimeout(() => {
+          window.location.href = 'dashboard.html'
+        }, 900)
+
+      } catch (err) {
+        console.error(err)
+        showError(err.message || 'فشل تسجيل الدخول.')
+      } finally {
+        loginBtn.disabled = false
+        loginBtn.textContent = 'دخول'
+      }
+    })
   </script>
 
 </body>
