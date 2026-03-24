@@ -1,7 +1,7 @@
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-  const SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+  const SUPABASE_URL =  'https://qxyrpnexybxmfmtrnzpg.supabase.co
   const SUPABASE_ANON_KEY = 'sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT'
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
@@ -46,7 +46,6 @@
       if (managerNameEl) {
         managerNameEl.textContent =
           profile.full_name ||
-          profile['الاسم الكامل'] ||
           profile.name ||
           user.email ||
           '...'
@@ -88,7 +87,7 @@
           .from('الجمعيات')
           .insert([
             {
-              'الاسم': name.trim(),
+              'name': name.trim(),
               'manager_user_id': user.id
             }
           ])
