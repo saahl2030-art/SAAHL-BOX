@@ -261,21 +261,15 @@
           throw new Error('تعذر تسجيل الدخول.')
         }
 
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('user_id', data.user.id)
-          .maybeSingle()
+ const { error: profileError } = await supabase
+  .from('profiles')
+  .select('id')
+  .eq('user_id', data.user.id)
+  .maybeSingle()
 
-        if (profileError) {
-          console.error('Profile fetch error:', profileError)
-          throw new Error('تعذر التحقق من نوع الحساب.')
-        }
-
-        if (profile && profile.role && profile.role !== 'manager') {
-          await supabase.auth.signOut()
-          throw new Error('هذا الدخول مخصص لمدير الجمعية فقط.')
-        }
+if (profileError) {
+  console.error('Profile fetch error:', profileError)
+}
 
         showSuccess('تم تسجيل الدخول بنجاح. جاري تحويلك...')
 
