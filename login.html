@@ -59,6 +59,7 @@
       margin:0 0 18px;
       color:var(--muted);
       font-size:14px;
+      line-height:1.8;
     }
 
     .type-box{
@@ -231,7 +232,7 @@
       successBox.textContent = ''
     }
 
-    loginForm.addEventListener('submit', async function(e) {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault()
       clearMessages()
 
@@ -261,13 +262,14 @@
         }
 
         const { data: profile, error: profileError } = await supabase
-          .from('الملفات الشخصية')
+          .from('profiles')
           .select('*')
           .eq('user_id', data.user.id)
           .maybeSingle()
 
         if (profileError) {
           console.error('Profile fetch error:', profileError)
+          throw new Error('تعذر التحقق من نوع الحساب.')
         }
 
         if (profile && profile.role && profile.role !== 'manager') {
@@ -279,7 +281,7 @@
 
         setTimeout(() => {
           window.location.href = 'dashboard.html'
-        }, 900)
+        }, 700)
 
       } catch (err) {
         console.error(err)
