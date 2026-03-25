@@ -1,7 +1,7 @@
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-  const SUPABASE_URL =  'https://qxyrpnexybxmfmtrnzpg.supabase.co
+  const SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
   const SUPABASE_ANON_KEY = 'sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT'
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
@@ -33,7 +33,7 @@
     }
 
     const { data: profile, error: profileError } = await supabase
-      .from('الملفات الشخصية')
+      .from('profiles')
       .select('*')
       .eq('user_id', user.id)
       .maybeSingle()
@@ -53,7 +53,7 @@
     }
 
     const { data: society, error: societyError } = await supabase
-      .from('الجمعيات')
+      .from('societies')
       .select('*')
       .eq('manager_user_id', user.id)
       .limit(1)
@@ -65,7 +65,7 @@
       console.log('Society:', society)
 
       if (societyNameEl) {
-        societyNameEl.textContent = society['الاسم'] || society.name || '...'
+        societyNameEl.textContent = society.name || '...'
       }
     } else {
       if (societyNameEl) {
@@ -84,11 +84,11 @@
         }
 
         const { error: insertError } = await supabase
-          .from('الجمعيات')
+          .from('societies')
           .insert([
             {
-              'name': name.trim(),
-              'manager_user_id': user.id
+              name: name.trim(),
+              manager_user_id: user.id
             }
           ])
 
