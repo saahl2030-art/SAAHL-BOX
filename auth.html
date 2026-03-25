@@ -223,8 +223,7 @@
       font-weight:800;
     }
 
-    .field,
-    .select{
+    .field{
       width:100%;
       border:1px solid var(--line-dark);
       background:#fff;
@@ -235,8 +234,7 @@
       font-size:14px;
     }
 
-    .field:focus,
-    .select:focus{
+    .field:focus{
       border-color:#96bdd8;
       box-shadow:0 0 0 4px rgba(31,111,165,.08);
     }
@@ -323,32 +321,6 @@
     .tag-blue{background:var(--blue-soft);color:var(--blue)}
     .tag-green{background:var(--green-soft);color:var(--green)}
     .tag-amber{background:var(--amber-soft);color:var(--amber)}
-
-    .summary-list{
-      margin-top:18px;
-      display:grid;
-      gap:12px;
-    }
-
-    .summary-item{
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:14px;
-      background:#fff;
-    }
-
-    .summary-item h4{
-      margin:0 0 6px;
-      font-size:16px;
-      font-weight:900;
-    }
-
-    .summary-item p{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.8;
-    }
 
     .addons{
       margin-top:18px;
@@ -612,32 +584,10 @@
           </div>
 
           <div class="card">
-            <h3>ملخص مناسب وسريع</h3>
+            <h3>التوسعات والملاحظات</h3>
             <p class="card-sub">
-              هنا توضيح مختصر فقط، بدون تكرار مشتت، لمساعدتك على اختيار الباقة بسرعة.
+              هنا فقط المعلومات الإضافية التي يحتاجها المدير قبل التسجيل، بدون تكرار الباقات مرة ثانية.
             </p>
-
-            <div class="summary-list">
-              <div class="summary-item">
-                <h4>Free</h4>
-                <p>خيار بداية وتجربة أولى لإدارة جمعية واحدة صغيرة.</p>
-              </div>
-
-              <div class="summary-item">
-                <h4>Basic</h4>
-                <p>مناسب لمن يدير أكثر من جمعية ويريد سعة أولية عملية.</p>
-              </div>
-
-              <div class="summary-item">
-                <h4>Pro</h4>
-                <p>أفضل توازن بين السعر والسعة لمعظم مدراء الجمعيات.</p>
-              </div>
-
-              <div class="summary-item">
-                <h4>Business</h4>
-                <p>مناسب للتشغيل الأكبر وإدارة عدد أعلى من الجمعيات والأعضاء.</p>
-              </div>
-            </div>
 
             <div class="addons">
               <h4>التوسعات</h4>
@@ -655,6 +605,10 @@
 
             <div class="notice">
               بعد إنشاء الحساب بنجاح سيتم نقلك إلى صفحة تسجيل الدخول، ثم إلى لوحة المدير المرتبطة بجمعيتك.
+            </div>
+
+            <div class="notice">
+              إذا ظهر لك أن البريد مسجل مسبقًا، فهذا يعني أن الحساب موجود أصلًا، وفي هذه الحالة استخدم صفحة تسجيل الدخول بدل إعادة إنشاء الحساب.
             </div>
           </div>
         </div>
@@ -701,7 +655,7 @@
       successBox.textContent = ''
     }
 
-    signupForm.addEventListener('submit', async function(e) {
+    signupForm.addEventListener('submit', async (e) => {
       e.preventDefault()
       clearMessages()
 
@@ -719,6 +673,7 @@
 
       submitBtn.classList.add('loading')
       submitBtn.disabled = true
+      submitBtn.textContent = 'جاري إنشاء الحساب...'
 
       try {
         const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
@@ -727,6 +682,9 @@
         })
 
         if (signUpError) {
+          if (signUpError.message?.toLowerCase().includes('already registered')) {
+            throw new Error('هذا البريد مسجل مسبقًا. استخدم صفحة تسجيل الدخول.')
+          }
           throw signUpError
         }
 
@@ -772,7 +730,7 @@
           if (subscriptionError) {
             console.error('Subscription creation failed:', subscriptionError)
           } else if (subscriptionData) {
-            subscriptionId = subscriptionData.uid || subscriptionData.id || null
+            subscriptionId = subscriptionData.id || subscriptionData.uid || null
           }
         }
 
@@ -794,12 +752,11 @@
         }
 
         showSuccess('تم إنشاء الحساب والجمعية بنجاح. سيتم تحويلك الآن إلى تسجيل الدخول.')
-
         signupForm.reset()
 
         setTimeout(() => {
           window.location.href = 'login.html'
-        }, 1800)
+        }, 1500)
 
       } catch (err) {
         console.error(err)
@@ -807,6 +764,7 @@
       } finally {
         submitBtn.classList.remove('loading')
         submitBtn.disabled = false
+        submitBtn.textContent = 'إنشاء الحساب'
       }
     })
   </script>
