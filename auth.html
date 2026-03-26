@@ -30,7 +30,6 @@
       --blue:#2563eb;
       --blue-soft:#edf3ff;
       --shadow:0 12px 30px rgba(15, 40, 64, 0.08);
-      --radius:22px;
     }
 
     *{box-sizing:border-box}
@@ -44,7 +43,7 @@
     }
 
     a{text-decoration:none;color:inherit}
-    button,input,select{font-family:"Tajawal", sans-serif}
+    button,input{font-family:"Tajawal", sans-serif}
 
     .container{
       width:min(1180px, calc(100% - 32px));
@@ -136,8 +135,6 @@
       border:1px solid var(--line-dark);
       color:var(--text);
     }
-
-    .btn-soft:hover{background:#f8fbff}
 
     .hero{
       padding:26px 0 16px;
@@ -629,13 +626,6 @@
     const successBox = document.getElementById('successBox')
     const errorBox = document.getElementById('errorBox')
 
-    const planConfig = {
-      Free: { price: 0, societies_limit: 1, members_limit: 4 },
-      Basic: { price: 39, societies_limit: 3, members_limit: 10 },
-      Pro: { price: 69, societies_limit: 6, members_limit: 15 },
-      Business: { price: 99, societies_limit: 10, members_limit: 25 }
-    }
-
     function showError(message) {
       errorBox.textContent = message
       errorBox.classList.add('show')
@@ -664,14 +654,12 @@
       const email = document.getElementById('email').value.trim()
       const password = document.getElementById('password').value.trim()
       const societyName = document.getElementById('societyName').value.trim()
-      const selectedPlan = document.querySelector('input[name="plan"]:checked')?.value || 'Free'
 
       if (!fullName || !phone || !email || !password || !societyName) {
         showError('أكمل جميع الحقول المطلوبة.')
         return
       }
 
-      submitBtn.classList.add('loading')
       submitBtn.disabled = true
       submitBtn.textContent = 'جاري إنشاء الحساب...'
 
@@ -688,10 +676,16 @@
           throw signUpError
         }
 
-        const userId = signUpData?.user?.id
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        })
 
+        if (signInError) throw signInError
+
+        const userId = signInData?.user?.id
         if (!userId) {
-          throw new Error('لم يتم الحصول على معرف المستخدم بعد إنشاء الحساب.')
+          throw new Error('تعذر الحصول على معرف المستخدم.')
         }
 
         const { error: profileError } = await supabase
@@ -700,68 +694,35 @@
             {
               user_id: userId,
               full_name: fullName,
-              phone: phone,
+              phone: phone
             }
           ])
 
-        if (profileError) {
-          throw profileError
-        }
-
-        let subscriptionId = null
-        const planMeta = planConfig[selectedPlan]
-
-        if (planMeta) {
-          const { data: subscriptionData, error: subscriptionError } = await supabase
-            .from('subscriptions')
-            .insert([
-              {
-                name: selectedPlan,
-                price: planMeta.price,
-                societies_limit: planMeta.societies_limit,
-                members_limit: planMeta.members_limit,
-                status: 'active'
-              }
-            ])
-            .select()
-            .single()
-
-          if (subscriptionError) {
-            console.error('Subscription creation failed:', subscriptionError)
-          } else if (subscriptionData) {
-            subscriptionId = subscriptionData.id || subscriptionData.uid || null
-          }
-        }
-
-        const societyPayload = {
-          'الاسم': societyName,
-          manager_user_id: userId
-        }
-
-        if (subscriptionId) {
-          societyPayload.subscription_id = subscriptionId
-        }
+        if (profileError) throw profileError
 
         const { error: societyError } = await supabase
           .from('societies')
-          .insert([societyPayload])
+          .insert([
+            {
+              name: societyName,
+              manager_user_id: userId
+            }
+          ])
 
-        if (societyError) {
-          throw societyError
-        }
+        if (societyError) throw societyError
 
         showSuccess('تم إنشاء الحساب والجمعية بنجاح. سيتم تحويلك الآن إلى تسجيل الدخول.')
+
         signupForm.reset()
 
         setTimeout(() => {
           window.location.href = 'login.html'
-        }, 1500)
+        }, 1200)
 
       } catch (err) {
         console.error(err)
         showError(err.message || 'حدث خطأ أثناء إنشاء الحساب.')
       } finally {
-        submitBtn.classList.remove('loading')
         submitBtn.disabled = false
         submitBtn.textContent = 'إنشاء الحساب'
       }
