@@ -29,7 +29,7 @@
       --red-soft:#fdeeee;
       --blue:#2563eb;
       --blue-soft:#edf3ff;
-      --shadow:0 12px 30px rgba(15, 40, 64, 0.08);
+      --shadow:0 12px 30px rgba(15,40,64,0.08);
     }
 
     *{box-sizing:border-box}
@@ -38,407 +38,198 @@
     body{
       margin:0;
       font-family:"Tajawal", sans-serif;
-      background:linear-gradient(180deg,#f8fbff 0%, #f3f7fb 100%);
+      background:linear-gradient(180deg,#f8fbff 0%,#f3f7fb 100%);
       color:var(--text);
     }
 
     a{text-decoration:none;color:inherit}
-    button,input{font-family:"Tajawal", sans-serif}
+    button,input,select{font-family:"Tajawal",sans-serif}
 
     .container{
       width:min(1180px, calc(100% - 32px));
       margin:auto;
     }
 
-    .topbar{
-      padding:18px 0;
-    }
-
+    /* topbar */
+    .topbar{padding:18px 0}
     .topbar-inner{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      flex-wrap:wrap;
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:14px 16px;
-      box-shadow:var(--shadow);
+      display:flex;align-items:center;justify-content:space-between;
+      gap:14px;flex-wrap:wrap;
+      background:#fff;border:1px solid var(--line);border-radius:18px;
+      padding:14px 16px;box-shadow:var(--shadow);
     }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
+    .brand{display:flex;align-items:center;gap:12px}
     .brand-logo{
-      width:48px;
-      height:48px;
-      border-radius:16px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg,var(--primary) 0%, #46a8d8 100%);
-      color:#fff;
-      font-size:22px;
-      font-weight:900;
-      box-shadow:0 10px 20px rgba(31,111,165,.22);
-      flex:0 0 48px;
+      width:48px;height:48px;border-radius:16px;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--primary) 0%,#46a8d8 100%);
+      color:#fff;font-size:22px;font-weight:900;
+      box-shadow:0 10px 20px rgba(31,111,165,.22);flex:0 0 48px;
     }
+    .brand h1{margin:0;font-size:21px;font-weight:900;line-height:1.1}
+    .brand p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .top-actions{display:flex;gap:10px;flex-wrap:wrap}
 
-    .brand h1{
-      margin:0;
-      font-size:21px;
-      font-weight:900;
-      line-height:1.1;
-    }
-
-    .brand p{
-      margin:4px 0 0;
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .top-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
+    /* buttons */
     .btn{
-      border:none;
-      border-radius:14px;
-      padding:12px 16px;
-      cursor:pointer;
-      font-size:14px;
-      font-weight:900;
-      transition:.2s ease;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
+      border:none;border-radius:14px;padding:12px 16px;
+      cursor:pointer;font-size:14px;font-weight:900;
+      transition:.2s ease;display:inline-flex;
+      align-items:center;justify-content:center;gap:8px;
     }
-
     .btn:hover{transform:translateY(-1px)}
-
-    .btn-primary{
-      background:var(--primary);
-      color:#fff;
-      box-shadow:0 10px 20px rgba(31,111,165,.18);
-    }
-
+    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 10px 20px rgba(31,111,165,.18)}
     .btn-primary:hover{background:var(--primary-dark)}
+    .btn-primary:disabled{opacity:.65;cursor:not-allowed;transform:none}
+    .btn-soft{background:#fff;border:1px solid var(--line-dark);color:var(--text)}
 
-    .btn-soft{
-      background:#fff;
-      border:1px solid var(--line-dark);
-      color:var(--text);
-    }
-
-    .hero{
-      padding:26px 0 16px;
-      text-align:center;
-    }
-
+    /* hero */
+    .hero{padding:26px 0 16px;text-align:center}
     .hero-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 14px;
-      border-radius:999px;
-      background:var(--primary-soft);
-      color:var(--primary-dark);
-      font-size:13px;
-      font-weight:900;
-      margin-bottom:14px;
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 14px;border-radius:999px;
+      background:var(--primary-soft);color:var(--primary-dark);
+      font-size:13px;font-weight:900;margin-bottom:14px;
     }
-
-    .hero h2{
-      margin:0;
-      font-size:38px;
-      font-weight:900;
-      line-height:1.2;
-    }
-
+    .hero h2{margin:0;font-size:38px;font-weight:900;line-height:1.2}
     .hero p{
-      width:min(780px, 100%);
-      margin:14px auto 0;
-      color:var(--muted);
-      font-size:16px;
-      line-height:1.9;
+      width:min(780px,100%);margin:14px auto 0;
+      color:var(--muted);font-size:16px;line-height:1.9;
     }
 
-    .layout{
-      padding:14px 0 34px;
-    }
-
+    /* layout */
+    .layout{padding:14px 0 34px}
     .layout-grid{
       display:grid;
       grid-template-columns:1.05fr .95fr;
-      gap:18px;
-      align-items:start;
+      gap:18px;align-items:start;
     }
 
+    /* card */
     .card{
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:24px;
-      box-shadow:var(--shadow);
-      padding:22px;
+      background:#fff;border:1px solid var(--line);
+      border-radius:24px;box-shadow:var(--shadow);padding:22px;
     }
+    .card h3{margin:0;font-size:24px;font-weight:900}
+    .card-sub{margin:8px 0 0;color:var(--muted);font-size:14px;line-height:1.8}
 
-    .card h3{
-      margin:0;
-      font-size:24px;
-      font-weight:900;
-    }
-
-    .card-sub{
-      margin:8px 0 0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.8;
-    }
-
+    /* form */
     .form-grid{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:14px;
-      margin-top:18px;
+      display:grid;grid-template-columns:repeat(2,1fr);
+      gap:14px;margin-top:18px;
     }
-
-    .field-wrap.full{
-      grid-column:1 / -1;
-    }
-
-    .label{
-      display:block;
-      margin-bottom:8px;
-      color:var(--muted);
-      font-size:13px;
-      font-weight:800;
-    }
-
+    .field-wrap.full{grid-column:1 / -1}
+    .label{display:block;margin-bottom:8px;color:var(--muted);font-size:13px;font-weight:800}
     .field{
-      width:100%;
-      border:1px solid var(--line-dark);
-      background:#fff;
-      color:var(--text);
-      border-radius:14px;
-      padding:13px 14px;
-      outline:none;
-      font-size:14px;
+      width:100%;border:1px solid var(--line-dark);
+      background:#fff;color:var(--text);
+      border-radius:14px;padding:13px 14px;
+      outline:none;font-size:14px;
     }
-
     .field:focus{
       border-color:#96bdd8;
       box-shadow:0 0 0 4px rgba(31,111,165,.08);
     }
 
-    .plans-list{
-      display:grid;
-      gap:12px;
-      margin-top:18px;
+    /* section divider */
+    .section-title{
+      margin:22px 0 14px;
+      font-size:15px;font-weight:900;
+      color:var(--primary);
+      border-bottom:2px solid var(--primary-soft);
+      padding-bottom:8px;
     }
 
-    .plan-option{
-      position:relative;
-    }
-
-    .plan-option input{
-      position:absolute;
-      inset:0;
-      opacity:0;
-      cursor:pointer;
-    }
-
+    /* plans */
+    .plans-list{display:grid;gap:12px;margin-top:4px}
+    .plan-option{position:relative}
+    .plan-option input{position:absolute;inset:0;opacity:0;cursor:pointer}
     .plan-box{
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:16px;
-      background:#fff;
-      transition:.2s ease;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
+      border:1px solid var(--line);border-radius:18px;
+      padding:16px;background:#fff;transition:.2s ease;
+      display:flex;align-items:flex-start;
+      justify-content:space-between;gap:12px;flex-wrap:wrap;
     }
-
     .plan-option input:checked + .plan-box{
-      border-color:#9fcae4;
-      background:var(--primary-soft);
+      border-color:#9fcae4;background:var(--primary-soft);
       box-shadow:0 0 0 4px rgba(31,111,165,.06);
     }
-
-    .plan-info h4{
-      margin:0 0 6px;
-      font-size:18px;
-      font-weight:900;
-    }
-
-    .plan-info p{
-      margin:0;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.8;
-    }
-
-    .plan-meta{
-      text-align:left;
-    }
-
-    .plan-price{
-      font-size:28px;
-      font-weight:900;
-      line-height:1;
-      white-space:nowrap;
-    }
-
-    .plan-price small{
-      font-size:13px;
-      color:var(--muted);
-      font-weight:700;
-    }
-
+    .plan-info h4{margin:0 0 6px;font-size:18px;font-weight:900}
+    .plan-info p{margin:0;color:var(--muted);font-size:13px;line-height:1.8}
+    .plan-meta{text-align:left}
+    .plan-price{font-size:28px;font-weight:900;line-height:1;white-space:nowrap}
+    .plan-price small{font-size:13px;color:var(--muted);font-weight:700}
     .plan-tag{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:900;
-      margin-top:8px;
-      white-space:nowrap;
+      display:inline-flex;align-items:center;gap:6px;
+      padding:6px 10px;border-radius:999px;
+      font-size:12px;font-weight:900;margin-top:8px;white-space:nowrap;
     }
-
     .tag-primary{background:var(--primary-soft);color:var(--primary-dark)}
     .tag-blue{background:var(--blue-soft);color:var(--blue)}
     .tag-green{background:var(--green-soft);color:var(--green)}
     .tag-amber{background:var(--amber-soft);color:var(--amber)}
 
+    /* addons */
     .addons{
-      margin-top:18px;
-      padding:16px;
-      border-radius:18px;
-      background:linear-gradient(135deg,#f7fbff 0%, #eef7fd 100%);
+      margin-top:18px;padding:16px;border-radius:18px;
+      background:linear-gradient(135deg,#f7fbff 0%,#eef7fd 100%);
       border:1px solid #d8e9f7;
     }
-
-    .addons h4{
-      margin:0 0 10px;
-      font-size:17px;
-      font-weight:900;
-    }
-
-    .addons ul{
-      list-style:none;
-      margin:0;
-      padding:0;
-      display:grid;
-      gap:10px;
-    }
-
+    .addons h4{margin:0 0 10px;font-size:17px;font-weight:900}
+    .addons ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
     .addons li{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:12px 14px;
-      font-size:14px;
-      font-weight:800;
+      display:flex;align-items:center;justify-content:space-between;
+      gap:10px;background:#fff;border:1px solid var(--line);
+      border-radius:14px;padding:12px 14px;
+      font-size:14px;font-weight:800;
     }
+    .addons li span{color:var(--green);font-weight:900;white-space:nowrap}
 
-    .addons li span{
-      color:var(--green);
-      font-weight:900;
-      white-space:nowrap;
-    }
+    /* actions */
+    .actions{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
 
-    .actions{
-      margin-top:18px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
+    /* notice */
     .notice{
-      margin-top:14px;
-      padding:12px 14px;
-      border-radius:14px;
-      background:#f8fbff;
-      border:1px solid var(--line);
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.8;
+      margin-top:14px;padding:12px 14px;border-radius:14px;
+      background:#f8fbff;border:1px solid var(--line);
+      color:var(--muted);font-size:13px;line-height:1.8;
     }
 
-    .error-box,
-    .success-box{
-      display:none;
-      margin-top:16px;
-      padding:14px;
-      border-radius:16px;
-      font-size:14px;
-      font-weight:900;
-      line-height:1.8;
+    /* messages */
+    .msg-box{
+      display:none;margin-top:16px;padding:14px;
+      border-radius:16px;font-size:14px;
+      font-weight:900;line-height:1.8;
     }
+    .msg-box.error{background:var(--red-soft);color:var(--red)}
+    .msg-box.success{background:var(--green-soft);color:var(--green)}
+    .msg-box.show{display:block}
 
-    .error-box{
-      background:var(--red-soft);
-      color:var(--red);
+    /* overlay */
+    .overlay{
+      display:none;position:fixed;inset:0;
+      background:rgba(255,255,255,.75);
+      align-items:center;justify-content:center;
+      z-index:999;font-size:16px;font-weight:700;
+      color:var(--primary);flex-direction:column;gap:12px;
     }
+    .overlay.show{display:flex}
 
-    .success-box{
-      background:var(--green-soft);
-      color:var(--green);
+    @media(max-width:980px){
+      .layout-grid{grid-template-columns:1fr}
     }
-
-    .error-box.show,
-    .success-box.show{
-      display:block;
-    }
-
-    .loading{
-      opacity:.7;
-      pointer-events:none;
-    }
-
-    @media (max-width:980px){
-      .layout-grid{
-        grid-template-columns:1fr;
-      }
-    }
-
-    @media (max-width:700px){
-      .form-grid{
-        grid-template-columns:1fr;
-      }
-
-      .hero h2{
-        font-size:30px;
-      }
-
-      .hero p{
-        font-size:15px;
-      }
-
-      .plan-box{
-        flex-direction:column;
-      }
-
-      .plan-meta{
-        text-align:right;
-      }
+    @media(max-width:700px){
+      .form-grid{grid-template-columns:1fr}
+      .hero h2{font-size:30px}
+      .hero p{font-size:15px}
+      .plan-box{flex-direction:column}
+      .plan-meta{text-align:right}
     }
   </style>
 </head>
 <body>
+
+  <div class="overlay" id="overlay">جاري التحقق...</div>
 
   <header class="topbar">
     <div class="container">
@@ -450,7 +241,6 @@
             <p>إنشاء حساب مدير جمعية</p>
           </div>
         </div>
-
         <div class="top-actions">
           <a class="btn btn-soft" href="index.html">العودة للرئيسية</a>
           <a class="btn btn-soft" href="plans.html">عرض الباقات</a>
@@ -466,7 +256,7 @@
         <div class="hero-badge">ابدأ الآن بخطة واضحة</div>
         <h2>أنشئ حسابك وأنشئ جمعيتك من البداية</h2>
         <p>
-          هذه الصفحة مخصصة لمدير الجمعية فقط. اختر الباقة المناسبة، أدخل اسم الجمعية، ثم أنشئ الحساب ليتم ربط كل شيء بحسابك مباشرة.
+          هذه الصفحة مخصصة لمدير الجمعية فقط. اختر الباقة المناسبة، أدخل بيانات الجمعية، ثم أنشئ الحساب ليتم ربط كل شيء بحسابك مباشرة.
         </p>
       </div>
     </section>
@@ -474,40 +264,74 @@
     <section class="layout">
       <div class="container">
         <div class="layout-grid">
+
+          <!-- بطاقة النموذج -->
           <div class="card">
             <h3>بيانات الحساب والجمعية</h3>
             <p class="card-sub">
               بعد إنشاء الحساب سيتم حفظ بياناتك في النظام، وإنشاء الجمعية وربطها بحسابك.
             </p>
 
-            <form id="signupForm">
+            <form id="signupForm" novalidate>
+
+              <!-- بيانات المدير -->
+              <div class="section-title">بيانات المدير</div>
               <div class="form-grid">
                 <div>
                   <label class="label" for="fullName">الاسم الكامل</label>
                   <input class="field" type="text" id="fullName" placeholder="اكتب الاسم الكامل" required>
                 </div>
-
                 <div>
                   <label class="label" for="phone">رقم الهاتف</label>
-                  <input class="field" type="tel" id="phone" placeholder="05xxxxxxxx" required>
+                  <input class="field" type="tel" id="phone" placeholder="05xxxxxxxx">
                 </div>
-
                 <div>
                   <label class="label" for="email">البريد الإلكتروني</label>
                   <input class="field" type="email" id="email" placeholder="example@email.com" required>
                 </div>
-
                 <div>
                   <label class="label" for="password">كلمة المرور</label>
-                  <input class="field" type="password" id="password" placeholder="********" required minlength="6">
-                </div>
-
-                <div class="field-wrap full">
-                  <label class="label" for="societyName">اسم الجمعية</label>
-                  <input class="field" type="text" id="societyName" placeholder="مثال: جمعية ساهل الأولى" required>
+                  <input class="field" type="password" id="password" placeholder="6 أحرف على الأقل" required minlength="6">
                 </div>
               </div>
 
+              <!-- بيانات الجمعية -->
+              <div class="section-title">بيانات الجمعية</div>
+              <div class="form-grid">
+                <div class="field-wrap full">
+                  <label class="label" for="groupName">اسم الجمعية</label>
+                  <input class="field" type="text" id="groupName" placeholder="مثال: جمعية ساهل الأولى" required>
+                </div>
+                <div>
+                  <label class="label" for="monthlyAmount">المبلغ الشهري (درهم)</label>
+                  <input class="field" type="number" id="monthlyAmount" placeholder="مثال: 500" min="1" required>
+                </div>
+                <div>
+                  <label class="label" for="startMonth">شهر البداية</label>
+                  <select class="field" id="startMonth" required>
+                    <option value="">اختر الشهر</option>
+                    <option value="1">يناير</option>
+                    <option value="2">فبراير</option>
+                    <option value="3">مارس</option>
+                    <option value="4">أبريل</option>
+                    <option value="5">مايو</option>
+                    <option value="6">يونيو</option>
+                    <option value="7">يوليو</option>
+                    <option value="8">أغسطس</option>
+                    <option value="9">سبتمبر</option>
+                    <option value="10">أكتوبر</option>
+                    <option value="11">نوفمبر</option>
+                    <option value="12">ديسمبر</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="label" for="startYear">سنة البداية</label>
+                  <input class="field" type="number" id="startYear" placeholder="2025" min="2020" max="2100" required>
+                </div>
+              </div>
+
+              <!-- اختيار الباقة -->
+              <div class="section-title">اختر الباقة</div>
               <div class="plans-list">
                 <label class="plan-option">
                   <input type="radio" name="plan" value="Free" checked>
@@ -567,7 +391,7 @@
               </div>
 
               <div class="notice">
-                الباقة المجانية تسمح بجمعية واحدة فقط. بعد التسجيل يمكن تطوير الباقة لاحقًا من داخل النظام.
+                الباقة المجانية تسمح بجمعية واحدة فقط. يمكن تطوير الباقة لاحقًا من داخل النظام.
               </div>
 
               <div class="actions">
@@ -575,19 +399,19 @@
                 <a href="login.html" class="btn btn-soft">لدي حساب بالفعل</a>
               </div>
 
-              <div class="error-box" id="errorBox"></div>
-              <div class="success-box" id="successBox"></div>
+              <div class="msg-box" id="msgBox"></div>
             </form>
           </div>
 
+          <!-- بطاقة المعلومات -->
           <div class="card">
             <h3>التوسعات والملاحظات</h3>
             <p class="card-sub">
-              هنا فقط المعلومات الإضافية التي يحتاجها المدير قبل التسجيل، بدون تكرار الباقات مرة ثانية.
+              معلومات إضافية تحتاجها قبل التسجيل.
             </p>
 
             <div class="addons">
-              <h4>التوسعات</h4>
+              <h4>التوسعات المتاحة</h4>
               <ul>
                 <li>
                   <strong>+5 أعضاء</strong>
@@ -601,13 +425,18 @@
             </div>
 
             <div class="notice">
-              بعد إنشاء الحساب بنجاح سيتم نقلك إلى صفحة تسجيل الدخول، ثم إلى لوحة المدير المرتبطة بجمعيتك.
+              بعد إنشاء الحساب بنجاح سيتم نقلك مباشرة إلى لوحة المدير المرتبطة بجمعيتك.
             </div>
 
             <div class="notice">
-              إذا ظهر لك أن البريد مسجل مسبقًا، فهذا يعني أن الحساب موجود أصلًا، وفي هذه الحالة استخدم صفحة تسجيل الدخول بدل إعادة إنشاء الحساب.
+              إذا ظهر لك أن البريد مسجل مسبقًا، فهذا يعني أن الحساب موجود أصلًا. استخدم صفحة تسجيل الدخول بدلاً من إعادة إنشاء الحساب.
+            </div>
+
+            <div class="notice">
+              تأكد من إدخال المبلغ الشهري وشهر البداية بشكل صحيح — لا يمكن تعديلها بسهولة بعد إنشاء الجمعية.
             </div>
           </div>
+
         </div>
       </div>
     </section>
@@ -616,64 +445,101 @@
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-    const SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
-    const SUPABASE_ANON_KEY = 'sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT'
+    // ============================================================
+    // إعداد Supabase
+    // ============================================================
+    const SUPABASE_URL      = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
     const signupForm = document.getElementById('signupForm')
-    const submitBtn = document.getElementById('submitBtn')
-    const successBox = document.getElementById('successBox')
-    const errorBox = document.getElementById('errorBox')
+    const submitBtn  = document.getElementById('submitBtn')
+    const msgBox     = document.getElementById('msgBox')
+    const overlay    = document.getElementById('overlay')
 
-    function showError(message) {
-      errorBox.textContent = message
-      errorBox.classList.add('show')
-      successBox.classList.remove('show')
+    // ============================================================
+    // إذا كان مسجلاً دخل مسبقاً — وجّهه مباشرة
+    // ============================================================
+    ;(async () => {
+      overlay.classList.add('show')
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session) {
+        await redirectByRole(session.user.id)
+        return
+      }
+      overlay.classList.remove('show')
+    })()
+
+    // ============================================================
+    // توجيه حسب الـ role
+    // ============================================================
+    async function redirectByRole(userId) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .single()
+
+      if (profile?.role === 'admin') {
+        window.location.href = 'admin.html'
+      } else {
+        window.location.href = 'dashboard.html'
+      }
     }
 
-    function showSuccess(message) {
-      successBox.textContent = message
-      successBox.classList.add('show')
-      errorBox.classList.remove('show')
-    }
-
-    function clearMessages() {
-      errorBox.classList.remove('show')
-      successBox.classList.remove('show')
-      errorBox.textContent = ''
-      successBox.textContent = ''
-    }
-
+    // ============================================================
+    // إنشاء الحساب
+    // ============================================================
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault()
-      clearMessages()
+      clearMsg()
 
-      const fullName = document.getElementById('fullName').value.trim()
-      const phone = document.getElementById('phone').value.trim()
-      const email = document.getElementById('email').value.trim()
-      const password = document.getElementById('password').value.trim()
-      const societyName = document.getElementById('societyName').value.trim()
+      // جمع البيانات
+      const fullName      = document.getElementById('fullName').value.trim()
+      const phone         = document.getElementById('phone').value.trim()
+      const email         = document.getElementById('email').value.trim()
+      const password      = document.getElementById('password').value
+      const groupName     = document.getElementById('groupName').value.trim()
+      const monthlyAmount = parseFloat(document.getElementById('monthlyAmount').value)
+      const startMonth    = parseInt(document.getElementById('startMonth').value)
+      const startYear     = parseInt(document.getElementById('startYear').value)
+      const plan          = document.querySelector('input[name="plan"]:checked')?.value || 'Free'
 
-      if (!fullName || !phone || !email || !password || !societyName) {
-        showError('أكمل جميع الحقول المطلوبة.')
+      // التحقق من الحقول
+      if (!fullName || !email || !password || !groupName) {
+        showMsg('أكمل جميع الحقول المطلوبة.', 'error')
+        return
+      }
+      if (password.length < 6) {
+        showMsg('كلمة المرور يجب أن تكون 6 أحرف على الأقل.', 'error')
+        return
+      }
+      if (!monthlyAmount || monthlyAmount <= 0) {
+        showMsg('أدخل المبلغ الشهري بشكل صحيح.', 'error')
+        return
+      }
+      if (!startMonth || !startYear) {
+        showMsg('اختر شهر وسنة بداية الجمعية.', 'error')
         return
       }
 
-      submitBtn.disabled = true
+      submitBtn.disabled    = true
       submitBtn.textContent = 'جاري إنشاء الحساب...'
 
       try {
-  const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-  email,
-  password,
-  options: {
-    data: {
-      full_name: fullName,
-      phone: phone
-    }
-  }
-})
+        // الخطوة 1: إنشاء المستخدم في Supabase Auth
+        // الـ trigger سيُنشئ profile تلقائياً من هذه الـ metadata
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              full_name: fullName,
+              role: 'manager'       // مهم جداً — يقرأه الـ trigger
+            }
+          }
+        })
 
         if (signUpError) {
           if (signUpError.message?.toLowerCase().includes('already registered')) {
@@ -682,6 +548,7 @@
           throw signUpError
         }
 
+        // الخطوة 2: تسجيل الدخول للحصول على session
         const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
           email,
           password
@@ -690,38 +557,82 @@
         if (signInError) throw signInError
 
         const userId = signInData?.user?.id
-        if (!userId) {
-          throw new Error('تعذر الحصول على معرف المستخدم.')
-        }
+        if (!userId) throw new Error('تعذر الحصول على معرف المستخدم.')
 
-      
-        const { error: societyError } = await supabase
-          .from('societies')
-          .insert([
-            {
-              name: societyName,
-              manager_user_id: userId
-            }
-          ])
+        // الخطوة 3: إنشاء الجمعية في جدول groups
+        const { error: groupError } = await supabase
+          .from('groups')
+          .insert([{
+            manager_id:     userId,
+            name:           groupName,
+            monthly_amount: monthlyAmount,
+            start_month:    startMonth,
+            start_year:     startYear,
+            status:         'active'
+          }])
 
-        if (societyError) throw societyError
+        if (groupError) throw groupError
 
-        showSuccess('تم إنشاء الحساب والجمعية بنجاح. سيتم تحويلك الآن إلى تسجيل الدخول.')
+        // الخطوة 4: إنشاء سجل الاشتراك
+        const planAmounts = { Free: 0, Basic: 39, Pro: 69, Business: 99 }
+        const today = new Date()
+        const endDate = new Date(today)
+        endDate.setFullYear(endDate.getFullYear() + 1)
 
-        signupForm.reset()
+        await supabase
+          .from('subscriptions')
+          .insert([{
+            manager_id: userId,
+            plan_name:  plan,
+            status:     'active',
+            start_date: today.toISOString().split('T')[0],
+            end_date:   endDate.toISOString().split('T')[0],
+            amount:     planAmounts[plan] || 0
+          }])
+        // لا نوقف العملية إذا فشل الاشتراك — يمكن إضافته لاحقاً
+
+        showMsg('تم إنشاء الحساب والجمعية بنجاح! جاري نقلك للوحة التحكم...', 'success')
 
         setTimeout(() => {
-          window.location.href = 'login.html'
+          window.location.href = 'dashboard.html'
         }, 1200)
 
       } catch (err) {
         console.error(err)
-        showError(err.message || 'حدث خطأ أثناء إنشاء الحساب.')
+        showMsg(mapError(err.message), 'error')
       } finally {
-        submitBtn.disabled = false
+        submitBtn.disabled    = false
         submitBtn.textContent = 'إنشاء الحساب'
       }
     })
+
+    // ============================================================
+    // مساعدات
+    // ============================================================
+    function showMsg(text, type) {
+      msgBox.textContent = text
+      msgBox.className   = `msg-box ${type} show`
+      msgBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    }
+
+    function clearMsg() {
+      msgBox.className   = 'msg-box'
+      msgBox.textContent = ''
+    }
+
+    function mapError(msg) {
+      if (!msg) return 'حدث خطأ غير معروف'
+      if (msg.includes('already registered'))
+        return 'هذا البريد مسجل مسبقًا. استخدم صفحة تسجيل الدخول.'
+      if (msg.includes('Password should be at least'))
+        return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'
+      if (msg.includes('Unable to validate email'))
+        return 'صيغة البريد الإلكتروني غير صحيحة'
+      if (msg.includes('Email not confirmed'))
+        return 'يرجى تأكيد بريدك الإلكتروني أولاً'
+      return msg
+    }
   </script>
+
 </body>
 </html>
