@@ -1,113 +1,1009 @@
-<script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة مدير الجمعية - صندوق ساهل</title>
 
-  const SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
-  const SUPABASE_ANON_KEY = 'sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT'
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-  window.supabase = supabase
+  <style>
+    :root{
+      --bg:#f4f8fc;
+      --panel:#ffffff;
+      --panel-soft:#f8fbff;
+      --line:#dfe8f1;
+      --line-dark:#cfdbe7;
 
-  const managerNameEl = document.getElementById('manager-name')
-  const societyNameEl = document.getElementById('society-name')
-  const createBtn = document.getElementById('create-society-btn')
-  const statusEl = document.getElementById('create-society-status')
+      --text:#16324a;
+      --muted:#6e8498;
 
-  try {
-    const { data: { user }, error: userError } = await supabase.auth.getUser()
+      --primary:#1f6fa5;
+      --primary-dark:#185781;
+      --primary-soft:#eaf5fd;
 
-    if (userError) {
-      console.error('Auth error:', userError)
-      window.location.href = 'login.html'
-      throw userError
+      --green:#138a59;
+      --green-soft:#e8f8f1;
+
+      --amber:#b7791f;
+      --amber-soft:#fff5e4;
+
+      --red:#c53b3b;
+      --red-soft:#fdeeee;
+
+      --blue:#2563eb;
+      --blue-soft:#edf3ff;
+
+      --violet:#7c3aed;
+      --violet-soft:#f3edff;
+
+      --shadow:0 12px 30px rgba(15, 40, 64, 0.08);
+      --radius:18px;
     }
 
-    if (!user) {
-      window.location.href = 'login.html'
-      throw new Error('No authenticated user')
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+
+    body{
+      margin:0;
+      font-family:"Tajawal", sans-serif;
+      background:linear-gradient(180deg,#f8fbff 0%, #f3f7fb 100%);
+      color:var(--text);
     }
 
-    console.log('User:', user)
+    a{text-decoration:none;color:inherit}
+    button,input,select,textarea{font-family:"Tajawal", sans-serif}
 
-    if (managerNameEl) {
-      managerNameEl.textContent = user.email || '...'
+    .app{
+      min-height:100vh;
+      display:grid;
+      grid-template-columns:295px 1fr;
     }
 
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('user_id', user.id)
-      .maybeSingle()
+    .sidebar{
+      background:#fff;
+      border-left:1px solid var(--line);
+      padding:22px 18px;
+      position:sticky;
+      top:0;
+      height:100vh;
+      box-shadow:var(--shadow);
+      overflow:auto;
+      z-index:20;
+    }
 
-    if (profileError) {
-      console.error('Profile error:', profileError)
-    } else if (profile) {
-      console.log('Profile:', profile)
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:8px 8px 18px;
+      border-bottom:1px solid var(--line);
+      margin-bottom:18px;
+    }
 
-      if (managerNameEl) {
-        managerNameEl.textContent =
-          profile.full_name ||
-          profile.name ||
-          user.email ||
-          '...'
+    .brand-logo{
+      width:50px;
+      height:50px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--primary) 0%, #46a8d8 100%);
+      color:#fff;
+      font-size:22px;
+      font-weight:900;
+      box-shadow:0 10px 20px rgba(31,111,165,.22);
+      flex:0 0 50px;
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:21px;
+      font-weight:900;
+      line-height:1.1;
+    }
+
+    .brand p{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .manager-chip{
+      margin-top:8px;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:var(--primary-soft);
+      color:var(--primary-dark);
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .menu{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .menu-btn{
+      border:none;
+      background:transparent;
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px;
+      border-radius:14px;
+      cursor:pointer;
+      color:var(--text);
+      font-size:15px;
+      font-weight:800;
+      transition:.2s ease;
+    }
+
+    .menu-btn:hover{background:var(--panel-soft)}
+
+    .menu-btn.active{
+      background:var(--primary-soft);
+      border:1px solid #d3e9f8;
+      color:var(--primary-dark);
+    }
+
+    .menu-right{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .menu-icon{
+      width:34px;
+      height:34px;
+      border-radius:10px;
+      display:grid;
+      place-items:center;
+      background:#f2f7fb;
+      font-size:16px;
+      flex:0 0 34px;
+    }
+
+    .menu-btn.active .menu-icon{
+      background:#dceefb;
+    }
+
+    .content{
+      padding:24px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+
+    .topbar h2{
+      margin:0;
+      font-size:31px;
+      font-weight:900;
+    }
+
+    .topbar p{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .topbar-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .btn{
+      border:none;
+      border-radius:14px;
+      padding:12px 16px;
+      cursor:pointer;
+      font-size:14px;
+      font-weight:900;
+      transition:.2s ease;
+    }
+
+    .btn:hover{transform:translateY(-1px)}
+
+    .btn-primary{
+      background:var(--primary);
+      color:#fff;
+      box-shadow:0 10px 20px rgba(31,111,165,.18);
+    }
+
+    .btn-primary:hover{background:var(--primary-dark)}
+
+    .btn-soft{
+      background:#fff;
+      border:1px solid var(--line-dark);
+      color:var(--text);
+    }
+
+    .btn-soft:hover{background:#f8fbff}
+
+    .btn-success{background:var(--green);color:#fff}
+    .btn-danger{background:var(--red);color:#fff}
+    .btn-warning{background:var(--amber);color:#fff}
+
+    .page{display:none;animation:fade .22s ease}
+    .page.active{display:block}
+
+    @keyframes fade{
+      from{opacity:0;transform:translateY(6px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    .grid{display:grid;gap:16px}
+    .grid-4{grid-template-columns:repeat(4,1fr)}
+    .grid-3{grid-template-columns:repeat(3,1fr)}
+    .grid-2{grid-template-columns:repeat(2,1fr)}
+
+    .card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+
+    .card-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .card-title{
+      margin:0;
+      font-size:18px;
+      font-weight:900;
+    }
+
+    .card-sub{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .badge-green{background:var(--green-soft);color:var(--green)}
+    .badge-red{background:var(--red-soft);color:var(--red)}
+    .badge-amber{background:var(--amber-soft);color:var(--amber)}
+    .badge-blue{background:var(--blue-soft);color:var(--blue)}
+    .badge-primary{background:var(--primary-soft);color:var(--primary-dark)}
+    .badge-violet{background:var(--violet-soft);color:var(--violet)}
+
+    .quick-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .mini-list,
+    .notice-list,
+    .payment-list,
+    .archive-list{
+      display:grid;
+      gap:12px;
+    }
+
+    .notice,
+    .list-item{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+    }
+
+    .notice-left{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+    }
+
+    .notice-icon{
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      flex:0 0 42px;
+      font-weight:900;
+    }
+
+    .notice h4,
+    .list-item h4{
+      margin:0 0 6px;
+      font-size:15px;
+      font-weight:900;
+    }
+
+    .notice p,
+    .list-item p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.7;
+    }
+
+    .mini-cards{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+    }
+
+    .mini-card{
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:#fff;
+      padding:16px;
+    }
+
+    .mini-card span{
+      display:block;
+      margin-bottom:8px;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .mini-card strong{
+      display:block;
+      font-size:24px;
+      font-weight:900;
+      line-height:1.2;
+    }
+
+    .table-wrap{
+      width:100%;
+      overflow:auto;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:#fff;
+    }
+
+    table{
+      width:100%;
+      min-width:1220px;
+      border-collapse:collapse;
+      background:#fff;
+    }
+
+    thead{background:#f7fbff}
+
+    th,td{
+      padding:14px 12px;
+      text-align:right;
+      border-bottom:1px solid var(--line);
+      font-size:14px;
+      vertical-align:middle;
+    }
+
+    th{
+      color:#5b7287;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    td{
+      color:var(--text);
+      font-weight:700;
+    }
+
+    tr:hover td{background:#fcfeff}
+
+    .actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .action-btn{
+      border:none;
+      border-radius:10px;
+      padding:8px 10px;
+      cursor:pointer;
+      font-size:12px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .action-blue{background:var(--blue-soft);color:var(--blue)}
+    .action-green{background:var(--green-soft);color:var(--green)}
+    .action-red{background:var(--red-soft);color:var(--red)}
+    .action-amber{background:var(--amber-soft);color:var(--amber)}
+    .action-primary{background:var(--primary-soft);color:var(--primary-dark)}
+
+    .filters{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .field,
+    .select,
+    .textarea{
+      width:100%;
+      border:1px solid var(--line-dark);
+      background:#fff;
+      color:var(--text);
+      border-radius:14px;
+      padding:12px 14px;
+      outline:none;
+      font-size:14px;
+    }
+
+    .field:focus,
+    .select:focus,
+    .textarea:focus{
+      border-color:#96bdd8;
+      box-shadow:0 0 0 4px rgba(31,111,165,.08);
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+    }
+
+    .label{
+      display:block;
+      margin-bottom:7px;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .progress-wrap{
+      display:grid;
+      gap:10px;
+    }
+
+    .progress-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      font-size:14px;
+      font-weight:900;
+    }
+
+    .progress{
+      height:12px;
+      background:#edf3f8;
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .progress > span{
+      display:block;
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--primary),#54b0dd);
+    }
+
+    .status-text{
+      min-height:20px;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:800;
+    }
+
+    @media (max-width:1280px){
+      .grid-4,
+      .mini-cards{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .grid-3{
+        grid-template-columns:1fr;
       }
     }
 
-    const { data: society, error: societyError } = await supabase
-      .from('societies')
-      .select('*')
-      .eq('manager_user_id', user.id)
-      .limit(1)
-      .maybeSingle()
+    @media (max-width:980px){
+      .app{grid-template-columns:1fr}
 
-    if (societyError) {
-      console.error('Society error:', societyError)
-    } else if (society) {
-      console.log('Society:', society)
+      .sidebar{
+        position:relative;
+        top:auto;
+        height:auto;
+        border-left:none;
+        border-bottom:1px solid var(--line);
+      }
 
-      if (societyNameEl) {
-        societyNameEl.textContent = society.name || '...'
+      .menu{
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
       }
-    } else {
-      if (societyNameEl) {
-        societyNameEl.textContent = 'لا توجد جمعية بعد'
-      }
+
+      .content{padding:16px}
+      .grid-2,
+      .form-grid{grid-template-columns:1fr}
     }
 
-    if (createBtn) {
-      createBtn.addEventListener('click', async () => {
-        const name = prompt('اكتب اسم الجمعية')
+    @media (max-width:640px){
+      .menu{grid-template-columns:1fr}
+      .grid-4,
+      .mini-cards{grid-template-columns:1fr}
+      .topbar h2{font-size:23px}
+      .mini-card strong{font-size:22px}
+    }
+  </style>
+</head>
+<body>
 
-        if (!name || !name.trim()) return
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">س</div>
+        <div>
+          <h1>صندوق ساهل</h1>
+          <p>لوحة مدير الجمعية</p>
+          <div class="manager-chip">إدارة جمعيتك من مكان واحد</div>
+        </div>
+      </div>
 
-        if (statusEl) {
-          statusEl.textContent = 'جاري الإنشاء...'
-        }
+      <div class="menu">
+        <button class="menu-btn active" data-page="overview-page">
+          <div class="menu-right">
+            <div class="menu-icon">📋</div>
+            <span>نظرة عامة</span>
+          </div>
+          <span>‹</span>
+        </button>
 
-        const { error: insertError } = await supabase
-          .from('societies')
-          .insert([
-            {
-              name: name.trim(),
-              manager_user_id: user.id
-            }
-          ])
+        <button class="menu-btn" data-page="members-page">
+          <div class="menu-right">
+            <div class="menu-icon">👥</div>
+            <span>أعضاء الجمعية</span>
+          </div>
+          <span>‹</span>
+        </button>
 
-        if (insertError) {
-          console.error('Create society error:', insertError)
-          if (statusEl) {
-            statusEl.textContent = 'خطأ في إنشاء الجمعية'
+        <button class="menu-btn" data-page="requests-page">
+          <div class="menu-right">
+            <div class="menu-icon">📨</div>
+            <span>طلبات الانضمام</span>
+          </div>
+          <span>‹</span>
+        </button>
+
+        <button class="menu-btn" data-page="member-link-page">
+          <div class="menu-right">
+            <div class="menu-icon">🔗</div>
+            <span>رابط / صفحة العضو</span>
+          </div>
+          <span>‹</span>
+        </button>
+
+        <button class="menu-btn" data-page="payments-page">
+          <div class="menu-right">
+            <div class="menu-icon">💳</div>
+            <span>الدفعات</span>
+          </div>
+          <span>‹</span>
+        </button>
+
+        <button class="menu-btn" data-page="plan-page">
+          <div class="menu-right">
+            <div class="menu-icon">📦</div>
+            <span>الباقة الحالية</span>
+          </div>
+          <span>‹</span>
+        </button>
+
+        <button class="menu-btn" data-page="alerts-page">
+          <div class="menu-right">
+            <div class="menu-icon">🔔</div>
+            <span>التنبيهات</span>
+          </div>
+          <span>‹</span>
+        </button>
+
+        <button class="menu-btn" data-page="archive-page">
+          <div class="menu-right">
+            <div class="menu-icon">🗂️</div>
+            <span>الأرشيف</span>
+          </div>
+          <span>‹</span>
+        </button>
+
+        <button class="menu-btn" data-page="notes-page">
+          <div class="menu-right">
+            <div class="menu-icon">📝</div>
+            <span>ملاحظات للإدارة</span>
+          </div>
+          <span>‹</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <div>
+          <h2 id="page-title">صفحة مدير المجموعة</h2>
+          <p>تحكم مباشر في الجمعية، الأعضاء، الطلبات، الدفعات، والتنبيهات من مكان واحد.</p>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="btn btn-soft" type="button" onclick="window.location.href='index.html'">الرئيسية</button>
+          <button class="btn btn-primary" id="create-society-btn">+ إنشاء جمعية</button>
+          <span id="create-society-status" class="status-text"></span>
+        </div>
+      </div>
+
+      <section class="page active" id="overview-page">
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3 class="card-title">معلومات الجمعية</h3>
+                <p class="card-sub">البيانات الأساسية الخاصة بجمعيتك الحالية</p>
+              </div>
+              <span class="badge badge-green">نشطة</span>
+            </div>
+
+            <div class="mini-cards">
+              <div class="mini-card">
+                <span>اسم الجمعية</span>
+                <strong id="society-name">...</strong>
+              </div>
+
+              <div class="mini-card">
+                <span>اسم المدير</span>
+                <strong id="manager-name">...</strong>
+              </div>
+
+              <div class="mini-card">
+                <span>الباقة الحالية</span>
+                <strong>لاحقًا</strong>
+              </div>
+
+              <div class="mini-card">
+                <span>الأعضاء</span>
+                <strong>لاحقًا</strong>
+              </div>
+            </div>
+
+            <div style="margin-top:16px;" class="progress-wrap">
+              <div class="progress-head">
+                <span>حالة النظام</span>
+                <span>الربط الأساسي مكتمل</span>
+              </div>
+              <div class="progress">
+                <span style="width:40%;"></span>
+              </div>
+            </div>
+
+            <div style="margin-top:16px;" class="quick-actions">
+              <button class="btn btn-primary" type="button">+ إضافة عضو</button>
+              <button class="btn btn-soft" type="button">نسخ رابط الانضمام</button>
+              <button class="btn btn-soft" type="button">مشاركة واتساب</button>
+              <button class="btn btn-soft" type="button">إرسال تذكير</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3 class="card-title">الملخص السريع</h3>
+                <p class="card-sub">سيتم ربط الأرقام الفعلية هنا بعد تثبيت مسار الأعضاء والمدفوعات</p>
+              </div>
+            </div>
+
+            <div class="mini-cards">
+              <div class="mini-card">
+                <span>عدد الأعضاء</span>
+                <strong>—</strong>
+              </div>
+
+              <div class="mini-card">
+                <span>المتأخرين</span>
+                <strong>—</strong>
+              </div>
+
+              <div class="mini-card">
+                <span>المدفوع</span>
+                <strong>—</strong>
+              </div>
+
+              <div class="mini-card">
+                <span>المتبقي</span>
+                <strong>—</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="members-page">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">أعضاء الجمعية</h3>
+              <p class="card-sub">سيتم ربط الأعضاء هنا في المرحلة التالية</p>
+            </div>
+          </div>
+
+          <div class="notice-list">
+            <div class="notice">
+              <div class="notice-left">
+                <div class="notice-icon badge-blue">i</div>
+                <div>
+                  <h4>الربط القادم</h4>
+                  <p>بعد تثبيت التسجيل والدخول والجمعية، سنربط جدول الأعضاء والمدفوعات والطلبات بشكل نهائي.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="requests-page">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">طلبات الانضمام</h3>
+              <p class="card-sub">الطلبات ستظهر هنا بعد ربط join_requests</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="member-link-page">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">رابط / صفحة العضو</h3>
+              <p class="card-sub">هذه المنطقة ستربط لاحقًا مع join.html</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="payments-page">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">الدفعات</h3>
+              <p class="card-sub">الدفعات ستظهر هنا بعد ربط جدول payments</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="plan-page">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">الباقة الحالية</h3>
+              <p class="card-sub">تم إيقاف ربط الاشتراكات مؤقتًا حتى يثبت الأساس</p>
+            </div>
+          </div>
+
+          <div class="notice-list">
+            <div class="notice">
+              <div class="notice-left">
+                <div class="notice-icon badge-amber">!</div>
+                <div>
+                  <h4>قرار تقني</h4>
+                  <p>تم تأجيل ربط الباقات الفعلية حتى يثبت التسجيل والدخول وإنشاء الجمعية بدون أخطاء.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="alerts-page">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">التنبيهات</h3>
+              <p class="card-sub">التنبيهات ستُفعّل بعد استكمال منطق النظام التشغيلي</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="archive-page">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">الأرشيف</h3>
+              <p class="card-sub">سيظهر هنا سجل الجمعيات المكتملة أو المتوقفة لاحقًا</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="notes-page">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">ملاحظات للإدارة</h3>
+              <p class="card-sub">سيتم ربط هذا القسم لاحقًا مع جدول notes</p>
+            </div>
+          </div>
+
+          <div>
+            <label class="label">عنوان الملاحظة</label>
+            <input class="field" type="text" placeholder="مثال: مشكلة في اعتماد الإيصال">
+          </div>
+
+          <div style="margin-top:12px;">
+            <label class="label">التفاصيل</label>
+            <textarea class="textarea" rows="7" placeholder="اكتب الملاحظة أو الاقتراح هنا..."></textarea>
+          </div>
+
+          <div style="margin-top:14px;" class="quick-actions">
+            <button class="btn btn-primary" type="button">إرسال للإدارة</button>
+            <button class="btn btn-soft" type="button">حفظ كمسودة</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+    const SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+    const SUPABASE_ANON_KEY = 'sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT'
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    window.supabase = supabase
+
+    const managerNameEl = document.getElementById('manager-name')
+    const societyNameEl = document.getElementById('society-name')
+    const createBtn = document.getElementById('create-society-btn')
+    const statusEl = document.getElementById('create-society-status')
+
+    function setStatus(message) {
+      if (statusEl) statusEl.textContent = message
+    }
+
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+
+      if (userError || !user) {
+        window.location.href = 'login.html'
+        throw userError || new Error('No authenticated user')
+      }
+
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('user_id', user.id)
+        .maybeSingle()
+
+      if (profileError) {
+        console.error('Profile error:', profileError)
+      } else if (profile?.full_name && managerNameEl) {
+        managerNameEl.textContent = profile.full_name
+      } else if (managerNameEl) {
+        managerNameEl.textContent = user.email || '...'
+      }
+
+      const { data: society, error: societyError } = await supabase
+        .from('societies')
+        .select('id, name')
+        .eq('manager_user_id', user.id)
+        .limit(1)
+        .maybeSingle()
+
+      if (societyError) {
+        console.error('Society error:', societyError)
+        if (societyNameEl) societyNameEl.textContent = 'تعذر تحميل الجمعية'
+      } else if (society) {
+        if (societyNameEl) societyNameEl.textContent = society.name || '...'
+      } else {
+        if (societyNameEl) societyNameEl.textContent = 'لا توجد جمعية بعد'
+      }
+
+      if (createBtn) {
+        createBtn.addEventListener('click', async () => {
+          const name = prompt('اكتب اسم الجمعية')
+          if (!name || !name.trim()) return
+
+          setStatus('جاري الإنشاء...')
+
+          const { error: insertError } = await supabase
+            .from('societies')
+            .insert([
+              {
+                name: name.trim(),
+                manager_user_id: user.id
+              }
+            ])
+
+          if (insertError) {
+            console.error('Create society error:', insertError)
+            setStatus('خطأ في إنشاء الجمعية')
+            return
           }
-          return
-        }
 
-        if (statusEl) {
-          statusEl.textContent = 'تم إنشاء الجمعية بنجاح'
-        }
-
-        location.reload()
-      })
+          setStatus('تم إنشاء الجمعية بنجاح')
+          location.reload()
+        })
+      }
+    } catch (err) {
+      console.error('Dashboard fatal error:', err)
+      document.body.innerHTML = `
+        <div style="font-family:Tajawal,sans-serif;padding:40px;text-align:center">
+          حدث خطأ في تحميل لوحة المدير.
+        </div>
+      `
     }
-  } catch (err) {
-    console.error('Dashboard fatal error:', err)
-  }
-</script>
+  </script>
+
+  <script>
+    const menuButtons = document.querySelectorAll('.menu-btn');
+    const pages = document.querySelectorAll('.page');
+    const pageTitle = document.getElementById('page-title');
+
+    const titles = {
+      'overview-page': 'صفحة مدير المجموعة',
+      'members-page': 'أعضاء الجمعية',
+      'requests-page': 'طلبات الانضمام',
+      'member-link-page': 'رابط / صفحة العضو',
+      'payments-page': 'الدفعات',
+      'plan-page': 'الباقة الحالية',
+      'alerts-page': 'التنبيهات',
+      'archive-page': 'الأرشيف',
+      'notes-page': 'ملاحظات للإدارة'
+    };
+
+    menuButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-page');
+        if (!target) return;
+
+        menuButtons.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        pages.forEach((page) => page.classList.remove('active'));
+
+        const nextPage = document.getElementById(target);
+        if (nextPage) {
+          nextPage.classList.add('active');
+          pageTitle.textContent = titles[target] || 'لوحة مدير الجمعية';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
