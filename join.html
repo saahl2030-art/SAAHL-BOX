@@ -1,905 +1,487 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>الانضمام إلى الجمعية - صندوق ساهل</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet"/>
   <style>
     :root{
-      --primary:#1a6b8a;
-      --primary2:#155972;
-      --primary3:#e0f4fa;
-      --teal:#0891b2;
-      --red:#be123c;
-      --redbg:#ffe4e6;
-      --green:#15803d;
-      --greenbg:#dcfce7;
-      --amber:#b45309;
-      --amberbg:#fef3c7;
-      --bg:#f4f8fb;
-      --border:#d4e4ee;
-      --dark:#0d2233;
-      --dark2:#163348;
-      --muted:#5a7a90;
-      --white:#fff;
-      --sh:0 1px 3px rgba(26,107,138,.08),0 1px 2px rgba(26,107,138,.06);
-      --sh2:0 4px 16px rgba(26,107,138,.12),0 2px 4px rgba(26,107,138,.06);
-      --sh3:0 20px 60px rgba(26,107,138,.15);
+      --p:#1f6fa5;--p2:#185781;--p3:#eaf5fd;--p4:#c8e6f7;
+      --green:#138a59;--green-s:#e8f8f1;
+      --red:#c53b3b;--red-s:#fdeeee;
+      --text:#16324a;--muted:#6e8498;
+      --line:#dfe8f1;--line2:#cfdbe7;
+      --bg:#f4f8fc;
+      --sh:0 8px 24px rgba(31,111,165,.1);
+      --sh2:0 20px 60px rgba(31,111,165,.14);
     }
-
     *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
-    body{
-      font-family:'Tajawal',sans-serif;
-      background:var(--bg);
-      color:var(--dark);
-      min-height:100vh;
+    .header{
+      background:#fff;border-bottom:1px solid var(--line);
+      padding:14px 24px;display:flex;align-items:center;
+      justify-content:center;box-shadow:0 2px 12px rgba(31,111,165,.07);
+      position:sticky;top:0;z-index:50;
+    }
+    .header-logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:900;color:var(--text)}
+    .header-logo-icon{
+      width:40px;height:40px;border-radius:12px;
+      background:linear-gradient(135deg,var(--p),#46a8d8);
+      display:grid;place-items:center;color:#fff;font-size:18px;font-weight:900;
+      box-shadow:0 6px 16px rgba(31,111,165,.25);
     }
 
-    .nav{
-      position:sticky;
-      top:0;
-      z-index:100;
-      background:rgba(255,255,255,.92);
-      backdrop-filter:blur(20px);
-      border-bottom:1px solid var(--border);
-      min-height:64px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:10px 24px;
-      box-shadow:var(--sh);
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .nav-logo{
-      display:flex;
-      align-items:center;
-      gap:9px;
-      font-size:20px;
-      font-weight:900;
-      color:var(--dark);
-      text-decoration:none;
-    }
-
-    .nav-actions{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      padding:10px 18px;
-      border:none;
-      border-radius:12px;
-      font-family:'Tajawal',sans-serif;
-      font-size:14px;
-      font-weight:800;
-      cursor:pointer;
-      transition:all .18s;
-      text-decoration:none;
-      white-space:nowrap;
-    }
-
-    .btn:hover{transform:translateY(-1px);box-shadow:var(--sh2)}
-    .btn:active{transform:scale(.98)}
-    .btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
-
-    .btn-p{background:var(--primary);color:#fff}
-    .btn-w{background:#fff;border:1px solid var(--border);color:var(--dark2);box-shadow:var(--sh)}
-    .btn-sm{padding:7px 12px;font-size:13px;border-radius:10px}
-    .btn-full{width:100%}
-
-    .wrap{
-      max-width:1040px;
-      margin:0 auto;
-      padding:30px 20px 80px;
-    }
+    .wrap{max-width:660px;margin:0 auto;padding:28px 18px 80px}
 
     .hero{
-      background:linear-gradient(135deg,#0d2233 0%,#1a3d52 50%,#0d2233 100%);
-      color:#fff;
-      border-radius:24px;
-      padding:34px 24px;
-      text-align:center;
-      box-shadow:var(--sh3);
-      margin-bottom:22px;
+      background:linear-gradient(135deg,#16324a 0%,#1f6fa5 100%);
+      border-radius:24px;padding:36px 24px;text-align:center;
+      color:#fff;margin-bottom:20px;box-shadow:var(--sh2);
+      position:relative;overflow:hidden;
     }
-
-    .hero h1{
-      font-size:38px;
-      font-weight:900;
-      margin-bottom:12px;
+    .hero::before{
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(ellipse at 80% 20%,rgba(255,255,255,.08),transparent 60%);
+      pointer-events:none;
     }
-
-    .hero p{
-      font-size:15px;
-      line-height:1.9;
-      opacity:.92;
-      max-width:760px;
-      margin:0 auto;
+    .hero-icon{
+      width:64px;height:64px;border-radius:20px;
+      background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.2);
+      display:grid;place-items:center;font-size:28px;
+      margin:0 auto 16px;backdrop-filter:blur(4px);
     }
+    .hero h1{font-size:28px;font-weight:900;margin-bottom:10px;line-height:1.2}
+    .hero p{font-size:14px;line-height:1.9;opacity:.88;max-width:480px;margin:0 auto}
 
-    .card{
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius:20px;
-      padding:24px;
-      box-shadow:var(--sh2);
-      margin-bottom:18px;
+    .error-state{
+      background:var(--red-s);border:1px solid #f5c6c6;
+      border-radius:18px;padding:28px 24px;text-align:center;
     }
+    .error-state .icon{font-size:36px;margin-bottom:12px}
+    .error-state h3{font-size:18px;font-weight:900;color:var(--red);margin-bottom:8px}
+    .error-state p{font-size:13px;color:var(--red);line-height:1.8}
 
-    .title{
-      font-size:24px;
-      font-weight:900;
-      margin-bottom:14px;
-      color:var(--dark);
-      text-align:center;
+    .card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--sh);margin-bottom:16px}
+    .card-title{font-size:17px;font-weight:900;margin-bottom:4px}
+    .card-sub{font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.7}
+
+    .group-info{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .info-item{background:#f8fbff;border:1px solid var(--line);border-radius:12px;padding:13px 14px}
+    .info-item span{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px}
+    .info-item strong{display:block;font-size:15px;font-weight:900;color:var(--text);word-break:break-word}
+
+    .year-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+    .year-row label{font-size:13px;font-weight:800;color:var(--muted);white-space:nowrap}
+    .select{
+      border:1px solid var(--line2);background:#fff;color:var(--text);
+      border-radius:10px;padding:9px 12px;outline:none;font-size:13px;
+      font-family:'Tajawal',sans-serif;
     }
+    .select:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(31,111,165,.08)}
 
-    .muted{
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.9;
-      text-align:center;
+    .months-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+    .month-btn{
+      border:1.5px solid var(--line2);background:#fff;border-radius:12px;
+      padding:12px 6px;text-align:center;cursor:pointer;transition:all .18s;
+      font-size:13px;font-weight:800;color:var(--text);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:4px;min-height:70px;
     }
+    .month-btn:hover:not(.taken){border-color:var(--p);background:var(--p3);transform:translateY(-1px)}
+    .month-btn.selected{background:var(--p);border-color:var(--p);color:#fff;box-shadow:0 6px 16px rgba(31,111,165,.25);transform:translateY(-1px)}
+    .month-btn.taken{background:#f3f6fa;border-color:var(--line);color:#b0bec5;cursor:not-allowed}
+    .month-btn small{font-size:10px;font-weight:700;opacity:.8}
+    .month-btn.taken small{color:#b0bec5}
 
-    .info-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
-      margin-top:18px;
+    .selected-banner{
+      display:none;margin-top:12px;padding:12px 14px;
+      background:var(--p3);border:1px solid var(--p4);
+      border-radius:12px;font-size:13px;font-weight:800;
+      color:var(--p2);text-align:center;
     }
+    .selected-banner.show{display:block}
 
-    .info-box{
-      background:#f9fcfe;
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:16px;
-      text-align:center;
-    }
-
-    .info-label{
-      font-size:12px;
-      color:var(--muted);
-      margin-bottom:6px;
-      font-weight:700;
-    }
-
-    .info-value{
-      font-size:20px;
-      color:var(--dark);
-      font-weight:900;
-      word-break:break-word;
-    }
-
+    .form-group{margin-bottom:14px}
+    .form-group label{display:block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px}
     .field{
-      margin-bottom:14px;
+      width:100%;border:1px solid var(--line2);background:#fff;color:var(--text);
+      border-radius:11px;padding:12px 14px;outline:none;font-size:14px;
+      font-family:'Tajawal',sans-serif;transition:.2s;
     }
+    .field:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(31,111,165,.08)}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
-    .field label{
-      display:block;
-      font-size:13px;
-      color:var(--dark2);
-      font-weight:800;
-      margin-bottom:6px;
+    .upload-area{
+      border:2px dashed var(--line2);border-radius:14px;padding:20px;
+      text-align:center;cursor:pointer;transition:.2s;background:#fafcfe;
     }
+    .upload-area:hover{border-color:var(--p);background:var(--p3)}
+    .upload-area.has-file{border-color:var(--green);background:var(--green-s)}
+    .upload-area input[type=file]{display:none}
+    .upload-icon{font-size:28px;margin-bottom:8px}
+    .upload-text{font-size:13px;font-weight:800;color:var(--muted)}
+    .upload-sub{font-size:11px;color:var(--muted);margin-top:4px}
+    .upload-name{font-size:13px;font-weight:800;color:var(--green);margin-top:6px}
 
-    input, select, textarea{
-      width:100%;
-      padding:13px 14px;
-      border:1.5px solid var(--border);
-      border-radius:10px;
-      font-size:15px;
-      font-family:'Tajawal',sans-serif;
-      background:#fff;
-      color:var(--dark);
-      outline:none;
-      transition:border-color .2s, box-shadow .2s;
+    .submit-btn{
+      width:100%;padding:15px;border:none;border-radius:14px;
+      background:var(--p);color:#fff;font-size:15px;font-weight:900;
+      font-family:'Tajawal',sans-serif;cursor:pointer;transition:.2s;
+      box-shadow:0 8px 20px rgba(31,111,165,.25);
     }
+    .submit-btn:hover{background:var(--p2);transform:translateY(-1px)}
+    .submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
 
-    textarea{
-      min-height:110px;
-      resize:vertical;
-      line-height:1.8;
+    .msg{display:none;padding:14px;border-radius:12px;font-size:13px;font-weight:800;line-height:1.8;margin-top:12px;text-align:center}
+    .msg.error{background:var(--red-s);color:var(--red);border:1px solid #f5c6c6;display:block}
+    .msg.success{background:var(--green-s);color:var(--green);border:1px solid #b7e4cf;display:block}
+
+    .success-state{
+      display:none;background:var(--green-s);border:1px solid #b7e4cf;
+      border-radius:20px;padding:36px 24px;text-align:center;
     }
+    .success-state.show{display:block}
+    .success-state .icon{font-size:48px;margin-bottom:16px}
+    .success-state h3{font-size:20px;font-weight:900;color:var(--green);margin-bottom:8px}
+    .success-state p{font-size:14px;color:var(--green);line-height:1.9}
 
-    input:focus, select:focus, textarea:focus{
-      border-color:var(--primary);
-      box-shadow:0 0 0 3px rgba(26,107,138,.12);
+    .loader{
+      display:none;position:fixed;inset:0;background:rgba(255,255,255,.82);
+      z-index:999;align-items:center;justify-content:center;
+      flex-direction:column;gap:12px;font-size:15px;font-weight:700;color:var(--p);
     }
+    .loader.show{display:flex}
+    .spinner{width:36px;height:36px;border:3px solid var(--p4);border-top-color:var(--p);border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
 
-    .file-input{
-      width:100%;
-      padding:12px;
-      border:1.5px solid var(--border);
-      border-radius:10px;
-      background:#fff;
-      font-family:'Tajawal',sans-serif;
+    @media(max-width:540px){
+      .group-info{grid-template-columns:1fr}
+      .form-row{grid-template-columns:1fr}
+      .hero h1{font-size:24px}
     }
-
-    .code-box{
-      direction:ltr;
-      background:var(--primary3);
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:12px;
-      text-align:center;
-      color:var(--primary2);
-      font-size:24px;
-      font-weight:900;
-      letter-spacing:2px;
-      margin-top:10px;
-    }
-
-    .warn{
-      color:#991b1b;
-      margin-top:14px;
-      font-weight:800;
-      background:var(--redbg);
-      border:1px solid #fecdd3;
-      border-radius:10px;
-      padding:12px;
-      text-align:center;
-      line-height:1.8;
-    }
-
-    .success{
-      color:#155972;
-      margin-top:14px;
-      font-weight:800;
-      background:var(--primary3);
-      border:1px solid #bae6fd;
-      border-radius:10px;
-      padding:12px;
-      text-align:center;
-      line-height:1.9;
-    }
-
-    .hidden{display:none}
-
-    .field-row{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-    }
-
-    .months-grid{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:10px;
-      margin-top:16px;
-    }
-
-    .month-card{
-      border:1.5px solid var(--border);
-      background:#fff;
-      border-radius:14px;
-      padding:14px 10px;
-      text-align:center;
-      cursor:pointer;
-      transition:all .18s;
-      font-weight:800;
-      color:var(--dark2);
-      box-shadow:var(--sh);
-      min-height:82px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .month-card:hover{
-      transform:translateY(-1px);
-      border-color:var(--primary);
-      box-shadow:var(--sh2);
-    }
-
-    .month-card.selected{
-      background:var(--primary3);
-      border-color:var(--primary);
-      color:var(--primary2);
-    }
-
-    .month-card.taken{
-      background:#f3f4f6;
-      border-color:#e5e7eb;
-      color:#9ca3af;
-      cursor:not-allowed;
-      box-shadow:none;
-    }
-
-    .month-card small{
-      display:block;
-      margin-top:6px;
-      font-size:11px;
-      font-weight:700;
-      color:var(--muted);
-      line-height:1.6;
-    }
-
-    .picked-month{
-      margin-top:14px;
-      text-align:center;
-      color:var(--primary2);
-      font-size:14px;
-      font-weight:800;
-      line-height:1.8;
-    }
-
-    .section-helper{
-      text-align:center;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.8;
-      margin-top:10px;
-    }
-
-    .year-badge{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      margin:10px auto 0;
-      padding:6px 12px;
-      border-radius:999px;
-      background:var(--primary3);
-      color:var(--primary2);
-      font-size:13px;
-      font-weight:800;
-    }
-
-    @media(max-width:760px){
-      .nav{
-        padding:10px 14px;
-        justify-content:center;
-      }
-
-      .nav-logo{
-        width:100%;
-        justify-content:center;
-      }
-
-      .nav-actions{
-        width:100%;
-        justify-content:center;
-      }
-
-      .nav-actions .btn{
-        flex:1 1 calc(50% - 8px);
-      }
-
-      .wrap{
-        padding:20px 14px 60px;
-      }
-
-      .hero h1{
-        font-size:28px;
-      }
-
-      .info-grid{
-        grid-template-columns:1fr;
-      }
-
-      .field-row{
-        grid-template-columns:1fr;
-      }
-
-      .card{
-        padding:18px;
-      }
-
-      .months-grid{
-        grid-template-columns:repeat(2,1fr);
-      }
-
-      .btn-full{
-        width:100%;
-      }
-    }
-
-    @media(max-width:480px){
-      .months-grid{
-        grid-template-columns:1fr 1fr;
-      }
-
-      .month-card{
-        min-height:76px;
-        padding:12px 8px;
-      }
-    }
+    @media(max-width:380px){.months-grid{grid-template-columns:repeat(2,1fr)}}
   </style>
 </head>
 <body>
-  <nav class="nav">
-    <div class="nav-logo">🏦 صندوق ساهل</div>
-    <div class="nav-actions">
-      <a class="btn btn-w btn-sm" href="index.html">← الرئيسية</a>
-      <a class="btn btn-p btn-sm" href="plans.html">الخطط</a>
-    </div>
-  </nav>
 
-  <div class="wrap">
-    <div class="hero">
-      <h1>الانضمام إلى الجمعية</h1>
-      <p>
-        هذه الصفحة مخصصة لاستقبال الأعضاء الجدد عبر رابط الدعوة. اختر السنة أولًا ثم اختر شهرًا متاحًا فقط، وبعدها أكمل بياناتك وأرسل الطلب.
-      </p>
-    </div>
+<div class="loader" id="loader"><div class="spinner"></div><span>جاري التحميل...</span></div>
 
-    <div class="card">
-      <div class="title">بيانات الدعوة</div>
-      <p class="muted">إذا كان الرابط صحيحًا، ستظهر بيانات الجمعية هنا تلقائيًا.</p>
+<header class="header">
+  <div class="header-logo">
+    <div class="header-logo-icon">س</div>
+    <span>صندوق ساهل</span>
+  </div>
+</header>
 
-      <div class="info-grid">
-        <div class="info-box">
-          <div class="info-label">اسم الجمعية</div>
-          <div class="info-value" id="groupNameView">—</div>
-        </div>
+<div class="wrap">
 
-        <div class="info-box">
-          <div class="info-label">اسم المدير</div>
-          <div class="info-value" id="managerNameView">—</div>
-        </div>
-
-        <div class="info-box">
-          <div class="info-label">عدد الأعضاء الحالي</div>
-          <div class="info-value" id="membersView">—</div>
-        </div>
-
-        <div class="info-box">
-          <div class="info-label">قيمة الجمعية</div>
-          <div class="info-value" id="amountView">—</div>
-        </div>
-
-        <div class="info-box">
-          <div class="info-label">الخطة</div>
-          <div class="info-value" id="planView">—</div>
-        </div>
-
-        <div class="info-box">
-          <div class="info-label">الحد الأقصى للأعضاء</div>
-          <div class="info-value" id="membersLimitView">—</div>
-        </div>
-      </div>
-
-      <div style="margin-top:18px">
-        <div class="info-label" style="text-align:center">كود الدعوة</div>
-        <div class="code-box" id="codeView">—</div>
-      </div>
-
-      <div id="inviteError" class="warn hidden"></div>
-    </div>
-
-    <div class="card">
-      <div class="title">اختيار سنة وشهر الاستحقاق</div>
-      <p class="muted">اختر السنة أولًا، ثم اختر شهرًا واحدًا فقط من الأشهر المتاحة داخل تلك السنة.</p>
-
-      <div class="field-row" style="margin-top:16px">
-        <div class="field">
-          <label>السنة</label>
-          <select id="yearSelect"></select>
-        </div>
-
-        <div class="field">
-          <label>الشهر المختار</label>
-          <input id="selectedMonthDisplay" type="text" readonly placeholder="لم يتم الاختيار بعد">
-        </div>
-      </div>
-
-      <div class="year-badge" id="yearBadge">السنة الحالية: —</div>
-      <div id="monthsGrid" class="months-grid"></div>
-      <div id="pickedMonthText" class="picked-month">لم يتم اختيار شهر بعد</div>
-      <div class="section-helper">الأشهر الرمادية محجوزة، ولا يمكن اختيارها.</div>
-    </div>
-
-    <div class="card">
-      <div class="title">نموذج الانضمام</div>
-      <p class="muted">املأ البيانات التالية لإتمام الانضمام.</p>
-
-      <div class="field">
-        <label>الاسم الكامل</label>
-        <input id="memberName" type="text" placeholder="اكتب اسمك الكامل">
-      </div>
-
-      <div class="field-row">
-        <div class="field">
-          <label>رقم الهاتف</label>
-          <input id="memberPhone" type="tel" placeholder="05xxxxxxxx">
-        </div>
-
-        <div class="field">
-          <label>البريد الإلكتروني</label>
-          <input id="memberEmail" type="email" placeholder="example@email.com" style="direction:ltr;text-align:left">
-        </div>
-      </div>
-
-      <div class="field">
-        <label>ملاحظات العضو</label>
-        <textarea id="memberNote" placeholder="مثال: أفضّل السداد في بداية الشهر"></textarea>
-      </div>
-
-      <div class="field">
-        <label>رفع إيصال الدفع (اختياري)</label>
-        <input id="memberReceipt" class="file-input" type="file" accept=".jpg,.jpeg,.png,.pdf,.webp">
-      </div>
-
-      <button type="button" class="btn btn-p btn-full" onclick="submitJoinRequest()">إرسال طلب الانضمام</button>
-
-      <div id="joinMessage"></div>
-    </div>
+  <div class="hero">
+    <div class="hero-icon">🏦</div>
+    <h1>الانضمام إلى الجمعية</h1>
+    <p>اختر شهرك المتاح، أكمل بياناتك، وأرسل طلب الانضمام. سيتواصل معك مدير الجمعية لتأكيد القبول.</p>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = "https://qxyrpnexybxmfmtrnzpg.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_QIxCZZAQvM_tBEPJp5-IDg_m9hZRHAT";
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  <div class="error-state" id="errorState" style="display:none">
+    <div class="icon">⚠️</div>
+    <h3>رابط غير صالح</h3>
+    <p id="errorStateText">رابط الدعوة غير صحيح أو الجمعية غير موجودة.</p>
+  </div>
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const inviteCode = urlParams.get("code");
+  <div id="mainContent" style="display:none">
 
-    let currentGroup = null;
-    let selectedMonth = "";
-    let selectedYear = "";
+    <!-- معلومات الجمعية -->
+    <div class="card">
+      <div class="card-title">معلومات الجمعية</div>
+      <div class="card-sub">الجمعية التي ستنضم إليها</div>
+      <div class="group-info">
+        <div class="info-item"><span>اسم الجمعية</span><strong id="vGroupName">—</strong></div>
+        <div class="info-item"><span>مدير الجمعية</span><strong id="vManagerName">—</strong></div>
+        <div class="info-item"><span>المبلغ الشهري</span><strong id="vAmount">—</strong></div>
+        <div class="info-item"><span>عدد الأعضاء</span><strong id="vMembersCount">—</strong></div>
+      </div>
+    </div>
 
-    const MONTHS = [
-      "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
-      "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
-    ];
+    <!-- اختيار الشهر -->
+    <div class="card" id="monthCard">
+      <div class="card-title">اختر شهر الاستلام</div>
+      <div class="card-sub">الأشهر الرمادية محجوزة. اختر شهراً متاحاً فقط.</div>
+      <div class="year-row">
+        <label>السنة:</label>
+        <select class="select" id="yearSelect"></select>
+      </div>
+      <div class="months-grid" id="monthsGrid"></div>
+      <div class="selected-banner" id="selectedBanner">✅ اخترت: <span id="selectedLabel">—</span></div>
+    </div>
 
-    function showInviteError(msg){
-      const el = document.getElementById("inviteError");
-      el.textContent = msg;
-      el.classList.remove("hidden");
+    <!-- النموذج -->
+    <div class="card" id="formCard">
+      <div class="card-title">بياناتك الشخصية</div>
+      <div class="card-sub">أكمل البيانات لإرسال طلب الانضمام</div>
+
+      <div class="form-group">
+        <label>الاسم الكامل *</label>
+        <input class="field" id="fName" type="text" placeholder="اكتب اسمك الكامل">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>رقم الهاتف *</label>
+          <input class="field" id="fPhone" type="tel" placeholder="05xxxxxxxx">
+        </div>
+        <div class="form-group">
+          <label>البريد الإلكتروني (اختياري)</label>
+          <input class="field" id="fEmail" type="email" placeholder="example@email.com" style="direction:ltr;text-align:left">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>إيصال الدفع الأول (اختياري)</label>
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fReceipt').click()">
+          <input type="file" id="fReceipt" accept=".jpg,.jpeg,.png,.pdf,.webp" onchange="handleFileSelect(this)">
+          <div class="upload-icon">📎</div>
+          <div class="upload-text">اضغط لرفع الإيصال</div>
+          <div class="upload-sub">JPG, PNG, PDF — الحد الأقصى 5MB</div>
+          <div class="upload-name" id="uploadName"></div>
+        </div>
+      </div>
+
+      <div class="msg" id="formMsg"></div>
+      <button class="submit-btn" id="submitBtn" onclick="submitRequest()">إرسال طلب الانضمام</button>
+    </div>
+
+    <!-- النجاح -->
+    <div class="success-state" id="successState">
+      <div class="icon">🎉</div>
+      <h3>تم إرسال طلبك بنجاح!</h3>
+      <p id="successText">سيتواصل معك مدير الجمعية لتأكيد قبول طلبك.</p>
+    </div>
+
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+const SUPABASE_URL      = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+const MONTHS = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
+
+let currentGroup  = null
+let managerName   = ''
+let takenMonths   = []
+let selectedMonth = null
+let selectedYear  = new Date().getFullYear()
+
+const loader = document.getElementById('loader')
+
+async function init() {
+  loader.classList.add('show')
+
+  const token = new URLSearchParams(window.location.search).get('token')
+  if (!token) {
+    showError('لا يوجد رابط دعوة صحيح. تواصل مع مدير الجمعية للحصول على الرابط الصحيح.')
+    loader.classList.remove('show')
+    return
+  }
+
+  // جلب الجمعية مع بيانات المدير
+  const { data: group, error } = await sb
+    .from('groups')
+    .select('*, profiles(full_name)')
+    .eq('join_token', token)
+    .single()
+
+  if (error || !group) {
+    showError('رابط الدعوة غير صالح أو الجمعية غير موجودة.')
+    loader.classList.remove('show')
+    return
+  }
+
+  if (group.status !== 'active') {
+    showError('هذه الجمعية غير نشطة حالياً ولا تقبل أعضاء جدد.')
+    loader.classList.remove('show')
+    return
+  }
+
+  currentGroup = group
+  managerName  = group.profiles?.full_name || '—'
+
+  // عدد الأعضاء النشطين
+  const { count } = await sb.from('members')
+    .select('*', {count:'exact',head:true})
+    .eq('group_id', group.id).eq('status','active')
+
+  // تحديث الـ UI
+  document.getElementById('vGroupName').textContent    = group.name
+  document.getElementById('vManagerName').textContent  = managerName
+  document.getElementById('vAmount').textContent       = group.monthly_amount + ' درهم'
+  document.getElementById('vMembersCount').textContent = (count || 0) + ' عضو'
+
+  fillYears()
+  await loadTakenMonths()
+  renderMonths()
+
+  document.getElementById('mainContent').style.display = 'block'
+  loader.classList.remove('show')
+}
+
+function fillYears() {
+  const sel  = document.getElementById('yearSelect')
+  const curr = new Date().getFullYear()
+  for (let y = curr; y <= curr + 3; y++) {
+    const o = document.createElement('option')
+    o.value = y; o.textContent = y; sel.appendChild(o)
+  }
+  sel.value = curr
+  sel.addEventListener('change', async () => {
+    selectedYear  = parseInt(sel.value)
+    selectedMonth = null
+    updateBanner()
+    await loadTakenMonths()
+    renderMonths()
+  })
+}
+
+async function loadTakenMonths() {
+  const { data } = await sb.from('members')
+    .select('join_month').eq('group_id', currentGroup.id).eq('join_year', selectedYear)
+  takenMonths = (data || []).map(m => m.join_month)
+}
+
+function renderMonths() {
+  const grid   = document.getElementById('monthsGrid')
+  grid.innerHTML = ''
+  const takenSet = new Set(takenMonths)
+
+  MONTHS.forEach((name, i) => {
+    const num   = i + 1
+    const taken = takenSet.has(num)
+    const isSel = selectedMonth === num
+
+    const btn = document.createElement('button')
+    btn.type = 'button'
+    btn.className = 'month-btn' + (taken?' taken':'') + (isSel?' selected':'')
+    btn.innerHTML = `<span>${name}</span><small>${taken?'محجوز':'متاح'}</small>`
+
+    if (!taken) {
+      btn.addEventListener('click', () => {
+        selectedMonth = num
+        renderMonths()
+        updateBanner()
+      })
     }
+    grid.appendChild(btn)
+  })
+}
 
-    function showJoinMessage(html){
-      document.getElementById("joinMessage").innerHTML = html;
-    }
+function updateBanner() {
+  const b = document.getElementById('selectedBanner')
+  if (selectedMonth) {
+    document.getElementById('selectedLabel').textContent = `${MONTHS[selectedMonth-1]} ${selectedYear}`
+    b.classList.add('show')
+  } else {
+    b.classList.remove('show')
+  }
+}
 
-    function escapeHtml(value){
-      return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
+window.handleFileSelect = function(input) {
+  const file = input.files[0]
+  const area = document.getElementById('uploadArea')
+  const name = document.getElementById('uploadName')
+  if (!file) { area.classList.remove('has-file'); name.textContent=''; return }
+  if (file.size > 5*1024*1024) {
+    showFormMsg('حجم الملف أكبر من 5MB', 'error')
+    input.value=''
+    return
+  }
+  area.classList.add('has-file')
+  name.textContent = '✅ ' + file.name
+}
 
-    function generateYears(count = 6){
-      const currentYear = new Date().getFullYear();
-      return Array.from({ length: count }, (_, i) => String(currentYear + i));
-    }
+window.submitRequest = async function() {
+  const name  = document.getElementById('fName').value.trim()
+  const phone = document.getElementById('fPhone').value.trim()
+  const file  = document.getElementById('fReceipt').files[0]
 
-    function fillYearSelect(){
-      const yearSelect = document.getElementById("yearSelect");
-      const years = generateYears(6);
-      selectedYear = years[0];
+  if (!name)         { showFormMsg('أدخل اسمك الكامل', 'error'); return }
+  if (!phone)        { showFormMsg('أدخل رقم هاتفك', 'error'); return }
+  if (!selectedMonth){ showFormMsg('اختر شهر الاستلام أولاً', 'error'); return }
 
-      yearSelect.innerHTML = years.map(year => `
-        <option value="${year}">${year}</option>
-      `).join("");
+  // تحقق مزدوج من الشهر
+  const { data: chk } = await sb.from('members').select('id')
+    .eq('group_id', currentGroup.id)
+    .eq('join_month', selectedMonth).eq('join_year', selectedYear)
 
-      yearSelect.value = selectedYear;
-      updateYearBadge();
-      updateSelectedMonthDisplay();
+  if (chk && chk.length > 0) {
+    showFormMsg('هذا الشهر أصبح محجوزاً. اختر شهراً آخر.', 'error')
+    await loadTakenMonths(); renderMonths(); return
+  }
 
-      yearSelect.addEventListener("change", async function(){
-        selectedYear = this.value;
-        selectedMonth = "";
-        updateYearBadge();
-        updateSelectedMonthDisplay();
-        await renderMonths();
-      });
-    }
+  const btn = document.getElementById('submitBtn')
+  btn.disabled = true; btn.textContent = 'جاري الإرسال...'
+  loader.classList.add('show')
 
-    function updateYearBadge(){
-      document.getElementById("yearBadge").textContent = `السنة المختارة: ${selectedYear || "—"}`;
-    }
-
-    function updateSelectedMonthDisplay(){
-      const display = document.getElementById("selectedMonthDisplay");
-      const pickedText = document.getElementById("pickedMonthText");
-
-      if(selectedMonth && selectedYear){
-        display.value = `${MONTHS[Number(selectedMonth) - 1]} ${selectedYear}`;
-        pickedText.textContent = `الشهر المختار: ${MONTHS[Number(selectedMonth) - 1]} ${selectedYear}`;
-      } else {
-        display.value = "";
-        pickedText.textContent = "لم يتم اختيار شهر بعد";
+  try {
+    // رفع الإيصال إن وجد
+    let receipt_url = null
+    if (file) {
+      const path = `${currentGroup.id}/${Date.now()}_${file.name.replace(/[^\w.\-]+/g,'_')}`
+      const { error: upErr } = await sb.storage.from('receipts').upload(path, file, {upsert:true})
+      if (!upErr) {
+        const { data: ud } = sb.storage.from('receipts').getPublicUrl(path)
+        receipt_url = ud?.publicUrl || null
       }
     }
 
-    function renderGroupInfo(group, membersCount = 0){
-      document.getElementById("groupNameView").textContent = group.group_name || "—";
-      document.getElementById("managerNameView").textContent = group.manager_name || "—";
-      document.getElementById("membersView").textContent = membersCount || 0;
-      document.getElementById("amountView").textContent = Number(group.amount || 0);
-      document.getElementById("planView").textContent = group.plan_name || "—";
-      document.getElementById("membersLimitView").textContent = group.members_limit || "—";
-      document.getElementById("codeView").textContent = group.invite_code || "—";
-    }
+    // إدراج الطلب في join_requests
+    const { error: reqErr } = await sb.from('join_requests').insert({
+      group_id:        currentGroup.id,
+      full_name:       name,
+      phone:           phone,
+      requested_month: selectedMonth,
+      requested_year:  selectedYear,
+      status:          'pending'
+    })
 
-    async function getReservedMonthsForSelectedYear() {
-      if (!currentGroup || !selectedYear) return [];
+    if (reqErr) throw reqErr
 
-      const { data, error } = await supabaseClient
-        .from("members")
-        .select("name, selected_month, selected_year")
-        .eq("group_id", currentGroup.id)
-        .eq("selected_year", Number(selectedYear));
+    // إخفاء النموذج وإظهار النجاح
+    loader.classList.remove('show')
+    document.getElementById('formCard').style.display  = 'none'
+    document.getElementById('monthCard').style.display = 'none'
+    document.getElementById('successState').classList.add('show')
+    document.getElementById('successText').innerHTML = `
+      مرحباً <strong>${name}</strong>،<br>
+      تم إرسال طلب انضمامك لجمعية <strong>${currentGroup.name}</strong><br>
+      للشهر: <strong>${MONTHS[selectedMonth-1]} ${selectedYear}</strong><br><br>
+      سيراجع المدير طلبك ويتواصل معك على: <strong>${phone}</strong>
+    `
 
-      if (error) {
-        console.error(error);
-        return [];
-      }
+  } catch(err) {
+    console.error(err)
+    loader.classList.remove('show')
+    showFormMsg('حدث خطأ: ' + err.message, 'error')
+    btn.disabled = false; btn.textContent = 'إرسال طلب الانضمام'
+  }
+}
 
-      return data || [];
-    }
+function showError(text) {
+  document.getElementById('errorStateText').textContent = text
+  document.getElementById('errorState').style.display = 'block'
+}
 
-    async function renderMonths() {
-      const grid = document.getElementById("monthsGrid");
-      grid.innerHTML = "";
+function showFormMsg(text, type) {
+  const el = document.getElementById('formMsg')
+  el.textContent = text; el.className = `msg ${type}`
+  el.scrollIntoView({behavior:'smooth',block:'nearest'})
+}
 
-      const reserved = await getReservedMonthsForSelectedYear();
-      const reservedMap = new Map(
-        reserved.map(item => [String(item.selected_month), item.name])
-      );
-
-      MONTHS.forEach((monthName, index) => {
-        const monthNumber = index + 1;
-        const monthKey = String(monthNumber);
-        const isTaken = reservedMap.has(monthKey);
-        const ownerName = reservedMap.get(monthKey);
-
-        const div = document.createElement("div");
-        div.className = "month-card" + (isTaken ? " taken" : "") + (selectedMonth === monthKey ? " selected" : "");
-
-        div.innerHTML = `
-          ${monthName}
-          <small>${selectedYear}${isTaken ? ` • محجوز لـ ${escapeHtml(ownerName)}` : " • متاح"}</small>
-        `;
-
-        if (!isTaken) {
-          div.addEventListener("click", () => {
-            selectedMonth = monthKey;
-            updateSelectedMonthDisplay();
-            renderMonths();
-          });
-        }
-
-        grid.appendChild(div);
-      });
-
-      updateSelectedMonthDisplay();
-    }
-
-    async function loadInvite(){
-      if(!inviteCode){
-        showInviteError("لا يوجد كود دعوة في الرابط.");
-        return;
-      }
-
-      const { data: group, error } = await supabaseClient
-        .from("groups")
-        .select("*")
-        .eq("invite_code", inviteCode)
-        .maybeSingle();
-
-      if (error) {
-        console.error(error);
-        showInviteError("حدث خطأ أثناء تحميل بيانات الدعوة.");
-        document.getElementById("codeView").textContent = inviteCode;
-        return;
-      }
-
-      if (!group) {
-        showInviteError("رابط الدعوة غير صالح أو الجمعية غير موجودة.");
-        document.getElementById("codeView").textContent = inviteCode;
-        return;
-      }
-
-      currentGroup = group;
-
-      const { count } = await supabaseClient
-        .from("members")
-        .select("*", { count: "exact", head: true })
-        .eq("group_id", currentGroup.id);
-
-      renderGroupInfo(currentGroup, count || 0);
-      fillYearSelect();
-      await renderMonths();
-    }
-
-    async function uploadReceiptIfExists(groupId, memberEmail){
-      const fileInput = document.getElementById("memberReceipt");
-      const file = fileInput.files[0];
-      if(!file) return { filePath: "", fileUrl: "", fileName: "" };
-
-      const safeEmail = (memberEmail || "member").replace(/[^\w.\-@]+/g, "_");
-      const safeName = file.name.replace(/[^\w.\-]+/g, "_");
-      const filePath = `${groupId}/${Date.now()}_${safeEmail}_${safeName}`;
-
-      const { error: uploadError } = await supabaseClient
-        .storage
-        .from("receipts")
-        .upload(filePath, file, { upsert: true });
-
-      if(uploadError) throw uploadError;
-
-      const { data } = supabaseClient
-        .storage
-        .from("receipts")
-        .getPublicUrl(filePath);
-
-      return {
-        filePath,
-        fileUrl: data?.publicUrl || "",
-        fileName: file.name
-      };
-    }
-
-    async function createReceiptRecord(groupId, memberId, memberName, receiptData, noteText){
-      if(!receiptData.fileUrl) return;
-
-      const { error } = await supabaseClient
-        .from("payment_receipts")
-        .insert([
-          {
-            group_id: groupId,
-            member_id: memberId,
-            member_name: memberName,
-            file_name: receiptData.fileName || "",
-            file_path: receiptData.filePath || "",
-            file_url: receiptData.fileUrl || "",
-            note: noteText || ""
-          }
-        ]);
-
-      if(error){
-        console.error(error);
-      }
-    }
-
-    async function submitJoinRequest(){
-      showJoinMessage("");
-
-      if(!currentGroup){
-        showJoinMessage('<div class="warn">بيانات الجمعية غير متاحة حاليًا.</div>');
-        return;
-      }
-
-      const memberName = document.getElementById("memberName").value.trim();
-      const memberPhone = document.getElementById("memberPhone").value.trim();
-      const memberEmail = document.getElementById("memberEmail").value.trim().toLowerCase();
-      const memberNote = document.getElementById("memberNote").value.trim();
-
-      if(!memberName || !memberPhone || !memberEmail){
-        showJoinMessage('<div class="warn">يرجى تعبئة الاسم ورقم الهاتف والبريد الإلكتروني.</div>');
-        return;
-      }
-
-      if(!selectedYear){
-        showJoinMessage('<div class="warn">اختر السنة أولًا.</div>');
-        return;
-      }
-
-      if(!selectedMonth){
-        showJoinMessage('<div class="warn">يجب اختيار شهر واحد قبل إرسال الطلب.</div>');
-        return;
-      }
-
-      const { count: currentMembersCount } = await supabaseClient
-        .from("members")
-        .select("*", { count: "exact", head: true })
-        .eq("group_id", currentGroup.id);
-
-      if (
-        Number(currentGroup.members_limit || 0) > 0 &&
-        Number(currentMembersCount || 0) >= Number(currentGroup.members_limit || 0)
-      ) {
-        showJoinMessage('<div class="warn">هذه الجمعية وصلت إلى الحد الأقصى من الأعضاء.</div>');
-        return;
-      }
-
-      const selectedMonthNumber = parseInt(selectedMonth, 10);
-      const selectedYearNumber = parseInt(selectedYear, 10);
-
-      const { data: existingSlot, error: checkError } = await supabaseClient
-        .from("members")
-        .select("id,name")
-        .eq("group_id", currentGroup.id)
-        .eq("selected_month", selectedMonthNumber)
-        .eq("selected_year", selectedYearNumber)
-        .maybeSingle();
-
-      if (checkError) {
-        console.error(checkError);
-        showJoinMessage('<div class="warn">تعذر التحقق من الشهر المختار.</div>');
-        return;
-      }
-
-      if (existingSlot) {
-        showJoinMessage(`<div class="warn">هذا الشهر محجوز بالفعل باسم ${escapeHtml(existingSlot.name)}.</div>`);
-        await renderMonths();
-        return;
-      }
-
-      try{
-        const receiptData = await uploadReceiptIfExists(currentGroup.id, memberEmail);
-
-        const { data: insertedMember, error: insertError } = await supabaseClient
-          .from("members")
-          .insert([
-            {
-              group_id: currentGroup.id,
-              name: memberName,
-              phone: memberPhone,
-              email: memberEmail,
-              selected_month: selectedMonthNumber,
-              selected_year: selectedYearNumber,
-              payment_status: "pending",
-              note: memberNote
-            }
-          ])
-          .select()
-          .single();
-
-        if (insertError) {
-          console.error(insertError);
-          showJoinMessage('<div class="warn">حدث خطأ أثناء إرسال الطلب.</div>');
-          return;
-        }
-
-        if (receiptData.fileUrl && insertedMember?.id) {
-          await createReceiptRecord(
-            currentGroup.id,
-            insertedMember.id,
-            memberName,
-            receiptData,
-            "إيصال مرفوع من صفحة الانضمام"
-          );
-        }
-
-        showJoinMessage(`
-          <div class="success">
-            تم الانضمام بنجاح.<br>
-            الاسم: <strong>${escapeHtml(memberName)}</strong><br>
-            الجمعية: <strong>${escapeHtml(currentGroup.group_name || "")}</strong><br>
-            الشهر المختار: <strong>${MONTHS[selectedMonthNumber - 1]} ${selectedYearNumber}</strong>
-          </div>
-        `);
-
-        document.getElementById("memberName").value = "";
-        document.getElementById("memberPhone").value = "";
-        document.getElementById("memberEmail").value = "";
-        document.getElementById("memberNote").value = "";
-        document.getElementById("memberReceipt").value = "";
-        selectedMonth = "";
-
-        const { count } = await supabaseClient
-          .from("members")
-          .select("*", { count: "exact", head: true })
-          .eq("group_id", currentGroup.id);
-
-        renderGroupInfo(currentGroup, count || 0);
-        updateSelectedMonthDisplay();
-        await renderMonths();
-      } catch(err){
-        console.error(err);
-        showJoinMessage('<div class="warn">حدث خطأ أثناء رفع الإيصال أو حفظ البيانات.</div>');
-      }
-    }
-
-    loadInvite();
-  </script>
+init()
+</script>
 </body>
 </html>
