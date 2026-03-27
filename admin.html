@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>لوحة الأدمن العامة - صندوق ساهل</title>
+  <title>لوحة الأدمن - صندوق ساهل</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,339 +16,124 @@
       --panel-soft:#f8fbff;
       --line:#dfe8f1;
       --line-dark:#cfdbe7;
-
       --text:#16324a;
       --muted:#6e8498;
-
       --primary:#1f6fa5;
       --primary-dark:#185781;
       --primary-soft:#eaf5fd;
-
       --green:#138a59;
       --green-soft:#e8f8f1;
-
       --amber:#b7791f;
       --amber-soft:#fff5e4;
-
       --red:#c53b3b;
       --red-soft:#fdeeee;
-
       --blue:#2563eb;
       --blue-soft:#edf3ff;
-
       --violet:#7c3aed;
       --violet-soft:#f3edff;
-
-      --shadow:0 12px 30px rgba(15, 40, 64, 0.08);
+      --shadow:0 12px 30px rgba(15,40,64,0.08);
       --radius:18px;
     }
 
-    *{box-sizing:border-box}
-
+    *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
-
-    body{
-      margin:0;
-      font-family:"Tajawal", sans-serif;
-      background:linear-gradient(180deg,#f8fbff 0%, #f3f7fb 100%);
-      color:var(--text);
-    }
-
+    body{font-family:"Tajawal",sans-serif;background:linear-gradient(180deg,#f8fbff,#f3f7fb);color:var(--text)}
     a{text-decoration:none;color:inherit}
-    button,input,select,textarea{font-family:"Tajawal", sans-serif}
+    button,input,select,textarea{font-family:"Tajawal",sans-serif}
 
-    .app{
-      min-height:100vh;
-      display:grid;
-      grid-template-columns:295px 1fr;
-    }
+    /* ── Layout ── */
+    .app{min-height:100vh;display:grid;grid-template-columns:270px 1fr}
 
+    /* ── Sidebar ── */
     .sidebar{
-      background:#fff;
-      border-left:1px solid var(--line);
-      padding:22px 18px;
-      position:sticky;
-      top:0;
-      height:100vh;
-      box-shadow:var(--shadow);
-      overflow:auto;
-      z-index:20;
+      background:#fff;border-left:1px solid var(--line);
+      padding:20px 16px;position:sticky;top:0;
+      height:100vh;box-shadow:var(--shadow);overflow:auto;z-index:20;
     }
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      padding:8px 8px 18px;
-      border-bottom:1px solid var(--line);
-      margin-bottom:18px;
-    }
-
+    .brand{display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:14px}
     .brand-logo{
-      width:50px;
-      height:50px;
-      border-radius:16px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg,var(--primary) 0%, #46a8d8 100%);
-      color:#fff;
-      font-size:22px;
-      font-weight:900;
-      box-shadow:0 10px 20px rgba(31,111,165,.22);
-      flex:0 0 50px;
+      width:44px;height:44px;border-radius:13px;display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--red),#e05c5c);
+      color:#fff;font-size:19px;font-weight:900;flex:0 0 44px;
     }
-
-    .brand h1{
-      margin:0;
-      font-size:21px;
-      font-weight:900;
-      line-height:1.1;
-    }
-
-    .brand p{
-      margin:4px 0 0;
-      color:var(--muted);
-      font-size:13px;
-    }
+    .brand h1{font-size:18px;font-weight:900;line-height:1.1}
+    .brand p{color:var(--muted);font-size:12px;margin-top:3px}
 
     .admin-chip{
-      margin-top:8px;
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:6px 10px;
-      border-radius:999px;
-      background:var(--red-soft);
-      color:var(--red);
-      font-size:12px;
-      font-weight:900;
+      margin-top:10px;padding:7px 12px;border-radius:11px;
+      background:var(--red-soft);border:1px solid #f5c6c6;
     }
+    .admin-chip span{display:block;font-size:11px;color:var(--red);font-weight:700}
+    .admin-chip strong{display:block;font-size:13px;font-weight:900;color:var(--red)}
 
-    .menu{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-
+    .menu{display:flex;flex-direction:column;gap:5px;margin-top:14px}
     .menu-btn{
-      border:none;
-      background:transparent;
-      width:100%;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:14px;
-      border-radius:14px;
-      cursor:pointer;
-      color:var(--text);
-      font-size:15px;
-      font-weight:800;
-      transition:.2s ease;
+      border:none;background:transparent;width:100%;
+      display:flex;align-items:center;gap:10px;
+      padding:11px 13px;border-radius:11px;cursor:pointer;
+      color:var(--text);font-size:13px;font-weight:800;transition:.2s;
     }
-
     .menu-btn:hover{background:var(--panel-soft)}
+    .menu-btn.active{background:var(--red-soft);color:var(--red);border:1px solid #f5c6c6}
+    .menu-icon{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:#f2f7fb;font-size:14px;flex:0 0 30px}
+    .menu-btn.active .menu-icon{background:#fde8e8}
 
-    .menu-btn.active{
-      background:var(--primary-soft);
-      border:1px solid #d3e9f8;
-      color:var(--primary-dark);
+    .logout-btn{
+      margin-top:14px;padding-top:14px;border-top:1px solid var(--line);
+      border:none;background:none;width:100%;
+      display:flex;align-items:center;gap:10px;
+      padding:11px 13px;border-radius:11px;cursor:pointer;
+      color:var(--red);font-size:13px;font-weight:800;
     }
+    .logout-btn:hover{background:var(--red-soft)}
 
-    .menu-right{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-    }
+    /* ── Content ── */
+    .content{padding:22px;min-width:0}
 
-    .menu-icon{
-      width:34px;
-      height:34px;
-      border-radius:10px;
-      display:grid;
-      place-items:center;
-      background:#f2f7fb;
-      font-size:16px;
-      flex:0 0 34px;
-    }
+    .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+    .topbar h2{font-size:26px;font-weight:900}
+    .topbar p{color:var(--muted);font-size:13px;margin-top:4px}
 
-    .menu-btn.active .menu-icon{
-      background:#dceefb;
-    }
-
-    .content{
-      padding:24px;
-    }
-
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      flex-wrap:wrap;
-      margin-bottom:18px;
-    }
-
-    .topbar h2{
-      margin:0;
-      font-size:31px;
-      font-weight:900;
-    }
-
-    .topbar p{
-      margin:6px 0 0;
-      color:var(--muted);
-      font-size:14px;
-    }
-
-    .topbar-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .btn{
-      border:none;
-      border-radius:14px;
-      padding:12px 16px;
-      cursor:pointer;
-      font-size:14px;
-      font-weight:900;
-      transition:.2s ease;
-    }
-
-    .btn:hover{transform:translateY(-1px)}
-
-    .btn-primary{
-      background:var(--primary);
-      color:#fff;
-      box-shadow:0 10px 20px rgba(31,111,165,.18);
-    }
-
-    .btn-primary:hover{background:var(--primary-dark)}
-
-    .btn-soft{
-      background:#fff;
-      border:1px solid var(--line-dark);
-      color:var(--text);
-    }
-
-    .btn-soft:hover{background:#f8fbff}
-
-    .btn-success{background:var(--green);color:#fff}
-    .btn-danger{background:var(--red);color:#fff}
-    .btn-warning{background:var(--amber);color:#fff}
-
-    .page{display:none;animation:fade .22s ease}
+    /* ── Pages ── */
+    .page{display:none;animation:fade .2s ease}
     .page.active{display:block}
+    @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 
-    @keyframes fade{
-      from{opacity:0;transform:translateY(6px)}
-      to{opacity:1;transform:translateY(0)}
+    /* ── Buttons ── */
+    .btn{
+      border:none;border-radius:11px;padding:10px 16px;cursor:pointer;
+      font-size:13px;font-weight:900;transition:.2s;white-space:nowrap;
+      display:inline-flex;align-items:center;gap:6px;
     }
+    .btn:hover{transform:translateY(-1px)}
+    .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+    .btn-primary{background:var(--primary);color:#fff}
+    .btn-primary:hover{background:var(--primary-dark)}
+    .btn-soft{background:#fff;border:1px solid var(--line-dark);color:var(--text)}
+    .btn-danger{background:var(--red);color:#fff}
+    .btn-sm{padding:7px 11px;font-size:12px;border-radius:9px}
 
-    .grid{display:grid;gap:16px}
-    .grid-5{grid-template-columns:repeat(5,1fr)}
-    .grid-4{grid-template-columns:repeat(4,1fr)}
-    .grid-3{grid-template-columns:repeat(3,1fr)}
-    .grid-2{grid-template-columns:repeat(2,1fr)}
+    /* ── Stats ── */
+    .stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+    .stat-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;position:relative;overflow:hidden}
+    .stat-icon{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-size:18px;margin-bottom:10px}
+    .stat-label{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:4px}
+    .stat-value{font-size:28px;font-weight:900;line-height:1}
+    .stat-note{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.6}
 
-    .card{
-      background:var(--panel);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:18px;
-    }
+    /* ── Cards ── */
+    .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+    .card+.card{margin-top:16px}
+    .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+    .card-title{font-size:16px;font-weight:900}
+    .card-sub{color:var(--muted);font-size:12px;margin-top:3px}
 
-    .card-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:14px;
-    }
+    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 
-    .card-title{
-      margin:0;
-      font-size:18px;
-      font-weight:900;
-    }
-
-    .card-sub{
-      margin:6px 0 0;
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .stat{
-      position:relative;
-      overflow:hidden;
-      min-height:138px;
-    }
-
-    .stat::after{
-      content:"";
-      position:absolute;
-      left:-20px;
-      bottom:-35px;
-      width:90px;
-      height:90px;
-      background:radial-gradient(circle, rgba(31,111,165,.10) 0%, rgba(31,111,165,0) 72%);
-      border-radius:50%;
-    }
-
-    .stat-top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:12px;
-    }
-
-    .stat-icon{
-      width:48px;
-      height:48px;
-      border-radius:14px;
-      display:grid;
-      place-items:center;
-      background:var(--primary-soft);
-      color:var(--primary);
-      font-size:20px;
-      font-weight:900;
-    }
-
-    .stat-label{
-      color:var(--muted);
-      font-size:14px;
-      font-weight:700;
-    }
-
-    .stat-value{
-      margin:6px 0 2px;
-      font-size:30px;
-      font-weight:900;
-    }
-
-    .stat-note{
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.7;
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:7px 12px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:900;
-      white-space:nowrap;
-    }
-
+    /* ── Badges ── */
+    .badge{display:inline-flex;align-items:center;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:900;white-space:nowrap}
     .badge-green{background:var(--green-soft);color:var(--green)}
     .badge-red{background:var(--red-soft);color:var(--red)}
     .badge-amber{background:var(--amber-soft);color:var(--amber)}
@@ -356,1276 +141,944 @@
     .badge-primary{background:var(--primary-soft);color:var(--primary-dark)}
     .badge-violet{background:var(--violet-soft);color:var(--violet)}
 
-    .mini-list,
-    .notice-list,
-    .list-grid{
-      display:grid;
-      gap:12px;
-    }
-
-    .notice,
-    .list-item{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:14px;
-    }
-
-    .notice-left{
-      display:flex;
-      align-items:flex-start;
-      gap:12px;
-    }
-
-    .notice-icon{
-      width:42px;
-      height:42px;
-      border-radius:12px;
-      display:grid;
-      place-items:center;
-      flex:0 0 42px;
-      font-weight:900;
-    }
-
-    .notice h4,
-    .list-item h4{
-      margin:0 0 6px;
-      font-size:15px;
-      font-weight:900;
-    }
-
-    .notice p,
-    .list-item p{
-      margin:0;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.7;
-    }
-
-    .quick-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .table-wrap{
-      width:100%;
-      overflow:auto;
-      border:1px solid var(--line);
-      border-radius:16px;
-      background:#fff;
-    }
-
-    table{
-      width:100%;
-      min-width:1100px;
-      border-collapse:collapse;
-      background:#fff;
-    }
-
-    thead{
-      background:#f7fbff;
-    }
-
-    th,td{
-      padding:14px 12px;
-      text-align:right;
-      border-bottom:1px solid var(--line);
-      font-size:14px;
-      vertical-align:middle;
-    }
-
-    th{
-      color:#5b7287;
-      font-weight:900;
-      white-space:nowrap;
-    }
-
-    td{
-      color:var(--text);
-      font-weight:700;
-    }
-
+    /* ── Table ── */
+    .table-wrap{width:100%;overflow:auto;border:1px solid var(--line);border-radius:13px;background:#fff}
+    table{width:100%;min-width:700px;border-collapse:collapse}
+    thead{background:#f7fbff}
+    th,td{padding:11px 13px;text-align:right;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle}
+    th{color:var(--muted);font-weight:900;white-space:nowrap}
+    td{font-weight:700}
+    tr:last-child td{border-bottom:none}
     tr:hover td{background:#fcfeff}
+    .td-actions{display:flex;gap:5px;flex-wrap:wrap}
 
-    .actions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-
-    .action-btn{
-      border:none;
-      border-radius:10px;
-      padding:8px 10px;
-      cursor:pointer;
-      font-size:12px;
-      font-weight:900;
-      white-space:nowrap;
-    }
-
+    /* ── Action Buttons ── */
+    .action-btn{border:none;border-radius:7px;padding:5px 9px;cursor:pointer;font-size:11px;font-weight:900;white-space:nowrap}
     .action-blue{background:var(--blue-soft);color:var(--blue)}
     .action-green{background:var(--green-soft);color:var(--green)}
     .action-red{background:var(--red-soft);color:var(--red)}
     .action-amber{background:var(--amber-soft);color:var(--amber)}
     .action-primary{background:var(--primary-soft);color:var(--primary-dark)}
-    .action-violet{background:var(--violet-soft);color:var(--violet)}
 
-    .bar-list{
-      display:grid;
-      gap:12px;
+    /* ── Filters ── */
+    .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:13px;align-items:center}
+    .select,.field{border:1px solid var(--line-dark);background:#fff;color:var(--text);border-radius:10px;padding:9px 13px;outline:none;font-size:13px}
+    .select:focus,.field:focus{border-color:#96bdd8;box-shadow:0 0 0 3px rgba(31,111,165,.08)}
+
+    /* ── Empty ── */
+    .empty{text-align:center;padding:30px;color:var(--muted);font-size:13px;font-weight:700}
+
+    /* ── Notice ── */
+    .notice-list{display:grid;gap:10px}
+    .notice{
+      display:flex;align-items:flex-start;justify-content:space-between;
+      gap:12px;flex-wrap:wrap;background:#fff;
+      border:1px solid var(--line);border-radius:13px;padding:13px;
     }
+    .notice-left{display:flex;align-items:flex-start;gap:10px}
+    .notice-icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;flex:0 0 38px;font-weight:900;font-size:16px}
+    .notice h4{font-size:14px;font-weight:900;margin-bottom:4px}
+    .notice p{color:var(--muted);font-size:12px;line-height:1.7}
 
-    .bar-row{
-      display:grid;
-      grid-template-columns:110px 1fr 55px;
-      gap:10px;
-      align-items:center;
-      font-size:14px;
-      font-weight:900;
-    }
+    /* ── Bar ── */
+    .bar-list{display:grid;gap:10px}
+    .bar-row{display:grid;grid-template-columns:90px 1fr 45px;gap:8px;align-items:center;font-size:13px;font-weight:800}
+    .bar{height:10px;background:#edf3f8;border-radius:999px;overflow:hidden}
+    .bar span{display:block;height:100%;border-radius:999px}
 
-    .bar{
-      height:12px;
-      background:#edf3f8;
-      border-radius:999px;
-      overflow:hidden;
-    }
+    /* ── Loading ── */
+    .page-loader{display:none;position:fixed;inset:0;background:rgba(255,255,255,.85);z-index:200;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--primary)}
+    .page-loader.show{display:flex}
 
-    .bar span{
-      display:block;
-      height:100%;
-      border-radius:999px;
-    }
-
-    .bar-green span{background:var(--green)}
-    .bar-amber span{background:var(--amber)}
-    .bar-red span{background:var(--red)}
-    .bar-blue span{background:var(--blue)}
-    .bar-violet span{background:var(--violet)}
-
-    .field,
-    .select,
-    .textarea{
-      width:100%;
-      border:1px solid var(--line-dark);
-      background:#fff;
-      color:var(--text);
-      border-radius:14px;
-      padding:12px 14px;
-      outline:none;
-      font-size:14px;
-    }
-
-    .field:focus,
-    .select:focus,
-    .textarea:focus{
-      border-color:#96bdd8;
-      box-shadow:0 0 0 4px rgba(31,111,165,.08);
-    }
-
-    .filters{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .form-grid{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:12px;
-    }
-
-    .label{
-      display:block;
-      margin-bottom:7px;
-      color:var(--muted);
-      font-size:13px;
-      font-weight:800;
-    }
-
-    .mini-cards{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:12px;
-    }
-
-    .mini-card{
-      border:1px solid var(--line);
-      border-radius:16px;
-      background:#fff;
-      padding:16px;
-    }
-
-    .mini-card span{
-      display:block;
-      margin-bottom:8px;
-      color:var(--muted);
-      font-size:13px;
-      font-weight:700;
-    }
-
-    .mini-card strong{
-      display:block;
-      font-size:24px;
-      font-weight:900;
-      line-height:1.2;
-    }
-
-    @media (max-width:1280px){
-      .grid-5{grid-template-columns:repeat(3,1fr)}
-      .grid-4,
-      .mini-cards{grid-template-columns:repeat(2,1fr)}
-      .grid-3{grid-template-columns:1fr}
-    }
-
-    @media (max-width:980px){
+    /* ── Responsive ── */
+    @media(max-width:1280px){.stats-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:980px){
       .app{grid-template-columns:1fr}
-      .sidebar{
-        position:relative;
-        top:auto;
-        height:auto;
-        border-left:none;
-        border-bottom:1px solid var(--line);
-      }
-      .menu{
-        display:grid;
-        grid-template-columns:repeat(2,1fr);
-      }
+      .sidebar{position:relative;height:auto;border-left:none;border-bottom:1px solid var(--line)}
+      .menu{display:grid;grid-template-columns:repeat(3,1fr)}
       .content{padding:16px}
-      .grid-2,
-      .form-grid{grid-template-columns:1fr}
+      .grid-2,.grid-3{grid-template-columns:1fr}
     }
-
-    @media (max-width:640px){
-      .menu{grid-template-columns:1fr}
-      .grid-5,
-      .grid-4,
-      .mini-cards{grid-template-columns:1fr}
-      .topbar h2{font-size:23px}
-      .stat-value{font-size:24px}
+    @media(max-width:640px){
+      .menu{grid-template-columns:repeat(2,1fr)}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .topbar h2{font-size:20px}
     }
   </style>
 </head>
 <body>
 
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-logo">س</div>
+<div class="page-loader" id="pageLoader">جاري تحميل لوحة الأدمن...</div>
+
+<div class="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">أ</div>
+      <div>
+        <h1>صندوق ساهل</h1>
+        <p>لوحة المشرف العام</p>
+      </div>
+    </div>
+
+    <div class="admin-chip">
+      <span>المشرف العام</span>
+      <strong id="adminName">...</strong>
+    </div>
+
+    <div class="menu">
+      <button class="menu-btn active" data-page="overview-page">
+        <div class="menu-icon">📊</div><span>نظرة عامة</span>
+      </button>
+      <button class="menu-btn" data-page="groups-page">
+        <div class="menu-icon">🏛️</div><span>الجمعيات</span>
+      </button>
+      <button class="menu-btn" data-page="managers-page">
+        <div class="menu-icon">🧑‍💼</div><span>المدراء</span>
+      </button>
+      <button class="menu-btn" data-page="members-page">
+        <div class="menu-icon">👥</div><span>الأعضاء</span>
+      </button>
+      <button class="menu-btn" data-page="payments-page">
+        <div class="menu-icon">💳</div><span>الدفعات</span>
+      </button>
+      <button class="menu-btn" data-page="requests-page">
+        <div class="menu-icon">📨</div><span>طلبات الانضمام</span>
+      </button>
+      <button class="menu-btn" data-page="subscriptions-page">
+        <div class="menu-icon">📦</div><span>الاشتراكات</span>
+      </button>
+      <button class="menu-btn" data-page="notes-page">
+        <div class="menu-icon">📝</div><span>ملاحظات المدراء</span>
+      </button>
+    </div>
+
+    <button class="logout-btn" onclick="doLogout()">
+      <span>🚪</span><span>تسجيل الخروج</span>
+    </button>
+  </aside>
+
+  <!-- Main -->
+  <main class="content">
+
+    <div class="topbar">
+      <div>
+        <h2 id="pageTitle">نظرة عامة</h2>
+        <p id="pageSubtitle">إحصائيات شاملة لكامل المنصة</p>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-soft btn-sm" onclick="reloadCurrentPage()">🔄 تحديث</button>
+      </div>
+    </div>
+
+    <!-- ════ نظرة عامة ════ -->
+    <section class="page active" id="overview-page">
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--blue-soft)">🏛️</div>
+          <div class="stat-label">إجمالي الجمعيات</div>
+          <div class="stat-value" id="statGroups">—</div>
+          <div class="stat-note" id="statGroupsNote">جاري التحميل...</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--primary-soft)">🧑‍💼</div>
+          <div class="stat-label">المدراء</div>
+          <div class="stat-value" id="statManagers">—</div>
+          <div class="stat-note">حسابات مدراء مسجّلة</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--violet-soft)">👥</div>
+          <div class="stat-label">إجمالي الأعضاء</div>
+          <div class="stat-value" id="statMembers">—</div>
+          <div class="stat-note">في كل الجمعيات</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--green-soft)">💳</div>
+          <div class="stat-label">الدفعات المسددة</div>
+          <div class="stat-value" id="statPaid">—</div>
+          <div class="stat-note">إجمالي على المنصة</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--red-soft)">⚠️</div>
+          <div class="stat-label">الدفعات المتأخرة</div>
+          <div class="stat-value" id="statLate">—</div>
+          <div class="stat-note">تحتاج متابعة</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- ملخص الجمعيات -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">حالة الجمعيات</div>
+              <div class="card-sub">توزيع الجمعيات حسب الحالة</div>
+            </div>
+            <button class="btn btn-soft btn-sm" onclick="switchPage('groups-page')">عرض الكل</button>
+          </div>
+          <div class="bar-list" id="groupsStatusBars">
+            <div class="empty">جاري التحميل...</div>
+          </div>
+        </div>
+
+        <!-- ملخص الاشتراكات -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">توزيع الاشتراكات</div>
+              <div class="card-sub">الباقات المستخدمة حالياً</div>
+            </div>
+            <button class="btn btn-soft btn-sm" onclick="switchPage('subscriptions-page')">عرض الكل</button>
+          </div>
+          <div class="bar-list" id="plansBars">
+            <div class="empty">جاري التحميل...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- آخر الطلبات -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-head">
+          <div>
+            <div class="card-title">آخر طلبات الانضمام المعلقة</div>
+            <div class="card-sub">أحدث الطلبات الواردة من الأعضاء</div>
+          </div>
+          <button class="btn btn-soft btn-sm" onclick="switchPage('requests-page')">عرض الكل</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>الاسم</th><th>الجمعية</th><th>الشهر المطلوب</th><th>التاريخ</th><th>الحالة</th></tr>
+            </thead>
+            <tbody id="recentRequestsBody">
+              <tr><td colspan="5" class="empty">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- آخر الملاحظات -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-head">
+          <div>
+            <div class="card-title">آخر ملاحظات المدراء</div>
+            <div class="card-sub">رسائل واردة من المدراء للإدارة</div>
+          </div>
+          <button class="btn btn-soft btn-sm" onclick="switchPage('notes-page')">عرض الكل</button>
+        </div>
+        <div id="recentNotesList"><div class="empty">جاري التحميل...</div></div>
+      </div>
+
+    </section>
+
+    <!-- ════ الجمعيات ════ -->
+    <section class="page" id="groups-page">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">كل الجمعيات</div>
+            <div class="card-sub" id="groupsCount">جاري التحميل...</div>
+          </div>
+          <div class="filters" style="margin:0">
+            <select class="select" id="groupStatusFilter" onchange="loadGroups()">
+              <option value="">كل الحالات</option>
+              <option value="active">نشطة</option>
+              <option value="completed">مكتملة</option>
+              <option value="stopped">متوقفة</option>
+              <option value="renewed">مجددة</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>اسم الجمعية</th>
+                <th>المدير</th>
+                <th>المبلغ الشهري</th>
+                <th>شهر البداية</th>
+                <th>عدد الأعضاء</th>
+                <th>الحالة</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="groupsBody">
+              <tr><td colspan="7" class="empty">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ المدراء ════ -->
+    <section class="page" id="managers-page">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">كل المدراء</div>
+            <div class="card-sub" id="managersCount">جاري التحميل...</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>البريد الإلكتروني</th>
+                <th>عدد الجمعيات</th>
+                <th>الباقة</th>
+                <th>تاريخ التسجيل</th>
+              </tr>
+            </thead>
+            <tbody id="managersBody">
+              <tr><td colspan="5" class="empty">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ الأعضاء ════ -->
+    <section class="page" id="members-page">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">كل الأعضاء</div>
+            <div class="card-sub" id="membersCount">جاري التحميل...</div>
+          </div>
+          <div class="filters" style="margin:0">
+            <select class="select" id="memberStatusFilter" onchange="loadMembers()">
+              <option value="">كل الحالات</option>
+              <option value="active">نشط</option>
+              <option value="pending">معلق</option>
+              <option value="rejected">مرفوض</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>الهاتف</th>
+                <th>الجمعية</th>
+                <th>شهر الاستلام</th>
+                <th>السنة</th>
+                <th>الحالة</th>
+              </tr>
+            </thead>
+            <tbody id="membersBody">
+              <tr><td colspan="6" class="empty">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ الدفعات ════ -->
+    <section class="page" id="payments-page">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">كل الدفعات</div>
+            <div class="card-sub" id="paymentsCount">جاري التحميل...</div>
+          </div>
+          <div class="filters" style="margin:0">
+            <select class="select" id="payStatusFilter" onchange="loadPayments()">
+              <option value="">كل الحالات</option>
+              <option value="paid">مدفوع</option>
+              <option value="pending">معلق</option>
+              <option value="late">متأخر</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>العضو</th>
+                <th>الجمعية</th>
+                <th>المبلغ</th>
+                <th>الشهر</th>
+                <th>السنة</th>
+                <th>الحالة</th>
+                <th>الإيصال</th>
+              </tr>
+            </thead>
+            <tbody id="paymentsBody">
+              <tr><td colspan="7" class="empty">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ طلبات الانضمام ════ -->
+    <section class="page" id="requests-page">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">طلبات الانضمام</div>
+            <div class="card-sub" id="requestsCount">جاري التحميل...</div>
+          </div>
+          <div class="filters" style="margin:0">
+            <select class="select" id="reqStatusFilter" onchange="loadRequests()">
+              <option value="pending">معلقة</option>
+              <option value="">الكل</option>
+              <option value="approved">مقبولة</option>
+              <option value="rejected">مرفوضة</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>الهاتف</th>
+                <th>الجمعية</th>
+                <th>الشهر المطلوب</th>
+                <th>السنة</th>
+                <th>التاريخ</th>
+                <th>الحالة</th>
+              </tr>
+            </thead>
+            <tbody id="requestsBody">
+              <tr><td colspan="7" class="empty">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ الاشتراكات ════ -->
+    <section class="page" id="subscriptions-page">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">كل الاشتراكات</div>
+            <div class="card-sub" id="subsCount">جاري التحميل...</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>المدير</th>
+                <th>الباقة</th>
+                <th>المبلغ</th>
+                <th>الحالة</th>
+                <th>تاريخ البداية</th>
+                <th>تاريخ الانتهاء</th>
+              </tr>
+            </thead>
+            <tbody id="subsBody">
+              <tr><td colspan="6" class="empty">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ ملاحظات المدراء ════ -->
+    <section class="page" id="notes-page">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">ملاحظات المدراء</div>
+            <div class="card-sub" id="notesCount">جاري التحميل...</div>
+          </div>
+          <button class="btn btn-soft btn-sm" onclick="loadNotes()">🔄 تحديث</button>
+        </div>
+        <div id="notesList"><div class="empty">جاري التحميل...</div></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+// ════════════════════════════════
+// إعداد Supabase
+// ════════════════════════════════
+const SUPABASE_URL      = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+// ════════════════════════════════
+// الحالة
+// ════════════════════════════════
+let currentUser    = null
+let currentPage    = 'overview-page'
+const loader       = document.getElementById('pageLoader')
+
+const MONTHS = ['','يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
+
+// ════════════════════════════════
+// التهيئة
+// ════════════════════════════════
+async function init() {
+  loader.classList.add('show')
+
+  try {
+    // 1) التحقق من الجلسة
+    const { data: { session } } = await sb.auth.getSession()
+    if (!session) { window.location.href = 'login.html'; return }
+    currentUser = session.user
+
+    // 2) التحقق من الـ role
+    const { data: profile, error } = await sb
+      .from('profiles').select('*').eq('id', currentUser.id).single()
+
+    if (error || !profile || profile.role !== 'admin') {
+      window.location.href = 'dashboard.html'; return
+    }
+
+    document.getElementById('adminName').textContent = profile.full_name || profile.email
+
+    // 3) تحميل النظرة العامة
+    await loadOverview()
+
+  } catch(e) {
+    console.error(e)
+    window.location.href = 'login.html'
+  } finally {
+    loader.classList.remove('show')
+  }
+}
+
+// ════════════════════════════════
+// النظرة العامة
+// ════════════════════════════════
+async function loadOverview() {
+  // الجمعيات
+  const { data: groups } = await sb.from('groups').select('id,status')
+  const totalGroups  = groups?.length || 0
+  const activeGroups = groups?.filter(g => g.status === 'active').length || 0
+  const doneGroups   = groups?.filter(g => g.status === 'completed').length || 0
+  const stoppedGroups= groups?.filter(g => g.status === 'stopped').length || 0
+
+  document.getElementById('statGroups').textContent     = totalGroups
+  document.getElementById('statGroupsNote').textContent = `${activeGroups} نشطة / ${doneGroups} مكتملة / ${stoppedGroups} متوقفة`
+
+  // المدراء
+  const { count: managersCount } = await sb.from('profiles').select('*',{count:'exact',head:true}).eq('role','manager')
+  document.getElementById('statManagers').textContent = managersCount || 0
+
+  // الأعضاء
+  const { count: membersCount } = await sb.from('members').select('*',{count:'exact',head:true})
+  document.getElementById('statMembers').textContent = membersCount || 0
+
+  // الدفعات
+  const { count: paidCount } = await sb.from('payments').select('*',{count:'exact',head:true}).eq('status','paid')
+  const { count: lateCount } = await sb.from('payments').select('*',{count:'exact',head:true}).eq('status','late')
+  document.getElementById('statPaid').textContent = paidCount || 0
+  document.getElementById('statLate').textContent = lateCount || 0
+
+  // أشرطة حالة الجمعيات
+  const barsEl = document.getElementById('groupsStatusBars')
+  if (totalGroups > 0) {
+    const statuses = [
+      { label:'نشطة',    count:activeGroups,  color:'#138a59', pct: Math.round(activeGroups/totalGroups*100) },
+      { label:'مكتملة',  count:doneGroups,    color:'#2563eb', pct: Math.round(doneGroups/totalGroups*100) },
+      { label:'متوقفة',  count:stoppedGroups, color:'#c53b3b', pct: Math.round(stoppedGroups/totalGroups*100) },
+    ]
+    barsEl.innerHTML = statuses.map(s => `
+      <div class="bar-row">
+        <span>${s.label}</span>
+        <div class="bar"><span style="width:${s.pct}%;background:${s.color}"></span></div>
+        <strong>${s.count}</strong>
+      </div>
+    `).join('')
+  } else {
+    barsEl.innerHTML = '<div class="empty">لا توجد جمعيات</div>'
+  }
+
+  // أشرطة الاشتراكات
+  const { data: subs } = await sb.from('subscriptions').select('plan_name').eq('status','active')
+  const planCounts = { Free:0, Basic:0, Pro:0, Business:0 }
+  subs?.forEach(s => { if (planCounts[s.plan_name] !== undefined) planCounts[s.plan_name]++ })
+  const totalSubs = subs?.length || 0
+  const planColors = { Free:'#2563eb', Basic:'#138a59', Pro:'#7c3aed', Business:'#b7791f' }
+
+  const plansEl = document.getElementById('plansBars')
+  if (totalSubs > 0) {
+    plansEl.innerHTML = Object.entries(planCounts).map(([name, count]) => `
+      <div class="bar-row">
+        <span>${name}</span>
+        <div class="bar"><span style="width:${Math.round(count/totalSubs*100)}%;background:${planColors[name]}"></span></div>
+        <strong>${count}</strong>
+      </div>
+    `).join('')
+  } else {
+    plansEl.innerHTML = '<div class="empty">لا توجد اشتراكات</div>'
+  }
+
+  // آخر الطلبات
+  const { data: reqs } = await sb.from('join_requests')
+    .select('*, groups(name)')
+    .eq('status','pending')
+    .order('created_at',{ascending:false})
+    .limit(5)
+
+  const reqBody = document.getElementById('recentRequestsBody')
+  if (!reqs || reqs.length === 0) {
+    reqBody.innerHTML = '<tr><td colspan="5" class="empty">لا توجد طلبات معلقة</td></tr>'
+  } else {
+    reqBody.innerHTML = reqs.map(r => `
+      <tr>
+        <td>${r.full_name}</td>
+        <td>${r.groups?.name || '—'}</td>
+        <td>${MONTHS[r.requested_month]} ${r.requested_year}</td>
+        <td>${new Date(r.created_at).toLocaleDateString('ar')}</td>
+        <td><span class="badge badge-amber">معلق</span></td>
+      </tr>
+    `).join('')
+  }
+
+  // آخر الملاحظات
+  const { data: notes } = await sb.from('manager_notes')
+    .select('*, profiles(full_name)')
+    .order('created_at',{ascending:false})
+    .limit(4)
+
+  const notesEl = document.getElementById('recentNotesList')
+  if (!notes || notes.length === 0) {
+    notesEl.innerHTML = '<div class="empty">لا توجد ملاحظات</div>'
+  } else {
+    notesEl.innerHTML = notes.map(n => `
+      <div style="padding:12px;border-bottom:1px solid var(--line);font-size:13px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+          <strong>${n.profiles?.full_name || '—'}</strong>
+          <span style="color:var(--muted)">${new Date(n.created_at).toLocaleDateString('ar')}</span>
+        </div>
+        <div style="color:var(--muted)">${n.note}</div>
+      </div>
+    `).join('')
+  }
+}
+
+// ════════════════════════════════
+// الجمعيات
+// ════════════════════════════════
+window.loadGroups = async function() {
+  const status = document.getElementById('groupStatusFilter')?.value
+  let q = sb.from('groups').select('*, profiles(full_name)').order('created_at',{ascending:false})
+  if (status) q = q.eq('status', status)
+
+  const { data, error } = await q
+  const tbody = document.getElementById('groupsBody')
+
+  if (error) { tbody.innerHTML = `<tr><td colspan="7" class="empty">خطأ في التحميل</td></tr>`; return }
+  if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="empty">لا توجد جمعيات</td></tr>`; return }
+
+  document.getElementById('groupsCount').textContent = `${data.length} جمعية`
+
+  // جلب عدد الأعضاء لكل جمعية
+  const groupIds = data.map(g => g.id)
+  const { data: membersData } = await sb.from('members').select('group_id').in('group_id', groupIds).eq('status','active')
+  const memberCountMap = {}
+  membersData?.forEach(m => { memberCountMap[m.group_id] = (memberCountMap[m.group_id] || 0) + 1 })
+
+  tbody.innerHTML = data.map(g => `
+    <tr>
+      <td>${g.name}</td>
+      <td>${g.profiles?.full_name || '—'}</td>
+      <td>${g.monthly_amount} درهم</td>
+      <td>${MONTHS[g.start_month]} ${g.start_year}</td>
+      <td>${memberCountMap[g.id] || 0}</td>
+      <td><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></td>
+      <td>
+        <div class="td-actions">
+          <button class="action-btn action-green" onclick="changeGroupStatus('${g.id}','active')">تفعيل</button>
+          <button class="action-btn action-red" onclick="changeGroupStatus('${g.id}','stopped')">إيقاف</button>
+        </div>
+      </td>
+    </tr>
+  `).join('')
+}
+
+window.changeGroupStatus = async function(id, status) {
+  if (!confirm(`تغيير حالة الجمعية إلى: ${groupLabel(status)}؟`)) return
+  const { error } = await sb.from('groups').update({status}).eq('id', id)
+  if (error) { alert('خطأ: ' + error.message); return }
+  loadGroups()
+}
+
+// ════════════════════════════════
+// المدراء
+// ════════════════════════════════
+async function loadManagers() {
+  const { data, error } = await sb.from('profiles')
+    .select('*, subscriptions(plan_name,status)')
+    .eq('role','manager')
+    .order('created_at',{ascending:false})
+
+  const tbody = document.getElementById('managersBody')
+  if (error || !data) { tbody.innerHTML = `<tr><td colspan="5" class="empty">خطأ في التحميل</td></tr>`; return }
+  if (data.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="empty">لا يوجد مدراء</td></tr>`; return }
+
+  document.getElementById('managersCount').textContent = `${data.length} مدير`
+
+  // عدد الجمعيات لكل مدير
+  const { data: groups } = await sb.from('groups').select('manager_id')
+  const groupCountMap = {}
+  groups?.forEach(g => { groupCountMap[g.manager_id] = (groupCountMap[g.manager_id] || 0) + 1 })
+
+  tbody.innerHTML = data.map(m => {
+    const activeSub = m.subscriptions?.find(s => s.status === 'active')
+    return `
+      <tr>
+        <td>${m.full_name}</td>
+        <td style="direction:ltr;text-align:right">${m.email}</td>
+        <td>${groupCountMap[m.id] || 0}</td>
+        <td>${activeSub ? `<span class="badge badge-primary">${activeSub.plan_name}</span>` : '—'}</td>
+        <td>${new Date(m.created_at).toLocaleDateString('ar')}</td>
+      </tr>
+    `
+  }).join('')
+}
+
+// ════════════════════════════════
+// الأعضاء
+// ════════════════════════════════
+window.loadMembers = async function() {
+  const status = document.getElementById('memberStatusFilter')?.value
+  let q = sb.from('members').select('*, groups(name)').order('created_at',{ascending:false})
+  if (status) q = q.eq('status', status)
+
+  const { data, error } = await q
+  const tbody = document.getElementById('membersBody')
+
+  if (error) { tbody.innerHTML = `<tr><td colspan="6" class="empty">خطأ في التحميل</td></tr>`; return }
+  if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="empty">لا يوجد أعضاء</td></tr>`; return }
+
+  document.getElementById('membersCount').textContent = `${data.length} عضو`
+
+  tbody.innerHTML = data.map(m => `
+    <tr>
+      <td>${m.full_name}</td>
+      <td>${m.phone || '—'}</td>
+      <td>${m.groups?.name || '—'}</td>
+      <td>${MONTHS[m.join_month]}</td>
+      <td>${m.join_year}</td>
+      <td><span class="badge ${memberBadge(m.status)}">${memberLabel(m.status)}</span></td>
+    </tr>
+  `).join('')
+}
+
+// ════════════════════════════════
+// الدفعات
+// ════════════════════════════════
+window.loadPayments = async function() {
+  const status = document.getElementById('payStatusFilter')?.value
+  let q = sb.from('payments').select('*, members(full_name), groups(name)').order('created_at',{ascending:false})
+  if (status) q = q.eq('status', status)
+
+  const { data, error } = await q
+  const tbody = document.getElementById('paymentsBody')
+
+  if (error) { tbody.innerHTML = `<tr><td colspan="7" class="empty">خطأ في التحميل</td></tr>`; return }
+  if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="empty">لا توجد دفعات</td></tr>`; return }
+
+  document.getElementById('paymentsCount').textContent = `${data.length} دفعة`
+
+  tbody.innerHTML = data.map(p => `
+    <tr>
+      <td>${p.members?.full_name || '—'}</td>
+      <td>${p.groups?.name || '—'}</td>
+      <td>${p.amount} درهم</td>
+      <td>${MONTHS[p.payment_month]}</td>
+      <td>${p.payment_year}</td>
+      <td><span class="badge ${payBadge(p.status)}">${payLabel(p.status)}</span></td>
+      <td>${p.receipt_url ? `<a href="${p.receipt_url}" target="_blank" class="action-btn action-blue">عرض</a>` : '—'}</td>
+    </tr>
+  `).join('')
+}
+
+// ════════════════════════════════
+// طلبات الانضمام
+// ════════════════════════════════
+window.loadRequests = async function() {
+  const status = document.getElementById('reqStatusFilter')?.value
+  let q = sb.from('join_requests').select('*, groups(name)').order('created_at',{ascending:false})
+  if (status) q = q.eq('status', status)
+
+  const { data, error } = await q
+  const tbody = document.getElementById('requestsBody')
+
+  if (error) { tbody.innerHTML = `<tr><td colspan="7" class="empty">خطأ في التحميل</td></tr>`; return }
+  if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="empty">لا توجد طلبات</td></tr>`; return }
+
+  document.getElementById('requestsCount').textContent = `${data.length} طلب`
+
+  tbody.innerHTML = data.map(r => `
+    <tr>
+      <td>${r.full_name}</td>
+      <td>${r.phone || '—'}</td>
+      <td>${r.groups?.name || '—'}</td>
+      <td>${MONTHS[r.requested_month]}</td>
+      <td>${r.requested_year}</td>
+      <td>${new Date(r.created_at).toLocaleDateString('ar')}</td>
+      <td><span class="badge ${reqBadge(r.status)}">${reqLabel(r.status)}</span></td>
+    </tr>
+  `).join('')
+}
+
+// ════════════════════════════════
+// الاشتراكات
+// ════════════════════════════════
+async function loadSubscriptions() {
+  const { data, error } = await sb.from('subscriptions')
+    .select('*, profiles(full_name)')
+    .order('created_at',{ascending:false})
+
+  const tbody = document.getElementById('subsBody')
+
+  if (error) { tbody.innerHTML = `<tr><td colspan="6" class="empty">خطأ في التحميل</td></tr>`; return }
+  if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="empty">لا توجد اشتراكات</td></tr>`; return }
+
+  document.getElementById('subsCount').textContent = `${data.length} اشتراك`
+
+  tbody.innerHTML = data.map(s => `
+    <tr>
+      <td>${s.profiles?.full_name || '—'}</td>
+      <td><span class="badge badge-primary">${s.plan_name}</span></td>
+      <td>${s.amount} درهم</td>
+      <td><span class="badge ${s.status === 'active' ? 'badge-green' : 'badge-red'}">${s.status === 'active' ? 'نشط' : 'منتهي'}</span></td>
+      <td>${s.start_date}</td>
+      <td>${s.end_date || '—'}</td>
+    </tr>
+  `).join('')
+}
+
+// ════════════════════════════════
+// الملاحظات
+// ════════════════════════════════
+window.loadNotes = async function() {
+  const { data, error } = await sb.from('manager_notes')
+    .select('*, profiles(full_name), groups(name)')
+    .order('created_at',{ascending:false})
+
+  const el = document.getElementById('notesList')
+
+  if (error) { el.innerHTML = '<div class="empty">خطأ في التحميل</div>'; return }
+  if (!data || data.length === 0) { el.innerHTML = '<div class="empty">لا توجد ملاحظات</div>'; return }
+
+  document.getElementById('notesCount').textContent = `${data.length} ملاحظة`
+
+  el.innerHTML = data.map(n => `
+    <div style="padding:14px;border-bottom:1px solid var(--line)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
         <div>
-          <h1>صندوق ساهل</h1>
-          <p>لوحة الأدمن العامة</p>
-          <div class="admin-chip">صلاحية كاملة</div>
+          <strong style="font-size:14px">${n.profiles?.full_name || '—'}</strong>
+          ${n.groups?.name ? `<span style="color:var(--muted);font-size:12px;margin-right:8px">· ${n.groups.name}</span>` : ''}
         </div>
+        <span style="color:var(--muted);font-size:12px">${new Date(n.created_at).toLocaleDateString('ar')}</span>
       </div>
-
-      <div class="menu">
-        <button class="menu-btn active" data-page="overview-page">
-          <div class="menu-right">
-            <div class="menu-icon">📊</div>
-            <span>نظرة عامة</span>
-          </div>
-          <span>‹</span>
-        </button>
-
-        <button class="menu-btn" data-page="societies-page">
-          <div class="menu-right">
-            <div class="menu-icon">👥</div>
-            <span>الجمعيات</span>
-          </div>
-          <span>‹</span>
-        </button>
-
-        <button class="menu-btn" data-page="managers-page">
-          <div class="menu-right">
-            <div class="menu-icon">🧑‍💼</div>
-            <span>المدراء</span>
-          </div>
-          <span>‹</span>
-        </button>
-
-        <button class="menu-btn" data-page="members-page">
-          <div class="menu-right">
-            <div class="menu-icon">🧑‍🤝‍🧑</div>
-            <span>الأعضاء</span>
-          </div>
-          <span>‹</span>
-        </button>
-
-        <button class="menu-btn" data-page="subscriptions-page">
-          <div class="menu-right">
-            <div class="menu-icon">📦</div>
-            <span>الاشتراكات</span>
-          </div>
-          <span>‹</span>
-        </button>
-
-        <button class="menu-btn" data-page="payments-page">
-          <div class="menu-right">
-            <div class="menu-icon">💳</div>
-            <span>المدفوعات</span>
-          </div>
-          <span>‹</span>
-        </button>
-
-        <button class="menu-btn" data-page="requests-page">
-          <div class="menu-right">
-            <div class="menu-icon">📨</div>
-            <span>الطلبات</span>
-          </div>
-          <span>‹</span>
-        </button>
-
-        <button class="menu-btn" data-page="alerts-page">
-          <div class="menu-right">
-            <div class="menu-icon">🔔</div>
-            <span>التنبيهات</span>
-          </div>
-          <span>‹</span>
-        </button>
-
-        <button class="menu-btn" data-page="notes-page">
-          <div class="menu-right">
-            <div class="menu-icon">📝</div>
-            <span>الملاحظات</span>
-          </div>
-          <span>‹</span>
-        </button>
-
-        <button class="menu-btn" data-page="reports-page">
-          <div class="menu-right">
-            <div class="menu-icon">📈</div>
-            <span>التقارير</span>
-          </div>
-          <span>‹</span>
-        </button>
-
-        <button class="menu-btn" data-page="archive-page">
-          <div class="menu-right">
-            <div class="menu-icon">🗂️</div>
-            <span>الأرشيف</span>
-          </div>
-          <span>‹</span>
-        </button>
-      </div>
-    </aside>
-
-    <main class="content">
-      <div class="topbar">
-        <div>
-          <h2 id="page-title">لوحة الأدمن العامة</h2>
-          <p>تحكم شامل في جميع جمعيات صندوق ساهل، الاشتراكات، الدفعات، والتنبيهات من مكان واحد.</p>
-        </div>
-
-        <div class="topbar-actions">
-          <button class="btn btn-soft">الإعدادات العامة</button>
-          <button class="btn btn-primary">+ إنشاء جمعية يدويًا</button>
-        </div>
-      </div>
-
-      <!-- نظرة عامة -->
-      <section class="page active" id="overview-page">
-        <div class="grid grid-5">
-          <div class="card stat">
-            <div class="stat-top">
-              <div class="stat-icon">👥</div>
-              <span class="badge badge-blue">إجمالي</span>
-            </div>
-            <div class="stat-label">الجمعيات</div>
-            <div class="stat-value">18</div>
-            <div class="stat-note">12 نشطة / 4 مكتملة / 2 متأخرة</div>
-          </div>
-
-          <div class="card stat">
-            <div class="stat-top">
-              <div class="stat-icon">🧑‍💼</div>
-              <span class="badge badge-primary">الحسابات الفعالة</span>
-            </div>
-            <div class="stat-label">المدراء</div>
-            <div class="stat-value">24</div>
-            <div class="stat-note">مدراء نشطون يديرون مختلف الجمعيات</div>
-          </div>
-
-          <div class="card stat">
-            <div class="stat-top">
-              <div class="stat-icon">🧑‍🤝‍🧑</div>
-              <span class="badge badge-violet">أعضاء</span>
-            </div>
-            <div class="stat-label">إجمالي الأعضاء</div>
-            <div class="stat-value">122</div>
-            <div class="stat-note">يشمل كل الأعضاء ضمن الجمعيات الحالية</div>
-          </div>
-
-          <div class="card stat">
-            <div class="stat-top">
-              <div class="stat-icon">📦</div>
-              <span class="badge badge-green">نشطة</span>
-            </div>
-            <div class="stat-label">الاشتراكات</div>
-            <div class="stat-value">61</div>
-            <div class="stat-note">Free / Basic / Pro / Business</div>
-          </div>
-
-          <div class="card stat">
-            <div class="stat-top">
-              <div class="stat-icon">💰</div>
-              <span class="badge badge-amber">هذا الشهر</span>
-            </div>
-            <div class="stat-label">الأرباح</div>
-            <div class="stat-value">4,890</div>
-            <div class="stat-note">درهم إماراتي</div>
-          </div>
-        </div>
-
-        <div class="grid grid-4" style="margin-top:16px;">
-          <div class="card stat">
-            <div class="stat-top">
-              <div class="stat-icon">⏳</div>
-              <span class="badge badge-amber">قريبًا</span>
-            </div>
-            <div class="stat-label">جمعيات قاربت الانتهاء</div>
-            <div class="stat-value">5</div>
-            <div class="stat-note">تحتاج متابعة للتجديد أو الإيقاف</div>
-          </div>
-
-          <div class="card stat">
-            <div class="stat-top">
-              <div class="stat-icon">⚠️</div>
-              <span class="badge badge-red">حرج</span>
-            </div>
-            <div class="stat-label">دفعات متأخرة</div>
-            <div class="stat-value">11</div>
-            <div class="stat-note">أعضاء أو مدراء لديهم تأخير يحتاج متابعة</div>
-          </div>
-
-          <div class="card stat">
-            <div class="stat-top">
-              <div class="stat-icon">📨</div>
-              <span class="badge badge-blue">جديدة</span>
-            </div>
-            <div class="stat-label">طلبات الانضمام</div>
-            <div class="stat-value">14</div>
-            <div class="stat-note">طلبات قيد المراجعة في مختلف الجمعيات</div>
-          </div>
-
-          <div class="card stat">
-            <div class="stat-top">
-              <div class="stat-icon">📝</div>
-              <span class="badge badge-violet">من المدراء</span>
-            </div>
-            <div class="stat-label">الملاحظات الواردة</div>
-            <div class="stat-value">8</div>
-            <div class="stat-note">اقتراحات ومشكلات تحتاج مراجعة الإدارة</div>
-          </div>
-        </div>
-
-        <div class="grid grid-2" style="margin-top:16px;">
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3 class="card-title">تنبيهات حرجة على مستوى المنصة</h3>
-                <p class="card-sub">المهام والحالات التي تحتاج قرارًا سريعًا من الأدمن</p>
-              </div>
-            </div>
-
-            <div class="notice-list">
-              <div class="notice">
-                <div class="notice-left">
-                  <div class="notice-icon badge-red">!</div>
-                  <div>
-                    <h4>جمعيتان متعثرتان</h4>
-                    <p>يوجد جمعيتان لديهما عدد مرتفع من الدفعات المتأخرة ويجب مراجعة المديرين فورًا.</p>
-                  </div>
-                </div>
-                <span class="badge badge-red">حرج</span>
-              </div>
-
-              <div class="notice">
-                <div class="notice-left">
-                  <div class="notice-icon badge-amber">⏰</div>
-                  <div>
-                    <h4>6 اشتراكات ستنتهي قريبًا</h4>
-                    <p>قد يترتب عليها توقف التجديد لبعض الجمعيات إن لم يتم التفعيل في الوقت المناسب.</p>
-                  </div>
-                </div>
-                <span class="badge badge-amber">متابعة</span>
-              </div>
-
-              <div class="notice">
-                <div class="notice-left">
-                  <div class="notice-icon badge-blue">ℹ</div>
-                  <div>
-                    <h4>14 طلب انضمام جديد</h4>
-                    <p>عدد ملحوظ من الطلبات الجديدة بانتظار القبول أو الرفض في عدة جمعيات.</p>
-                  </div>
-                </div>
-                <span class="badge badge-blue">جديد</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3 class="card-title">توزيع الاشتراكات</h3>
-                <p class="card-sub">نظرة سريعة على الباقات المستخدمة حاليًا</p>
-              </div>
-            </div>
-
-            <div class="bar-list">
-              <div class="bar-row">
-                <span>Free</span>
-                <div class="bar bar-blue"><span style="width:18%;"></span></div>
-                <strong>18%</strong>
-              </div>
-
-              <div class="bar-row">
-                <span>Basic</span>
-                <div class="bar bar-green"><span style="width:26%;"></span></div>
-                <strong>26%</strong>
-              </div>
-
-              <div class="bar-row">
-                <span>Pro</span>
-                <div class="bar bar-violet"><span style="width:38%;"></span></div>
-                <strong>38%</strong>
-              </div>
-
-              <div class="bar-row">
-                <span>Business</span>
-                <div class="bar bar-amber"><span style="width:18%;"></span></div>
-                <strong>18%</strong>
-              </div>
-            </div>
-
-            <div class="card-sub" style="margin-top:16px;">
-              أعلى استخدام حاليًا: <strong>Pro</strong> — وهو مؤشر جيد على توجه المدراء للباقات المتوسطة.
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-3" style="margin-top:16px;">
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3 class="card-title">آخر النشاطات</h3>
-                <p class="card-sub">آخر الحركات المسجلة على مستوى المنصة</p>
-              </div>
-            </div>
-
-            <div class="mini-list">
-              <div class="list-item">
-                <div>
-                  <h4>اعتماد دفعة جديدة</h4>
-                  <p>تم اعتماد دفعة عضو في جمعية الأصدقاء قبل 8 دقائق.</p>
-                </div>
-                <span class="badge badge-green">مدفوعات</span>
-              </div>
-
-              <div class="list-item">
-                <div>
-                  <h4>إنشاء جمعية جديدة</h4>
-                  <p>مدير جديد أنشأ جمعية باسم "جمعية الرواد".</p>
-                </div>
-                <span class="badge badge-blue">جمعيات</span>
-              </div>
-
-              <div class="list-item">
-                <div>
-                  <h4>إرسال ملاحظة للإدارة</h4>
-                  <p>مدير جمعية أرسل ملاحظة حول اعتماد الإيصالات.</p>
-                </div>
-                <span class="badge badge-violet">ملاحظات</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3 class="card-title">أعلى الجمعيات التزامًا</h3>
-                <p class="card-sub">الأفضل في الانضباط والسداد</p>
-              </div>
-            </div>
-
-            <div class="mini-list">
-              <div class="list-item">
-                <div>
-                  <h4>جمعية الأصدقاء</h4>
-                  <p>نسبة السداد 96% ولا توجد متأخرات حرجة.</p>
-                </div>
-                <span class="badge badge-green">ممتازة</span>
-              </div>
-
-              <div class="list-item">
-                <div>
-                  <h4>جمعية الموظفين</h4>
-                  <p>نسبة انتظام مرتفعة مع تفاعل جيد من المدير.</p>
-                </div>
-                <span class="badge badge-green">جيدة جدًا</span>
-              </div>
-
-              <div class="list-item">
-                <div>
-                  <h4>جمعية العائلة</h4>
-                  <p>أغلب الدفعات مكتملة والدورة تسير بشكل منتظم.</p>
-                </div>
-                <span class="badge badge-blue">مستقرة</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3 class="card-title">الأكثر تعثرًا</h3>
-                <p class="card-sub">الجمعيات التي تحتاج تدخلًا سريعًا</p>
-              </div>
-            </div>
-
-            <div class="mini-list">
-              <div class="list-item">
-                <div>
-                  <h4>جمعية الخير</h4>
-                  <p>عدة أعضاء متأخرون والدفعات غير مستقرة.</p>
-                </div>
-                <span class="badge badge-red">حرجة</span>
-              </div>
-
-              <div class="list-item">
-                <div>
-                  <h4>جمعية النخبة</h4>
-                  <p>تأخير متكرر في رفع الإيصالات من أكثر من عضو.</p>
-                </div>
-                <span class="badge badge-amber">متابعة</span>
-              </div>
-
-              <div class="list-item">
-                <div>
-                  <h4>جمعية الرواد</h4>
-                  <p>تحتاج إلى مراجعة مبكرة قبل دخولها مرحلة التعثر.</p>
-                </div>
-                <span class="badge badge-amber">مراقبة</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-top:16px;">
-          <div class="card-head">
-            <div>
-              <h3 class="card-title">أزرار إدارة سريعة</h3>
-              <p class="card-sub">تنقل سريع إلى أهم أقسام التشغيل</p>
-            </div>
-          </div>
-
-          <div class="quick-actions">
-            <button class="btn btn-soft">إدارة الجمعيات</button>
-            <button class="btn btn-soft">إدارة المدراء</button>
-            <button class="btn btn-soft">إدارة الأعضاء</button>
-            <button class="btn btn-soft">إدارة الاشتراكات</button>
-            <button class="btn btn-soft">إدارة المدفوعات</button>
-            <button class="btn btn-soft">إدارة الطلبات</button>
-            <button class="btn btn-soft">إدارة الملاحظات</button>
-            <button class="btn btn-soft">التقارير العامة</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- الجمعيات -->
-      <section class="page" id="societies-page">
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <h3 class="card-title">إدارة الجمعيات</h3>
-              <p class="card-sub">عرض جميع الجمعيات مع حالات التشغيل والمتابعة</p>
-            </div>
-            <div class="filters">
-              <select class="select" style="width:160px;">
-                <option>كل الحالات</option>
-                <option>نشطة</option>
-                <option>مكتملة</option>
-                <option>متأخرة</option>
-                <option>متوقفة</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>اسم الجمعية</th>
-                  <th>اسم المدير</th>
-                  <th>الحالة</th>
-                  <th>عدد الأعضاء</th>
-                  <th>نسبة السداد</th>
-                  <th>الباقة</th>
-                  <th>نهاية الدورة</th>
-                  <th>الإجراءات</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>جمعية الأصدقاء</td>
-                  <td>محمد عبدالله</td>
-                  <td><span class="badge badge-green">نشطة</span></td>
-                  <td>12</td>
-                  <td>72%</td>
-                  <td>Pro</td>
-                  <td>12/04/2026</td>
-                  <td>
-                    <div class="actions">
-                      <button class="action-btn action-blue">عرض</button>
-                      <button class="action-btn action-green">تفعيل</button>
-                      <button class="action-btn action-red">إيقاف</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>جمعية الخير</td>
-                  <td>سالم أحمد</td>
-                  <td><span class="badge badge-red">متأخرة</span></td>
-                  <td>9</td>
-                  <td>43%</td>
-                  <td>Basic</td>
-                  <td>20/03/2026</td>
-                  <td>
-                    <div class="actions">
-                      <button class="action-btn action-blue">عرض</button>
-                      <button class="action-btn action-amber">تنبيه</button>
-                      <button class="action-btn action-red">إيقاف</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>جمعية الموظفين</td>
-                  <td>ناصر علي</td>
-                  <td><span class="badge badge-blue">مكتملة</span></td>
-                  <td>15</td>
-                  <td>100%</td>
-                  <td>Business</td>
-                  <td>01/03/2026</td>
-                  <td>
-                    <div class="actions">
-                      <button class="action-btn action-blue">عرض</button>
-                      <button class="action-btn action-green">إعادة تفعيل</button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- المدراء -->
-      <section class="page" id="managers-page">
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <h3 class="card-title">إدارة المدراء</h3>
-              <p class="card-sub">مراجعة حسابات المدراء وحالة نشاطهم</p>
-            </div>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>الاسم</th>
-                  <th>الهاتف</th>
-                  <th>عدد الجمعيات</th>
-                  <th>الباقة</th>
-                  <th>الحالة</th>
-                  <th>آخر نشاط</th>
-                  <th>الإجراءات</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>محمد عبدالله</td>
-                  <td>0500000001</td>
-                  <td>3</td>
-                  <td>Pro</td>
-                  <td><span class="badge badge-green">نشط</span></td>
-                  <td>منذ 10 دقائق</td>
-                  <td>
-                    <div class="actions">
-                      <button class="action-btn action-blue">عرض</button>
-                      <button class="action-btn action-amber">تنبيه</button>
-                      <button class="action-btn action-red">تعطيل</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>سالم أحمد</td>
-                  <td>0500000002</td>
-                  <td>1</td>
-                  <td>Basic</td>
-                  <td><span class="badge badge-amber">متابعة</span></td>
-                  <td>منذ يوم</td>
-                  <td>
-                    <div class="actions">
-                      <button class="action-btn action-blue">عرض</button>
-                      <button class="action-btn action-green">تفعيل</button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- الأعضاء -->
-      <section class="page" id="members-page">
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <h3 class="card-title">إدارة الأعضاء</h3>
-              <p class="card-sub">عرض شامل لأعضاء جميع الجمعيات</p>
-            </div>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>الاسم</th>
-                  <th>الهاتف</th>
-                  <th>الجمعية</th>
-                  <th>الشهر</th>
-                  <th>حالة الدفع</th>
-                  <th>حالة الاستلام</th>
-                  <th>الإجراءات</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>أحمد سالم</td>
-                  <td>0500000003</td>
-                  <td>جمعية الأصدقاء</td>
-                  <td>مارس 2026</td>
-                  <td><span class="badge badge-green">مدفوع</span></td>
-                  <td><span class="badge badge-blue">استلم</span></td>
-                  <td>
-                    <div class="actions">
-                      <button class="action-btn action-blue">عرض</button>
-                      <button class="action-btn action-red">حذف</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>خالد ناصر</td>
-                  <td>0500000004</td>
-                  <td>جمعية الخير</td>
-                  <td>مارس 2026</td>
-                  <td><span class="badge badge-red">متأخر</span></td>
-                  <td><span class="badge badge-primary">لم يستلم</span></td>
-                  <td>
-                    <div class="actions">
-                      <button class="action-btn action-blue">عرض</button>
-                      <button class="action-btn action-amber">تنبيه</button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- الاشتراكات -->
-      <section class="page" id="subscriptions-page">
-        <div class="grid grid-2">
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3 class="card-title">ملخص الاشتراكات</h3>
-                <p class="card-sub">عدد المشتركين حسب كل باقة</p>
-              </div>
-            </div>
-
-            <div class="bar-list">
-              <div class="bar-row">
-                <span>Free</span>
-                <div class="bar bar-blue"><span style="width:18%;"></span></div>
-                <strong>11</strong>
-              </div>
-              <div class="bar-row">
-                <span>Basic</span>
-                <div class="bar bar-green"><span style="width:26%;"></span></div>
-                <strong>16</strong>
-              </div>
-              <div class="bar-row">
-                <span>Pro</span>
-                <div class="bar bar-violet"><span style="width:38%;"></span></div>
-                <strong>23</strong>
-              </div>
-              <div class="bar-row">
-                <span>Business</span>
-                <div class="bar bar-amber"><span style="width:18%;"></span></div>
-                <strong>11</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3 class="card-title">أهم ملاحظات الاشتراكات</h3>
-                <p class="card-sub">مؤشرات تحتاج قرارًا أو متابعة</p>
-              </div>
-            </div>
-
-            <div class="notice-list">
-              <div class="notice">
-                <div class="notice-left">
-                  <div class="notice-icon badge-amber">⏳</div>
-                  <div>
-                    <h4>6 اشتراكات ستنتهي قريبًا</h4>
-                    <p>تحتاج تنبيهًا أو تواصلاً قبل تعطّل التجديد لبعض الجمعيات.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="notice">
-                <div class="notice-left">
-                  <div class="notice-icon badge-green">⬆</div>
-                  <div>
-                    <h4>زيادة الطلب على Pro</h4>
-                    <p>هناك توجه أعلى لهذه الباقة مقارنة ببقية الباقات.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- المدفوعات -->
-      <section class="page" id="payments-page">
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <h3 class="card-title">إدارة المدفوعات</h3>
-              <p class="card-sub">جميع الحركات المالية والإيصالات على مستوى المنصة</p>
-            </div>
-            <div class="filters">
-              <select class="select" style="width:160px;">
-                <option>كل الحالات</option>
-                <option>مدفوع</option>
-                <option>متأخر</option>
-                <option>بانتظار المراجعة</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>النوع</th>
-                  <th>الجهة</th>
-                  <th>المبلغ</th>
-                  <th>الحالة</th>
-                  <th>التاريخ</th>
-                  <th>الإيصال</th>
-                  <th>الإجراءات</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>اشتراك</td>
-                  <td>محمد عبدالله</td>
-                  <td>69 درهم</td>
-                  <td><span class="badge badge-green">مدفوع</span></td>
-                  <td>05/03/2026</td>
-                  <td><button class="action-btn action-primary">عرض</button></td>
-                  <td>
-                    <div class="actions">
-                      <button class="action-btn action-green">اعتماد</button>
-                      <button class="action-btn action-red">رفض</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>دفعة عضو</td>
-                  <td>أحمد سالم</td>
-                  <td>700 درهم</td>
-                  <td><span class="badge badge-amber">بانتظار</span></td>
-                  <td>06/03/2026</td>
-                  <td><button class="action-btn action-primary">عرض</button></td>
-                  <td>
-                    <div class="actions">
-                      <button class="action-btn action-green">اعتماد</button>
-                      <button class="action-btn action-red">رفض</button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- الطلبات -->
-      <section class="page" id="requests-page">
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <h3 class="card-title">طلبات الانضمام والحسابات</h3>
-              <p class="card-sub">الطلبات الجديدة على مستوى المنصة</p>
-            </div>
-          </div>
-
-          <div class="mini-list">
-            <div class="list-item">
-              <div>
-                <h4>طلب انضمام جديد - جمعية الأصدقاء</h4>
-                <p>فاطمة يوسف طلبت الانضمام لشهر يوليو 2026.</p>
-              </div>
-              <div class="actions">
-                <button class="action-btn action-green">قبول</button>
-                <button class="action-btn action-red">رفض</button>
-              </div>
-            </div>
-
-            <div class="list-item">
-              <div>
-                <h4>طلب تسجيل مدير جديد</h4>
-                <p>يوجد حساب جديد بانتظار التحقق من بيانات الاشتراك الأولية.</p>
-              </div>
-              <div class="actions">
-                <button class="action-btn action-green">اعتماد</button>
-                <button class="action-btn action-red">رفض</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- التنبيهات -->
-      <section class="page" id="alerts-page">
-        <div class="grid grid-2">
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3 class="card-title">تنبيهات عامة</h3>
-                <p class="card-sub">حالات حرجة أو قريبة من التحول إلى مشكلة</p>
-              </div>
-            </div>
-
-            <div class="notice-list">
-              <div class="notice">
-                <div class="notice-left">
-                  <div class="notice-icon badge-red">!</div>
-                  <div>
-                    <h4>تأخر جماعي في جمعية الخير</h4>
-                    <p>توجد نسبة تعثر مرتفعة ويجب التواصل مع المدير.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="notice">
-                <div class="notice-left">
-                  <div class="notice-icon badge-amber">⏳</div>
-                  <div>
-                    <h4>جمعيات ستكتمل قريبًا</h4>
-                    <p>5 جمعيات على وشك نهاية الدورة وتحتاج خيار تجديد أو إيقاف.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3 class="card-title">إجراءات سريعة</h3>
-                <p class="card-sub">تنفيذ فوري لأهم الأوامر</p>
-              </div>
-            </div>
-
-            <div class="quick-actions">
-              <button class="btn btn-warning">إرسال تنبيه عام</button>
-              <button class="btn btn-soft">متابعة الاشتراكات المنتهية</button>
-              <button class="btn btn-soft">مراجعة المتأخرات</button>
-              <button class="btn btn-soft">عرض الطلبات الجديدة</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- الملاحظات -->
-      <section class="page" id="notes-page">
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <h3 class="card-title">الملاحظات والاقتراحات</h3>
-              <p class="card-sub">رسائل واردة من المدراء والمستخدمين</p>
-            </div>
-          </div>
-
-          <div class="mini-list">
-            <div class="list-item">
-              <div>
-                <h4>اقتراح تحسين صفحة الانضمام</h4>
-                <p>يوصى بإظهار الأشهر المحجوزة بشكل أوضح وتلوينها بصريًا.</p>
-              </div>
-              <span class="badge badge-blue">اقتراح</span>
-            </div>
-
-            <div class="list-item">
-              <div>
-                <h4>مشكلة في اعتماد الإيصال</h4>
-                <p>مدير جمعية أفاد بأن بعض المستخدمين يرفعون صورًا غير واضحة.</p>
-              </div>
-              <span class="badge badge-amber">ملاحظة</span>
-            </div>
-
-            <div class="list-item">
-              <div>
-                <h4>طلب تطوير التنبيهات</h4>
-                <p>إضافة رسائل واتساب جماعية للمتأخرين قبل موعد الاستحقاق.</p>
-              </div>
-              <span class="badge badge-violet">تطوير</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- التقارير -->
-      <section class="page" id="reports-page">
-        <div class="grid grid-2">
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3 class="card-title">تقرير مالي سريع</h3>
-                <p class="card-sub">ملخص رقمي لأداء المنصة</p>
-              </div>
-            </div>
-
-            <div class="mini-cards">
-              <div class="mini-card">
-                <span>إيرادات الشهر</span>
-                <strong>4,890</strong>
-              </div>
-              <div class="mini-card">
-                <span>الدفعات المتأخرة</span>
-                <strong>11</strong>
-              </div>
-              <div class="mini-card">
-                <span>اشتراكات جديدة</span>
-                <strong>7</strong>
-              </div>
-              <div class="mini-card">
-                <span>جمعيات مكتملة</span>
-                <strong>4</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3 class="card-title">مخرجات التقارير</h3>
-                <p class="card-sub">نماذج سريعة للتصدير أو المراجعة</p>
-              </div>
-            </div>
-
-            <div class="quick-actions">
-              <button class="btn btn-soft">تقرير الجمعيات</button>
-              <button class="btn btn-soft">تقرير المدراء</button>
-              <button class="btn btn-soft">تقرير الاشتراكات</button>
-              <button class="btn btn-soft">تقرير المدفوعات</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- الأرشيف -->
-      <section class="page" id="archive-page">
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <h3 class="card-title">الأرشيف العام</h3>
-              <p class="card-sub">الجمعيات والحسابات المؤرشفة أو المتوقفة</p>
-            </div>
-          </div>
-
-          <div class="mini-list">
-            <div class="list-item">
-              <div>
-                <h4>جمعية الموظفين</h4>
-                <p>حالة: مكتملة — انتهت الدورة بالكامل وتمت أرشفتها.</p>
-              </div>
-              <div class="actions">
-                <span class="badge badge-blue">مكتملة</span>
-                <button class="action-btn action-primary">عرض التفاصيل</button>
-              </div>
-            </div>
-
-            <div class="list-item">
-              <div>
-                <h4>حساب مدير متوقف</h4>
-                <p>تم إيقاف الحساب بعد انتهاء الباقة وعدم التجديد.</p>
-              </div>
-              <div class="actions">
-                <span class="badge badge-red">متوقف</span>
-                <button class="action-btn action-green">إعادة تفعيل</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <script>
-    const menuButtons = document.querySelectorAll('.menu-btn');
-    const pages = document.querySelectorAll('.page');
-    const pageTitle = document.getElementById('page-title');
-
-    const titles = {
-      'overview-page': 'لوحة الأدمن العامة',
-      'societies-page': 'إدارة الجمعيات',
-      'managers-page': 'إدارة المدراء',
-      'members-page': 'إدارة الأعضاء',
-      'subscriptions-page': 'إدارة الاشتراكات',
-      'payments-page': 'إدارة المدفوعات',
-      'requests-page': 'الطلبات',
-      'alerts-page': 'التنبيهات',
-      'notes-page': 'الملاحظات',
-      'reports-page': 'التقارير',
-      'archive-page': 'الأرشيف'
-    };
-
-    menuButtons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const target = btn.getAttribute('data-page');
-        if (!target) return;
-
-        menuButtons.forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        pages.forEach((page) => page.classList.remove('active'));
-
-        const nextPage = document.getElementById(target);
-        if (nextPage) {
-          nextPage.classList.add('active');
-          pageTitle.textContent = titles[target] || 'لوحة الأدمن';
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      });
-    });
-  </script>
+      <div style="font-size:13px;color:var(--text);line-height:1.8">${n.note}</div>
+    </div>
+  `).join('')
+}
+
+// ════════════════════════════════
+// تسجيل الخروج
+// ════════════════════════════════
+window.doLogout = async function() {
+  await sb.auth.signOut()
+  window.location.href = 'login.html'
+}
+
+// ════════════════════════════════
+// تحديث الصفحة الحالية
+// ════════════════════════════════
+window.reloadCurrentPage = function() {
+  const loaders = {
+    'overview-page':      loadOverview,
+    'groups-page':        loadGroups,
+    'managers-page':      loadManagers,
+    'members-page':       loadMembers,
+    'payments-page':      loadPayments,
+    'requests-page':      loadRequests,
+    'subscriptions-page': loadSubscriptions,
+    'notes-page':         loadNotes,
+  }
+  loaders[currentPage]?.()
+}
+
+// ════════════════════════════════
+// التنقل بين الصفحات
+// ════════════════════════════════
+const pageTitles = {
+  'overview-page':      ['نظرة عامة','إحصائيات شاملة لكامل المنصة'],
+  'groups-page':        ['الجمعيات','كل الجمعيات المسجّلة في المنصة'],
+  'managers-page':      ['المدراء','حسابات مدراء الجمعيات'],
+  'members-page':       ['الأعضاء','كل الأعضاء في المنصة'],
+  'payments-page':      ['الدفعات','سجل الدفعات على مستوى المنصة'],
+  'requests-page':      ['طلبات الانضمام','الطلبات الواردة من الأعضاء'],
+  'subscriptions-page': ['الاشتراكات','باقات المدراء النشطة'],
+  'notes-page':         ['ملاحظات المدراء','رسائل واردة من المدراء'],
+}
+
+const pageLoaders = {
+  'groups-page':        loadGroups,
+  'managers-page':      loadManagers,
+  'members-page':       loadMembers,
+  'payments-page':      loadPayments,
+  'requests-page':      loadRequests,
+  'subscriptions-page': loadSubscriptions,
+  'notes-page':         loadNotes,
+}
+
+window.switchPage = function(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
+  document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'))
+
+  const page = document.getElementById(pageId)
+  if (page) page.classList.add('active')
+
+  const btn = document.querySelector(`[data-page="${pageId}"]`)
+  if (btn) btn.classList.add('active')
+
+  const [title, sub] = pageTitles[pageId] || ['لوحة الأدمن','']
+  document.getElementById('pageTitle').textContent    = title
+  document.getElementById('pageSubtitle').textContent = sub
+
+  currentPage = pageId
+
+  // تحميل البيانات عند أول زيارة للصفحة
+  pageLoaders[pageId]?.()
+
+  window.scrollTo({top:0,behavior:'smooth'})
+}
+
+document.querySelectorAll('.menu-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.getAttribute('data-page')
+    if (target) switchPage(target)
+  })
+})
+
+// ════════════════════════════════
+// مساعدات
+// ════════════════════════════════
+function groupBadge(s) { return {active:'badge-green',completed:'badge-blue',stopped:'badge-red',renewed:'badge-violet'}[s]||'badge-primary' }
+function groupLabel(s) { return {active:'نشطة',completed:'مكتملة',stopped:'متوقفة',renewed:'مجددة'}[s]||s }
+function memberBadge(s){ return {active:'badge-green',pending:'badge-amber',rejected:'badge-red',approved:'badge-blue'}[s]||'badge-primary' }
+function memberLabel(s){ return {active:'نشط',pending:'معلق',rejected:'مرفوض',approved:'مقبول'}[s]||s }
+function payBadge(s)   { return {paid:'badge-green',pending:'badge-amber',late:'badge-red'}[s]||'badge-primary' }
+function payLabel(s)   { return {paid:'مدفوع',pending:'معلق',late:'متأخر'}[s]||s }
+function reqBadge(s)   { return {pending:'badge-amber',approved:'badge-green',rejected:'badge-red'}[s]||'badge-primary' }
+function reqLabel(s)   { return {pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s]||s }
+
+// ════════════════════════════════
+// تشغيل
+// ════════════════════════════════
+init()
+</script>
 </body>
 </html>
