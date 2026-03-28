@@ -11,26 +11,15 @@
 
   <style>
     :root{
-      --bg:#f4f8fc;
-      --panel:#ffffff;
-      --panel-soft:#f8fbff;
-      --line:#dfe8f1;
-      --line-dark:#cfdbe7;
-      --text:#16324a;
-      --muted:#6e8498;
-      --primary:#1f6fa5;
-      --primary-dark:#185781;
-      --primary-soft:#eaf5fd;
-      --green:#138a59;
-      --green-soft:#e8f8f1;
-      --amber:#b7791f;
-      --amber-soft:#fff5e4;
-      --red:#c53b3b;
-      --red-soft:#fdeeee;
-      --blue:#2563eb;
-      --blue-soft:#edf3ff;
-      --violet:#7c3aed;
-      --violet-soft:#f3edff;
+      --bg:#f4f8fc;--panel:#ffffff;--panel-soft:#f8fbff;
+      --line:#dfe8f1;--line-dark:#cfdbe7;
+      --text:#16324a;--muted:#6e8498;
+      --primary:#1f6fa5;--primary-dark:#185781;--primary-soft:#eaf5fd;
+      --green:#138a59;--green-soft:#e8f8f1;
+      --amber:#b7791f;--amber-soft:#fff5e4;
+      --red:#c53b3b;--red-soft:#fdeeee;
+      --blue:#2563eb;--blue-soft:#edf3ff;
+      --violet:#7c3aed;--violet-soft:#f3edff;
       --shadow:0 12px 30px rgba(15,40,64,0.08);
       --radius:18px;
     }
@@ -41,67 +30,54 @@
     a{text-decoration:none;color:inherit}
     button,input,select,textarea{font-family:"Tajawal",sans-serif}
 
-    /* ── Layout ── */
     .app{min-height:100vh;display:grid;grid-template-columns:280px 1fr}
 
     /* ── Sidebar ── */
-    .sidebar{
-      background:#fff;border-left:1px solid var(--line);
-      padding:20px 16px;position:sticky;top:0;
-      height:100vh;box-shadow:var(--shadow);overflow:auto;z-index:20;
-    }
-
+    .sidebar{background:#fff;border-left:1px solid var(--line);padding:20px 16px;position:sticky;top:0;height:100vh;box-shadow:var(--shadow);overflow:auto;z-index:20}
     .brand{display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:16px}
-    .brand-logo{
-      width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
-      background:linear-gradient(135deg,var(--primary),#46a8d8);
-      color:#fff;font-size:20px;font-weight:900;flex:0 0 46px;
-    }
+    .brand-logo{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),#46a8d8);color:#fff;font-size:20px;font-weight:900;flex:0 0 46px}
     .brand h1{font-size:19px;font-weight:900;line-height:1.1}
     .brand p{color:var(--muted);font-size:12px;margin-top:3px}
-
-    .manager-chip{
-      margin-top:10px;padding:8px 12px;border-radius:12px;
-      background:var(--primary-soft);
-    }
+    .manager-chip{margin-top:10px;padding:8px 12px;border-radius:12px;background:var(--primary-soft)}
     .manager-chip span{display:block;font-size:11px;color:var(--muted);font-weight:700}
     .manager-chip strong{display:block;font-size:14px;font-weight:900;color:var(--primary-dark)}
-
     .menu{display:flex;flex-direction:column;gap:6px}
     .menu-btn{
       border:none;background:transparent;width:100%;
       display:flex;align-items:center;gap:10px;
       padding:12px 14px;border-radius:12px;cursor:pointer;
       color:var(--text);font-size:14px;font-weight:800;transition:.2s;
+      position:relative;
     }
     .menu-btn:hover{background:var(--panel-soft)}
     .menu-btn.active{background:var(--primary-soft);color:var(--primary-dark);border:1px solid #d3e9f8}
     .menu-icon{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:#f2f7fb;font-size:15px;flex:0 0 32px}
     .menu-btn.active .menu-icon{background:#dceefb}
+    .menu-btn span{flex:1;text-align:right}
 
-    .logout-btn{
-      margin-top:16px;padding-top:16px;border-top:1px solid var(--line);
-      border:none;background:none;width:100%;
-      display:flex;align-items:center;gap:10px;
-      padding:12px 14px;border-radius:12px;cursor:pointer;
-      color:var(--red);font-size:14px;font-weight:800;
+    /* ── Badge للطلبات ── */
+    .req-badge{
+      display:none;
+      background:var(--red);color:#fff;
+      font-size:11px;font-weight:900;
+      width:20px;height:20px;border-radius:999px;
+      align-items:center;justify-content:center;
+      flex:0 0 20px;
     }
+    .req-badge.show{display:flex}
+
+    .logout-btn{margin-top:16px;border-top:1px solid var(--line);border:none;background:none;width:100%;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;cursor:pointer;color:var(--red);font-size:14px;font-weight:800}
     .logout-btn:hover{background:var(--red-soft)}
 
-    /* ── Main Content ── */
+    /* ── Content ── */
     .content{padding:22px;min-width:0}
-
     .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px}
     .topbar h2{font-size:28px;font-weight:900}
     .topbar p{color:var(--muted);font-size:13px;margin-top:5px}
     .topbar-actions{display:flex;gap:10px;flex-wrap:wrap}
 
     /* ── Buttons ── */
-    .btn{
-      border:none;border-radius:12px;padding:11px 16px;cursor:pointer;
-      font-size:13px;font-weight:900;transition:.2s;white-space:nowrap;
-      display:inline-flex;align-items:center;gap:6px;
-    }
+    .btn{border:none;border-radius:12px;padding:11px 16px;cursor:pointer;font-size:13px;font-weight:900;transition:.2s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
     .btn:hover{transform:translateY(-1px)}
     .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
     .btn-primary{background:var(--primary);color:#fff;box-shadow:0 8px 16px rgba(31,111,165,.2)}
@@ -110,7 +86,6 @@
     .btn-soft:hover{background:#f8fbff}
     .btn-success{background:var(--green);color:#fff}
     .btn-danger{background:var(--red);color:#fff}
-    .btn-warning{background:var(--amber);color:#fff}
     .btn-sm{padding:7px 12px;font-size:12px;border-radius:9px}
 
     /* ── Pages ── */
@@ -131,7 +106,6 @@
     .stat-card span{display:block;color:var(--muted);font-size:12px;font-weight:700;margin-bottom:6px}
     .stat-card strong{display:block;font-size:26px;font-weight:900}
 
-    /* ── Grid ── */
     .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
 
     /* ── Badges ── */
@@ -145,7 +119,7 @@
 
     /* ── Table ── */
     .table-wrap{width:100%;overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
-    table{width:100%;min-width:900px;border-collapse:collapse}
+    table{width:100%;min-width:800px;border-collapse:collapse}
     thead{background:#f7fbff}
     th,td{padding:12px 14px;text-align:right;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle}
     th{color:var(--muted);font-weight:900;white-space:nowrap}
@@ -164,31 +138,19 @@
 
     /* ── Filters ── */
     .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
-    .select,.field{
-      border:1px solid var(--line-dark);background:#fff;color:var(--text);
-      border-radius:12px;padding:10px 14px;outline:none;font-size:13px;
-    }
+    .select,.field{border:1px solid var(--line-dark);background:#fff;color:var(--text);border-radius:12px;padding:10px 14px;outline:none;font-size:13px}
     .select:focus,.field:focus{border-color:#96bdd8;box-shadow:0 0 0 3px rgba(31,111,165,.08)}
     .textarea{width:100%;border:1px solid var(--line-dark);background:#fff;color:var(--text);border-radius:12px;padding:12px 14px;outline:none;font-size:13px;resize:vertical}
     .textarea:focus{border-color:#96bdd8;box-shadow:0 0 0 3px rgba(31,111,165,.08)}
 
     /* ── Form Grid ── */
     .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    .form-grid.full{grid-template-columns:1fr}
     .label{display:block;margin-bottom:6px;color:var(--muted);font-size:12px;font-weight:800}
-    .field-full{grid-column:1/-1}
 
     /* ── Modal ── */
-    .modal-overlay{
-      display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);
-      z-index:100;align-items:center;justify-content:center;padding:20px;
-    }
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center;padding:20px}
     .modal-overlay.show{display:flex}
-    .modal{
-      background:#fff;border-radius:20px;padding:24px;
-      width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.15);
-      max-height:90vh;overflow:auto;
-    }
+    .modal{background:#fff;border-radius:20px;padding:24px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.15);max-height:90vh;overflow:auto}
     .modal h3{font-size:20px;font-weight:900;margin-bottom:16px}
     .modal-actions{display:flex;gap:10px;margin-top:18px;justify-content:flex-end}
 
@@ -198,35 +160,27 @@
     .msg.success{background:var(--green-soft);color:var(--green)}
     .msg.show{display:block}
 
-    /* ── Empty State ── */
     .empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:14px;font-weight:700}
 
-    /* ── Loading Overlay ── */
-    .page-loader{
-      display:none;position:fixed;inset:0;background:rgba(255,255,255,.85);
-      z-index:200;align-items:center;justify-content:center;
-      flex-direction:column;gap:12px;font-size:15px;font-weight:700;color:var(--primary);
-    }
+    .page-loader{display:none;position:fixed;inset:0;background:rgba(255,255,255,.85);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:12px;font-size:15px;font-weight:700;color:var(--primary)}
     .page-loader.show{display:flex}
 
-    /* ── Join Link Box ── */
-    .link-box{
-      display:flex;align-items:center;gap:10px;
-      background:#f8fbff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;
-    }
+    .link-box{display:flex;align-items:center;gap:10px;background:#f8fbff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
     .link-box input{flex:1;border:none;background:transparent;font-size:13px;color:var(--text);outline:none}
 
-    /* ── Cycle Status ── */
-    .cycle-banner{
-      padding:14px 18px;border-radius:14px;font-size:14px;font-weight:900;
-      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-      margin-bottom:16px;
-    }
+    .cycle-banner{padding:14px 18px;border-radius:14px;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
     .cycle-banner.completed{background:#e8f8f1;color:var(--green);border:1px solid #b7e4cf}
     .cycle-banner.stopped{background:var(--red-soft);color:var(--red);border:1px solid #f5c6c6}
     .cycle-banner.active{background:var(--primary-soft);color:var(--primary-dark);border:1px solid #c3dff0}
 
-    /* ── Responsive ── */
+    /* ── جدول الدفعات الشهري ── */
+    .schedule-table{width:100%;min-width:700px;border-collapse:collapse}
+    .schedule-table th{padding:12px 14px;text-align:right;background:#f7fbff;color:var(--muted);font-weight:900;font-size:12px;border-bottom:2px solid var(--line)}
+    .schedule-table td{padding:12px 14px;text-align:right;border-bottom:1px solid var(--line);font-size:13px;font-weight:700}
+    .schedule-table tr:last-child td{border-bottom:none}
+    .schedule-table tr:hover td{background:#fcfeff}
+    .month-header{background:#f0f7ff!important;font-weight:900!important;color:var(--primary-dark)!important;font-size:13px!important}
+
     @media(max-width:1280px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:980px){
       .app{grid-template-columns:1fr}
@@ -245,41 +199,26 @@
 </head>
 <body>
 
-<!-- ── Loading Overlay ── -->
 <div class="page-loader" id="pageLoader">جاري تحميل لوحة التحكم...</div>
 
-<!-- ── Modal: إضافة / تعديل عضو ── -->
+<!-- Modal: إضافة / تعديل عضو -->
 <div class="modal-overlay" id="memberModal">
   <div class="modal">
     <h3 id="memberModalTitle">إضافة عضو</h3>
     <div class="form-grid">
-      <div>
-        <label class="label">الاسم الكامل *</label>
-        <input class="field" id="m_fullName" type="text" placeholder="اسم العضو">
-      </div>
-      <div>
-        <label class="label">رقم الهاتف</label>
-        <input class="field" id="m_phone" type="tel" placeholder="05xxxxxxxx">
-      </div>
+      <div><label class="label">الاسم الكامل *</label><input class="field" id="m_fullName" type="text" placeholder="اسم العضو" style="width:100%"></div>
+      <div><label class="label">رقم الهاتف</label><input class="field" id="m_phone" type="tel" placeholder="05xxxxxxxx" style="width:100%"></div>
       <div>
         <label class="label">شهر الاستلام *</label>
-        <select class="select" id="m_month">
-          <option value="1">يناير</option><option value="2">فبراير</option>
-          <option value="3">مارس</option><option value="4">أبريل</option>
-          <option value="5">مايو</option><option value="6">يونيو</option>
-          <option value="7">يوليو</option><option value="8">أغسطس</option>
-          <option value="9">سبتمبر</option><option value="10">أكتوبر</option>
-          <option value="11">نوفمبر</option><option value="12">ديسمبر</option>
+        <select class="select" id="m_month" style="width:100%">
+          <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option>
+          <option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option>
+          <option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option>
+          <option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
         </select>
       </div>
-      <div>
-        <label class="label">السنة *</label>
-        <input class="field" id="m_year" type="number" placeholder="2024">
-      </div>
-      <div>
-        <label class="label">ترتيب الصرف</label>
-        <input class="field" id="m_order" type="number" placeholder="1">
-      </div>
+      <div><label class="label">السنة *</label><input class="field" id="m_year" type="number" placeholder="2024" style="width:100%"></div>
+      <div><label class="label">ترتيب الصرف</label><input class="field" id="m_order" type="number" placeholder="1" style="width:100%"></div>
     </div>
     <div class="msg" id="memberMsg"></div>
     <div class="modal-actions">
@@ -289,7 +228,7 @@
   </div>
 </div>
 
-<!-- ── Modal: تسجيل دفعة ── -->
+<!-- Modal: تسجيل دفعة -->
 <div class="modal-overlay" id="paymentModal">
   <div class="modal">
     <h3>تسجيل دفعة</h3>
@@ -297,39 +236,25 @@
     <div class="form-grid">
       <div>
         <label class="label">شهر الدفع *</label>
-        <select class="select" id="pay_month">
-          <option value="1">يناير</option><option value="2">فبراير</option>
-          <option value="3">مارس</option><option value="4">أبريل</option>
-          <option value="5">مايو</option><option value="6">يونيو</option>
-          <option value="7">يوليو</option><option value="8">أغسطس</option>
-          <option value="9">سبتمبر</option><option value="10">أكتوبر</option>
-          <option value="11">نوفمبر</option><option value="12">ديسمبر</option>
+        <select class="select" id="pay_month" style="width:100%">
+          <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option>
+          <option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option>
+          <option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option>
+          <option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
         </select>
       </div>
-      <div>
-        <label class="label">السنة *</label>
-        <input class="field" id="pay_year" type="number" placeholder="2024">
-      </div>
-      <div>
-        <label class="label">المبلغ (درهم) *</label>
-        <input class="field" id="pay_amount" type="number" placeholder="500">
-      </div>
-      <div>
-        <label class="label">تاريخ الاستحقاق</label>
-        <input class="field" id="pay_due" type="date">
-      </div>
+      <div><label class="label">السنة *</label><input class="field" id="pay_year" type="number" placeholder="2024" style="width:100%"></div>
+      <div><label class="label">المبلغ (درهم) *</label><input class="field" id="pay_amount" type="number" placeholder="500" style="width:100%"></div>
+      <div><label class="label">تاريخ الاستحقاق</label><input class="field" id="pay_due" type="date" style="width:100%"></div>
       <div>
         <label class="label">حالة الدفع *</label>
-        <select class="select" id="pay_status">
+        <select class="select" id="pay_status" style="width:100%">
           <option value="paid">مدفوع</option>
           <option value="pending">معلق</option>
           <option value="late">متأخر</option>
         </select>
       </div>
-      <div>
-        <label class="label">رابط الإيصال (اختياري)</label>
-        <input class="field" id="pay_receipt" type="url" placeholder="https://...">
-      </div>
+      <div><label class="label">رابط الإيصال (اختياري)</label><input class="field" id="pay_receipt" type="url" placeholder="https://..." style="width:100%"></div>
     </div>
     <div class="msg" id="paymentMsg"></div>
     <div class="modal-actions">
@@ -339,24 +264,18 @@
   </div>
 </div>
 
-<!-- ── App ── -->
 <div class="app">
-
   <!-- Sidebar -->
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-logo">س</div>
-      <div>
-        <h1>صندوق ساهل</h1>
-        <p>لوحة مدير الجمعية</p>
-      </div>
+      <div><h1>صندوق ساهل</h1><p>لوحة مدير الجمعية</p></div>
     </div>
 
     <div class="manager-chip">
       <span>المدير</span>
       <strong id="sidebarManagerName">...</strong>
     </div>
-
     <div class="manager-chip" style="margin-top:8px">
       <span>الجمعية</span>
       <strong id="sidebarGroupName">...</strong>
@@ -370,10 +289,15 @@
         <div class="menu-icon">👥</div><span>الأعضاء</span>
       </button>
       <button class="menu-btn" data-page="requests-page">
-        <div class="menu-icon">📨</div><span>طلبات الانضمام</span>
+        <div class="menu-icon">📨</div>
+        <span>طلبات الانضمام</span>
+        <div class="req-badge" id="reqBadge">0</div>
       </button>
       <button class="menu-btn" data-page="payments-page">
         <div class="menu-icon">💳</div><span>الدفعات</span>
+      </button>
+      <button class="menu-btn" data-page="schedule-page">
+        <div class="menu-icon">📅</div><span>جدول الدفعات</span>
       </button>
       <button class="menu-btn" data-page="link-page">
         <div class="menu-icon">🔗</div><span>رابط الانضمام</span>
@@ -393,7 +317,6 @@
 
   <!-- Main -->
   <main class="content">
-
     <div class="topbar">
       <div>
         <h2 id="pageTitle">نظرة عامة</h2>
@@ -404,63 +327,38 @@
       </div>
     </div>
 
-    <!-- ════════════════════════════════
-         صفحة: نظرة عامة
-    ════════════════════════════════ -->
+    <!-- نظرة عامة -->
     <section class="page active" id="overview-page">
-
-      <!-- حالة الجمعية -->
       <div class="cycle-banner active" id="cycleBanner">
         <span id="cycleBannerText">الجمعية نشطة</span>
         <div style="display:flex;gap:8px" id="cycleActions"></div>
       </div>
 
-      <!-- إحصائيات -->
       <div class="stats-grid">
-        <div class="stat-card">
-          <span>إجمالي الأعضاء</span>
-          <strong id="statTotal">—</strong>
-        </div>
-        <div class="stat-card">
-          <span>الدفعات المسددة</span>
-          <strong id="statPaid">—</strong>
-        </div>
-        <div class="stat-card">
-          <span>الدفعات المتأخرة</span>
-          <strong id="statLate">—</strong>
-        </div>
-        <div class="stat-card">
-          <span>حالة الجمعية</span>
-          <strong id="statStatus">—</strong>
-        </div>
+        <div class="stat-card"><span>إجمالي الأعضاء</span><strong id="statTotal">—</strong></div>
+        <div class="stat-card"><span>الدفعات المسددة</span><strong id="statPaid">—</strong></div>
+        <div class="stat-card"><span>الدفعات المتأخرة</span><strong id="statLate">—</strong></div>
+        <div class="stat-card"><span>حالة الجمعية</span><strong id="statStatus">—</strong></div>
       </div>
 
       <div class="grid-2">
-        <!-- معلومات الجمعية -->
         <div class="card">
           <div class="card-head">
-            <div>
-              <div class="card-title">معلومات الجمعية</div>
-              <div class="card-sub">البيانات الأساسية</div>
-            </div>
+            <div><div class="card-title">معلومات الجمعية</div><div class="card-sub">البيانات الأساسية</div></div>
             <span class="badge badge-green" id="groupStatusBadge">نشطة</span>
           </div>
           <div style="display:grid;gap:10px">
             <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px">
-              <span style="color:var(--muted);font-weight:700">اسم الجمعية</span>
-              <strong id="infoGroupName">—</strong>
+              <span style="color:var(--muted);font-weight:700">اسم الجمعية</span><strong id="infoGroupName">—</strong>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px">
-              <span style="color:var(--muted);font-weight:700">المدير</span>
-              <strong id="infoManagerName">—</strong>
+              <span style="color:var(--muted);font-weight:700">المدير</span><strong id="infoManagerName">—</strong>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px">
-              <span style="color:var(--muted);font-weight:700">المبلغ الشهري</span>
-              <strong id="infoAmount">—</strong>
+              <span style="color:var(--muted);font-weight:700">المبلغ الشهري</span><strong id="infoAmount">—</strong>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px">
-              <span style="color:var(--muted);font-weight:700">شهر البداية</span>
-              <strong id="infoStartDate">—</strong>
+              <span style="color:var(--muted);font-weight:700">شهر البداية</span><strong id="infoStartDate">—</strong>
             </div>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
@@ -469,7 +367,6 @@
           </div>
         </div>
 
-        <!-- آخر الطلبات -->
         <div class="card">
           <div class="card-head">
             <div class="card-title">آخر طلبات الانضمام</div>
@@ -480,156 +377,122 @@
       </div>
     </section>
 
-    <!-- ════════════════════════════════
-         صفحة: الأعضاء
-    ════════════════════════════════ -->
+    <!-- الأعضاء -->
     <section class="page" id="members-page">
       <div class="card">
         <div class="card-head">
-          <div>
-            <div class="card-title">أعضاء الجمعية</div>
-            <div class="card-sub" id="memberCount">جاري التحميل...</div>
-          </div>
+          <div><div class="card-title">أعضاء الجمعية</div><div class="card-sub" id="memberCount">جاري التحميل...</div></div>
           <button class="btn btn-primary btn-sm" onclick="openAddMember()">+ إضافة عضو</button>
         </div>
-
-        <!-- فلاتر -->
         <div class="filters">
           <select class="select" id="filterMonth" onchange="loadMembers()">
             <option value="">كل الأشهر</option>
-            <option value="1">يناير</option><option value="2">فبراير</option>
-            <option value="3">مارس</option><option value="4">أبريل</option>
-            <option value="5">مايو</option><option value="6">يونيو</option>
-            <option value="7">يوليو</option><option value="8">أغسطس</option>
-            <option value="9">سبتمبر</option><option value="10">أكتوبر</option>
-            <option value="11">نوفمبر</option><option value="12">ديسمبر</option>
+            <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option>
+            <option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option>
+            <option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option>
+            <option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
           </select>
           <input class="field" id="filterYear" type="number" placeholder="السنة" style="width:110px" onchange="loadMembers()">
           <button class="btn btn-soft btn-sm" onclick="clearFilters()">مسح الفلتر</button>
         </div>
-
         <div class="table-wrap">
           <table>
             <thead>
-              <tr>
-                <th>#</th>
-                <th>الاسم</th>
-                <th>الهاتف</th>
-                <th>شهر الاستلام</th>
-                <th>السنة</th>
-                <th>الترتيب</th>
-                <th>الحالة</th>
-                <th>الإجراءات</th>
-              </tr>
+              <tr><th>#</th><th>الاسم</th><th>الهاتف</th><th>شهر الاستلام</th><th>السنة</th><th>الترتيب</th><th>الحالة</th><th>الإجراءات</th></tr>
             </thead>
-            <tbody id="membersBody">
-              <tr><td colspan="8" class="empty">جاري التحميل...</td></tr>
-            </tbody>
+            <tbody id="membersBody"><tr><td colspan="8" class="empty">جاري التحميل...</td></tr></tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- ════════════════════════════════
-         صفحة: طلبات الانضمام
-    ════════════════════════════════ -->
+    <!-- طلبات الانضمام -->
     <section class="page" id="requests-page">
       <div class="card">
         <div class="card-head">
-          <div>
-            <div class="card-title">طلبات الانضمام</div>
-            <div class="card-sub">الطلبات الواردة عبر رابط الانضمام</div>
-          </div>
+          <div><div class="card-title">طلبات الانضمام</div><div class="card-sub">الطلبات الواردة عبر رابط الانضمام</div></div>
           <button class="btn btn-soft btn-sm" onclick="loadRequests()">🔄 تحديث</button>
         </div>
-
         <div class="table-wrap">
           <table>
             <thead>
-              <tr>
-                <th>الاسم</th>
-                <th>الهاتف</th>
-                <th>الشهر المطلوب</th>
-                <th>السنة</th>
-                <th>تاريخ الطلب</th>
-                <th>الحالة</th>
-                <th>الإجراءات</th>
-              </tr>
+              <tr><th>الاسم</th><th>الهاتف</th><th>الشهر المطلوب</th><th>السنة</th><th>تاريخ الطلب</th><th>الحالة</th><th>الإجراءات</th></tr>
             </thead>
-            <tbody id="requestsBody">
-              <tr><td colspan="7" class="empty">جاري التحميل...</td></tr>
-            </tbody>
+            <tbody id="requestsBody"><tr><td colspan="7" class="empty">جاري التحميل...</td></tr></tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- ════════════════════════════════
-         صفحة: الدفعات
-    ════════════════════════════════ -->
+    <!-- الدفعات -->
     <section class="page" id="payments-page">
       <div class="card">
         <div class="card-head">
-          <div>
-            <div class="card-title">الدفعات</div>
-            <div class="card-sub">سجل كامل لدفعات الأعضاء</div>
-          </div>
+          <div><div class="card-title">الدفعات</div><div class="card-sub">سجل كامل لدفعات الأعضاء</div></div>
           <button class="btn btn-soft btn-sm" onclick="loadPayments()">🔄 تحديث</button>
         </div>
-
         <div class="filters">
           <select class="select" id="payFilterMonth" onchange="loadPayments()">
             <option value="">كل الأشهر</option>
-            <option value="1">يناير</option><option value="2">فبراير</option>
-            <option value="3">مارس</option><option value="4">أبريل</option>
-            <option value="5">مايو</option><option value="6">يونيو</option>
-            <option value="7">يوليو</option><option value="8">أغسطس</option>
-            <option value="9">سبتمبر</option><option value="10">أكتوبر</option>
-            <option value="11">نوفمبر</option><option value="12">ديسمبر</option>
+            <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option>
+            <option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option>
+            <option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option>
+            <option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
           </select>
           <input class="field" id="payFilterYear" type="number" placeholder="السنة" style="width:110px" onchange="loadPayments()">
           <select class="select" id="payFilterStatus" onchange="loadPayments()">
             <option value="">كل الحالات</option>
-            <option value="paid">مدفوع</option>
-            <option value="pending">معلق</option>
-            <option value="late">متأخر</option>
+            <option value="paid">مدفوع</option><option value="pending">معلق</option><option value="late">متأخر</option>
           </select>
         </div>
-
         <div class="table-wrap">
           <table>
             <thead>
-              <tr>
-                <th>العضو</th>
-                <th>المبلغ</th>
-                <th>الشهر</th>
-                <th>السنة</th>
-                <th>تاريخ الاستحقاق</th>
-                <th>تاريخ الدفع</th>
-                <th>الحالة</th>
-                <th>الإيصال</th>
-                <th>الإجراءات</th>
-              </tr>
+              <tr><th>العضو</th><th>المبلغ</th><th>الشهر</th><th>السنة</th><th>تاريخ الاستحقاق</th><th>تاريخ الدفع</th><th>الحالة</th><th>الإيصال</th><th>الإجراءات</th></tr>
             </thead>
-            <tbody id="paymentsBody">
-              <tr><td colspan="9" class="empty">جاري التحميل...</td></tr>
-            </tbody>
+            <tbody id="paymentsBody"><tr><td colspan="9" class="empty">جاري التحميل...</td></tr></tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- ════════════════════════════════
-         صفحة: رابط الانضمام
-    ════════════════════════════════ -->
-    <section class="page" id="link-page">
+    <!-- ════ جدول الدفعات الشهري ════ -->
+    <section class="page" id="schedule-page">
       <div class="card">
         <div class="card-head">
-          <div class="card-title">رابط الانضمام</div>
+          <div>
+            <div class="card-title">جدول الدفعات الشهري</div>
+            <div class="card-sub">كل أعضاء الجمعية مرتبين حسب شهر استلامهم مع حالة دفعاتهم</div>
+          </div>
+          <button class="btn btn-soft btn-sm" onclick="loadSchedule()">🔄 تحديث</button>
         </div>
-        <p style="color:var(--muted);font-size:14px;margin-bottom:16px">
-          أرسل هذا الرابط للأعضاء ليتمكنوا من تقديم طلب الانضمام لجمعيتك.
-        </p>
+        <div class="table-wrap">
+          <table class="schedule-table">
+            <thead>
+              <tr>
+                <th>الترتيب</th>
+                <th>الاسم</th>
+                <th>الهاتف</th>
+                <th>شهر الاستلام</th>
+                <th>السنة</th>
+                <th>المبلغ</th>
+                <th>حالة الدفع</th>
+                <th>تاريخ الدفع</th>
+                <th>الإيصال</th>
+                <th>إجراء</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleBody"><tr><td colspan="10" class="empty">جاري التحميل...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- رابط الانضمام -->
+    <section class="page" id="link-page">
+      <div class="card">
+        <div class="card-head"><div class="card-title">رابط الانضمام</div></div>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:16px">أرسل هذا الرابط للأعضاء ليتمكنوا من تقديم طلب الانضمام لجمعيتك.</p>
         <div class="link-box">
           <input type="text" id="joinLinkInput" readonly placeholder="جاري التحميل...">
           <button class="btn btn-primary btn-sm" onclick="copyJoinLink()">نسخ</button>
@@ -639,142 +502,87 @@
       </div>
     </section>
 
-    <!-- ════════════════════════════════
-         صفحة: الباقة
-    ════════════════════════════════ -->
+    <!-- الباقة -->
     <section class="page" id="plan-page">
       <div class="card">
-        <div class="card-head">
-          <div class="card-title">الباقة الحالية</div>
-        </div>
+        <div class="card-head"><div class="card-title">الباقة الحالية</div></div>
         <div id="planInfo"><div class="empty">جاري التحميل...</div></div>
       </div>
     </section>
 
-    <!-- ════════════════════════════════
-         صفحة: ملاحظات للإدارة
-    ════════════════════════════════ -->
+    <!-- ملاحظات -->
     <section class="page" id="notes-page">
       <div class="card">
         <div class="card-head">
           <div class="card-title">ملاحظات للإدارة</div>
           <div class="card-sub">أرسل ملاحظاتك أو اقتراحاتك للمشرف العام</div>
         </div>
-
-        <div>
-          <label class="label">الملاحظة أو الاقتراح *</label>
+        <div><label class="label">الملاحظة أو الاقتراح *</label>
           <textarea class="textarea" id="noteText" rows="5" placeholder="اكتب ملاحظتك هنا..."></textarea>
         </div>
-
-        <div style="margin-top:12px">
-          <button class="btn btn-primary" onclick="saveNote()">إرسال للإدارة</button>
-        </div>
-
+        <div style="margin-top:12px"><button class="btn btn-primary" onclick="saveNote()">إرسال للإدارة</button></div>
         <div class="msg" id="noteMsg"></div>
-
         <div style="margin-top:20px">
           <div class="card-title" style="margin-bottom:12px;font-size:15px">ملاحظاتك السابقة</div>
           <div id="notesList"><div class="empty">لا توجد ملاحظات</div></div>
         </div>
       </div>
     </section>
-
   </main>
 </div>
 
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-// ════════════════════════════════════════════════
-// إعداد Supabase
-// ════════════════════════════════════════════════
 const SUPABASE_URL      = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-// ════════════════════════════════════════════════
-// الحالة العامة
-// ════════════════════════════════════════════════
-let currentUser    = null
-let currentProfile = null
-let currentGroup   = null
-let editingMemberId = null
-
+let currentUser = null, currentProfile = null, currentGroup = null, editingMemberId = null
 const loader = document.getElementById('pageLoader')
 
-// ════════════════════════════════════════════════
-// التهيئة
-// ════════════════════════════════════════════════
+// ════ التهيئة ════
 async function init() {
   loader.classList.add('show')
   try {
-    // 1) التحقق من الجلسة
     const { data: { session } } = await sb.auth.getSession()
     if (!session) { window.location.href = 'login.html'; return }
-
     currentUser = session.user
 
-    // 2) جلب profile والتحقق من الـ role
-    const { data: profile, error: pErr } = await sb
-      .from('profiles').select('*').eq('id', currentUser.id).single()
-
+    const { data: profile, error: pErr } = await sb.from('profiles').select('*').eq('id', currentUser.id).single()
     if (pErr || !profile) { window.location.href = 'login.html'; return }
     if (profile.role !== 'manager') { window.location.href = 'admin.html'; return }
-
     currentProfile = profile
 
-    // 3) جلب الجمعية
-    const { data: group, error: gErr } = await sb
-      .from('groups').select('*').eq('manager_id', currentUser.id).single()
-
-    if (gErr || !group) {
-      showNoGroup(); loader.classList.remove('show'); return
-    }
-
+    const { data: group } = await sb.from('groups').select('*').eq('manager_id', currentUser.id).single()
+    if (!group) { showNoGroup(); loader.classList.remove('show'); return }
     currentGroup = group
 
-    // 4) تحديث الـ UI
     updateSidebar()
-    updateOverview()
+    await updateOverview()
     loadMembers()
     loadRequests()
     loadPayments()
+    loadSchedule()
     loadPlan()
     loadNotes()
     setJoinLink()
 
-  } catch(e) {
-    console.error(e)
-    window.location.href = 'login.html'
-  } finally {
-    loader.classList.remove('show')
-  }
+  } catch(e) { console.error(e); window.location.href = 'login.html' }
+  finally { loader.classList.remove('show') }
 }
 
-// ════════════════════════════════════════════════
-// تحديث الـ Sidebar
-// ════════════════════════════════════════════════
 function updateSidebar() {
   document.getElementById('sidebarManagerName').textContent = currentProfile.full_name || '—'
   document.getElementById('sidebarGroupName').textContent   = currentGroup.name || '—'
 }
 
-// ════════════════════════════════════════════════
-// تحديث النظرة العامة
-// ════════════════════════════════════════════════
+// ════ النظرة العامة ════
 async function updateOverview() {
-  // معلومات الجمعية
   document.getElementById('infoGroupName').textContent   = currentGroup.name
   document.getElementById('infoManagerName').textContent = currentProfile.full_name
   document.getElementById('infoAmount').textContent      = currentGroup.monthly_amount + ' درهم'
   document.getElementById('infoStartDate').textContent   = `${currentGroup.start_month}/${currentGroup.start_year}`
-
-  // حالة الجمعية
-  const status = currentGroup.status
-  const banner = document.getElementById('cycleBanner')
-  const bannerText = document.getElementById('cycleBannerText')
-  const cycleActions = document.getElementById('cycleActions')
-  const badge = document.getElementById('groupStatusBadge')
 
   const statusMap = {
     active:    { label:'الجمعية نشطة', cls:'active', badge:'badge-green' },
@@ -782,40 +590,37 @@ async function updateOverview() {
     stopped:   { label:'الجمعية متوقفة', cls:'stopped', badge:'badge-red' },
     renewed:   { label:'تم تجديد الجمعية', cls:'active', badge:'badge-violet' }
   }
-
-  const s = statusMap[status] || statusMap['active']
-  banner.className = `cycle-banner ${s.cls}`
-  bannerText.textContent = s.label
-  badge.className = `badge ${s.badge}`
-  badge.textContent = s.label
+  const s = statusMap[currentGroup.status] || statusMap['active']
+  document.getElementById('cycleBanner').className = `cycle-banner ${s.cls}`
+  document.getElementById('cycleBannerText').textContent = s.label
+  document.getElementById('groupStatusBadge').className = `badge ${s.badge}`
+  document.getElementById('groupStatusBadge').textContent = s.label
   document.getElementById('statStatus').textContent = s.label
 
-  // أزرار حالة الجمعية
+  const cycleActions = document.getElementById('cycleActions')
   cycleActions.innerHTML = ''
-  if (status === 'active') {
+  if (currentGroup.status === 'active') {
     cycleActions.innerHTML = `
       <button class="btn btn-soft btn-sm" onclick="updateGroupStatus('completed')">✅ إنهاء الدورة</button>
-      <button class="btn btn-danger btn-sm" onclick="updateGroupStatus('stopped')">⏹ إيقاف</button>
-    `
-  } else if (status === 'completed' || status === 'stopped') {
-    cycleActions.innerHTML = `
-      <button class="btn btn-success btn-sm" onclick="updateGroupStatus('renewed')">🔄 تجديد الجمعية</button>
-    `
+      <button class="btn btn-danger btn-sm" onclick="updateGroupStatus('stopped')">⏹ إيقاف</button>`
+  } else if (['completed','stopped'].includes(currentGroup.status)) {
+    cycleActions.innerHTML = `<button class="btn btn-success btn-sm" onclick="updateGroupStatus('renewed')">🔄 تجديد</button>`
   }
 
-  // الإحصائيات
   const { data: members } = await sb.from('members').select('id').eq('group_id', currentGroup.id).eq('status','active')
   const { data: paidList } = await sb.from('payments').select('id').eq('group_id', currentGroup.id).eq('status','paid')
   const { data: lateList } = await sb.from('payments').select('id').eq('group_id', currentGroup.id).eq('status','late')
-
   document.getElementById('statTotal').textContent = members?.length ?? '0'
   document.getElementById('statPaid').textContent  = paidList?.length ?? '0'
   document.getElementById('statLate').textContent  = lateList?.length ?? '0'
 
-  // آخر الطلبات
+  // آخر الطلبات + badge
   const { data: reqs } = await sb.from('join_requests')
     .select('*').eq('group_id', currentGroup.id).eq('status','pending')
-    .order('created_at', {ascending:false}).limit(3)
+    .order('created_at',{ascending:false}).limit(3)
+
+  // تحديث الـ badge
+  updateReqBadge(reqs?.length || 0)
 
   const recentEl = document.getElementById('recentRequests')
   if (!reqs || reqs.length === 0) {
@@ -828,53 +633,54 @@ async function updateOverview() {
           <div style="color:var(--muted)">${monthName(r.requested_month)} ${r.requested_year}</div>
         </div>
         <div style="display:flex;gap:6px">
-          <button class="action-btn action-green" onclick="approveRequest('${r.id}')">قبول</button>
+          <button class="action-btn action-green" onclick="approveRequest('${r.id}','${escQ(r.full_name)}','${r.phone||''}',${r.requested_month},${r.requested_year})">قبول</button>
           <button class="action-btn action-red" onclick="rejectRequest('${r.id}')">رفض</button>
         </div>
-      </div>
-    `).join('')
+      </div>`).join('')
   }
 }
 
-// ════════════════════════════════════════════════
-// تحديث حالة الجمعية
-// ════════════════════════════════════════════════
+// ════ Badge الطلبات ════
+function updateReqBadge(count) {
+  const badge = document.getElementById('reqBadge')
+  if (count > 0) {
+    badge.textContent = count
+    badge.classList.add('show')
+  } else {
+    badge.classList.remove('show')
+  }
+}
+
 window.updateGroupStatus = async function(newStatus) {
-  if (!confirm(`هل تريد تغيير حالة الجمعية؟`)) return
-  const { error } = await sb.from('groups').update({ status: newStatus }).eq('id', currentGroup.id)
-  if (error) { alert('حدث خطأ: ' + error.message); return }
+  if (!confirm('هل تريد تغيير حالة الجمعية؟')) return
+  const { error } = await sb.from('groups').update({status:newStatus}).eq('id', currentGroup.id)
+  if (error) { alert('خطأ: ' + error.message); return }
   currentGroup.status = newStatus
   updateOverview()
 }
 
-// ════════════════════════════════════════════════
-// تحميل الأعضاء
-// ════════════════════════════════════════════════
+// ════ الأعضاء ════
 window.loadMembers = async function() {
   const month = document.getElementById('filterMonth')?.value
   const year  = document.getElementById('filterYear')?.value
-
   let q = sb.from('members').select('*').eq('group_id', currentGroup.id).order('join_month')
-
   if (month) q = q.eq('join_month', parseInt(month))
   if (year)  q = q.eq('join_year',  parseInt(year))
 
   const { data, error } = await q
-
   const tbody = document.getElementById('membersBody')
   if (error) { tbody.innerHTML = `<tr><td colspan="8" class="empty">خطأ في التحميل</td></tr>`; return }
   if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="8" class="empty">لا يوجد أعضاء</td></tr>`; return }
 
   document.getElementById('memberCount').textContent = `${data.length} عضو`
-
-  tbody.innerHTML = data.map((m, i) => `
+  tbody.innerHTML = data.map((m,i) => `
     <tr>
-      <td>${i + 1}</td>
+      <td>${i+1}</td>
       <td>${m.full_name}</td>
-      <td>${m.phone || '—'}</td>
+      <td>${m.phone||'—'}</td>
       <td>${monthName(m.join_month)}</td>
       <td>${m.join_year}</td>
-      <td>${m.payout_order || '—'}</td>
+      <td>${m.payout_order||'—'}</td>
       <td><span class="badge ${statusBadge(m.status)}">${statusLabel(m.status)}</span></td>
       <td>
         <div class="td-actions">
@@ -883,8 +689,7 @@ window.loadMembers = async function() {
           <button class="action-btn action-red" onclick="deleteMember('${m.id}')">حذف</button>
         </div>
       </td>
-    </tr>
-  `).join('')
+    </tr>`).join('')
 }
 
 window.clearFilters = function() {
@@ -893,9 +698,6 @@ window.clearFilters = function() {
   loadMembers()
 }
 
-// ════════════════════════════════════════════════
-// Modal: إضافة / تعديل عضو
-// ════════════════════════════════════════════════
 window.openAddMember = function() {
   editingMemberId = null
   document.getElementById('memberModalTitle').textContent = 'إضافة عضو'
@@ -921,59 +723,41 @@ window.openEditMember = function(id, name, phone, month, year, order) {
 }
 
 window.saveMember = async function() {
-  const fullName    = document.getElementById('m_fullName').value.trim()
-  const phone       = document.getElementById('m_phone').value.trim()
-  const join_month  = parseInt(document.getElementById('m_month').value)
-  const join_year   = parseInt(document.getElementById('m_year').value)
+  const fullName     = document.getElementById('m_fullName').value.trim()
+  const phone        = document.getElementById('m_phone').value.trim()
+  const join_month   = parseInt(document.getElementById('m_month').value)
+  const join_year    = parseInt(document.getElementById('m_year').value)
   const payout_order = parseInt(document.getElementById('m_order').value) || null
 
-  if (!fullName || !join_month || !join_year) {
-    showMsg('memberMsg', 'أكمل الحقول المطلوبة', 'error'); return
-  }
-
+  if (!fullName || !join_month || !join_year) { showMsg('memberMsg','أكمل الحقول المطلوبة','error'); return }
   document.getElementById('memberSaveBtn').disabled = true
 
   let error
   if (editingMemberId) {
-    ({ error } = await sb.from('members').update({full_name:fullName, phone, join_month, join_year, payout_order}).eq('id', editingMemberId))
+    ({error} = await sb.from('members').update({full_name:fullName,phone,join_month,join_year,payout_order}).eq('id',editingMemberId))
   } else {
-    // التحقق من عدم تكرار الشهر
-    const { data: existing } = await sb.from('members')
-      .select('id').eq('group_id', currentGroup.id)
-      .eq('join_month', join_month).eq('join_year', join_year)
-
-    if (existing && existing.length > 0) {
-      showMsg('memberMsg', 'هذا الشهر محجوز لعضو آخر', 'error')
-      document.getElementById('memberSaveBtn').disabled = false
-      return
-    }
-
-    ;({ error } = await sb.from('members').insert({
-      group_id: currentGroup.id, full_name: fullName,
-      phone, join_month, join_year, payout_order, status: 'active'
-    }))
+    const { data: existing } = await sb.from('members').select('id').eq('group_id',currentGroup.id).eq('join_month',join_month).eq('join_year',join_year)
+    if (existing && existing.length > 0) { showMsg('memberMsg','هذا الشهر محجوز لعضو آخر','error'); document.getElementById('memberSaveBtn').disabled=false; return }
+    ;({error} = await sb.from('members').insert({group_id:currentGroup.id,full_name:fullName,phone,join_month,join_year,payout_order,status:'active'}))
   }
 
   document.getElementById('memberSaveBtn').disabled = false
-
-  if (error) { showMsg('memberMsg', 'خطأ: ' + error.message, 'error'); return }
-
+  if (error) { showMsg('memberMsg','خطأ: '+error.message,'error'); return }
   closeModal('memberModal')
   loadMembers()
+  loadSchedule()
   updateOverview()
 }
 
 window.deleteMember = async function(id) {
   if (!confirm('هل تريد حذف هذا العضو؟')) return
-  const { error } = await sb.from('members').delete().eq('id', id)
-  if (error) { alert('خطأ: ' + error.message); return }
+  await sb.from('members').delete().eq('id',id)
   loadMembers()
+  loadSchedule()
   updateOverview()
 }
 
-// ════════════════════════════════════════════════
-// Modal: تسجيل دفعة
-// ════════════════════════════════════════════════
+// ════ الدفعات ════
 window.openPaymentModal = function(memberId) {
   document.getElementById('pay_memberId').value = memberId
   document.getElementById('pay_month').value    = new Date().getMonth() + 1
@@ -987,141 +771,169 @@ window.openPaymentModal = function(memberId) {
 }
 
 window.savePayment = async function() {
-  const member_id      = document.getElementById('pay_memberId').value
-  const payment_month  = parseInt(document.getElementById('pay_month').value)
-  const payment_year   = parseInt(document.getElementById('pay_year').value)
-  const amount         = parseFloat(document.getElementById('pay_amount').value)
-  const status         = document.getElementById('pay_status').value
-  const receipt_url    = document.getElementById('pay_receipt').value.trim() || null
-  const due_date       = document.getElementById('pay_due').value || null
+  const member_id     = document.getElementById('pay_memberId').value
+  const payment_month = parseInt(document.getElementById('pay_month').value)
+  const payment_year  = parseInt(document.getElementById('pay_year').value)
+  const amount        = parseFloat(document.getElementById('pay_amount').value)
+  const status        = document.getElementById('pay_status').value
+  const receipt_url   = document.getElementById('pay_receipt').value.trim() || null
+  const due_date      = document.getElementById('pay_due').value || null
 
-  if (!member_id || !payment_month || !payment_year || !amount) {
-    showMsg('paymentMsg', 'أكمل الحقول المطلوبة', 'error'); return
-  }
+  if (!member_id || !payment_month || !payment_year || !amount) { showMsg('paymentMsg','أكمل الحقول المطلوبة','error'); return }
 
   const { error } = await sb.from('payments').upsert({
-    group_id: currentGroup.id, member_id,
-    payment_month, payment_year, amount, status,
-    receipt_url, due_date,
-    paid_at: status === 'paid' ? new Date().toISOString() : null
-  }, { onConflict: 'member_id,payment_month,payment_year' })
+    group_id:currentGroup.id, member_id, payment_month, payment_year,
+    amount, status, receipt_url, due_date,
+    paid_at: status==='paid' ? new Date().toISOString() : null
+  }, {onConflict:'member_id,payment_month,payment_year'})
 
-  if (error) { showMsg('paymentMsg', 'خطأ: ' + error.message, 'error'); return }
-
+  if (error) { showMsg('paymentMsg','خطأ: '+error.message,'error'); return }
   closeModal('paymentModal')
   loadPayments()
+  loadSchedule()
   updateOverview()
 }
 
-// ════════════════════════════════════════════════
-// تحميل الدفعات
-// ════════════════════════════════════════════════
 window.loadPayments = async function() {
   const month  = document.getElementById('payFilterMonth')?.value
   const year   = document.getElementById('payFilterYear')?.value
   const status = document.getElementById('payFilterStatus')?.value
-
-  let q = sb.from('payments')
-    .select('*, members(full_name)')
-    .eq('group_id', currentGroup.id)
-    .order('payment_year').order('payment_month')
-
+  let q = sb.from('payments').select('*, members(full_name)').eq('group_id',currentGroup.id).order('payment_year').order('payment_month')
   if (month)  q = q.eq('payment_month', parseInt(month))
   if (year)   q = q.eq('payment_year',  parseInt(year))
   if (status) q = q.eq('status', status)
 
   const { data, error } = await q
   const tbody = document.getElementById('paymentsBody')
-
-  if (error) { tbody.innerHTML = `<tr><td colspan="9" class="empty">خطأ في التحميل</td></tr>`; return }
-  if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="9" class="empty">لا توجد دفعات</td></tr>`; return }
+  if (error || !data || data.length === 0) { tbody.innerHTML=`<tr><td colspan="9" class="empty">${error?'خطأ في التحميل':'لا توجد دفعات'}</td></tr>`; return }
 
   tbody.innerHTML = data.map(p => `
     <tr>
-      <td>${p.members?.full_name || '—'}</td>
+      <td>${p.members?.full_name||'—'}</td>
       <td>${p.amount} درهم</td>
       <td>${monthName(p.payment_month)}</td>
       <td>${p.payment_year}</td>
-      <td>${p.due_date || '—'}</td>
+      <td>${p.due_date||'—'}</td>
       <td>${p.paid_at ? new Date(p.paid_at).toLocaleDateString('ar') : '—'}</td>
       <td><span class="badge ${payStatusBadge(p.status)}">${payStatusLabel(p.status)}</span></td>
       <td>${p.receipt_url ? `<a href="${p.receipt_url}" target="_blank" class="action-btn action-blue">عرض</a>` : '—'}</td>
-      <td>
-        <div class="td-actions">
-          <button class="action-btn action-green" onclick="openPaymentModal('${p.member_id}')">تعديل</button>
-        </div>
-      </td>
-    </tr>
-  `).join('')
+      <td><button class="action-btn action-green" onclick="openPaymentModal('${p.member_id}')">تعديل</button></td>
+    </tr>`).join('')
 }
 
-// ════════════════════════════════════════════════
-// طلبات الانضمام
-// ════════════════════════════════════════════════
+// ════ جدول الدفعات الشهري ════
+window.loadSchedule = async function() {
+  const { data: members, error } = await sb.from('members')
+    .select('*').eq('group_id', currentGroup.id).order('join_year').order('join_month')
+
+  const tbody = document.getElementById('scheduleBody')
+  if (error || !members || members.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="10" class="empty">لا يوجد أعضاء</td></tr>`; return
+  }
+
+  // جلب الدفعات لكل الأعضاء
+  const memberIds = members.map(m => m.id)
+  const { data: payments } = await sb.from('payments')
+    .select('*').in('member_id', memberIds)
+
+  // بناء map للدفعات
+  const payMap = {}
+  payments?.forEach(p => { payMap[p.member_id] = p })
+
+  tbody.innerHTML = members.map((m, i) => {
+    const pay = payMap[m.id]
+    const payStatus = pay?.status || 'pending'
+    const paidAt = pay?.paid_at ? new Date(pay.paid_at).toLocaleDateString('ar') : '—'
+    const receiptUrl = pay?.receipt_url
+
+    return `
+      <tr>
+        <td>${i + 1}</td>
+        <td><strong>${m.full_name}</strong></td>
+        <td>${m.phone || '—'}</td>
+        <td style="color:var(--primary-dark);font-weight:900">${monthName(m.join_month)}</td>
+        <td>${m.join_year}</td>
+        <td>${currentGroup.monthly_amount} درهم</td>
+        <td><span class="badge ${payStatusBadge(payStatus)}">${payStatusLabel(payStatus)}</span></td>
+        <td>${paidAt}</td>
+        <td>${receiptUrl ? `<a href="${receiptUrl}" target="_blank" class="action-btn action-blue">عرض</a>` : '—'}</td>
+        <td><button class="action-btn action-primary" onclick="openPaymentModal('${m.id}')">تسجيل دفعة</button></td>
+      </tr>`
+  }).join('')
+}
+
+// ════ طلبات الانضمام ════
 window.loadRequests = async function() {
   const { data, error } = await sb.from('join_requests')
-    .select('*').eq('group_id', currentGroup.id)
-    .order('created_at', {ascending:false})
+    .select('*').eq('group_id', currentGroup.id).order('created_at',{ascending:false})
 
   const tbody = document.getElementById('requestsBody')
-  if (error) { tbody.innerHTML = `<tr><td colspan="7" class="empty">خطأ في التحميل</td></tr>`; return }
-  if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="empty">لا توجد طلبات</td></tr>`; return }
+  if (error || !data || data.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" class="empty">${error?'خطأ':'لا توجد طلبات'}</td></tr>`
+    updateReqBadge(0); return
+  }
+
+  // عدد المعلقة فقط
+  const pendingCount = data.filter(r => r.status === 'pending').length
+  updateReqBadge(pendingCount)
 
   tbody.innerHTML = data.map(r => `
     <tr>
       <td>${r.full_name}</td>
-      <td>${r.phone || '—'}</td>
+      <td>${r.phone||'—'}</td>
       <td>${monthName(r.requested_month)}</td>
       <td>${r.requested_year}</td>
       <td>${new Date(r.created_at).toLocaleDateString('ar')}</td>
       <td><span class="badge ${reqStatusBadge(r.status)}">${reqStatusLabel(r.status)}</span></td>
       <td>
-        ${r.status === 'pending' ? `
+        ${r.status==='pending' ? `
           <div class="td-actions">
             <button class="action-btn action-green" onclick="approveRequest('${r.id}','${escQ(r.full_name)}','${r.phone||''}',${r.requested_month},${r.requested_year})">قبول</button>
             <button class="action-btn action-red" onclick="rejectRequest('${r.id}')">رفض</button>
-          </div>
-        ` : '—'}
+          </div>` : '—'}
       </td>
-    </tr>
-  `).join('')
+    </tr>`).join('')
 }
 
+// ════ قبول الطلب — يضيف العضو مباشرة ════
 window.approveRequest = async function(id, name, phone, month, year) {
   // التحقق من عدم تكرار الشهر
   const { data: existing } = await sb.from('members')
-    .select('id').eq('group_id', currentGroup.id)
-    .eq('join_month', month).eq('join_year', year)
+    .select('id').eq('group_id',currentGroup.id).eq('join_month',month).eq('join_year',year)
 
   if (existing && existing.length > 0) {
-    alert('هذا الشهر محجوز مسبقاً لعضو آخر. لا يمكن قبول الطلب.')
-    return
+    alert('هذا الشهر محجوز مسبقاً. لا يمكن قبول الطلب.'); return
   }
 
-  // قبول الطلب
-  await sb.from('join_requests').update({status:'approved'}).eq('id', id)
+  // تحديث حالة الطلب
+  const { error: reqErr } = await sb.from('join_requests').update({status:'approved'}).eq('id',id)
+  if (reqErr) { alert('خطأ: ' + reqErr.message); return }
 
-  // إضافة عضو جديد
-  await sb.from('members').insert({
+  // إضافة العضو
+  const { error: memErr } = await sb.from('members').insert({
     group_id: currentGroup.id,
     full_name: name, phone,
     join_month: month, join_year: year,
     status: 'active'
   })
 
+  if (memErr) { alert('تم قبول الطلب لكن حدث خطأ في إضافة العضو: ' + memErr.message); }
+
+  // تحديث كل الصفحات
   loadRequests()
+  loadMembers()
+  loadSchedule()
   updateOverview()
 }
 
 window.rejectRequest = async function(id) {
   if (!confirm('هل تريد رفض هذا الطلب؟')) return
-  await sb.from('join_requests').update({status:'rejected'}).eq('id', id)
+  await sb.from('join_requests').update({status:'rejected'}).eq('id',id)
   loadRequests()
+  updateOverview()
 }
 
-// ════════════════════════════════════════════════
-// رابط الانضمام
-// ════════════════════════════════════════════════
+// ════ رابط الانضمام ════
 function setJoinLink() {
   const base  = window.location.origin + window.location.pathname.replace(/[^/]*$/, '')
   const link  = `${base}join.html?token=${currentGroup.join_token}`
@@ -1133,186 +945,99 @@ window.copyJoinLink = function() {
   const input = document.getElementById('joinLinkInput')
   if (!input) return
   navigator.clipboard.writeText(input.value).then(() => {
-    showMsg('linkMsg', 'تم نسخ الرابط', 'success')
-    setTimeout(() => clearMsg('linkMsg'), 2000)
+    showMsg('linkMsg','تم نسخ الرابط','success')
+    setTimeout(()=>clearMsg('linkMsg'),2000)
   })
 }
 
 window.shareWhatsApp = function() {
   const link = document.getElementById('joinLinkInput')?.value
   if (!link) return
-  window.open(`https://wa.me/?text=${encodeURIComponent('انضم إلى جمعيتي عبر هذا الرابط:\n' + link)}`, '_blank')
+  window.open(`https://wa.me/?text=${encodeURIComponent('انضم إلى جمعيتي:\n'+link)}`, '_blank')
 }
 
-// ════════════════════════════════════════════════
-// الباقة
-// ════════════════════════════════════════════════
+// ════ الباقة ════
 async function loadPlan() {
-  const { data } = await sb.from('subscriptions')
-    .select('*').eq('manager_id', currentUser.id).eq('status','active').single()
-
+  const { data } = await sb.from('subscriptions').select('*').eq('manager_id',currentUser.id).eq('status','active').single()
   const el = document.getElementById('planInfo')
-  if (!data) { el.innerHTML = '<div class="empty">لا يوجد اشتراك نشط</div>'; return }
-
+  if (!data) { el.innerHTML='<div class="empty">لا يوجد اشتراك نشط</div>'; return }
   el.innerHTML = `
     <div style="display:grid;gap:10px">
+      ${[['الباقة',data.plan_name],['الحالة','نشط'],['البداية',data.start_date],['الانتهاء',data.end_date||'غير محدد'],['المبلغ',data.amount+' درهم / شهر']].map(([k,v])=>`
       <div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px">
-        <span style="color:var(--muted);font-weight:700">الباقة</span>
-        <strong>${data.plan_name}</strong>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px">
-        <span style="color:var(--muted);font-weight:700">الحالة</span>
-        <span class="badge badge-green">نشط</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px">
-        <span style="color:var(--muted);font-weight:700">تاريخ البداية</span>
-        <strong>${data.start_date}</strong>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px">
-        <span style="color:var(--muted);font-weight:700">تاريخ الانتهاء</span>
-        <strong>${data.end_date || 'غير محدد'}</strong>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px">
-        <span style="color:var(--muted);font-weight:700">المبلغ</span>
-        <strong>${data.amount} درهم / شهر</strong>
-      </div>
-    </div>
-  `
+        <span style="color:var(--muted);font-weight:700">${k}</span><strong>${v}</strong>
+      </div>`).join('')}
+    </div>`
 }
 
-// ════════════════════════════════════════════════
-// الملاحظات
-// ════════════════════════════════════════════════
+// ════ الملاحظات ════
 async function loadNotes() {
-  const { data } = await sb.from('manager_notes')
-    .select('*').eq('manager_id', currentUser.id)
-    .order('created_at', {ascending:false})
-
+  const { data } = await sb.from('manager_notes').select('*').eq('manager_id',currentUser.id).order('created_at',{ascending:false})
   const el = document.getElementById('notesList')
-  if (!data || data.length === 0) { el.innerHTML = '<div class="empty">لا توجد ملاحظات</div>'; return }
-
-  el.innerHTML = data.map(n => `
+  if (!data || data.length===0) { el.innerHTML='<div class="empty">لا توجد ملاحظات</div>'; return }
+  el.innerHTML = data.map(n=>`
     <div style="padding:12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;font-size:13px">
       <div style="color:var(--muted);margin-bottom:4px">${new Date(n.created_at).toLocaleDateString('ar')}</div>
       <div>${n.note}</div>
-    </div>
-  `).join('')
+    </div>`).join('')
 }
 
 window.saveNote = async function() {
   const note = document.getElementById('noteText').value.trim()
-  if (!note) { showMsg('noteMsg', 'اكتب ملاحظتك أولاً', 'error'); return }
-
-  const { error } = await sb.from('manager_notes').insert({
-    manager_id: currentUser.id,
-    group_id:   currentGroup?.id,
-    note
-  })
-
-  if (error) { showMsg('noteMsg', 'خطأ: ' + error.message, 'error'); return }
-
+  if (!note) { showMsg('noteMsg','اكتب ملاحظتك أولاً','error'); return }
+  const { error } = await sb.from('manager_notes').insert({manager_id:currentUser.id,group_id:currentGroup?.id,note})
+  if (error) { showMsg('noteMsg','خطأ: '+error.message,'error'); return }
   document.getElementById('noteText').value = ''
-  showMsg('noteMsg', 'تم إرسال الملاحظة', 'success')
+  showMsg('noteMsg','تم إرسال الملاحظة','success')
   loadNotes()
-  setTimeout(() => clearMsg('noteMsg'), 2000)
+  setTimeout(()=>clearMsg('noteMsg'),2000)
 }
 
-// ════════════════════════════════════════════════
-// تسجيل الخروج
-// ════════════════════════════════════════════════
-window.doLogout = async function() {
-  await sb.auth.signOut()
-  window.location.href = 'login.html'
-}
+window.doLogout = async function() { await sb.auth.signOut(); window.location.href='login.html' }
 
-// ════════════════════════════════════════════════
-// حالة عدم وجود جمعية
-// ════════════════════════════════════════════════
 function showNoGroup() {
-  document.querySelector('.content').innerHTML = `
+  document.querySelector('.content').innerHTML=`
     <div style="text-align:center;padding:60px 20px">
       <div style="font-size:48px;margin-bottom:16px">🏛️</div>
       <h2 style="font-size:22px;font-weight:900;margin-bottom:8px">لا توجد جمعية مرتبطة بحسابك</h2>
-      <p style="color:var(--muted);font-size:14px;margin-bottom:20px">يبدو أنك سجلت الدخول لكن لم يتم إنشاء جمعية. يرجى إنشاء حساب جديد وإكمال الإعداد.</p>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:20px">يرجى إنشاء جمعية جديدة.</p>
       <a href="auth.html" class="btn btn-primary">إنشاء جمعية جديدة</a>
-    </div>
-  `
+    </div>`
 }
 
-// ════════════════════════════════════════════════
-// مساعدات
-// ════════════════════════════════════════════════
 window.openModal  = id => document.getElementById(id).classList.add('show')
 window.closeModal = id => document.getElementById(id).classList.remove('show')
 
-function showMsg(id, text, type) {
-  const el = document.getElementById(id)
-  if (!el) return
-  el.textContent = text
-  el.className   = `msg ${type} show`
-}
+function showMsg(id,text,type) { const el=document.getElementById(id); if(!el)return; el.textContent=text; el.className=`msg ${type} show` }
+function clearMsg(id) { const el=document.getElementById(id); if(!el)return; el.className='msg'; el.textContent='' }
 
-function clearMsg(id) {
-  const el = document.getElementById(id)
-  if (!el) return
-  el.className   = 'msg'
-  el.textContent = ''
-}
-
-function monthName(m) {
-  return ['','يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'][m] || m
-}
-
-function statusBadge(s) {
-  return {active:'badge-green',pending:'badge-amber',approved:'badge-blue',rejected:'badge-red'}[s] || 'badge-primary'
-}
-
-function statusLabel(s) {
-  return {active:'نشط',pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s] || s
-}
-
-function payStatusBadge(s) {
-  return {paid:'badge-green',pending:'badge-amber',late:'badge-red'}[s] || 'badge-primary'
-}
-
-function payStatusLabel(s) {
-  return {paid:'مدفوع',pending:'معلق',late:'متأخر'}[s] || s
-}
-
-function reqStatusBadge(s) {
-  return {pending:'badge-amber',approved:'badge-green',rejected:'badge-red'}[s] || 'badge-primary'
-}
-
-function reqStatusLabel(s) {
-  return {pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s] || s
-}
-
+function monthName(m) { return ['','يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'][m]||m }
+function statusBadge(s) { return {active:'badge-green',pending:'badge-amber',approved:'badge-blue',rejected:'badge-red'}[s]||'badge-primary' }
+function statusLabel(s) { return {active:'نشط',pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s]||s }
+function payStatusBadge(s) { return {paid:'badge-green',pending:'badge-amber',late:'badge-red'}[s]||'badge-primary' }
+function payStatusLabel(s) { return {paid:'مدفوع',pending:'معلق',late:'متأخر'}[s]||s }
+function reqStatusBadge(s) { return {pending:'badge-amber',approved:'badge-green',rejected:'badge-red'}[s]||'badge-primary' }
+function reqStatusLabel(s) { return {pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s]||s }
 function escQ(str) { return (str||'').replace(/'/g,"\\'") }
 
-// ════════════════════════════════════════════════
-// التنقل بين الصفحات
-// ════════════════════════════════════════════════
+// ════ التنقل ════
 const pageTitles = {
-  'overview-page': ['نظرة عامة','ملخص شامل لجمعيتك'],
-  'members-page':  ['الأعضاء','قائمة أعضاء الجمعية'],
-  'requests-page': ['طلبات الانضمام','الطلبات الواردة عبر رابط الانضمام'],
-  'payments-page': ['الدفعات','سجل دفعات الأعضاء'],
-  'link-page':     ['رابط الانضمام','أرسل الرابط للأعضاء الجدد'],
-  'plan-page':     ['الباقة الحالية','تفاصيل اشتراكك'],
-  'notes-page':    ['ملاحظات للإدارة','تواصل مع المشرف العام'],
+  'overview-page':  ['نظرة عامة','ملخص شامل لجمعيتك'],
+  'members-page':   ['الأعضاء','قائمة أعضاء الجمعية'],
+  'requests-page':  ['طلبات الانضمام','الطلبات الواردة عبر رابط الانضمام'],
+  'payments-page':  ['الدفعات','سجل دفعات الأعضاء'],
+  'schedule-page':  ['جدول الدفعات','جدول الدفعات الشهري لكل الأعضاء'],
+  'link-page':      ['رابط الانضمام','أرسل الرابط للأعضاء الجدد'],
+  'plan-page':      ['الباقة الحالية','تفاصيل اشتراكك'],
+  'notes-page':     ['ملاحظات للإدارة','تواصل مع المشرف العام'],
 }
 
 window.switchPage = function(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
-  document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'))
-
-  const page = document.getElementById(pageId)
-  if (page) page.classList.add('active')
-
-  const btn = document.querySelector(`[data-page="${pageId}"]`)
-  if (btn) btn.classList.add('active')
-
-  const [title, sub] = pageTitles[pageId] || ['لوحة التحكم','']
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'))
+  document.querySelectorAll('.menu-btn').forEach(b=>b.classList.remove('active'))
+  document.getElementById(pageId)?.classList.add('active')
+  document.querySelector(`[data-page="${pageId}"]`)?.classList.add('active')
+  const [title,sub] = pageTitles[pageId]||['لوحة التحكم','']
   document.getElementById('pageTitle').textContent    = title
   document.getElementById('pageSubtitle').textContent = sub
   window.scrollTo({top:0,behavior:'smooth'})
@@ -1325,9 +1050,6 @@ document.querySelectorAll('.menu-btn').forEach(btn => {
   })
 })
 
-// ════════════════════════════════════════════════
-// تشغيل
-// ════════════════════════════════════════════════
 init()
 </script>
 </body>
