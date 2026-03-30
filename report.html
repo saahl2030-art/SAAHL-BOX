@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تقارير الجمعية - صندوق ساهل</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --primary:#1f6fa5;--primary-dark:#185781;--primary-soft:#eaf5fd;
+      --green:#138a59;--green-soft:#e8f8f1;
+      --amber:#b7791f;--amber-soft:#fff5e4;
+      --red:#c53b3b;--red-soft:#fdeeee;
+      --text:#16324a;--muted:#6e8498;
+      --line:#dfe8f1;--line-dark:#cfdbe7;
+      --shadow:0 12px 30px rgba(15,40,64,.08);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Tajawal',sans-serif;background:linear-gradient(180deg,#f8fbff,#f3f7fb);color:var(--text);min-height:100vh}
+
+    .nav{background:#fff;border-bottom:1px solid var(--line);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);position:sticky;top:0;z-index:50}
+    .nav-brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:900;color:var(--text);text-decoration:none}
+    .nav-logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--primary),#46a8d8);display:grid;place-items:center;color:#fff;font-size:17px;font-weight:900}
+    .btn{border:none;border-radius:12px;padding:10px 16px;cursor:pointer;font-size:13px;font-weight:900;transition:.2s;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+    .btn:hover{transform:translateY(-1px)}
+    .btn-soft{background:#fff;border:1px solid var(--line-dark);color:var(--text)}
+    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 8px 16px rgba(31,111,165,.2)}
+    .btn-primary:hover{background:var(--primary-dark)}
+    .btn-green{background:var(--green);color:#fff}
+    .btn-sm{padding:7px 12px;font-size:12px;border-radius:9px}
+
+    .wrap{max-width:960px;margin:0 auto;padding:28px 20px 60px}
+
+    .page-title{font-size:26px;font-weight:900;margin-bottom:6px}
+    .page-sub{color:var(--muted);font-size:14px;margin-bottom:28px}
+
+    .card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px;margin-bottom:16px}
+    .card-title{font-size:16px;font-weight:900;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+
+    .reports-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+    .report-card{
+      background:#fff;border:1.5px solid var(--line);border-radius:16px;
+      padding:20px;cursor:pointer;transition:.25s;text-align:center;
+    }
+    .report-card:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:0 12px 32px rgba(31,111,165,.12)}
+    .report-icon{font-size:36px;margin-bottom:12px}
+    .report-title{font-size:15px;font-weight:900;color:var(--text);margin-bottom:6px}
+    .report-desc{font-size:12px;color:var(--muted);line-height:1.7}
+    .report-btn{
+      margin-top:14px;width:100%;padding:10px;border-radius:10px;
+      font-family:'Tajawal',sans-serif;font-size:13px;font-weight:900;
+      border:none;cursor:pointer;transition:.2s;
+    }
+
+    .badge{display:inline-flex;align-items:center;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:900}
+    .badge-green{background:var(--green-soft);color:var(--green)}
+    .badge-red{background:var(--red-soft);color:var(--red)}
+    .badge-amber{background:var(--amber-soft);color:var(--amber)}
+    .badge-primary{background:var(--primary-soft);color:var(--primary-dark)}
+
+    .loader{display:none;position:fixed;inset:0;background:rgba(255,255,255,.85);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:12px;font-size:15px;font-weight:700;color:var(--primary)}
+    .loader.show{display:flex}
+    .spinner{width:36px;height:36px;border:3px solid var(--primary-soft);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .msg{padding:12px 14px;border-radius:12px;font-size:13px;font-weight:700;margin-top:12px;display:none}
+    .msg.show{display:block}
+    .msg.error{background:var(--red-soft);color:var(--red)}
+    .msg.success{background:var(--green-soft);color:var(--green)}
+
+    @media(max-width:640px){.reports-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<div class="loader" id="loader"><div class="spinner"></div><span id="loaderText">جاري إنشاء التقرير...</span></div>
+
+<nav class="nav">
+  <a class="nav-brand" href="dashboard.html">
+    <div class="nav-logo">س</div>
+    صندوق ساهل
+  </a>
+  <a class="btn btn-soft btn-sm" href="dashboard.html">← العودة للوحة التحكم</a>
+</nav>
+
+<div class="wrap">
+  <div class="page-title">📊 تقارير الجمعية</div>
+  <p class="page-sub">اختر نوع التقرير وسيتم تحميله كملف PDF جاهز للطباعة</p>
+
+  <div class="card">
+    <div class="card-title">📋 معلومات الجمعية</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" id="groupInfoGrid">
+      <div style="padding:12px;background:#f8fbff;border-radius:10px;font-size:13px">
+        <div style="color:var(--muted);font-weight:700;margin-bottom:4px">اسم الجمعية</div>
+        <strong id="infoName">جاري التحميل...</strong>
+      </div>
+      <div style="padding:12px;background:#f8fbff;border-radius:10px;font-size:13px">
+        <div style="color:var(--muted);font-weight:700;margin-bottom:4px">المدير</div>
+        <strong id="infoManager">—</strong>
+      </div>
+      <div style="padding:12px;background:#f8fbff;border-radius:10px;font-size:13px">
+        <div style="color:var(--muted);font-weight:700;margin-bottom:4px">المبلغ الشهري</div>
+        <strong id="infoAmount">—</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="reports-grid">
+
+    <div class="report-card">
+      <div class="report-icon">👥</div>
+      <div class="report-title">كشف الأعضاء</div>
+      <div class="report-desc">قائمة كاملة بأسماء الأعضاء وأشهر استلامهم وترتيبهم وحالتهم</div>
+      <button class="report-btn btn-primary" style="background:var(--primary);color:#fff" onclick="generateMembersReport()">
+        تحميل PDF
+      </button>
+    </div>
+
+    <div class="report-card">
+      <div class="report-icon">💳</div>
+      <div class="report-title">تقرير الدفعات</div>
+      <div class="report-desc">سجل كامل لجميع الدفعات مع حالة كل عضو ومبلغه وتاريخ الدفع</div>
+      <button class="report-btn btn-primary" style="background:var(--green);color:#fff" onclick="generatePaymentsReport()">
+        تحميل PDF
+      </button>
+    </div>
+
+    <div class="report-card">
+      <div class="report-icon">📅</div>
+      <div class="report-title">جدول الدورة الكاملة</div>
+      <div class="report-desc">جدول زمني بترتيب صرف الجمعية من أول شهر إلى آخر شهر مع كل تفاصيل الأعضاء</div>
+      <button class="report-btn btn-primary" style="background:var(--amber);color:#fff" onclick="generateScheduleReport()">
+        تحميل PDF
+      </button>
+    </div>
+
+  </div>
+
+  <div class="msg" id="pageMsg"></div>
+</div>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+const SUPABASE_URL      = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+const MONTHS = ['','يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
+
+let currentUser    = null
+let currentProfile = null
+let currentGroup   = null
+const loader       = document.getElementById('loader')
+const loaderText   = document.getElementById('loaderText')
+
+// ════ التهيئة ════
+async function init() {
+  loader.classList.add('show')
+  try {
+    const { data: { session } } = await sb.auth.getSession()
+    if (!session) { window.location.href = 'login.html'; return }
+    currentUser = session.user
+
+    const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single()
+    if (!profile || profile.role !== 'manager') { window.location.href = 'login.html'; return }
+    currentProfile = profile
+
+    const { data: group } = await sb.from('groups').select('*').eq('manager_id', currentUser.id).single()
+    if (!group) { window.location.href = 'dashboard.html'; return }
+    currentGroup = group
+
+    document.getElementById('infoName').textContent    = group.name
+    document.getElementById('infoManager').textContent = profile.full_name
+    document.getElementById('infoAmount').textContent  = group.monthly_amount + ' درهم'
+
+  } catch(e) { console.error(e); window.location.href = 'login.html' }
+  finally { loader.classList.remove('show') }
+}
+
+// ════ مساعدات PDF ════
+function createPDF() {
+  return new window.jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
+}
+
+function addHeader(doc, title, subtitle) {
+  // خلفية رأس الصفحة
+  doc.setFillColor(31, 111, 165)
+  doc.rect(0, 0, 210, 36, 'F')
+
+  // عنوان
+  doc.setTextColor(255, 255, 255)
+  doc.setFontSize(18)
+  doc.setFont('helvetica', 'bold')
+  doc.text(title, 105, 14, { align: 'center' })
+
+  doc.setFontSize(11)
+  doc.setFont('helvetica', 'normal')
+  doc.text(subtitle, 105, 22, { align: 'center' })
+
+  // معلومات الجمعية
+  doc.setFontSize(9)
+  doc.text(`${currentGroup.name}  |  ${currentProfile.full_name}  |  ${currentGroup.monthly_amount} AED/mo`, 105, 30, { align: 'center' })
+
+  // تاريخ التقرير
+  doc.setTextColor(100, 150, 180)
+  doc.text(new Date().toLocaleDateString('en-GB'), 190, 8, { align: 'right' })
+
+  doc.setTextColor(22, 50, 74)
+  return 44
+}
+
+function addFooter(doc, pageNum, totalPages) {
+  const pageHeight = doc.internal.pageSize.height
+  doc.setFillColor(248, 251, 255)
+  doc.rect(0, pageHeight - 12, 210, 12, 'F')
+  doc.setFontSize(8)
+  doc.setTextColor(110, 132, 152)
+  doc.text('Sahel Fund — saahl2030-art.github.io/SAAHL-BOX', 20, pageHeight - 4)
+  doc.text(`${pageNum} / ${totalPages}`, 190, pageHeight - 4, { align: 'right' })
+}
+
+function payStatusAr(s) { return {paid:'مدفوع',pending:'معلق',late:'متأخر'}[s]||'—' }
+function memberStatusAr(s) { return {active:'نشط',pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s]||'—' }
+
+// ════ تقرير الأعضاء ════
+window.generateMembersReport = async function() {
+  loaderText.textContent = 'جاري إنشاء كشف الأعضاء...'
+  loader.classList.add('show')
+
+  try {
+    const { data: members } = await sb.from('members')
+      .select('*').eq('group_id', currentGroup.id)
+      .order('join_year').order('join_month')
+
+    if (!members || members.length === 0) {
+      loader.classList.remove('show')
+      showMsg('لا يوجد أعضاء لإنشاء التقرير', 'error')
+      return
+    }
+
+    const doc = createPDF()
+    let y = addHeader(doc, 'Members Report', `${currentGroup.name} — كشف الأعضاء`)
+
+    // ملخص
+    doc.setFillColor(234, 245, 253)
+    doc.roundedRect(14, y, 182, 18, 3, 3, 'F')
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(31, 111, 165)
+    doc.text(`Total Members: ${members.length}  |  Max: ${currentGroup.max_members}  |  Start: ${currentGroup.start_month}/${currentGroup.start_year}`, 105, y + 11, { align: 'center' })
+    y += 24
+
+    // جدول
+    const rows = members.map((m, i) => [
+      i + 1,
+      m.full_name,
+      m.phone || '—',
+      `${MONTHS[m.join_month]} ${m.join_year}`,
+      m.payout_order || '—',
+      memberStatusAr(m.status)
+    ])
+
+    doc.autoTable({
+      startY: y,
+      head: [['#', 'Name / الاسم', 'Phone / الهاتف', 'Month / الشهر', 'Order / الترتيب', 'Status / الحالة']],
+      body: rows,
+      theme: 'grid',
+      headStyles: { fillColor: [31, 111, 165], textColor: 255, fontStyle: 'bold', halign: 'center', fontSize: 10 },
+      bodyStyles: { halign: 'center', fontSize: 9, textColor: [22, 50, 74] },
+      alternateRowStyles: { fillColor: [248, 251, 255] },
+      columnStyles: {
+        0: { cellWidth: 12 },
+        1: { cellWidth: 45, halign: 'right' },
+        2: { cellWidth: 35 },
+        3: { cellWidth: 38 },
+        4: { cellWidth: 25 },
+        5: { cellWidth: 28 }
+      },
+      margin: { left: 14, right: 14 },
+      didDrawPage: (data) => {
+        addFooter(doc, data.pageNumber, doc.internal.getNumberOfPages())
+      }
+    })
+
+    addFooter(doc, 1, doc.internal.getNumberOfPages())
+    doc.save(`members_${currentGroup.name}_${new Date().toISOString().slice(0,10)}.pdf`)
+    showMsg('تم تحميل كشف الأعضاء بنجاح ✅', 'success')
+
+  } catch(e) {
+    console.error(e)
+    showMsg('حدث خطأ: ' + e.message, 'error')
+  } finally {
+    loader.classList.remove('show')
+  }
+}
+
+// ════ تقرير الدفعات ════
+window.generatePaymentsReport = async function() {
+  loaderText.textContent = 'جاري إنشاء تقرير الدفعات...'
+  loader.classList.add('show')
+
+  try {
+    const { data: members } = await sb.from('members').select('*').eq('group_id', currentGroup.id).order('join_month')
+    const { data: payments } = await sb.from('payments').select('*').eq('group_id', currentGroup.id).order('payment_year').order('payment_month')
+
+    if (!members || members.length === 0) {
+      loader.classList.remove('show')
+      showMsg('لا يوجد أعضاء لإنشاء التقرير', 'error')
+      return
+    }
+
+    const payMap = {}
+    payments?.forEach(p => { payMap[p.member_id] = p })
+
+    const doc = createPDF()
+    let y = addHeader(doc, 'Payments Report', `${currentGroup.name} — تقرير الدفعات`)
+
+    // ملخص الدفعات
+    const paid   = payments?.filter(p => p.status === 'paid').length || 0
+    const late   = payments?.filter(p => p.status === 'late').length || 0
+    const pending = payments?.filter(p => p.status === 'pending').length || 0
+
+    doc.setFillColor(234, 245, 253)
+    doc.roundedRect(14, y, 182, 18, 3, 3, 'F')
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(31, 111, 165)
+    doc.text(`Paid: ${paid}  |  Late: ${late}  |  Pending: ${pending}  |  Amount/mo: ${currentGroup.monthly_amount} AED`, 105, y + 11, { align: 'center' })
+    y += 24
+
+    // جدول
+    const rows = members.map((m, i) => {
+      const pay = payMap[m.id]
+      return [
+        i + 1,
+        m.full_name,
+        `${MONTHS[m.join_month]} ${m.join_year}`,
+        pay ? `${MONTHS[pay.payment_month]} ${pay.payment_year}` : '—',
+        pay ? `${pay.amount} AED` : '—',
+        pay ? payStatusAr(pay.status) : 'لا يوجد',
+        pay?.paid_at ? new Date(pay.paid_at).toLocaleDateString('en-GB') : '—'
+      ]
+    })
+
+    doc.autoTable({
+      startY: y,
+      head: [['#', 'Name', 'Payout Month', 'Pay Month', 'Amount', 'Status', 'Paid On']],
+      body: rows,
+      theme: 'grid',
+      headStyles: { fillColor: [19, 138, 89], textColor: 255, fontStyle: 'bold', halign: 'center', fontSize: 9 },
+      bodyStyles: { halign: 'center', fontSize: 8.5, textColor: [22, 50, 74] },
+      alternateRowStyles: { fillColor: [248, 251, 255] },
+      columnStyles: {
+        0: { cellWidth: 10 },
+        1: { cellWidth: 42, halign: 'right' },
+        2: { cellWidth: 30 },
+        3: { cellWidth: 30 },
+        4: { cellWidth: 22 },
+        5: { cellWidth: 26 },
+        6: { cellWidth: 26 }
+      },
+      margin: { left: 14, right: 14 },
+      didDrawPage: (data) => {
+        addFooter(doc, data.pageNumber, doc.internal.getNumberOfPages())
+      },
+      didParseCell: (data) => {
+        if (data.column.index === 5 && data.section === 'body') {
+          const val = data.cell.raw
+          if (val === 'مدفوع') data.cell.styles.textColor = [19, 138, 89]
+          else if (val === 'متأخر') data.cell.styles.textColor = [197, 59, 59]
+          else if (val === 'معلق') data.cell.styles.textColor = [183, 121, 31]
+        }
+      }
+    })
+
+    addFooter(doc, 1, doc.internal.getNumberOfPages())
+    doc.save(`payments_${currentGroup.name}_${new Date().toISOString().slice(0,10)}.pdf`)
+    showMsg('تم تحميل تقرير الدفعات بنجاح ✅', 'success')
+
+  } catch(e) {
+    console.error(e)
+    showMsg('حدث خطأ: ' + e.message, 'error')
+  } finally {
+    loader.classList.remove('show')
+  }
+}
+
+// ════ تقرير جدول الدورة ════
+window.generateScheduleReport = async function() {
+  loaderText.textContent = 'جاري إنشاء جدول الدورة...'
+  loader.classList.add('show')
+
+  try {
+    const { data: members } = await sb.from('members')
+      .select('*').eq('group_id', currentGroup.id)
+      .order('join_year').order('join_month')
+
+    if (!members || members.length === 0) {
+      loader.classList.remove('show')
+      showMsg('لا يوجد أعضاء لإنشاء التقرير', 'error')
+      return
+    }
+
+    const { data: payments } = await sb.from('payments').select('*').eq('group_id', currentGroup.id)
+    const payMap = {}
+    payments?.forEach(p => { payMap[p.member_id] = p })
+
+    const doc = createPDF()
+    let y = addHeader(doc, 'Full Cycle Schedule', `${currentGroup.name} — جدول دورة الجمعية الكاملة`)
+
+    // ملخص الدورة
+    const totalAmount = members.length * currentGroup.monthly_amount
+    doc.setFillColor(255, 248, 232)
+    doc.roundedRect(14, y, 182, 18, 3, 3, 'F')
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(183, 121, 31)
+    doc.text(`Members: ${members.length}  |  Monthly: ${currentGroup.monthly_amount} AED  |  Total Pool: ${totalAmount} AED`, 105, y + 11, { align: 'center' })
+    y += 24
+
+    // جدول الدورة
+    const rows = members.map((m, i) => {
+      const pay = payMap[m.id]
+      const payStatus = pay?.status || '—'
+      let statusText = '—'
+      let paidDate = '—'
+
+      if (pay) {
+        statusText = payStatusAr(payStatus)
+        paidDate = pay.paid_at ? new Date(pay.paid_at).toLocaleDateString('en-GB') : '—'
+      }
+
+      return [
+        i + 1,
+        m.full_name,
+        m.phone || '—',
+        `${MONTHS[m.join_month]} ${m.join_year}`,
+        `${currentGroup.monthly_amount} AED`,
+        statusText,
+        paidDate,
+        pay?.receipt_url ? 'Yes' : 'No'
+      ]
+    })
+
+    doc.autoTable({
+      startY: y,
+      head: [['#', 'Name', 'Phone', 'Payout Month', 'Amount', 'Pay Status', 'Date Paid', 'Receipt']],
+      body: rows,
+      theme: 'striped',
+      headStyles: { fillColor: [183, 121, 31], textColor: 255, fontStyle: 'bold', halign: 'center', fontSize: 9 },
+      bodyStyles: { halign: 'center', fontSize: 8.5, textColor: [22, 50, 74] },
+      columnStyles: {
+        0: { cellWidth: 10 },
+        1: { cellWidth: 40, halign: 'right' },
+        2: { cellWidth: 28 },
+        3: { cellWidth: 30 },
+        4: { cellWidth: 22 },
+        5: { cellWidth: 22 },
+        6: { cellWidth: 24 },
+        7: { cellWidth: 16 }
+      },
+      margin: { left: 14, right: 14 },
+      didDrawPage: (data) => {
+        addFooter(doc, data.pageNumber, doc.internal.getNumberOfPages())
+      },
+      didParseCell: (data) => {
+        if (data.column.index === 5 && data.section === 'body') {
+          const val = data.cell.raw
+          if (val === 'مدفوع') data.cell.styles.textColor = [19, 138, 89]
+          else if (val === 'متأخر') data.cell.styles.textColor = [197, 59, 59]
+          else if (val === 'معلق') data.cell.styles.textColor = [183, 121, 31]
+        }
+      }
+    })
+
+    addFooter(doc, 1, doc.internal.getNumberOfPages())
+    doc.save(`schedule_${currentGroup.name}_${new Date().toISOString().slice(0,10)}.pdf`)
+    showMsg('تم تحميل جدول الدورة بنجاح ✅', 'success')
+
+  } catch(e) {
+    console.error(e)
+    showMsg('حدث خطأ: ' + e.message, 'error')
+  } finally {
+    loader.classList.remove('show')
+  }
+}
+
+function showMsg(text, type) {
+  const el = document.getElementById('pageMsg')
+  el.textContent = text
+  el.className = `msg ${type} show`
+  setTimeout(() => { el.className = 'msg' }, 4000)
+}
+
+init()
+</script>
+</body>
+</html>
