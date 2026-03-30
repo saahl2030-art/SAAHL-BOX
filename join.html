@@ -10,6 +10,7 @@
       --p:#1f6fa5;--p2:#185781;--p3:#eaf5fd;--p4:#c8e6f7;
       --green:#138a59;--green-s:#e8f8f1;
       --red:#c53b3b;--red-s:#fdeeee;
+      --amber:#b7791f;--amber-s:#fff5e4;
       --text:#16324a;--muted:#6e8498;
       --line:#dfe8f1;--line2:#cfdbe7;
       --bg:#f4f8fc;
@@ -20,49 +21,29 @@
     html{scroll-behavior:smooth}
     body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
-    .header{
-      background:#fff;border-bottom:1px solid var(--line);
-      padding:14px 24px;display:flex;align-items:center;
-      justify-content:center;box-shadow:0 2px 12px rgba(31,111,165,.07);
-      position:sticky;top:0;z-index:50;
-    }
+    .header{background:#fff;border-bottom:1px solid var(--line);padding:14px 24px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 12px rgba(31,111,165,.07);position:sticky;top:0;z-index:50}
     .header-logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:900;color:var(--text)}
-    .header-logo-icon{
-      width:40px;height:40px;border-radius:12px;
-      background:linear-gradient(135deg,var(--p),#46a8d8);
-      display:grid;place-items:center;color:#fff;font-size:18px;font-weight:900;
-      box-shadow:0 6px 16px rgba(31,111,165,.25);
-    }
+    .header-logo-icon{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--p),#46a8d8);display:grid;place-items:center;color:#fff;font-size:18px;font-weight:900;box-shadow:0 6px 16px rgba(31,111,165,.25)}
 
     .wrap{max-width:660px;margin:0 auto;padding:28px 18px 80px}
 
-    .hero{
-      background:linear-gradient(135deg,#16324a 0%,#1f6fa5 100%);
-      border-radius:24px;padding:36px 24px;text-align:center;
-      color:#fff;margin-bottom:20px;box-shadow:var(--sh2);
-      position:relative;overflow:hidden;
-    }
-    .hero::before{
-      content:'';position:absolute;inset:0;
-      background:radial-gradient(ellipse at 80% 20%,rgba(255,255,255,.08),transparent 60%);
-      pointer-events:none;
-    }
-    .hero-icon{
-      width:64px;height:64px;border-radius:20px;
-      background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.2);
-      display:grid;place-items:center;font-size:28px;
-      margin:0 auto 16px;backdrop-filter:blur(4px);
-    }
+    .hero{background:linear-gradient(135deg,#16324a 0%,#1f6fa5 100%);border-radius:24px;padding:36px 24px;text-align:center;color:#fff;margin-bottom:20px;box-shadow:var(--sh2);position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%,rgba(255,255,255,.08),transparent 60%);pointer-events:none}
+    .hero-icon{width:64px;height:64px;border-radius:20px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.2);display:grid;place-items:center;font-size:28px;margin:0 auto 16px;backdrop-filter:blur(4px)}
     .hero h1{font-size:28px;font-weight:900;margin-bottom:10px;line-height:1.2}
     .hero p{font-size:14px;line-height:1.9;opacity:.88;max-width:480px;margin:0 auto}
 
-    .error-state{
-      background:var(--red-s);border:1px solid #f5c6c6;
-      border-radius:18px;padding:28px 24px;text-align:center;
-    }
+    .error-state{background:var(--red-s);border:1px solid #f5c6c6;border-radius:18px;padding:28px 24px;text-align:center}
     .error-state .icon{font-size:36px;margin-bottom:12px}
     .error-state h3{font-size:18px;font-weight:900;color:var(--red);margin-bottom:8px}
     .error-state p{font-size:13px;color:var(--red);line-height:1.8}
+
+    /* بانر امتلاء الجمعية */
+    .full-banner{background:var(--amber-s);border:1px solid #f5dba6;border-radius:18px;padding:24px;text-align:center;margin-bottom:16px;display:none}
+    .full-banner .icon{font-size:32px;margin-bottom:10px}
+    .full-banner h3{font-size:17px;font-weight:900;color:var(--amber);margin-bottom:6px}
+    .full-banner p{font-size:13px;color:var(--amber);line-height:1.8}
+    .full-banner.show{display:block}
 
     .card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--sh);margin-bottom:16px}
     .card-title{font-size:17px;font-weight:900;margin-bottom:4px}
@@ -73,51 +54,37 @@
     .info-item span{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px}
     .info-item strong{display:block;font-size:15px;font-weight:900;color:var(--text);word-break:break-word}
 
+    /* شريط سعة الجمعية */
+    .capacity-bar{margin-top:14px;padding:12px 14px;background:#f8fbff;border:1px solid var(--line);border-radius:12px}
+    .capacity-bar-label{display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:8px}
+    .capacity-bar-track{height:8px;background:#e5eef5;border-radius:999px;overflow:hidden}
+    .capacity-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--p),#46a8d8);transition:.3s}
+    .capacity-bar-fill.full{background:linear-gradient(90deg,var(--red),#e05c5c)}
+    .capacity-bar-fill.near{background:linear-gradient(90deg,var(--amber),#f0a030)}
+
     .year-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
     .year-row label{font-size:13px;font-weight:800;color:var(--muted);white-space:nowrap}
-    .select{
-      border:1px solid var(--line2);background:#fff;color:var(--text);
-      border-radius:10px;padding:9px 12px;outline:none;font-size:13px;
-      font-family:'Tajawal',sans-serif;
-    }
+    .select{border:1px solid var(--line2);background:#fff;color:var(--text);border-radius:10px;padding:9px 12px;outline:none;font-size:13px;font-family:'Tajawal',sans-serif}
     .select:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(31,111,165,.08)}
 
     .months-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
-    .month-btn{
-      border:1.5px solid var(--line2);background:#fff;border-radius:12px;
-      padding:12px 6px;text-align:center;cursor:pointer;transition:all .18s;
-      font-size:13px;font-weight:800;color:var(--text);
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      gap:4px;min-height:70px;
-    }
+    .month-btn{border:1.5px solid var(--line2);background:#fff;border-radius:12px;padding:12px 6px;text-align:center;cursor:pointer;transition:all .18s;font-size:13px;font-weight:800;color:var(--text);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:70px}
     .month-btn:hover:not(.taken){border-color:var(--p);background:var(--p3);transform:translateY(-1px)}
     .month-btn.selected{background:var(--p);border-color:var(--p);color:#fff;box-shadow:0 6px 16px rgba(31,111,165,.25);transform:translateY(-1px)}
     .month-btn.taken{background:#f3f6fa;border-color:var(--line);color:#b0bec5;cursor:not-allowed}
     .month-btn small{font-size:10px;font-weight:700;opacity:.8}
     .month-btn.taken small{color:#b0bec5}
 
-    .selected-banner{
-      display:none;margin-top:12px;padding:12px 14px;
-      background:var(--p3);border:1px solid var(--p4);
-      border-radius:12px;font-size:13px;font-weight:800;
-      color:var(--p2);text-align:center;
-    }
+    .selected-banner{display:none;margin-top:12px;padding:12px 14px;background:var(--p3);border:1px solid var(--p4);border-radius:12px;font-size:13px;font-weight:800;color:var(--p2);text-align:center}
     .selected-banner.show{display:block}
 
     .form-group{margin-bottom:14px}
     .form-group label{display:block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px}
-    .field{
-      width:100%;border:1px solid var(--line2);background:#fff;color:var(--text);
-      border-radius:11px;padding:12px 14px;outline:none;font-size:14px;
-      font-family:'Tajawal',sans-serif;transition:.2s;
-    }
+    .field{width:100%;border:1px solid var(--line2);background:#fff;color:var(--text);border-radius:11px;padding:12px 14px;outline:none;font-size:14px;font-family:'Tajawal',sans-serif;transition:.2s}
     .field:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(31,111,165,.08)}
     .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
-    .upload-area{
-      border:2px dashed var(--line2);border-radius:14px;padding:20px;
-      text-align:center;cursor:pointer;transition:.2s;background:#fafcfe;
-    }
+    .upload-area{border:2px dashed var(--line2);border-radius:14px;padding:20px;text-align:center;cursor:pointer;transition:.2s;background:#fafcfe}
     .upload-area:hover{border-color:var(--p);background:var(--p3)}
     .upload-area.has-file{border-color:var(--green);background:var(--green-s)}
     .upload-area input[type=file]{display:none}
@@ -126,42 +93,26 @@
     .upload-sub{font-size:11px;color:var(--muted);margin-top:4px}
     .upload-name{font-size:13px;font-weight:800;color:var(--green);margin-top:6px}
 
-    .submit-btn{
-      width:100%;padding:15px;border:none;border-radius:14px;
-      background:var(--p);color:#fff;font-size:15px;font-weight:900;
-      font-family:'Tajawal',sans-serif;cursor:pointer;transition:.2s;
-      box-shadow:0 8px 20px rgba(31,111,165,.25);
-    }
+    .submit-btn{width:100%;padding:15px;border:none;border-radius:14px;background:var(--p);color:#fff;font-size:15px;font-weight:900;font-family:'Tajawal',sans-serif;cursor:pointer;transition:.2s;box-shadow:0 8px 20px rgba(31,111,165,.25)}
     .submit-btn:hover{background:var(--p2);transform:translateY(-1px)}
-    .submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+    .submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;background:#9ab8cc}
 
     .msg{display:none;padding:14px;border-radius:12px;font-size:13px;font-weight:800;line-height:1.8;margin-top:12px;text-align:center}
     .msg.error{background:var(--red-s);color:var(--red);border:1px solid #f5c6c6;display:block}
     .msg.success{background:var(--green-s);color:var(--green);border:1px solid #b7e4cf;display:block}
 
-    .success-state{
-      display:none;background:var(--green-s);border:1px solid #b7e4cf;
-      border-radius:20px;padding:36px 24px;text-align:center;
-    }
+    .success-state{display:none;background:var(--green-s);border:1px solid #b7e4cf;border-radius:20px;padding:36px 24px;text-align:center}
     .success-state.show{display:block}
     .success-state .icon{font-size:48px;margin-bottom:16px}
     .success-state h3{font-size:20px;font-weight:900;color:var(--green);margin-bottom:8px}
     .success-state p{font-size:14px;color:var(--green);line-height:1.9}
 
-    .loader{
-      display:none;position:fixed;inset:0;background:rgba(255,255,255,.82);
-      z-index:999;align-items:center;justify-content:center;
-      flex-direction:column;gap:12px;font-size:15px;font-weight:700;color:var(--p);
-    }
+    .loader{display:none;position:fixed;inset:0;background:rgba(255,255,255,.82);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:12px;font-size:15px;font-weight:700;color:var(--p)}
     .loader.show{display:flex}
     .spinner{width:36px;height:36px;border:3px solid var(--p4);border-top-color:var(--p);border-radius:50%;animation:spin .7s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    @media(max-width:540px){
-      .group-info{grid-template-columns:1fr}
-      .form-row{grid-template-columns:1fr}
-      .hero h1{font-size:24px}
-    }
+    @media(max-width:540px){.group-info{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.hero h1{font-size:24px}}
     @media(max-width:380px){.months-grid{grid-template-columns:repeat(2,1fr)}}
   </style>
 </head>
@@ -192,6 +143,13 @@
 
   <div id="mainContent" style="display:none">
 
+    <!-- بانر امتلاء الجمعية -->
+    <div class="full-banner" id="fullBanner">
+      <div class="icon">🚫</div>
+      <h3>الجمعية اكتملت</h3>
+      <p id="fullBannerText">وصلت هذه الجمعية إلى الحد الأقصى من الأعضاء. تواصل مع المدير لمزيد من المعلومات.</p>
+    </div>
+
     <!-- معلومات الجمعية -->
     <div class="card">
       <div class="card-title">معلومات الجمعية</div>
@@ -201,6 +159,16 @@
         <div class="info-item"><span>مدير الجمعية</span><strong id="vManagerName">—</strong></div>
         <div class="info-item"><span>المبلغ الشهري</span><strong id="vAmount">—</strong></div>
         <div class="info-item"><span>عدد الأعضاء</span><strong id="vMembersCount">—</strong></div>
+      </div>
+      <!-- شريط السعة -->
+      <div class="capacity-bar">
+        <div class="capacity-bar-label">
+          <span>سعة الجمعية</span>
+          <span id="capacityText">—</span>
+        </div>
+        <div class="capacity-bar-track">
+          <div class="capacity-bar-fill" id="capacityFill" style="width:0%"></div>
+        </div>
       </div>
     </div>
 
@@ -276,6 +244,9 @@ let managerName   = ''
 let takenMonths   = []
 let selectedMonth = null
 let selectedYear  = new Date().getFullYear()
+let currentCount  = 0
+let maxMembers    = 4
+let isFull        = false
 
 const loader = document.getElementById('loader')
 
@@ -289,7 +260,6 @@ async function init() {
     return
   }
 
-  // جلب الجمعية مع بيانات المدير
   const { data: group, error } = await sb
     .from('groups')
     .select('*, profiles(full_name)')
@@ -310,23 +280,46 @@ async function init() {
 
   currentGroup = group
   managerName  = group.profiles?.full_name || '—'
+  maxMembers   = group.max_members || 4
 
   // عدد الأعضاء النشطين
   const { count } = await sb.from('members')
     .select('*', {count:'exact',head:true})
     .eq('group_id', group.id).eq('status','active')
 
+  currentCount = count || 0
+  isFull = currentCount >= maxMembers
+
   // تحديث الـ UI
   document.getElementById('vGroupName').textContent    = group.name
   document.getElementById('vManagerName').textContent  = managerName
   document.getElementById('vAmount').textContent       = group.monthly_amount + ' درهم'
-  document.getElementById('vMembersCount').textContent = (count || 0) + ' عضو'
+  document.getElementById('vMembersCount').textContent = `${currentCount} / ${maxMembers} عضو`
+
+  // شريط السعة
+  const pct  = Math.min(100, Math.round(currentCount / maxMembers * 100))
+  const fill = document.getElementById('capacityFill')
+  const text = document.getElementById('capacityText')
+  fill.style.width = pct + '%'
+  text.textContent = `${currentCount} من ${maxMembers} (${pct}%)`
+  if (pct >= 100) fill.classList.add('full')
+  else if (pct >= 75) fill.classList.add('near')
+
+  document.getElementById('mainContent').style.display = 'block'
+
+  // إذا امتلأت الجمعية — أظهر بانر وأوقف النموذج
+  if (isFull) {
+    document.getElementById('fullBanner').classList.add('show')
+    document.getElementById('monthCard').style.display = 'none'
+    document.getElementById('formCard').style.display  = 'none'
+    loader.classList.remove('show')
+    return
+  }
 
   fillYears()
   await loadTakenMonths()
   renderMonths()
 
-  document.getElementById('mainContent').style.display = 'block'
   loader.classList.remove('show')
 }
 
@@ -354,7 +347,7 @@ async function loadTakenMonths() {
 }
 
 function renderMonths() {
-  const grid   = document.getElementById('monthsGrid')
+  const grid = document.getElementById('monthsGrid')
   grid.innerHTML = ''
   const takenSet = new Set(takenMonths)
 
@@ -412,7 +405,18 @@ window.submitRequest = async function() {
   if (!phone)        { showFormMsg('أدخل رقم هاتفك', 'error'); return }
   if (!selectedMonth){ showFormMsg('اختر شهر الاستلام أولاً', 'error'); return }
 
-  // تحقق مزدوج من الشهر
+  // ════ تحقق من حد الأعضاء ════
+  const { count: freshCount } = await sb.from('members')
+    .select('*', {count:'exact',head:true})
+    .eq('group_id', currentGroup.id).eq('status','active')
+
+  if ((freshCount || 0) >= maxMembers) {
+    showFormMsg(`عذراً، وصلت الجمعية للحد الأقصى (${maxMembers} أعضاء). لا يمكن قبول طلبات جديدة.`, 'error')
+    document.getElementById('submitBtn').disabled = true
+    return
+  }
+
+  // تحقق من الشهر
   const { data: chk } = await sb.from('members').select('id')
     .eq('group_id', currentGroup.id)
     .eq('join_month', selectedMonth).eq('join_year', selectedYear)
@@ -438,7 +442,7 @@ window.submitRequest = async function() {
       }
     }
 
-    // إدراج الطلب في join_requests
+    // إدراج الطلب
     const { error: reqErr } = await sb.from('join_requests').insert({
       group_id:        currentGroup.id,
       full_name:       name,
@@ -450,7 +454,6 @@ window.submitRequest = async function() {
 
     if (reqErr) throw reqErr
 
-    // إخفاء النموذج وإظهار النجاح
     loader.classList.remove('show')
     document.getElementById('formCard').style.display  = 'none'
     document.getElementById('monthCard').style.display = 'none'
@@ -461,7 +464,6 @@ window.submitRequest = async function() {
       للشهر: <strong>${MONTHS[selectedMonth-1]} ${selectedYear}</strong><br><br>
       سيراجع المدير طلبك ويتواصل معك على: <strong>${phone}</strong>
     `
-
   } catch(err) {
     console.error(err)
     loader.classList.remove('show')
