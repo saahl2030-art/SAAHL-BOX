@@ -4,11 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>لوحة مدير الجمعية - صندوق ساهل</title>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
-
   <style>
     :root{
       --bg:#f4f8fc;--panel:#ffffff;--panel-soft:#f8fbff;
@@ -23,16 +21,12 @@
       --shadow:0 12px 30px rgba(15,40,64,0.08);
       --radius:18px;
     }
-
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{font-family:"Tajawal",sans-serif;background:linear-gradient(180deg,#f8fbff,#f3f7fb);color:var(--text)}
     a{text-decoration:none;color:inherit}
     button,input,select,textarea{font-family:"Tajawal",sans-serif}
-
     .app{min-height:100vh;display:grid;grid-template-columns:280px 1fr}
-
-    /* ── Sidebar ── */
     .sidebar{background:#fff;border-left:1px solid var(--line);padding:20px 16px;position:sticky;top:0;height:100vh;box-shadow:var(--shadow);overflow:auto;z-index:20}
     .brand{display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:16px}
     .brand-logo{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),#46a8d8);color:#fff;font-size:20px;font-weight:900;flex:0 0 46px}
@@ -42,41 +36,21 @@
     .manager-chip span{display:block;font-size:11px;color:var(--muted);font-weight:700}
     .manager-chip strong{display:block;font-size:14px;font-weight:900;color:var(--primary-dark)}
     .menu{display:flex;flex-direction:column;gap:6px}
-    .menu-btn{
-      border:none;background:transparent;width:100%;
-      display:flex;align-items:center;gap:10px;
-      padding:12px 14px;border-radius:12px;cursor:pointer;
-      color:var(--text);font-size:14px;font-weight:800;transition:.2s;
-      position:relative;
-    }
+    .menu-btn{border:none;background:transparent;width:100%;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;cursor:pointer;color:var(--text);font-size:14px;font-weight:800;transition:.2s;position:relative}
     .menu-btn:hover{background:var(--panel-soft)}
     .menu-btn.active{background:var(--primary-soft);color:var(--primary-dark);border:1px solid #d3e9f8}
     .menu-icon{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:#f2f7fb;font-size:15px;flex:0 0 32px}
     .menu-btn.active .menu-icon{background:#dceefb}
     .menu-btn span{flex:1;text-align:right}
-
-    /* ── Badge للطلبات ── */
-    .req-badge{
-      display:none;
-      background:var(--red);color:#fff;
-      font-size:11px;font-weight:900;
-      width:20px;height:20px;border-radius:999px;
-      align-items:center;justify-content:center;
-      flex:0 0 20px;
-    }
+    .req-badge{display:none;background:var(--red);color:#fff;font-size:11px;font-weight:900;width:20px;height:20px;border-radius:999px;align-items:center;justify-content:center;flex:0 0 20px}
     .req-badge.show{display:flex}
-
     .logout-btn{margin-top:16px;border-top:1px solid var(--line);border:none;background:none;width:100%;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;cursor:pointer;color:var(--red);font-size:14px;font-weight:800}
     .logout-btn:hover{background:var(--red-soft)}
-
-    /* ── Content ── */
     .content{padding:22px;min-width:0}
     .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px}
     .topbar h2{font-size:28px;font-weight:900}
     .topbar p{color:var(--muted);font-size:13px;margin-top:5px}
     .topbar-actions{display:flex;gap:10px;flex-wrap:wrap}
-
-    /* ── Buttons ── */
     .btn{border:none;border-radius:12px;padding:11px 16px;cursor:pointer;font-size:13px;font-weight:900;transition:.2s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
     .btn:hover{transform:translateY(-1px)}
     .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
@@ -87,28 +61,19 @@
     .btn-success{background:var(--green);color:#fff}
     .btn-danger{background:var(--red);color:#fff}
     .btn-sm{padding:7px 12px;font-size:12px;border-radius:9px}
-
-    /* ── Pages ── */
     .page{display:none;animation:fade .2s ease}
     .page.active{display:block}
     @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-
-    /* ── Cards ── */
     .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
     .card+.card{margin-top:16px}
     .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
     .card-title{font-size:17px;font-weight:900}
     .card-sub{color:var(--muted);font-size:13px;margin-top:4px}
-
-    /* ── Stats ── */
     .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
     .stat-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
     .stat-card span{display:block;color:var(--muted);font-size:12px;font-weight:700;margin-bottom:6px}
     .stat-card strong{display:block;font-size:26px;font-weight:900}
-
     .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-
-    /* ── Badges ── */
     .badge{display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;font-size:11px;font-weight:900;white-space:nowrap}
     .badge-green{background:var(--green-soft);color:var(--green)}
     .badge-red{background:var(--red-soft);color:var(--red)}
@@ -116,8 +81,6 @@
     .badge-blue{background:var(--blue-soft);color:var(--blue)}
     .badge-primary{background:var(--primary-soft);color:var(--primary-dark)}
     .badge-violet{background:var(--violet-soft);color:var(--violet)}
-
-    /* ── Table ── */
     .table-wrap{width:100%;overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
     table{width:100%;min-width:800px;border-collapse:collapse}
     thead{background:#f7fbff}
@@ -127,59 +90,50 @@
     tr:last-child td{border-bottom:none}
     tr:hover td{background:#fcfeff}
     .td-actions{display:flex;gap:6px;flex-wrap:wrap}
-
-    /* ── Action Buttons ── */
     .action-btn{border:none;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:11px;font-weight:900;white-space:nowrap}
     .action-blue{background:var(--blue-soft);color:var(--blue)}
     .action-green{background:var(--green-soft);color:var(--green)}
     .action-red{background:var(--red-soft);color:var(--red)}
     .action-amber{background:var(--amber-soft);color:var(--amber)}
     .action-primary{background:var(--primary-soft);color:var(--primary-dark)}
-
-    /* ── Filters ── */
     .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
     .select,.field{border:1px solid var(--line-dark);background:#fff;color:var(--text);border-radius:12px;padding:10px 14px;outline:none;font-size:13px}
     .select:focus,.field:focus{border-color:#96bdd8;box-shadow:0 0 0 3px rgba(31,111,165,.08)}
     .textarea{width:100%;border:1px solid var(--line-dark);background:#fff;color:var(--text);border-radius:12px;padding:12px 14px;outline:none;font-size:13px;resize:vertical}
-    .textarea:focus{border-color:#96bdd8;box-shadow:0 0 0 3px rgba(31,111,165,.08)}
-
-    /* ── Form Grid ── */
     .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
     .label{display:block;margin-bottom:6px;color:var(--muted);font-size:12px;font-weight:800}
-
-    /* ── Modal ── */
     .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center;padding:20px}
     .modal-overlay.show{display:flex}
     .modal{background:#fff;border-radius:20px;padding:24px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.15);max-height:90vh;overflow:auto}
     .modal h3{font-size:20px;font-weight:900;margin-bottom:16px}
     .modal-actions{display:flex;gap:10px;margin-top:18px;justify-content:flex-end}
-
-    /* ── Messages ── */
     .msg{display:none;padding:12px 14px;border-radius:12px;font-size:13px;font-weight:700;margin-top:12px}
     .msg.error{background:var(--red-soft);color:var(--red)}
     .msg.success{background:var(--green-soft);color:var(--green)}
     .msg.show{display:block}
-
     .empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:14px;font-weight:700}
-
     .page-loader{display:none;position:fixed;inset:0;background:rgba(255,255,255,.85);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:12px;font-size:15px;font-weight:700;color:var(--primary)}
     .page-loader.show{display:flex}
-
     .link-box{display:flex;align-items:center;gap:10px;background:#f8fbff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
     .link-box input{flex:1;border:none;background:transparent;font-size:13px;color:var(--text);outline:none}
-
     .cycle-banner{padding:14px 18px;border-radius:14px;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
     .cycle-banner.completed{background:#e8f8f1;color:var(--green);border:1px solid #b7e4cf}
     .cycle-banner.stopped{background:var(--red-soft);color:var(--red);border:1px solid #f5c6c6}
     .cycle-banner.active{background:var(--primary-soft);color:var(--primary-dark);border:1px solid #c3dff0}
 
-    /* ── جدول الدفعات الشهري ── */
+    /* شريط سعة الأعضاء */
+    .capacity-wrap{margin-top:12px;padding:12px;background:#f8fbff;border-radius:12px;border:1px solid var(--line)}
+    .capacity-label{display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px}
+    .capacity-track{height:8px;background:#e5eef5;border-radius:999px;overflow:hidden}
+    .capacity-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--primary),#46a8d8);transition:.3s}
+    .capacity-fill.near{background:linear-gradient(90deg,var(--amber),#f0a030)}
+    .capacity-fill.full{background:linear-gradient(90deg,var(--red),#e05c5c)}
+
     .schedule-table{width:100%;min-width:700px;border-collapse:collapse}
     .schedule-table th{padding:12px 14px;text-align:right;background:#f7fbff;color:var(--muted);font-weight:900;font-size:12px;border-bottom:2px solid var(--line)}
     .schedule-table td{padding:12px 14px;text-align:right;border-bottom:1px solid var(--line);font-size:13px;font-weight:700}
     .schedule-table tr:last-child td{border-bottom:none}
     .schedule-table tr:hover td{background:#fcfeff}
-    .month-header{background:#f0f7ff!important;font-weight:900!important;color:var(--primary-dark)!important;font-size:13px!important}
 
     @media(max-width:1280px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:980px){
@@ -249,9 +203,7 @@
       <div>
         <label class="label">حالة الدفع *</label>
         <select class="select" id="pay_status" style="width:100%">
-          <option value="paid">مدفوع</option>
-          <option value="pending">معلق</option>
-          <option value="late">متأخر</option>
+          <option value="paid">مدفوع</option><option value="pending">معلق</option><option value="late">متأخر</option>
         </select>
       </div>
       <div><label class="label">رابط الإيصال (اختياري)</label><input class="field" id="pay_receipt" type="url" placeholder="https://..." style="width:100%"></div>
@@ -265,65 +217,39 @@
 </div>
 
 <div class="app">
-  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-logo">س</div>
       <div><h1>صندوق ساهل</h1><p>لوحة مدير الجمعية</p></div>
     </div>
-
-    <div class="manager-chip">
-      <span>المدير</span>
-      <strong id="sidebarManagerName">...</strong>
-    </div>
-    <div class="manager-chip" style="margin-top:8px">
-      <span>الجمعية</span>
-      <strong id="sidebarGroupName">...</strong>
+    <div class="manager-chip"><span>المدير</span><strong id="sidebarManagerName">...</strong></div>
+    <div class="manager-chip" style="margin-top:8px"><span>الجمعية</span><strong id="sidebarGroupName">...</strong></div>
+    <div class="manager-chip" style="margin-top:8px;background:var(--green-soft)">
+      <span>سعة الأعضاء</span>
+      <strong id="sidebarCapacity" style="color:var(--green)">— / —</strong>
     </div>
 
     <div class="menu" style="margin-top:16px">
-      <button class="menu-btn active" data-page="overview-page">
-        <div class="menu-icon">📋</div><span>نظرة عامة</span>
-      </button>
-      <button class="menu-btn" data-page="members-page">
-        <div class="menu-icon">👥</div><span>الأعضاء</span>
-      </button>
+      <button class="menu-btn active" data-page="overview-page"><div class="menu-icon">📋</div><span>نظرة عامة</span></button>
+      <button class="menu-btn" data-page="members-page"><div class="menu-icon">👥</div><span>الأعضاء</span></button>
       <button class="menu-btn" data-page="requests-page">
-        <div class="menu-icon">📨</div>
-        <span>طلبات الانضمام</span>
+        <div class="menu-icon">📨</div><span>طلبات الانضمام</span>
         <div class="req-badge" id="reqBadge">0</div>
       </button>
-      <button class="menu-btn" data-page="payments-page">
-        <div class="menu-icon">💳</div><span>الدفعات</span>
-      </button>
-      <button class="menu-btn" data-page="schedule-page">
-        <div class="menu-icon">📅</div><span>جدول الدفعات</span>
-      </button>
-      <button class="menu-btn" data-page="link-page">
-        <div class="menu-icon">🔗</div><span>رابط الانضمام</span>
-      </button>
-      <button class="menu-btn" data-page="plan-page">
-        <div class="menu-icon">📦</div><span>الباقة</span>
-      </button>
-      <button class="menu-btn" data-page="notes-page">
-        <div class="menu-icon">📝</div><span>ملاحظات للإدارة</span>
-      </button>
+      <button class="menu-btn" data-page="payments-page"><div class="menu-icon">💳</div><span>الدفعات</span></button>
+      <button class="menu-btn" data-page="schedule-page"><div class="menu-icon">📅</div><span>جدول الدفعات</span></button>
+      <button class="menu-btn" data-page="link-page"><div class="menu-icon">🔗</div><span>رابط الانضمام</span></button>
+      <button class="menu-btn" data-page="plan-page"><div class="menu-icon">📦</div><span>الباقة</span></button>
+      <button class="menu-btn" data-page="notes-page"><div class="menu-icon">📝</div><span>ملاحظات للإدارة</span></button>
     </div>
-
-    <button class="logout-btn" onclick="doLogout()">
-      <span>🚪</span><span>تسجيل الخروج</span>
-    </button>
+    <button class="logout-btn" onclick="doLogout()"><span>🚪</span><span>تسجيل الخروج</span></button>
   </aside>
 
-  <!-- Main -->
   <main class="content">
     <div class="topbar">
-      <div>
-        <h2 id="pageTitle">نظرة عامة</h2>
-        <p id="pageSubtitle">ملخص شامل لجمعيتك</p>
-      </div>
+      <div><h2 id="pageTitle">نظرة عامة</h2><p id="pageSubtitle">ملخص شامل لجمعيتك</p></div>
       <div class="topbar-actions">
-        <button class="btn btn-primary" onclick="openAddMember()">+ إضافة عضو</button>
+        <button class="btn btn-primary" id="addMemberBtn" onclick="openAddMember()">+ إضافة عضو</button>
       </div>
     </div>
 
@@ -333,14 +259,12 @@
         <span id="cycleBannerText">الجمعية نشطة</span>
         <div style="display:flex;gap:8px" id="cycleActions"></div>
       </div>
-
       <div class="stats-grid">
-        <div class="stat-card"><span>إجمالي الأعضاء</span><strong id="statTotal">—</strong></div>
+        <div class="stat-card"><span>الأعضاء الحاليين</span><strong id="statTotal">—</strong></div>
         <div class="stat-card"><span>الدفعات المسددة</span><strong id="statPaid">—</strong></div>
         <div class="stat-card"><span>الدفعات المتأخرة</span><strong id="statLate">—</strong></div>
         <div class="stat-card"><span>حالة الجمعية</span><strong id="statStatus">—</strong></div>
       </div>
-
       <div class="grid-2">
         <div class="card">
           <div class="card-head">
@@ -361,12 +285,21 @@
               <span style="color:var(--muted);font-weight:700">شهر البداية</span><strong id="infoStartDate">—</strong>
             </div>
           </div>
+          <!-- شريط السعة -->
+          <div class="capacity-wrap">
+            <div class="capacity-label">
+              <span>سعة الأعضاء</span>
+              <span id="capacityText">—</span>
+            </div>
+            <div class="capacity-track">
+              <div class="capacity-fill" id="capacityFill" style="width:0%"></div>
+            </div>
+          </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
             <button class="btn btn-primary btn-sm" onclick="switchPage('members-page')">عرض الأعضاء</button>
             <button class="btn btn-soft btn-sm" onclick="switchPage('link-page')">رابط الانضمام</button>
           </div>
         </div>
-
         <div class="card">
           <div class="card-head">
             <div class="card-title">آخر طلبات الانضمام</div>
@@ -397,9 +330,7 @@
         </div>
         <div class="table-wrap">
           <table>
-            <thead>
-              <tr><th>#</th><th>الاسم</th><th>الهاتف</th><th>شهر الاستلام</th><th>السنة</th><th>الترتيب</th><th>الحالة</th><th>الإجراءات</th></tr>
-            </thead>
+            <thead><tr><th>#</th><th>الاسم</th><th>الهاتف</th><th>شهر الاستلام</th><th>السنة</th><th>الترتيب</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
             <tbody id="membersBody"><tr><td colspan="8" class="empty">جاري التحميل...</td></tr></tbody>
           </table>
         </div>
@@ -415,9 +346,7 @@
         </div>
         <div class="table-wrap">
           <table>
-            <thead>
-              <tr><th>الاسم</th><th>الهاتف</th><th>الشهر المطلوب</th><th>السنة</th><th>تاريخ الطلب</th><th>الحالة</th><th>الإجراءات</th></tr>
-            </thead>
+            <thead><tr><th>الاسم</th><th>الهاتف</th><th>الشهر المطلوب</th><th>السنة</th><th>تاريخ الطلب</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
             <tbody id="requestsBody"><tr><td colspan="7" class="empty">جاري التحميل...</td></tr></tbody>
           </table>
         </div>
@@ -447,41 +376,23 @@
         </div>
         <div class="table-wrap">
           <table>
-            <thead>
-              <tr><th>العضو</th><th>المبلغ</th><th>الشهر</th><th>السنة</th><th>تاريخ الاستحقاق</th><th>تاريخ الدفع</th><th>الحالة</th><th>الإيصال</th><th>الإجراءات</th></tr>
-            </thead>
+            <thead><tr><th>العضو</th><th>المبلغ</th><th>الشهر</th><th>السنة</th><th>تاريخ الاستحقاق</th><th>تاريخ الدفع</th><th>الحالة</th><th>الإيصال</th><th>الإجراءات</th></tr></thead>
             <tbody id="paymentsBody"><tr><td colspan="9" class="empty">جاري التحميل...</td></tr></tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- ════ جدول الدفعات الشهري ════ -->
+    <!-- جدول الدفعات -->
     <section class="page" id="schedule-page">
       <div class="card">
         <div class="card-head">
-          <div>
-            <div class="card-title">جدول الدفعات الشهري</div>
-            <div class="card-sub">كل أعضاء الجمعية مرتبين حسب شهر استلامهم مع حالة دفعاتهم</div>
-          </div>
+          <div><div class="card-title">جدول الدفعات الشهري</div><div class="card-sub">كل الأعضاء مرتبين بالأشهر مع حالة دفعاتهم</div></div>
           <button class="btn btn-soft btn-sm" onclick="loadSchedule()">🔄 تحديث</button>
         </div>
         <div class="table-wrap">
           <table class="schedule-table">
-            <thead>
-              <tr>
-                <th>الترتيب</th>
-                <th>الاسم</th>
-                <th>الهاتف</th>
-                <th>شهر الاستلام</th>
-                <th>السنة</th>
-                <th>المبلغ</th>
-                <th>حالة الدفع</th>
-                <th>تاريخ الدفع</th>
-                <th>الإيصال</th>
-                <th>إجراء</th>
-              </tr>
-            </thead>
+            <thead><tr><th>الترتيب</th><th>الاسم</th><th>الهاتف</th><th>شهر الاستلام</th><th>السنة</th><th>المبلغ</th><th>حالة الدفع</th><th>تاريخ الدفع</th><th>الإيصال</th><th>إجراء</th></tr></thead>
             <tbody id="scheduleBody"><tr><td colspan="10" class="empty">جاري التحميل...</td></tr></tbody>
           </table>
         </div>
@@ -513,13 +424,8 @@
     <!-- ملاحظات -->
     <section class="page" id="notes-page">
       <div class="card">
-        <div class="card-head">
-          <div class="card-title">ملاحظات للإدارة</div>
-          <div class="card-sub">أرسل ملاحظاتك أو اقتراحاتك للمشرف العام</div>
-        </div>
-        <div><label class="label">الملاحظة أو الاقتراح *</label>
-          <textarea class="textarea" id="noteText" rows="5" placeholder="اكتب ملاحظتك هنا..."></textarea>
-        </div>
+        <div class="card-head"><div class="card-title">ملاحظات للإدارة</div><div class="card-sub">أرسل ملاحظاتك للمشرف العام</div></div>
+        <div><label class="label">الملاحظة *</label><textarea class="textarea" id="noteText" rows="5" placeholder="اكتب ملاحظتك هنا..."></textarea></div>
         <div style="margin-top:12px"><button class="btn btn-primary" onclick="saveNote()">إرسال للإدارة</button></div>
         <div class="msg" id="noteMsg"></div>
         <div style="margin-top:20px">
@@ -549,8 +455,8 @@ async function init() {
     if (!session) { window.location.href = 'login.html'; return }
     currentUser = session.user
 
-    const { data: profile, error: pErr } = await sb.from('profiles').select('*').eq('id', currentUser.id).single()
-    if (pErr || !profile) { window.location.href = 'login.html'; return }
+    const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single()
+    if (!profile) { window.location.href = 'login.html'; return }
     if (profile.role !== 'manager') { window.location.href = 'admin.html'; return }
     currentProfile = profile
 
@@ -570,6 +476,31 @@ async function init() {
 
   } catch(e) { console.error(e); window.location.href = 'login.html' }
   finally { loader.classList.remove('show') }
+}
+
+// ════ مساعد: جلب عدد الأعضاء الحاليين ════
+async function getMemberCount() {
+  const { count } = await sb.from('members').select('*',{count:'exact',head:true})
+    .eq('group_id', currentGroup.id).eq('status','active')
+  return count || 0
+}
+
+// ════ تحديث شريط السعة ════
+function updateCapacityBar(current, max) {
+  const pct  = Math.min(100, Math.round(current / max * 100))
+  const fill = document.getElementById('capacityFill')
+  const text = document.getElementById('capacityText')
+  const side = document.getElementById('sidebarCapacity')
+
+  if (fill) {
+    fill.style.width = pct + '%'
+    fill.className = 'capacity-fill' + (pct >= 100 ? ' full' : pct >= 75 ? ' near' : '')
+  }
+  if (text) text.textContent = `${current} من ${max} عضو (${pct}%)`
+  if (side) {
+    side.textContent = `${current} / ${max}`
+    side.style.color = pct >= 100 ? 'var(--red)' : pct >= 75 ? 'var(--amber)' : 'var(--green)'
+  }
 }
 
 function updateSidebar() {
@@ -593,7 +524,7 @@ async function updateOverview() {
   const s = statusMap[currentGroup.status] || statusMap['active']
   document.getElementById('cycleBanner').className = `cycle-banner ${s.cls}`
   document.getElementById('cycleBannerText').textContent = s.label
-  document.getElementById('groupStatusBadge').className = `badge ${s.badge}`
+  document.getElementById('groupStatusBadge').className  = `badge ${s.badge}`
   document.getElementById('groupStatusBadge').textContent = s.label
   document.getElementById('statStatus').textContent = s.label
 
@@ -607,19 +538,33 @@ async function updateOverview() {
     cycleActions.innerHTML = `<button class="btn btn-success btn-sm" onclick="updateGroupStatus('renewed')">🔄 تجديد</button>`
   }
 
-  const { data: members } = await sb.from('members').select('id').eq('group_id', currentGroup.id).eq('status','active')
-  const { data: paidList } = await sb.from('payments').select('id').eq('group_id', currentGroup.id).eq('status','paid')
-  const { data: lateList } = await sb.from('payments').select('id').eq('group_id', currentGroup.id).eq('status','late')
-  document.getElementById('statTotal').textContent = members?.length ?? '0'
-  document.getElementById('statPaid').textContent  = paidList?.length ?? '0'
-  document.getElementById('statLate').textContent  = lateList?.length ?? '0'
+  const currentCount = await getMemberCount()
+  const maxMembers   = currentGroup.max_members || 4
 
-  // آخر الطلبات + badge
+  document.getElementById('statTotal').textContent = currentCount
+  updateCapacityBar(currentCount, maxMembers)
+
+  // تعطيل زر الإضافة إذا امتلأت الجمعية
+  const addBtn = document.getElementById('addMemberBtn')
+  if (addBtn) {
+    if (currentCount >= maxMembers) {
+      addBtn.disabled = true
+      addBtn.textContent = `الجمعية ممتلئة (${maxMembers}/${maxMembers})`
+    } else {
+      addBtn.disabled = false
+      addBtn.textContent = '+ إضافة عضو'
+    }
+  }
+
+  const { data: paidList } = await sb.from('payments').select('id').eq('group_id',currentGroup.id).eq('status','paid')
+  const { data: lateList } = await sb.from('payments').select('id').eq('group_id',currentGroup.id).eq('status','late')
+  document.getElementById('statPaid').textContent = paidList?.length ?? '0'
+  document.getElementById('statLate').textContent = lateList?.length ?? '0'
+
   const { data: reqs } = await sb.from('join_requests')
-    .select('*').eq('group_id', currentGroup.id).eq('status','pending')
+    .select('*').eq('group_id',currentGroup.id).eq('status','pending')
     .order('created_at',{ascending:false}).limit(3)
 
-  // تحديث الـ badge
   updateReqBadge(reqs?.length || 0)
 
   const recentEl = document.getElementById('recentRequests')
@@ -628,10 +573,7 @@ async function updateOverview() {
   } else {
     recentEl.innerHTML = reqs.map(r => `
       <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;border-bottom:1px solid var(--line);font-size:13px">
-        <div>
-          <strong>${r.full_name}</strong>
-          <div style="color:var(--muted)">${monthName(r.requested_month)} ${r.requested_year}</div>
-        </div>
+        <div><strong>${r.full_name}</strong><div style="color:var(--muted)">${monthName(r.requested_month)} ${r.requested_year}</div></div>
         <div style="display:flex;gap:6px">
           <button class="action-btn action-green" onclick="approveRequest('${r.id}','${escQ(r.full_name)}','${r.phone||''}',${r.requested_month},${r.requested_year})">قبول</button>
           <button class="action-btn action-red" onclick="rejectRequest('${r.id}')">رفض</button>
@@ -640,21 +582,16 @@ async function updateOverview() {
   }
 }
 
-// ════ Badge الطلبات ════
 function updateReqBadge(count) {
   const badge = document.getElementById('reqBadge')
-  if (count > 0) {
-    badge.textContent = count
-    badge.classList.add('show')
-  } else {
-    badge.classList.remove('show')
-  }
+  if (count > 0) { badge.textContent=count; badge.classList.add('show') }
+  else badge.classList.remove('show')
 }
 
 window.updateGroupStatus = async function(newStatus) {
   if (!confirm('هل تريد تغيير حالة الجمعية؟')) return
-  const { error } = await sb.from('groups').update({status:newStatus}).eq('id', currentGroup.id)
-  if (error) { alert('خطأ: ' + error.message); return }
+  const { error } = await sb.from('groups').update({status:newStatus}).eq('id',currentGroup.id)
+  if (error) { alert('خطأ: '+error.message); return }
   currentGroup.status = newStatus
   updateOverview()
 }
@@ -663,23 +600,22 @@ window.updateGroupStatus = async function(newStatus) {
 window.loadMembers = async function() {
   const month = document.getElementById('filterMonth')?.value
   const year  = document.getElementById('filterYear')?.value
-  let q = sb.from('members').select('*').eq('group_id', currentGroup.id).order('join_month')
-  if (month) q = q.eq('join_month', parseInt(month))
-  if (year)  q = q.eq('join_year',  parseInt(year))
+  let q = sb.from('members').select('*').eq('group_id',currentGroup.id).order('join_month')
+  if (month) q = q.eq('join_month',parseInt(month))
+  if (year)  q = q.eq('join_year',parseInt(year))
 
   const { data, error } = await q
   const tbody = document.getElementById('membersBody')
-  if (error) { tbody.innerHTML = `<tr><td colspan="8" class="empty">خطأ في التحميل</td></tr>`; return }
-  if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="8" class="empty">لا يوجد أعضاء</td></tr>`; return }
-
-  document.getElementById('memberCount').textContent = `${data.length} عضو`
+  if (error || !data || data.length===0) {
+    tbody.innerHTML=`<tr><td colspan="8" class="empty">${error?'خطأ في التحميل':'لا يوجد أعضاء'}</td></tr>`
+    document.getElementById('memberCount').textContent = '0 عضو'
+    return
+  }
+  document.getElementById('memberCount').textContent = `${data.length} عضو من ${currentGroup.max_members||4}`
   tbody.innerHTML = data.map((m,i) => `
     <tr>
-      <td>${i+1}</td>
-      <td>${m.full_name}</td>
-      <td>${m.phone||'—'}</td>
-      <td>${monthName(m.join_month)}</td>
-      <td>${m.join_year}</td>
+      <td>${i+1}</td><td>${m.full_name}</td><td>${m.phone||'—'}</td>
+      <td>${monthName(m.join_month)}</td><td>${m.join_year}</td>
       <td>${m.payout_order||'—'}</td>
       <td><span class="badge ${statusBadge(m.status)}">${statusLabel(m.status)}</span></td>
       <td>
@@ -693,31 +629,38 @@ window.loadMembers = async function() {
 }
 
 window.clearFilters = function() {
-  document.getElementById('filterMonth').value = ''
-  document.getElementById('filterYear').value  = ''
+  document.getElementById('filterMonth').value=''
+  document.getElementById('filterYear').value=''
   loadMembers()
 }
 
-window.openAddMember = function() {
+window.openAddMember = async function() {
+  // تحقق من الحد قبل فتح النموذج
+  const current = await getMemberCount()
+  const max     = currentGroup.max_members || 4
+  if (current >= max) {
+    alert(`وصلت الجمعية للحد الأقصى (${max} أعضاء). لا يمكن إضافة المزيد.`)
+    return
+  }
   editingMemberId = null
   document.getElementById('memberModalTitle').textContent = 'إضافة عضو'
   document.getElementById('m_fullName').value = ''
   document.getElementById('m_phone').value    = ''
-  document.getElementById('m_month').value    = new Date().getMonth() + 1
+  document.getElementById('m_month').value    = new Date().getMonth()+1
   document.getElementById('m_year').value     = new Date().getFullYear()
   document.getElementById('m_order').value    = ''
   clearMsg('memberMsg')
   openModal('memberModal')
 }
 
-window.openEditMember = function(id, name, phone, month, year, order) {
+window.openEditMember = function(id,name,phone,month,year,order) {
   editingMemberId = id
   document.getElementById('memberModalTitle').textContent = 'تعديل بيانات العضو'
   document.getElementById('m_fullName').value = name
   document.getElementById('m_phone').value    = phone
   document.getElementById('m_month').value    = month
   document.getElementById('m_year').value     = year
-  document.getElementById('m_order').value    = order || ''
+  document.getElementById('m_order').value    = order||''
   clearMsg('memberMsg')
   openModal('memberModal')
 }
@@ -727,17 +670,29 @@ window.saveMember = async function() {
   const phone        = document.getElementById('m_phone').value.trim()
   const join_month   = parseInt(document.getElementById('m_month').value)
   const join_year    = parseInt(document.getElementById('m_year').value)
-  const payout_order = parseInt(document.getElementById('m_order').value) || null
+  const payout_order = parseInt(document.getElementById('m_order').value)||null
 
-  if (!fullName || !join_month || !join_year) { showMsg('memberMsg','أكمل الحقول المطلوبة','error'); return }
+  if (!fullName||!join_month||!join_year) { showMsg('memberMsg','أكمل الحقول المطلوبة','error'); return }
   document.getElementById('memberSaveBtn').disabled = true
 
   let error
   if (editingMemberId) {
     ({error} = await sb.from('members').update({full_name:fullName,phone,join_month,join_year,payout_order}).eq('id',editingMemberId))
   } else {
-    const { data: existing } = await sb.from('members').select('id').eq('group_id',currentGroup.id).eq('join_month',join_month).eq('join_year',join_year)
-    if (existing && existing.length > 0) { showMsg('memberMsg','هذا الشهر محجوز لعضو آخر','error'); document.getElementById('memberSaveBtn').disabled=false; return }
+    // تحقق نهائي من الحد
+    const current = await getMemberCount()
+    const max     = currentGroup.max_members || 4
+    if (current >= max) {
+      showMsg('memberMsg',`الجمعية وصلت للحد الأقصى (${max} أعضاء)`, 'error')
+      document.getElementById('memberSaveBtn').disabled = false
+      return
+    }
+    const { data: existing } = await sb.from('members').select('id')
+      .eq('group_id',currentGroup.id).eq('join_month',join_month).eq('join_year',join_year)
+    if (existing&&existing.length>0) {
+      showMsg('memberMsg','هذا الشهر محجوز لعضو آخر','error')
+      document.getElementById('memberSaveBtn').disabled=false; return
+    }
     ;({error} = await sb.from('members').insert({group_id:currentGroup.id,full_name:fullName,phone,join_month,join_year,payout_order,status:'active'}))
   }
 
@@ -752,15 +707,13 @@ window.saveMember = async function() {
 window.deleteMember = async function(id) {
   if (!confirm('هل تريد حذف هذا العضو؟')) return
   await sb.from('members').delete().eq('id',id)
-  loadMembers()
-  loadSchedule()
-  updateOverview()
+  loadMembers(); loadSchedule(); updateOverview()
 }
 
 // ════ الدفعات ════
 window.openPaymentModal = function(memberId) {
   document.getElementById('pay_memberId').value = memberId
-  document.getElementById('pay_month').value    = new Date().getMonth() + 1
+  document.getElementById('pay_month').value    = new Date().getMonth()+1
   document.getElementById('pay_year').value     = new Date().getFullYear()
   document.getElementById('pay_amount').value   = currentGroup.monthly_amount
   document.getElementById('pay_status').value   = 'paid'
@@ -776,226 +729,164 @@ window.savePayment = async function() {
   const payment_year  = parseInt(document.getElementById('pay_year').value)
   const amount        = parseFloat(document.getElementById('pay_amount').value)
   const status        = document.getElementById('pay_status').value
-  const receipt_url   = document.getElementById('pay_receipt').value.trim() || null
-  const due_date      = document.getElementById('pay_due').value || null
-
-  if (!member_id || !payment_month || !payment_year || !amount) { showMsg('paymentMsg','أكمل الحقول المطلوبة','error'); return }
-
-  const { error } = await sb.from('payments').upsert({
-    group_id:currentGroup.id, member_id, payment_month, payment_year,
-    amount, status, receipt_url, due_date,
-    paid_at: status==='paid' ? new Date().toISOString() : null
-  }, {onConflict:'member_id,payment_month,payment_year'})
-
+  const receipt_url   = document.getElementById('pay_receipt').value.trim()||null
+  const due_date      = document.getElementById('pay_due').value||null
+  if (!member_id||!payment_month||!payment_year||!amount) { showMsg('paymentMsg','أكمل الحقول المطلوبة','error'); return }
+  const {error} = await sb.from('payments').upsert({group_id:currentGroup.id,member_id,payment_month,payment_year,amount,status,receipt_url,due_date,paid_at:status==='paid'?new Date().toISOString():null},{onConflict:'member_id,payment_month,payment_year'})
   if (error) { showMsg('paymentMsg','خطأ: '+error.message,'error'); return }
-  closeModal('paymentModal')
-  loadPayments()
-  loadSchedule()
-  updateOverview()
+  closeModal('paymentModal'); loadPayments(); loadSchedule(); updateOverview()
 }
 
 window.loadPayments = async function() {
-  const month  = document.getElementById('payFilterMonth')?.value
-  const year   = document.getElementById('payFilterYear')?.value
-  const status = document.getElementById('payFilterStatus')?.value
-  let q = sb.from('payments').select('*, members(full_name)').eq('group_id',currentGroup.id).order('payment_year').order('payment_month')
-  if (month)  q = q.eq('payment_month', parseInt(month))
-  if (year)   q = q.eq('payment_year',  parseInt(year))
-  if (status) q = q.eq('status', status)
-
-  const { data, error } = await q
-  const tbody = document.getElementById('paymentsBody')
-  if (error || !data || data.length === 0) { tbody.innerHTML=`<tr><td colspan="9" class="empty">${error?'خطأ في التحميل':'لا توجد دفعات'}</td></tr>`; return }
-
-  tbody.innerHTML = data.map(p => `
+  const month=document.getElementById('payFilterMonth')?.value
+  const year=document.getElementById('payFilterYear')?.value
+  const status=document.getElementById('payFilterStatus')?.value
+  let q=sb.from('payments').select('*, members(full_name)').eq('group_id',currentGroup.id).order('payment_year').order('payment_month')
+  if(month) q=q.eq('payment_month',parseInt(month))
+  if(year)  q=q.eq('payment_year',parseInt(year))
+  if(status) q=q.eq('status',status)
+  const {data,error}=await q
+  const tbody=document.getElementById('paymentsBody')
+  if(error||!data||data.length===0){tbody.innerHTML=`<tr><td colspan="9" class="empty">${error?'خطأ':'لا توجد دفعات'}</td></tr>`;return}
+  tbody.innerHTML=data.map(p=>`
     <tr>
-      <td>${p.members?.full_name||'—'}</td>
-      <td>${p.amount} درهم</td>
-      <td>${monthName(p.payment_month)}</td>
-      <td>${p.payment_year}</td>
+      <td>${p.members?.full_name||'—'}</td><td>${p.amount} درهم</td>
+      <td>${monthName(p.payment_month)}</td><td>${p.payment_year}</td>
       <td>${p.due_date||'—'}</td>
-      <td>${p.paid_at ? new Date(p.paid_at).toLocaleDateString('ar') : '—'}</td>
+      <td>${p.paid_at?new Date(p.paid_at).toLocaleDateString('ar'):'—'}</td>
       <td><span class="badge ${payStatusBadge(p.status)}">${payStatusLabel(p.status)}</span></td>
-      <td>${p.receipt_url ? `<a href="${p.receipt_url}" target="_blank" class="action-btn action-blue">عرض</a>` : '—'}</td>
+      <td>${p.receipt_url?`<a href="${p.receipt_url}" target="_blank" class="action-btn action-blue">عرض</a>`:'—'}</td>
       <td><button class="action-btn action-green" onclick="openPaymentModal('${p.member_id}')">تعديل</button></td>
     </tr>`).join('')
 }
 
-// ════ جدول الدفعات الشهري ════
+// ════ جدول الدفعات ════
 window.loadSchedule = async function() {
-  const { data: members, error } = await sb.from('members')
-    .select('*').eq('group_id', currentGroup.id).order('join_year').order('join_month')
-
-  const tbody = document.getElementById('scheduleBody')
-  if (error || !members || members.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="10" class="empty">لا يوجد أعضاء</td></tr>`; return
-  }
-
-  // جلب الدفعات لكل الأعضاء
-  const memberIds = members.map(m => m.id)
-  const { data: payments } = await sb.from('payments')
-    .select('*').in('member_id', memberIds)
-
-  // بناء map للدفعات
-  const payMap = {}
-  payments?.forEach(p => { payMap[p.member_id] = p })
-
-  tbody.innerHTML = members.map((m, i) => {
-    const pay = payMap[m.id]
-    const payStatus = pay?.status || 'pending'
-    const paidAt = pay?.paid_at ? new Date(pay.paid_at).toLocaleDateString('ar') : '—'
-    const receiptUrl = pay?.receipt_url
-
-    return `
-      <tr>
-        <td>${i + 1}</td>
-        <td><strong>${m.full_name}</strong></td>
-        <td>${m.phone || '—'}</td>
-        <td style="color:var(--primary-dark);font-weight:900">${monthName(m.join_month)}</td>
-        <td>${m.join_year}</td>
-        <td>${currentGroup.monthly_amount} درهم</td>
-        <td><span class="badge ${payStatusBadge(payStatus)}">${payStatusLabel(payStatus)}</span></td>
-        <td>${paidAt}</td>
-        <td>${receiptUrl ? `<a href="${receiptUrl}" target="_blank" class="action-btn action-blue">عرض</a>` : '—'}</td>
-        <td><button class="action-btn action-primary" onclick="openPaymentModal('${m.id}')">تسجيل دفعة</button></td>
-      </tr>`
+  const {data:members,error}=await sb.from('members').select('*').eq('group_id',currentGroup.id).order('join_year').order('join_month')
+  const tbody=document.getElementById('scheduleBody')
+  if(error||!members||members.length===0){tbody.innerHTML=`<tr><td colspan="10" class="empty">لا يوجد أعضاء</td></tr>`;return}
+  const {data:payments}=await sb.from('payments').select('*').in('member_id',members.map(m=>m.id))
+  const payMap={}
+  payments?.forEach(p=>{payMap[p.member_id]=p})
+  tbody.innerHTML=members.map((m,i)=>{
+    const pay=payMap[m.id]
+    return `<tr>
+      <td>${i+1}</td><td><strong>${m.full_name}</strong></td><td>${m.phone||'—'}</td>
+      <td style="color:var(--primary-dark);font-weight:900">${monthName(m.join_month)}</td>
+      <td>${m.join_year}</td><td>${currentGroup.monthly_amount} درهم</td>
+      <td><span class="badge ${payStatusBadge(pay?.status||'pending')}">${payStatusLabel(pay?.status||'pending')}</span></td>
+      <td>${pay?.paid_at?new Date(pay.paid_at).toLocaleDateString('ar'):'—'}</td>
+      <td>${pay?.receipt_url?`<a href="${pay.receipt_url}" target="_blank" class="action-btn action-blue">عرض</a>`:'—'}</td>
+      <td><button class="action-btn action-primary" onclick="openPaymentModal('${m.id}')">تسجيل دفعة</button></td>
+    </tr>`
   }).join('')
 }
 
 // ════ طلبات الانضمام ════
 window.loadRequests = async function() {
-  const { data, error } = await sb.from('join_requests')
-    .select('*').eq('group_id', currentGroup.id).order('created_at',{ascending:false})
-
-  const tbody = document.getElementById('requestsBody')
-  if (error || !data || data.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" class="empty">${error?'خطأ':'لا توجد طلبات'}</td></tr>`
-    updateReqBadge(0); return
-  }
-
-  // عدد المعلقة فقط
-  const pendingCount = data.filter(r => r.status === 'pending').length
-  updateReqBadge(pendingCount)
-
-  tbody.innerHTML = data.map(r => `
+  const {data,error}=await sb.from('join_requests').select('*').eq('group_id',currentGroup.id).order('created_at',{ascending:false})
+  const tbody=document.getElementById('requestsBody')
+  if(error||!data||data.length===0){tbody.innerHTML=`<tr><td colspan="7" class="empty">${error?'خطأ':'لا توجد طلبات'}</td></tr>`;updateReqBadge(0);return}
+  updateReqBadge(data.filter(r=>r.status==='pending').length)
+  tbody.innerHTML=data.map(r=>`
     <tr>
-      <td>${r.full_name}</td>
-      <td>${r.phone||'—'}</td>
-      <td>${monthName(r.requested_month)}</td>
-      <td>${r.requested_year}</td>
+      <td>${r.full_name}</td><td>${r.phone||'—'}</td>
+      <td>${monthName(r.requested_month)}</td><td>${r.requested_year}</td>
       <td>${new Date(r.created_at).toLocaleDateString('ar')}</td>
       <td><span class="badge ${reqStatusBadge(r.status)}">${reqStatusLabel(r.status)}</span></td>
-      <td>
-        ${r.status==='pending' ? `
-          <div class="td-actions">
-            <button class="action-btn action-green" onclick="approveRequest('${r.id}','${escQ(r.full_name)}','${r.phone||''}',${r.requested_month},${r.requested_year})">قبول</button>
-            <button class="action-btn action-red" onclick="rejectRequest('${r.id}')">رفض</button>
-          </div>` : '—'}
-      </td>
+      <td>${r.status==='pending'?`
+        <div class="td-actions">
+          <button class="action-btn action-green" onclick="approveRequest('${r.id}','${escQ(r.full_name)}','${r.phone||''}',${r.requested_month},${r.requested_year})">قبول</button>
+          <button class="action-btn action-red" onclick="rejectRequest('${r.id}')">رفض</button>
+        </div>`:'—'}</td>
     </tr>`).join('')
 }
 
-// ════ قبول الطلب — يضيف العضو مباشرة ════
-window.approveRequest = async function(id, name, phone, month, year) {
-  // التحقق من عدم تكرار الشهر
-  const { data: existing } = await sb.from('members')
-    .select('id').eq('group_id',currentGroup.id).eq('join_month',month).eq('join_year',year)
-
-  if (existing && existing.length > 0) {
-    alert('هذا الشهر محجوز مسبقاً. لا يمكن قبول الطلب.'); return
+// ════ قبول الطلب مع تحقق من الحد ════
+window.approveRequest = async function(id,name,phone,month,year) {
+  // تحقق من الحد
+  const current = await getMemberCount()
+  const max     = currentGroup.max_members || 4
+  if (current >= max) {
+    alert(`لا يمكن قبول الطلب. الجمعية وصلت للحد الأقصى (${max} أعضاء).`)
+    return
   }
+  // تحقق من الشهر
+  const {data:existing}=await sb.from('members').select('id').eq('group_id',currentGroup.id).eq('join_month',month).eq('join_year',year)
+  if(existing&&existing.length>0){alert('هذا الشهر محجوز مسبقاً.');return}
 
-  // تحديث حالة الطلب
-  const { error: reqErr } = await sb.from('join_requests').update({status:'approved'}).eq('id',id)
-  if (reqErr) { alert('خطأ: ' + reqErr.message); return }
+  await sb.from('join_requests').update({status:'approved'}).eq('id',id)
+  await sb.from('members').insert({group_id:currentGroup.id,full_name:name,phone,join_month:month,join_year:year,status:'active'})
 
-  // إضافة العضو
-  const { error: memErr } = await sb.from('members').insert({
-    group_id: currentGroup.id,
-    full_name: name, phone,
-    join_month: month, join_year: year,
-    status: 'active'
-  })
-
-  if (memErr) { alert('تم قبول الطلب لكن حدث خطأ في إضافة العضو: ' + memErr.message); }
-
-  // تحديث كل الصفحات
-  loadRequests()
-  loadMembers()
-  loadSchedule()
-  updateOverview()
+  loadRequests(); loadMembers(); loadSchedule(); updateOverview()
 }
 
 window.rejectRequest = async function(id) {
-  if (!confirm('هل تريد رفض هذا الطلب؟')) return
+  if(!confirm('هل تريد رفض هذا الطلب؟')) return
   await sb.from('join_requests').update({status:'rejected'}).eq('id',id)
-  loadRequests()
-  updateOverview()
+  loadRequests(); updateOverview()
 }
 
 // ════ رابط الانضمام ════
 function setJoinLink() {
-  const base  = window.location.origin + window.location.pathname.replace(/[^/]*$/, '')
-  const link  = `${base}join.html?token=${currentGroup.join_token}`
-  const input = document.getElementById('joinLinkInput')
-  if (input) input.value = link
+  const base=window.location.origin+window.location.pathname.replace(/[^/]*$/,'')
+  const link=`${base}join.html?token=${currentGroup.join_token}`
+  const input=document.getElementById('joinLinkInput')
+  if(input) input.value=link
 }
 
-window.copyJoinLink = function() {
-  const input = document.getElementById('joinLinkInput')
-  if (!input) return
-  navigator.clipboard.writeText(input.value).then(() => {
+window.copyJoinLink=function(){
+  const input=document.getElementById('joinLinkInput')
+  if(!input) return
+  navigator.clipboard.writeText(input.value).then(()=>{
     showMsg('linkMsg','تم نسخ الرابط','success')
     setTimeout(()=>clearMsg('linkMsg'),2000)
   })
 }
 
-window.shareWhatsApp = function() {
-  const link = document.getElementById('joinLinkInput')?.value
-  if (!link) return
-  window.open(`https://wa.me/?text=${encodeURIComponent('انضم إلى جمعيتي:\n'+link)}`, '_blank')
+window.shareWhatsApp=function(){
+  const link=document.getElementById('joinLinkInput')?.value
+  if(!link) return
+  window.open(`https://wa.me/?text=${encodeURIComponent('انضم إلى جمعيتي:\n'+link)}`,'_blank')
 }
 
 // ════ الباقة ════
 async function loadPlan() {
-  const { data } = await sb.from('subscriptions').select('*').eq('manager_id',currentUser.id).eq('status','active').single()
-  const el = document.getElementById('planInfo')
-  if (!data) { el.innerHTML='<div class="empty">لا يوجد اشتراك نشط</div>'; return }
-  el.innerHTML = `
-    <div style="display:grid;gap:10px">
-      ${[['الباقة',data.plan_name],['الحالة','نشط'],['البداية',data.start_date],['الانتهاء',data.end_date||'غير محدد'],['المبلغ',data.amount+' درهم / شهر']].map(([k,v])=>`
-      <div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px">
-        <span style="color:var(--muted);font-weight:700">${k}</span><strong>${v}</strong>
-      </div>`).join('')}
-    </div>`
+  const {data}=await sb.from('subscriptions').select('*').eq('manager_id',currentUser.id).eq('status','active').single()
+  const el=document.getElementById('planInfo')
+  if(!data){el.innerHTML='<div class="empty">لا يوجد اشتراك نشط</div>';return}
+  el.innerHTML=`<div style="display:grid;gap:10px">
+    ${[['الباقة',data.plan_name],['الحالة','نشط'],['البداية',data.start_date],['الانتهاء',data.end_date||'غير محدد'],['المبلغ',data.amount+' درهم']].map(([k,v])=>`
+    <div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px">
+      <span style="color:var(--muted);font-weight:700">${k}</span><strong>${v}</strong>
+    </div>`).join('')}
+  </div>`
 }
 
 // ════ الملاحظات ════
 async function loadNotes() {
-  const { data } = await sb.from('manager_notes').select('*').eq('manager_id',currentUser.id).order('created_at',{ascending:false})
-  const el = document.getElementById('notesList')
-  if (!data || data.length===0) { el.innerHTML='<div class="empty">لا توجد ملاحظات</div>'; return }
-  el.innerHTML = data.map(n=>`
-    <div style="padding:12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;font-size:13px">
-      <div style="color:var(--muted);margin-bottom:4px">${new Date(n.created_at).toLocaleDateString('ar')}</div>
-      <div>${n.note}</div>
-    </div>`).join('')
+  const {data}=await sb.from('manager_notes').select('*').eq('manager_id',currentUser.id).order('created_at',{ascending:false})
+  const el=document.getElementById('notesList')
+  if(!data||data.length===0){el.innerHTML='<div class="empty">لا توجد ملاحظات</div>';return}
+  el.innerHTML=data.map(n=>`<div style="padding:12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;font-size:13px">
+    <div style="color:var(--muted);margin-bottom:4px">${new Date(n.created_at).toLocaleDateString('ar')}</div>
+    <div>${n.note}</div></div>`).join('')
 }
 
-window.saveNote = async function() {
-  const note = document.getElementById('noteText').value.trim()
-  if (!note) { showMsg('noteMsg','اكتب ملاحظتك أولاً','error'); return }
-  const { error } = await sb.from('manager_notes').insert({manager_id:currentUser.id,group_id:currentGroup?.id,note})
-  if (error) { showMsg('noteMsg','خطأ: '+error.message,'error'); return }
-  document.getElementById('noteText').value = ''
+window.saveNote=async function(){
+  const note=document.getElementById('noteText').value.trim()
+  if(!note){showMsg('noteMsg','اكتب ملاحظتك أولاً','error');return}
+  const {error}=await sb.from('manager_notes').insert({manager_id:currentUser.id,group_id:currentGroup?.id,note})
+  if(error){showMsg('noteMsg','خطأ: '+error.message,'error');return}
+  document.getElementById('noteText').value=''
   showMsg('noteMsg','تم إرسال الملاحظة','success')
   loadNotes()
   setTimeout(()=>clearMsg('noteMsg'),2000)
 }
 
-window.doLogout = async function() { await sb.auth.signOut(); window.location.href='login.html' }
+window.doLogout=async function(){await sb.auth.signOut();window.location.href='login.html'}
 
-function showNoGroup() {
+function showNoGroup(){
   document.querySelector('.content').innerHTML=`
     <div style="text-align:center;padding:60px 20px">
       <div style="font-size:48px;margin-bottom:16px">🏛️</div>
@@ -1005,48 +896,45 @@ function showNoGroup() {
     </div>`
 }
 
-window.openModal  = id => document.getElementById(id).classList.add('show')
-window.closeModal = id => document.getElementById(id).classList.remove('show')
+window.openModal  = id=>document.getElementById(id).classList.add('show')
+window.closeModal = id=>document.getElementById(id).classList.remove('show')
+function showMsg(id,text,type){const el=document.getElementById(id);if(!el)return;el.textContent=text;el.className=`msg ${type} show`}
+function clearMsg(id){const el=document.getElementById(id);if(!el)return;el.className='msg';el.textContent=''}
+function monthName(m){return['','يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'][m]||m}
+function statusBadge(s){return{active:'badge-green',pending:'badge-amber',approved:'badge-blue',rejected:'badge-red'}[s]||'badge-primary'}
+function statusLabel(s){return{active:'نشط',pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s]||s}
+function payStatusBadge(s){return{paid:'badge-green',pending:'badge-amber',late:'badge-red'}[s]||'badge-primary'}
+function payStatusLabel(s){return{paid:'مدفوع',pending:'معلق',late:'متأخر'}[s]||s}
+function reqStatusBadge(s){return{pending:'badge-amber',approved:'badge-green',rejected:'badge-red'}[s]||'badge-primary'}
+function reqStatusLabel(s){return{pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s]||s}
+function escQ(str){return(str||'').replace(/'/g,"\\'")}
 
-function showMsg(id,text,type) { const el=document.getElementById(id); if(!el)return; el.textContent=text; el.className=`msg ${type} show` }
-function clearMsg(id) { const el=document.getElementById(id); if(!el)return; el.className='msg'; el.textContent='' }
-
-function monthName(m) { return ['','يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'][m]||m }
-function statusBadge(s) { return {active:'badge-green',pending:'badge-amber',approved:'badge-blue',rejected:'badge-red'}[s]||'badge-primary' }
-function statusLabel(s) { return {active:'نشط',pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s]||s }
-function payStatusBadge(s) { return {paid:'badge-green',pending:'badge-amber',late:'badge-red'}[s]||'badge-primary' }
-function payStatusLabel(s) { return {paid:'مدفوع',pending:'معلق',late:'متأخر'}[s]||s }
-function reqStatusBadge(s) { return {pending:'badge-amber',approved:'badge-green',rejected:'badge-red'}[s]||'badge-primary' }
-function reqStatusLabel(s) { return {pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s]||s }
-function escQ(str) { return (str||'').replace(/'/g,"\\'") }
-
-// ════ التنقل ════
-const pageTitles = {
-  'overview-page':  ['نظرة عامة','ملخص شامل لجمعيتك'],
-  'members-page':   ['الأعضاء','قائمة أعضاء الجمعية'],
-  'requests-page':  ['طلبات الانضمام','الطلبات الواردة عبر رابط الانضمام'],
-  'payments-page':  ['الدفعات','سجل دفعات الأعضاء'],
-  'schedule-page':  ['جدول الدفعات','جدول الدفعات الشهري لكل الأعضاء'],
-  'link-page':      ['رابط الانضمام','أرسل الرابط للأعضاء الجدد'],
-  'plan-page':      ['الباقة الحالية','تفاصيل اشتراكك'],
-  'notes-page':     ['ملاحظات للإدارة','تواصل مع المشرف العام'],
+const pageTitles={
+  'overview-page':['نظرة عامة','ملخص شامل لجمعيتك'],
+  'members-page':['الأعضاء','قائمة أعضاء الجمعية'],
+  'requests-page':['طلبات الانضمام','الطلبات الواردة عبر رابط الانضمام'],
+  'payments-page':['الدفعات','سجل دفعات الأعضاء'],
+  'schedule-page':['جدول الدفعات','جدول الدفعات الشهري'],
+  'link-page':['رابط الانضمام','أرسل الرابط للأعضاء الجدد'],
+  'plan-page':['الباقة الحالية','تفاصيل اشتراكك'],
+  'notes-page':['ملاحظات للإدارة','تواصل مع المشرف العام'],
 }
 
-window.switchPage = function(pageId) {
+window.switchPage=function(pageId){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'))
   document.querySelectorAll('.menu-btn').forEach(b=>b.classList.remove('active'))
   document.getElementById(pageId)?.classList.add('active')
   document.querySelector(`[data-page="${pageId}"]`)?.classList.add('active')
-  const [title,sub] = pageTitles[pageId]||['لوحة التحكم','']
-  document.getElementById('pageTitle').textContent    = title
-  document.getElementById('pageSubtitle').textContent = sub
+  const[title,sub]=pageTitles[pageId]||['لوحة التحكم','']
+  document.getElementById('pageTitle').textContent=title
+  document.getElementById('pageSubtitle').textContent=sub
   window.scrollTo({top:0,behavior:'smooth'})
 }
 
-document.querySelectorAll('.menu-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const target = btn.getAttribute('data-page')
-    if (target) switchPage(target)
+document.querySelectorAll('.menu-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const target=btn.getAttribute('data-page')
+    if(target) switchPage(target)
   })
 })
 
