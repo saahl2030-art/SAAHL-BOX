@@ -1,3 +1,785 @@
-<a class="menu-btn" href="guide.html">
-  <div class="menu-icon">📖</div><span>دليل الاستخدام</span>
-</a>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>دليل الاستخدام — صندوق ساهل</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --sky:#1f6fa5;--sky2:#46a8d8;--sky3:#eaf5fd;--sky4:#d3eaf7;
+      --ink:#0a1628;--ink2:#1a2e4a;
+      --green:#138a59;--green-s:#e8f8f1;
+      --amber:#b7791f;--amber-s:#fff5e4;
+      --red:#c53b3b;--red-s:#fdeeee;
+      --gold:#c9943a;
+      --muted:#6e8498;--line:#dfe8f1;
+      --white:#fff;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Tajawal',sans-serif;background:#f8fbff;color:var(--ink)}
+
+    /* NAV */
+    .nav{
+      background:#fff;border-bottom:1px solid var(--line);
+      padding:14px 28px;display:flex;align-items:center;justify-content:space-between;
+      position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(15,40,64,.06);
+    }
+    .nav-brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:900;color:var(--ink);text-decoration:none}
+    .nav-logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--sky),var(--sky2));display:grid;place-items:center;color:#fff;font-size:17px;font-weight:900}
+    .nav-back{padding:8px 16px;border-radius:10px;background:var(--sky3);color:var(--sky);font-size:13px;font-weight:800;text-decoration:none;border:none;cursor:pointer}
+
+    /* HERO */
+    .hero{
+      background:linear-gradient(135deg,var(--ink) 0%,var(--ink2) 100%);
+      padding:60px 28px;text-align:center;position:relative;overflow:hidden;
+    }
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 90% at 30% 50%,rgba(31,111,165,.2),transparent)}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);font-size:12px;font-weight:800;color:rgba(255,255,255,.9);margin-bottom:18px}
+    .hero h1{font-size:clamp(26px,4vw,42px);font-weight:900;color:#fff;margin-bottom:12px;line-height:1.2}
+    .hero h1 span{color:var(--gold)}
+    .hero p{font-size:15px;color:rgba(255,255,255,.7);line-height:1.9;max-width:560px;margin:0 auto}
+
+    /* PROGRESS NAV */
+    .progress-nav{
+      background:#fff;border-bottom:1px solid var(--line);
+      padding:0 28px;overflow-x:auto;white-space:nowrap;
+      display:flex;gap:0;
+    }
+    .prog-item{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:14px 18px;font-size:13px;font-weight:800;
+      color:var(--muted);text-decoration:none;cursor:pointer;
+      border-bottom:3px solid transparent;transition:.2s;white-space:nowrap;
+    }
+    .prog-item:hover{color:var(--sky);background:var(--sky3)}
+    .prog-item.active{color:var(--sky);border-bottom-color:var(--sky)}
+    .prog-num{
+      width:24px;height:24px;border-radius:50%;
+      background:var(--line);color:var(--muted);
+      display:grid;place-items:center;font-size:11px;font-weight:900;
+      flex:0 0 24px;
+    }
+    .prog-item.active .prog-num{background:var(--sky);color:#fff}
+
+    /* WRAP */
+    .wrap{max-width:860px;margin:0 auto;padding:40px 20px 80px}
+
+    /* STEP SECTION */
+    .step-section{
+      background:#fff;border:1px solid var(--line);border-radius:20px;
+      margin-bottom:24px;overflow:hidden;
+      box-shadow:0 4px 20px rgba(15,40,64,.06);
+    }
+
+    .step-header{
+      padding:24px 28px;display:flex;align-items:center;gap:16px;
+      border-bottom:1px solid var(--line);
+      background:linear-gradient(135deg,#f8fbff,#fff);
+    }
+
+    .step-badge{
+      width:52px;height:52px;border-radius:16px;
+      display:grid;place-items:center;font-size:24px;
+      flex:0 0 52px;
+    }
+
+    .step-header-text h2{font-size:20px;font-weight:900;color:var(--ink);margin-bottom:4px}
+    .step-header-text p{font-size:13px;color:var(--muted);line-height:1.7}
+
+    .step-num-badge{
+      margin-right:auto;
+      width:36px;height:36px;border-radius:50%;
+      display:grid;place-items:center;
+      font-size:14px;font-weight:900;color:#fff;
+      flex:0 0 36px;
+    }
+
+    .step-body{padding:28px}
+
+    /* SUB STEPS */
+    .sub-steps{display:grid;gap:16px}
+
+    .sub-step{
+      display:flex;gap:16px;align-items:flex-start;
+      padding:18px;border-radius:14px;border:1px solid var(--line);
+      background:#fafcff;transition:.2s;
+    }
+    .sub-step:hover{border-color:var(--sky4);background:var(--sky3)}
+
+    .sub-num{
+      width:32px;height:32px;border-radius:50%;
+      display:grid;place-items:center;
+      font-size:13px;font-weight:900;color:#fff;
+      flex:0 0 32px;margin-top:2px;
+    }
+
+    .sub-step-content h3{font-size:15px;font-weight:900;color:var(--ink);margin-bottom:6px}
+    .sub-step-content p{font-size:13px;color:var(--muted);line-height:1.8}
+
+    /* MOCKUP */
+    .mockup{
+      border-radius:14px;overflow:hidden;
+      border:1px solid var(--line);margin-top:16px;
+      box-shadow:0 4px 16px rgba(15,40,64,.08);
+    }
+    .mockup-bar{
+      background:#f0f4f8;padding:10px 14px;
+      display:flex;align-items:center;gap:8px;
+      border-bottom:1px solid var(--line);
+    }
+    .mockup-dot{width:10px;height:10px;border-radius:50%}
+    .mockup-url{
+      flex:1;background:#fff;border-radius:6px;
+      padding:5px 12px;font-size:11px;color:var(--muted);
+      border:1px solid var(--line);text-align:center;
+    }
+    .mockup-body{padding:20px;background:#fff}
+
+    /* UI COMPONENTS IN MOCKUP */
+    .ui-nav{
+      background:var(--ink);border-radius:10px;
+      padding:10px 14px;display:flex;align-items:center;
+      justify-content:space-between;margin-bottom:12px;
+    }
+    .ui-nav-brand{color:#fff;font-size:13px;font-weight:900;display:flex;align-items:center;gap:8px}
+    .ui-nav-logo{width:24px;height:24px;border-radius:7px;background:var(--sky);display:grid;place-items:center;font-size:11px;color:#fff;font-weight:900}
+    .ui-btn{padding:6px 12px;border-radius:8px;font-size:11px;font-weight:900;border:none;cursor:default}
+    .ui-btn-primary{background:var(--sky);color:#fff}
+    .ui-btn-ghost{background:rgba(255,255,255,.15);color:#fff}
+
+    .ui-form{display:grid;gap:10px}
+    .ui-field{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--muted);background:#f8fbff;font-family:'Tajawal',sans-serif}
+    .ui-label{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:4px;display:block}
+    .ui-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .ui-select{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12px;background:#f8fbff;font-family:'Tajawal',sans-serif;color:var(--ink)}
+
+    .ui-sidebar{
+      width:160px;background:var(--ink);border-radius:10px;padding:12px;
+      display:flex;flex-direction:column;gap:4px;
+    }
+    .ui-sidebar-item{
+      padding:8px 10px;border-radius:7px;font-size:11px;font-weight:800;
+      color:rgba(255,255,255,.7);display:flex;align-items:center;gap:6px;
+    }
+    .ui-sidebar-item.active{background:rgba(255,255,255,.15);color:#fff}
+    .ui-sidebar-dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.6}
+
+    .ui-dashboard{display:flex;gap:12px}
+    .ui-main{flex:1}
+
+    .ui-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+    .ui-stat{background:#f8fbff;border:1px solid var(--line);border-radius:8px;padding:10px;text-align:center}
+    .ui-stat strong{display:block;font-size:18px;font-weight:900;color:var(--sky)}
+    .ui-stat span{font-size:10px;color:var(--muted);font-weight:700}
+
+    .ui-card{background:#f8fbff;border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:8px}
+    .ui-card-title{font-size:12px;font-weight:900;color:var(--ink);margin-bottom:8px}
+
+    .ui-table-row{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:8px;border-bottom:1px solid var(--line);font-size:11px;
+    }
+    .ui-table-row:last-child{border-bottom:none}
+    .ui-badge{padding:3px 8px;border-radius:999px;font-size:10px;font-weight:900}
+    .ui-badge-green{background:var(--green-s);color:var(--green)}
+    .ui-badge-amber{background:var(--amber-s);color:var(--amber)}
+    .ui-badge-red{background:var(--red-s);color:var(--red)}
+    .ui-badge-blue{background:var(--sky3);color:var(--sky)}
+
+    .ui-action-btns{display:flex;gap:6px}
+    .ui-action{padding:4px 8px;border-radius:6px;font-size:10px;font-weight:900;border:none;cursor:default}
+    .ui-action-green{background:var(--green-s);color:var(--green)}
+    .ui-action-red{background:var(--red-s);color:var(--red)}
+
+    .ui-link-box{
+      background:#f8fbff;border:1px solid var(--line);border-radius:8px;
+      padding:10px 12px;display:flex;align-items:center;gap:8px;
+    }
+    .ui-link-text{flex:1;font-size:10px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+    /* CAPACITY BAR */
+    .cap-bar{height:8px;background:#e5eef5;border-radius:999px;overflow:hidden;margin-top:6px}
+    .cap-fill{height:100%;border-radius:999px}
+
+    /* TIP BOX */
+    .tip{
+      display:flex;gap:12px;align-items:flex-start;
+      padding:14px 16px;border-radius:12px;margin-top:16px;
+    }
+    .tip-icon{font-size:18px;flex:0 0 auto;margin-top:2px}
+    .tip p{font-size:13px;line-height:1.8;font-weight:700}
+    .tip.info{background:var(--sky3);border:1px solid var(--sky4)}
+    .tip.info p{color:var(--sky)}
+    .tip.warn{background:var(--amber-s);border:1px solid #f0d090}
+    .tip.warn p{color:var(--amber)}
+    .tip.success{background:var(--green-s);border:1px solid #b7e4cf}
+    .tip.success p{color:var(--green)}
+
+    /* JOIN PAGE MOCKUP */
+    .ui-join-hero{
+      background:linear-gradient(135deg,var(--ink),var(--sky));
+      border-radius:10px;padding:16px;text-align:center;margin-bottom:10px;
+    }
+    .ui-join-hero h3{color:#fff;font-size:13px;font-weight:900;margin-bottom:4px}
+    .ui-join-hero p{color:rgba(255,255,255,.7);font-size:10px}
+
+    .ui-months{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+    .ui-month{
+      border:1px solid var(--line);border-radius:8px;padding:8px;
+      text-align:center;font-size:10px;font-weight:800;
+    }
+    .ui-month.taken{background:#f3f6fa;color:#b0bec5}
+    .ui-month.available{background:#fff;color:var(--ink);cursor:default}
+    .ui-month.selected{background:var(--sky);color:#fff}
+
+    /* SUMMARY */
+    .summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
+    .summary-card{
+      background:linear-gradient(135deg,#f8fbff,#eaf5fd);
+      border:1px solid var(--line);border-radius:12px;padding:16px;
+      text-align:center;
+    }
+    .summary-card .num{font-size:32px;font-weight:900;color:var(--sky);margin-bottom:4px}
+    .summary-card .label{font-size:12px;color:var(--muted);font-weight:700}
+
+    /* FOOTER */
+    .guide-footer{
+      background:var(--ink);padding:32px 28px;text-align:center;
+    }
+    .guide-footer h3{font-size:20px;font-weight:900;color:#fff;margin-bottom:8px}
+    .guide-footer p{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:20px}
+    .guide-footer a{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:12px 24px;border-radius:12px;
+      background:var(--sky);color:#fff;
+      font-family:'Tajawal',sans-serif;font-size:14px;font-weight:900;
+      text-decoration:none;
+    }
+
+    @media(max-width:640px){
+      .ui-dashboard{flex-direction:column}
+      .ui-sidebar{width:100%;flex-direction:row;flex-wrap:wrap}
+      .ui-stat-row{grid-template-columns:repeat(2,1fr)}
+      .summary-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="nav-brand" href="index.html">
+    <div class="nav-logo">س</div>
+    صندوق ساهل
+  </a>
+  <a class="nav-back" href="dashboard.html">← العودة للوحة التحكم</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">📖 دليل الاستخدام الكامل</div>
+  <h1>كيف تستخدم <span>صندوق ساهل</span>؟</h1>
+  <p>دليل مصور خطوة بخطوة لمدير الجمعية — من إنشاء الحساب إلى إدارة الأعضاء والدفعات</p>
+</div>
+
+<!-- PROGRESS NAV -->
+<div class="progress-nav">
+  <a class="prog-item active" href="#step1"><span class="prog-num">1</span>إنشاء الحساب</a>
+  <a class="prog-item" href="#step2"><span class="prog-num">2</span>لوحة التحكم</a>
+  <a class="prog-item" href="#step3"><span class="prog-num">3</span>رابط الانضمام</a>
+  <a class="prog-item" href="#step4"><span class="prog-num">4</span>قبول الطلبات</a>
+  <a class="prog-item" href="#step5"><span class="prog-num">5</span>الدفعات</a>
+  <a class="prog-item" href="#step6"><span class="prog-num">6</span>التقارير</a>
+</div>
+
+<div class="wrap">
+
+  <!-- ═══ الخطوة 1: إنشاء الحساب ═══ -->
+  <div class="step-section" id="step1">
+    <div class="step-header">
+      <div class="step-badge" style="background:#eaf5fd">🚀</div>
+      <div class="step-header-text">
+        <h2>إنشاء حساب مدير الجمعية</h2>
+        <p>سجّل بياناتك وأنشئ جمعيتك في دقيقتين</p>
+      </div>
+      <div class="step-num-badge" style="background:var(--sky)">1</div>
+    </div>
+    <div class="step-body">
+      <div class="sub-steps">
+
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--sky)">1</div>
+          <div class="sub-step-content">
+            <h3>افتح صفحة إنشاء الحساب</h3>
+            <p>اذهب إلى <strong>auth.html</strong> أو اضغط "ابدأ مجاناً" من الصفحة الرئيسية</p>
+            <div class="mockup">
+              <div class="mockup-bar">
+                <div class="mockup-dot" style="background:#ff5f57"></div>
+                <div class="mockup-dot" style="background:#febc2e"></div>
+                <div class="mockup-dot" style="background:#28c840"></div>
+                <div class="mockup-url">saahl2030-art.github.io/SAAHL-BOX/auth.html</div>
+              </div>
+              <div class="mockup-body">
+                <div class="ui-nav">
+                  <div class="ui-nav-brand"><div class="ui-nav-logo">س</div> صندوق ساهل</div>
+                  <div class="ui-btn ui-btn-ghost">تسجيل الدخول</div>
+                </div>
+                <div style="background:#f8fbff;border:1px solid var(--line);border-radius:10px;padding:16px">
+                  <div style="font-size:13px;font-weight:900;color:var(--ink);margin-bottom:12px">بيانات الحساب والجمعية</div>
+                  <div class="ui-form">
+                    <div class="ui-row">
+                      <div><div class="ui-label">الاسم الكامل *</div><div class="ui-field">محمد أحمد</div></div>
+                      <div><div class="ui-label">رقم الهاتف</div><div class="ui-field">0501234567</div></div>
+                    </div>
+                    <div class="ui-row">
+                      <div><div class="ui-label">البريد الإلكتروني *</div><div class="ui-field">manager@email.com</div></div>
+                      <div><div class="ui-label">كلمة المرور *</div><div class="ui-field">••••••••</div></div>
+                    </div>
+                    <div><div class="ui-label">اسم الجمعية *</div><div class="ui-field">جمعية الأصدقاء</div></div>
+                    <div><div class="ui-label">المبلغ الشهري (درهم) *</div><div class="ui-field">500</div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--sky)">2</div>
+          <div class="sub-step-content">
+            <h3>اختر الباقة المناسبة</h3>
+            <p>اختر عدد الأعضاء الذي تحتاجه — يمكن الترقية لاحقاً</p>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px">
+              <div style="border:1.5px solid var(--line);border-radius:10px;padding:12px;text-align:center">
+                <div style="font-size:13px;font-weight:900">Free</div>
+                <div style="font-size:10px;color:var(--muted);margin:4px 0">4 أعضاء</div>
+                <div style="font-size:16px;font-weight:900;color:var(--sky)">0</div>
+                <div style="font-size:10px;color:var(--muted)">درهم</div>
+              </div>
+              <div style="border:1.5px solid var(--line);border-radius:10px;padding:12px;text-align:center">
+                <div style="font-size:13px;font-weight:900">Basic</div>
+                <div style="font-size:10px;color:var(--muted);margin:4px 0">10 أعضاء</div>
+                <div style="font-size:16px;font-weight:900;color:var(--sky)">39</div>
+                <div style="font-size:10px;color:var(--muted)">درهم</div>
+              </div>
+              <div style="border:2px solid var(--sky);border-radius:10px;padding:12px;text-align:center;background:var(--sky3)">
+                <div style="font-size:13px;font-weight:900;color:var(--sky)">Pro ⭐</div>
+                <div style="font-size:10px;color:var(--muted);margin:4px 0">15 عضو</div>
+                <div style="font-size:16px;font-weight:900;color:var(--sky)">69</div>
+                <div style="font-size:10px;color:var(--muted)">درهم</div>
+              </div>
+              <div style="border:1.5px solid var(--line);border-radius:10px;padding:12px;text-align:center">
+                <div style="font-size:13px;font-weight:900">Business</div>
+                <div style="font-size:10px;color:var(--muted);margin:4px 0">25 عضو</div>
+                <div style="font-size:16px;font-weight:900;color:var(--sky)">99</div>
+                <div style="font-size:10px;color:var(--muted)">درهم</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--green)">3</div>
+          <div class="sub-step-content">
+            <h3>اضغط "إنشاء الحساب"</h3>
+            <p>سيتم إنشاء حسابك وجمعيتك تلقائياً وستُنقل للوحة التحكم مباشرة</p>
+            <div class="tip success"><div class="tip-icon">✅</div><p>بعد الضغط ستجد نفسك في لوحة التحكم الخاصة بك وجمعيتك جاهزة</p></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ الخطوة 2: لوحة التحكم ═══ -->
+  <div class="step-section" id="step2">
+    <div class="step-header">
+      <div class="step-badge" style="background:#e8f8f1">📋</div>
+      <div class="step-header-text">
+        <h2>فهم لوحة التحكم</h2>
+        <p>كل أقسام لوحة المدير وما تستخدمه لكل قسم</p>
+      </div>
+      <div class="step-num-badge" style="background:var(--green)">2</div>
+    </div>
+    <div class="step-body">
+
+      <div class="mockup">
+        <div class="mockup-bar">
+          <div class="mockup-dot" style="background:#ff5f57"></div>
+          <div class="mockup-dot" style="background:#febc2e"></div>
+          <div class="mockup-dot" style="background:#28c840"></div>
+          <div class="mockup-url">dashboard.html</div>
+        </div>
+        <div class="mockup-body">
+          <div class="ui-dashboard">
+            <!-- Sidebar -->
+            <div class="ui-sidebar">
+              <div style="color:rgba(255,255,255,.5);font-size:9px;font-weight:700;padding:4px 10px;margin-bottom:4px">صندوق ساهل</div>
+              <div class="ui-sidebar-item active"><div class="ui-sidebar-dot"></div>نظرة عامة</div>
+              <div class="ui-sidebar-item"><div class="ui-sidebar-dot"></div>الأعضاء</div>
+              <div class="ui-sidebar-item"><div class="ui-sidebar-dot"></div>طلبات الانضمام</div>
+              <div class="ui-sidebar-item"><div class="ui-sidebar-dot"></div>الدفعات</div>
+              <div class="ui-sidebar-item"><div class="ui-sidebar-dot"></div>جدول الدفعات</div>
+              <div class="ui-sidebar-item"><div class="ui-sidebar-dot"></div>رابط الانضمام</div>
+              <div class="ui-sidebar-item"><div class="ui-sidebar-dot"></div>التقارير PDF</div>
+            </div>
+            <!-- Main -->
+            <div class="ui-main">
+              <div class="ui-stat-row">
+                <div class="ui-stat"><strong>7</strong><span>الأعضاء</span></div>
+                <div class="ui-stat"><strong style="color:var(--green)">5</strong><span>مدفوع</span></div>
+                <div class="ui-stat"><strong style="color:var(--red)">2</strong><span>متأخر</span></div>
+              </div>
+              <div class="ui-card">
+                <div class="ui-card-title">معلومات الجمعية</div>
+                <div class="ui-table-row"><span style="color:var(--muted)">الاسم</span><span>جمعية الأصدقاء</span></div>
+                <div class="ui-table-row"><span style="color:var(--muted)">المبلغ الشهري</span><span>500 درهم</span></div>
+                <div style="margin-top:8px">
+                  <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:4px"><span>سعة الأعضاء</span><span>7 من 10</span></div>
+                  <div class="cap-bar"><div class="cap-fill" style="width:70%;background:var(--sky)"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-steps" style="margin-top:20px">
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--sky)">📋</div>
+          <div class="sub-step-content">
+            <h3>نظرة عامة</h3>
+            <p>الصفحة الرئيسية — تظهر إحصائيات الجمعية، عدد الأعضاء، الدفعات المسددة والمتأخرة، وآخر طلبات الانضمام</p>
+          </div>
+        </div>
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--green)">👥</div>
+          <div class="sub-step-content">
+            <h3>الأعضاء</h3>
+            <p>قائمة كاملة بجميع أعضاء الجمعية — يمكنك إضافة عضو يدوياً، تعديل بياناته، أو حذفه</p>
+          </div>
+        </div>
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--amber)">📨</div>
+          <div class="sub-step-content">
+            <h3>طلبات الانضمام</h3>
+            <p>طلبات الأعضاء الجدد الواردة عبر رابط الانضمام — اقبل أو ارفض كل طلب</p>
+            <div class="tip warn"><div class="tip-icon">💡</div><p>عندما يصل طلب جديد سيظهر رقم أحمر صغير بجانب "طلبات الانضمام" في القائمة</p></div>
+          </div>
+        </div>
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--sky)">💳</div>
+          <div class="sub-step-content">
+            <h3>الدفعات</h3>
+            <p>سجل كامل لدفعات الأعضاء — تستطيع تصفية حسب الشهر والحالة</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ الخطوة 3: رابط الانضمام ═══ -->
+  <div class="step-section" id="step3">
+    <div class="step-header">
+      <div class="step-badge" style="background:#fff8e8">🔗</div>
+      <div class="step-header-text">
+        <h2>إرسال رابط الانضمام للأعضاء</h2>
+        <p>العضو يملأ بياناته ويختار شهره بنفسه</p>
+      </div>
+      <div class="step-num-badge" style="background:var(--amber)">3</div>
+    </div>
+    <div class="step-body">
+      <div class="sub-steps">
+
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--sky)">1</div>
+          <div class="sub-step-content">
+            <h3>اذهب لقسم "رابط الانضمام"</h3>
+            <p>اضغط على "رابط الانضمام" في القائمة الجانبية</p>
+            <div class="mockup" style="margin-top:12px">
+              <div class="mockup-bar"><div class="mockup-dot" style="background:#ff5f57"></div><div class="mockup-dot" style="background:#febc2e"></div><div class="mockup-dot" style="background:#28c840"></div><div class="mockup-url">dashboard.html → رابط الانضمام</div></div>
+              <div class="mockup-body">
+                <div style="font-size:12px;font-weight:900;color:var(--ink);margin-bottom:10px">رابط الانضمام الخاص بجمعيتك</div>
+                <div class="ui-link-box">
+                  <div class="ui-link-text">https://saahl2030-art.github.io/SAAHL-BOX/join.html?token=xxxx-xxxx</div>
+                  <div class="ui-btn ui-btn-primary" style="font-size:11px;padding:5px 10px">نسخ</div>
+                  <div style="padding:5px 10px;border-radius:8px;background:#e8f8f1;color:var(--green);font-size:11px;font-weight:900">واتساب</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--sky)">2</div>
+          <div class="sub-step-content">
+            <h3>انسخ الرابط وأرسله للأعضاء</h3>
+            <p>اضغط "نسخ" ثم أرسله عبر واتساب أو أي وسيلة. أو اضغط "واتساب" لفتح رسالة جاهزة مباشرة</p>
+          </div>
+        </div>
+
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--green)">3</div>
+          <div class="sub-step-content">
+            <h3>العضو يملأ بياناته</h3>
+            <p>عند فتح الرابط يرى العضو صفحة الانضمام ويختار شهره المتاح</p>
+            <div class="mockup" style="margin-top:12px">
+              <div class="mockup-bar"><div class="mockup-dot" style="background:#ff5f57"></div><div class="mockup-dot" style="background:#febc2e"></div><div class="mockup-dot" style="background:#28c840"></div><div class="mockup-url">join.html?token=xxxx</div></div>
+              <div class="mockup-body">
+                <div class="ui-join-hero">
+                  <h3>الانضمام إلى الجمعية</h3>
+                  <p>اختر شهرك وأكمل بياناتك</p>
+                </div>
+                <div style="font-size:11px;font-weight:900;color:var(--ink);margin-bottom:6px">اختر شهر الاستلام</div>
+                <div class="ui-months">
+                  <div class="ui-month taken">يناير<br><span style="font-size:9px">محجوز</span></div>
+                  <div class="ui-month available">فبراير<br><span style="font-size:9px">متاح</span></div>
+                  <div class="ui-month selected">مارس<br><span style="font-size:9px">✓ مختار</span></div>
+                  <div class="ui-month available">أبريل<br><span style="font-size:9px">متاح</span></div>
+                  <div class="ui-month taken">مايو<br><span style="font-size:9px">محجوز</span></div>
+                  <div class="ui-month available">يونيو<br><span style="font-size:9px">متاح</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tip info"><div class="tip-icon">ℹ️</div><p>الأشهر الرمادية محجوزة لأعضاء آخرين — العضو يختار فقط من الأشهر المتاحة. عند امتلاء الجمعية يُغلق الرابط تلقائياً.</p></div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ الخطوة 4: قبول الطلبات ═══ -->
+  <div class="step-section" id="step4">
+    <div class="step-header">
+      <div class="step-badge" style="background:#e8f8f1">✅</div>
+      <div class="step-header-text">
+        <h2>قبول أو رفض طلبات الانضمام</h2>
+        <p>مراجعة الطلبات الواردة من الأعضاء الجدد</p>
+      </div>
+      <div class="step-num-badge" style="background:var(--green)">4</div>
+    </div>
+    <div class="step-body">
+      <div class="sub-steps">
+
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--sky)">1</div>
+          <div class="sub-step-content">
+            <h3>ستظهر نقطة حمراء عند وصول طلب</h3>
+            <p>في القائمة الجانبية بجانب "طلبات الانضمام" سيظهر رقم يدل على عدد الطلبات المعلقة</p>
+            <div style="display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:var(--ink);margin-top:10px">
+              <div style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4)"></div>
+              <span style="color:#fff;font-size:12px;font-weight:800">طلبات الانضمام</span>
+              <div style="width:20px;height:20px;border-radius:50%;background:var(--red);display:grid;place-items:center;font-size:10px;font-weight:900;color:#fff">3</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--sky)">2</div>
+          <div class="sub-step-content">
+            <h3>افتح صفحة طلبات الانضمام</h3>
+            <p>ستجد جدولاً بجميع الطلبات — اسم العضو، هاتفه، الشهر المطلوب، وتاريخ الطلب</p>
+            <div class="mockup" style="margin-top:12px">
+              <div class="mockup-bar"><div class="mockup-dot" style="background:#ff5f57"></div><div class="mockup-dot" style="background:#febc2e"></div><div class="mockup-dot" style="background:#28c840"></div><div class="mockup-url">طلبات الانضمام</div></div>
+              <div class="mockup-body">
+                <div class="ui-table-row" style="background:#f7fbff;font-weight:900;font-size:11px;color:var(--muted)">
+                  <span>الاسم</span><span>الهاتف</span><span>الشهر</span><span>الحالة</span><span>الإجراء</span>
+                </div>
+                <div class="ui-table-row">
+                  <span style="font-size:11px;font-weight:900">راشد علي</span>
+                  <span style="font-size:11px">0501234567</span>
+                  <span style="font-size:11px">أبريل 2026</span>
+                  <span><div class="ui-badge ui-badge-amber">معلق</div></span>
+                  <span><div class="ui-action-btns"><div class="ui-action ui-action-green">قبول</div><div class="ui-action ui-action-red">رفض</div></div></span>
+                </div>
+                <div class="ui-table-row">
+                  <span style="font-size:11px;font-weight:900">فاطمة محمد</span>
+                  <span style="font-size:11px">0557891234</span>
+                  <span style="font-size:11px">يونيو 2026</span>
+                  <span><div class="ui-badge ui-badge-amber">معلق</div></span>
+                  <span><div class="ui-action-btns"><div class="ui-action ui-action-green">قبول</div><div class="ui-action ui-action-red">رفض</div></div></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--green)">3</div>
+          <div class="sub-step-content">
+            <h3>اضغط "قبول" أو "رفض"</h3>
+            <p>عند الضغط على <strong>"قبول"</strong> — يُضاف العضو تلقائياً لقائمة الأعضاء وينتقل من الطلبات للأعضاء فوراً</p>
+            <div class="tip success"><div class="tip-icon">✅</div><p>العضو المقبول يظهر فوراً في قائمة الأعضاء بنفس الشهر الذي اختاره</p></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ الخطوة 5: الدفعات ═══ -->
+  <div class="step-section" id="step5">
+    <div class="step-header">
+      <div class="step-badge" style="background:#edf3ff">💳</div>
+      <div class="step-header-text">
+        <h2>تسجيل دفعات الأعضاء</h2>
+        <p>تتبع من دفع ومن لم يدفع بسهولة</p>
+      </div>
+      <div class="step-num-badge" style="background:#2563eb">5</div>
+    </div>
+    <div class="step-body">
+      <div class="sub-steps">
+
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--sky)">1</div>
+          <div class="sub-step-content">
+            <h3>من قائمة الأعضاء اضغط "دفعة"</h3>
+            <p>بجانب كل عضو زر "دفعة" — اضغطه لتسجيل دفعته الشهرية</p>
+          </div>
+        </div>
+
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--sky)">2</div>
+          <div class="sub-step-content">
+            <h3>أكمل تفاصيل الدفعة</h3>
+            <p>حدد شهر الدفع، المبلغ، الحالة (مدفوع / معلق / متأخر)، وأرفع الإيصال إن وجد</p>
+            <div class="mockup" style="margin-top:12px">
+              <div class="mockup-bar"><div class="mockup-dot" style="background:#ff5f57"></div><div class="mockup-dot" style="background:#febc2e"></div><div class="mockup-dot" style="background:#28c840"></div><div class="mockup-url">نافذة تسجيل دفعة</div></div>
+              <div class="mockup-body">
+                <div style="font-size:13px;font-weight:900;color:var(--ink);margin-bottom:12px">تسجيل دفعة</div>
+                <div class="ui-row" style="margin-bottom:8px">
+                  <div><div class="ui-label">شهر الدفع</div><div class="ui-select">أبريل 2026</div></div>
+                  <div><div class="ui-label">المبلغ (درهم)</div><div class="ui-field">500</div></div>
+                </div>
+                <div class="ui-row">
+                  <div><div class="ui-label">الحالة</div>
+                    <div style="display:flex;gap:6px;margin-top:4px">
+                      <div style="padding:6px 10px;border-radius:7px;background:var(--green-s);color:var(--green);font-size:11px;font-weight:900;border:2px solid var(--green)">مدفوع</div>
+                      <div style="padding:6px 10px;border-radius:7px;background:#f3f4f6;color:var(--muted);font-size:11px;font-weight:800">معلق</div>
+                      <div style="padding:6px 10px;border-radius:7px;background:#f3f4f6;color:var(--muted);font-size:11px;font-weight:800">متأخر</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:10px;display:flex;justify-content:flex-end">
+                  <div class="ui-btn ui-btn-primary">حفظ الدفعة</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--green)">3</div>
+          <div class="sub-step-content">
+            <h3>راجع جدول الدفعات الشهري</h3>
+            <p>اذهب لقسم "جدول الدفعات" لرؤية كل الأعضاء مرتبين بالأشهر مع حالة دفع كل واحد دفعة واحدة</p>
+            <div class="tip info"><div class="tip-icon">💡</div><p>جدول الدفعات يعطيك صورة كاملة — من دفع ومن لم يدفع بنظرة واحدة</p></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ الخطوة 6: التقارير ═══ -->
+  <div class="step-section" id="step6">
+    <div class="step-header">
+      <div class="step-badge" style="background:#fff8e8">📊</div>
+      <div class="step-header-text">
+        <h2>إنشاء وطباعة التقارير</h2>
+        <p>تقارير PDF احترافية بضغطة واحدة</p>
+      </div>
+      <div class="step-num-badge" style="background:var(--gold)">6</div>
+    </div>
+    <div class="step-body">
+      <div class="sub-steps">
+
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--sky)">1</div>
+          <div class="sub-step-content">
+            <h3>اضغط "التقارير PDF" من القائمة</h3>
+            <p>ستفتح صفحة التقارير — اختر نوع التقرير الذي تريده</p>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px">
+              <div style="border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center;background:#f8fbff">
+                <div style="font-size:22px;margin-bottom:6px">👥</div>
+                <div style="font-size:11px;font-weight:900;color:var(--ink)">كشف الأعضاء</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:4px">أسماء وأشهر وحالات</div>
+              </div>
+              <div style="border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center;background:#f8fbff">
+                <div style="font-size:22px;margin-bottom:6px">💳</div>
+                <div style="font-size:11px;font-weight:900;color:var(--ink)">تقرير الدفعات</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:4px">من دفع ومن لم يدفع</div>
+              </div>
+              <div style="border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center;background:#f8fbff">
+                <div style="font-size:22px;margin-bottom:6px">📅</div>
+                <div style="font-size:11px;font-weight:900;color:var(--ink)">جدول الدورة</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:4px">الجدول الكامل للجمعية</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--sky)">2</div>
+          <div class="sub-step-content">
+            <h3>اضغط "عرض التقرير"</h3>
+            <p>سيظهر التقرير كاملاً في الصفحة باللغة العربية</p>
+          </div>
+        </div>
+
+        <div class="sub-step">
+          <div class="sub-num" style="background:var(--green)">3</div>
+          <div class="sub-step-content">
+            <h3>اضغط "طباعة / حفظ PDF"</h3>
+            <p>ستفتح نافذة الطباعة — اختر <strong>"حفظ كـ PDF"</strong> من قائمة الطابعة لحفظ التقرير</p>
+            <div class="tip warn"><div class="tip-icon">💡</div><p>في الجوال: اضغط "طباعة" ثم اختر "حفظ كـ PDF" أو "Print to PDF" من الخيارات</p></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div style="background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:0 4px 20px rgba(15,40,64,.06)">
+    <h2 style="font-size:20px;font-weight:900;color:var(--ink);margin-bottom:6px;text-align:center">ملخص سريع</h2>
+    <p style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:20px">كل ما تحتاجه لإدارة جمعيتك</p>
+    <div class="summary-grid">
+      <div class="summary-card"><div class="num">1</div><div class="label">أنشئ حسابك من auth.html</div></div>
+      <div class="summary-card"><div class="num">2</div><div class="label">أرسل رابط الانضمام للأعضاء</div></div>
+      <div class="summary-card"><div class="num">3</div><div class="label">اقبل الطلبات من لوحة التحكم</div></div>
+      <div class="summary-card"><div class="num">4</div><div class="label">سجّل الدفعات وأنشئ التقارير</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="guide-footer">
+  <h3>جاهز للبدء؟</h3>
+  <p>افتح لوحة التحكم وابدأ إدارة جمعيتك الآن</p>
+  <a href="dashboard.html">انتقل للوحة التحكم ←</a>
+</div>
+
+<script>
+  // تحديث الـ progress nav عند التمرير
+  const sections = ['step1','step2','step3','step4','step5','step6']
+  const navItems = document.querySelectorAll('.prog-item')
+
+  window.addEventListener('scroll', () => {
+    let current = ''
+    sections.forEach(id => {
+      const el = document.getElementById(id)
+      if (el && window.scrollY >= el.offsetTop - 120) current = id
+    })
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + current)
+    })
+  })
+</script>
+</body>
+</html>
