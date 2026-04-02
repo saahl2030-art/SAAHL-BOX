@@ -215,6 +215,10 @@
                 عدد الأعضاء محدود حسب الباقة المختارة. لا يمكن إضافة أعضاء جدد بعد الوصول للحد الأقصى.
               </div>
 
+              <div id="paymentNotice" style="display:none;margin-top:14px;padding:12px 14px;border-radius:14px;background:#fff5e4;border:1px solid #f5c842;color:#b7791f;font-size:13px;font-weight:800">
+                💳 ستُحوَّل لصفحة الدفع عبر Stripe بعد إنشاء الحساب
+              </div>
+
               <div class="actions">
                 <button type="submit" class="btn btn-primary" id="submitBtn">إنشاء الحساب</button>
                 <a href="login.html" class="btn btn-soft">لدي حساب بالفعل</a>
@@ -255,8 +259,8 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-    // حدود الأعضاء حسب الباقة
     const PLAN_LIMITS = { Free: 4, Basic: 10, Pro: 15, Business: 25 }
+    const PLAN_GROUPS = { Free: 1, Basic: 3, Pro: 6, Business: 10 }
     const PLAN_PRICES = { Free: 0, Basic: 39, Pro: 69, Business: 99 }
 
     const signupForm = document.getElementById('signupForm')
@@ -264,7 +268,16 @@
     const msgBox     = document.getElementById('msgBox')
     const overlay    = document.getElementById('overlay')
 
-    // إذا كان مسجلاً دخل مسبقاً
+    // إظهار تنبيه الدفع عند اختيار باقة مدفوعة
+    document.querySelectorAll('input[name="plan"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        const plan = radio.value
+        const notice = document.getElementById('paymentNotice')
+        notice.style.display = plan === 'Free' ? 'none' : 'block'
+        submitBtn.textContent = plan === 'Free' ? 'إنشاء الحساب' : 'إنشاء الحساب والانتقال للدفع'
+      })
+    })
+
     ;(async () => {
       const { data: { session } } = await supabase.auth.getSession()
       if (session) await redirectByRole(session.user.id)
@@ -321,9 +334,10 @@
         const userId = signInData?.user?.id
         if (!userId) throw new Error('تعذر الحصول على معرف المستخدم.')
 
-        // 3) إنشاء الجمعية مع max_members حسب الباقة
+        // 3) إنشاء الجمعية
         const now = new Date()
         const maxMembers = PLAN_LIMITS[plan] ?? 4
+        const maxGroups  = PLAN_GROUPS[plan] ?? 1
 
         const { error: groupError } = await supabase.from('groups').insert({
           manager_id:     userId,
@@ -335,7 +349,6 @@
           status:         'active',
           max_members:    maxMembers
         })
-
         if (groupError) throw groupError
 
         // 4) إنشاء الاشتراك
@@ -345,22 +358,51 @@
         const { error: subError } = await supabase.from('subscriptions').insert({
           manager_id: userId,
           plan_name:  plan,
-          status:     'active',
+          status:     plan === 'Free' ? 'active' : 'pending_payment',
           start_date: now.toISOString().split('T')[0],
           end_date:   endDate.toISOString().split('T')[0],
           amount:     PLAN_PRICES[plan] ?? 0
         })
-
         if (subError) throw subError
 
-        showMsg('تم إنشاء الحساب والجمعية بنجاح. جاري التحويل...', 'success')
-        setTimeout(() => { window.location.href = 'dashboard.html' }, 1000)
+        // 5) إذا Free → لوحة التحكم مباشرة
+        if (plan === 'Free') {
+          showMsg('تم إنشاء الحساب والجمعية بنجاح. جاري التحويل...', 'success')
+          setTimeout(() => { window.location.href = 'dashboard.html' }, 1000)
+          return
+        }
+
+        // 6) إذا مدفوع → Stripe Checkout
+        overlay.querySelector ? null : null
+        document.getElementById('overlay').textContent = 'جاري التحضير لصفحة الدفع...'
+
+        const { data: { session: currentSession } } = await supabase.auth.getSession()
+
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentSession.access_token}`,
+          },
+          body: JSON.stringify({
+            plan: plan.toLowerCase(),
+            user_id: userId,
+            user_email: email,
+          }),
+        })
+
+        const data = await res.json()
+
+        if (data.url) {
+          window.location.href = data.url
+        } else {
+          throw new Error(data.error || 'تعذر الاتصال ببوابة الدفع')
+        }
 
       } catch (err) {
         console.error(err)
         showMsg(mapError(err.message), 'error')
         overlay.classList.remove('show')
-      } finally {
         submitBtn.disabled    = false
         submitBtn.textContent = 'إنشاء الحساب'
       }
@@ -371,12 +413,4 @@
     function mapError(msg) {
       if (!msg) return 'حدث خطأ غير معروف'
       if (msg.includes('already registered'))  return 'هذا البريد مسجل مسبقًا. استخدم صفحة تسجيل الدخول.'
-      if (msg.includes('Password should be'))  return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'
-      if (msg.includes('Unable to validate'))  return 'صيغة البريد الإلكتروني غير صحيحة'
-      if (msg.includes('Email not confirmed')) return 'تم إنشاء الحساب. تحقق من بريدك الإلكتروني.'
-      return msg
-    }
-  </script>
-
-</body>
-</html>
+      if (msg.in
