@@ -146,6 +146,7 @@
       footer{flex-direction:column;text-align:center}
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -166,13 +167,9 @@
 <section class="hero">
   <div class="hero-badge">💎 باقات واضحة بدون رسوم خفية</div>
   <h1>اختر الباقة<br><span>المناسبة لجمعيتك</span></h1>
-  <p>ابدأ مجاناً وطوّر باقتك عند الحاجة. جميع الباقات تشمل رابط الانضمام وتتبع الدفعات والتقارير.</p>
-
-  <div class="toggle-wrap">
-    <span class="toggle-label active" id="labelMonthly">شهري</span>
-    <button class="toggle" id="billingToggle" onclick="toggleBilling()"></button>
-    <span class="toggle-label" id="labelYearly">سنوي</span>
-    <span class="save-badge">وفّر 20%</span>
+  <p>ادفع مرة واحدة عند إنشاء جمعيتك. لا رسوم شهرية، لا تجديد تلقائي.</p>
+  <div style="display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:999px;background:var(--green-s);color:var(--green);font-size:13px;font-weight:900;margin-bottom:40px">
+    ✓ دفع لمرة واحدة — الجمعية تُغلق تلقائياً عند اكتمال الدورة
   </div>
 </section>
 
@@ -188,7 +185,7 @@
       <div class="plan-price">
         <span class="amount">0</span>
         <span class="currency"> درهم</span>
-        <span class="period"> / شهر</span>
+        <span class="period"> / جمعية</span>
       </div>
       <div class="plan-price-yearly" id="yearly-free">مجاناً للأبد 🎉</div>
       <div class="plan-divider"></div>
@@ -212,7 +209,7 @@
       <div class="plan-price">
         <span class="amount" id="price-basic">39</span>
         <span class="currency"> درهم</span>
-        <span class="period"> / شهر</span>
+        <span class="period"> / جمعية</span>
       </div>
       <div class="plan-price-yearly" id="yearly-basic">374 درهم / سنة (توفير 94 درهم)</div>
       <div class="plan-divider"></div>
@@ -225,7 +222,7 @@
         <li class="included"><span class="check">✓</span>رفع الإيصالات</li>
         <li class="excluded"><span class="check">✕</span>دعم أولوي</li>
       </ul>
-      <a class="plan-btn plan-btn-ghost" href="auth.html">اشترك الآن</a>
+      <button class="plan-btn plan-btn-ghost" onclick="startCheckout('basic')">اشترك الآن</button>
     </div>
 
     <!-- Pro -->
@@ -237,7 +234,7 @@
       <div class="plan-price">
         <span class="amount" id="price-pro">69</span>
         <span class="currency"> درهم</span>
-        <span class="period"> / شهر</span>
+        <span class="period"> / جمعية</span>
       </div>
       <div class="plan-price-yearly" id="yearly-pro">662 درهم / سنة (توفير 166 درهم)</div>
       <div class="plan-divider"></div>
@@ -250,7 +247,7 @@
         <li class="included"><span class="check">✓</span>رفع الإيصالات</li>
         <li class="included"><span class="check">✓</span>دعم أولوي</li>
       </ul>
-      <a class="plan-btn plan-btn-primary" href="auth.html">اشترك الآن</a>
+      <button class="plan-btn plan-btn-primary" onclick="startCheckout('pro')">اشترك الآن</button>
     </div>
 
     <!-- Business -->
@@ -261,7 +258,7 @@
       <div class="plan-price">
         <span class="amount" id="price-business">99</span>
         <span class="currency"> درهم</span>
-        <span class="period"> / شهر</span>
+        <span class="period"> / جمعية</span>
       </div>
       <div class="plan-price-yearly" id="yearly-business">950 درهم / سنة (توفير 238 درهم)</div>
       <div class="plan-divider"></div>
@@ -274,7 +271,7 @@
         <li class="included"><span class="check">✓</span>رفع الإيصالات</li>
         <li class="included"><span class="check">✓</span>دعم أولوي</li>
       </ul>
-      <a class="plan-btn plan-btn-ghost" href="auth.html">اشترك الآن</a>
+      <button class="plan-btn plan-btn-ghost" onclick="startCheckout('business')">اشترك الآن</button>
     </div>
 
   </div>
@@ -350,7 +347,7 @@
         <td><span class="check-yes">✓</span></td>
       </tr>
       <tr>
-        <td>السعر الشهري</td>
+        <td>السعر / جمعية</td>
         <td><strong>مجاناً</strong></td>
         <td><strong>39 درهم</strong></td>
         <td class="featured-col"><strong>69 درهم</strong></td>
@@ -432,32 +429,59 @@
 </footer>
 
 <script>
-  let isYearly = false
-
-  function toggleBilling() {
-    isYearly = !isYearly
-    const toggle = document.getElementById('billingToggle')
-    const lm = document.getElementById('labelMonthly')
-    const ly = document.getElementById('labelYearly')
-
-    toggle.classList.toggle('yearly', isYearly)
-    lm.classList.toggle('active', !isYearly)
-    ly.classList.toggle('active', isYearly)
-
-    // تحديث الأسعار
-    const prices = { basic: [39, 31], pro: [69, 55], business: [99, 79] }
-    Object.entries(prices).forEach(([plan, [monthly, yearly]]) => {
-      document.getElementById(`price-${plan}`).textContent = isYearly ? yearly : monthly
-      document.getElementById(`yearly-${plan}`).classList.toggle('show', isYearly)
-    })
-    document.getElementById('yearly-free').classList.toggle('show', isYearly)
-  }
+  const SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+  const SUPABASE_ANON_KEY = 'sb_publishable_QIxCZZAQvM_tBEQqwZFSWRr7aVbEoJomV'
 
   function toggleFaq(btn) {
     const item = btn.closest('.faq-item')
     const isOpen = item.classList.contains('open')
     document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'))
     if (!isOpen) item.classList.add('open')
+  }
+
+  async function startCheckout(plan) {
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    const { data: { session } } = await supabase.auth.getSession()
+
+    if (!session) {
+      // غير مسجل — أرسله للتسجيل مع حفظ الباقة
+      sessionStorage.setItem('selected_plan', plan)
+      window.location.href = 'auth.html?plan=' + plan
+      return
+    }
+
+    const btn = event.currentTarget
+    btn.textContent = '⏳ جاري التحضير...'
+    btn.disabled = true
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          plan,
+          user_id: session.user.id,
+          user_email: session.user.email,
+        }),
+      })
+
+      const data = await res.json()
+
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        alert('حدث خطأ: ' + (data.error || 'يرجى المحاولة مجدداً'))
+        btn.textContent = 'اشترك الآن'
+        btn.disabled = false
+      }
+    } catch (err) {
+      alert('خطأ في الاتصال بالخادم')
+      btn.textContent = 'اشترك الآن'
+      btn.disabled = false
+    }
   }
 </script>
 </body>
