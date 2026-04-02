@@ -1,1 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تم الدفع بنجاح - صندوق ساهل</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root{
+      --ink:#0a1628;--ink2:#1a2e4a;
+      --sky:#1f6fa5;--sky2:#46a8d8;--sky3:#eaf5fd;
+      --green:#138a59;--green-s:#e8f8f1;
+      --white:#fff;--muted:#6e8498;--line:#dfe8f1;
+      --gold:#f5c842;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Tajawal',sans-serif;background:linear-gradient(160deg,#f8fbff,#eaf5fd 50%,#f0f8f4);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{background:#fff;border-radius:28px;padding:48px 36px;max-width:480px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(15,40,64,.12);border:1px solid var(--line)}
+    .icon-wrap{width:90px;height:90px;border-radius:50%;background:var(--green-s);display:grid;place-items:center;margin:0 auto 24px;font-size:40px}
+    h1{font-size:28px;font-weight:900;color:var(--ink);margin-bottom:10px}
+    .subtitle{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:8px}
+    .plan-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:999px;background:var(--sky3);color:var(--sky);font-size:14px;font-weight:900;margin:16px 0 28px}
+    .divider{height:1px;background:var(--line);margin:20px 0}
+    .info-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;font-size:14px}
+    .info-row .label{color:var(--muted);font-weight:700}
+    .info-row .value{font-weight:900;color:var(--ink)}
+    .btn{display:block;width:100%;padding:15px;border-radius:15px;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:900;text-align:center;text-decoration:none;border:none;cursor:pointer;transition:.2s;margin-top:10px}
+    .btn-primary{background:var(--sky);color:#fff;box-shadow:0 8px 20px rgba(31,111,165,.2)}
+    .btn-primary:hover{background:var(--ink2)}
+    .btn-ghost{background:var(--sky3);color:var(--sky)}
+    .loading{display:flex;flex-direction:column;align-items:center;gap:16px}
+    .spinner{width:48px;height:48px;border:4px solid var(--line);border-top-color:var(--sky);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .error-icon{font-size:40px;margin-bottom:8px}
+    .error-title{font-size:22px;font-weight:900;color:#c53b3b;margin-bottom:8px}
+  </style>
+</head>
+<body>
+
+<div class="card" id="mainCard">
+  <div class="loading">
+    <div class="spinner"></div>
+    <p style="color:var(--muted);font-weight:700">جاري تفعيل باقتك...</p>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+  const SUPABASE_ANON_KEY = 'sb_publishable_QIxCZZAQvM_tBEQqwZFSWRr7aVbEoJomV'
+
+  const planNames = { free:'Free', basic:'Basic', pro:'Pro', business:'Business' }
+  const planLimits = {
+    free:     { max_groups:1,  max_members:4  },
+    basic:    { max_groups:3,  max_members:10 },
+    pro:      { max_groups:6,  max_members:15 },
+    business: { max_groups:10, max_members:25 },
+  }
+
+  async function activate() {
+    const params = new URLSearchParams(location.search)
+    const plan     = params.get('plan')?.toLowerCase()
+    const userId   = params.get('user_id')
+    const sessionId= params.get('session_id')
+    const card     = document.getElementById('mainCard')
+
+    if (!plan || !userId || !sessionId) {
+      showError(card, 'رابط غير صالح')
+      return
+    }
+
+    try {
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+      const limits   = planLimits[plan]
+
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          plan,
+          max_groups:  limits.max_groups,
+          max_members: limits.max_members,
+          stripe_session_id: sessionId,
+          plan_activated_at: new Date().toISOString(),
+        })
+        .eq('id', userId)
+
+      if (error) throw error
+
+      showSuccess(card, plan, sessionId)
+    } catch (err) {
+      showError(card, err.message)
+    }
+  }
+
+  function showSuccess(card, plan, sessionId) {
+    const planName = planNames[plan] || plan
+    card.innerHTML = `
+      <div class="icon-wrap">✅</div>
+      <h1>تم الدفع بنجاح!</h1>
+      <p class="subtitle">مرحباً بك في صندوق ساهل. تم تفعيل باقتك فوراً.</p>
+      <div class="plan-badge">💎 باقة ${planName}</div>
+      <div class="divider"></div>
+      <div class="info-row">
+        <span class="label">رقم العملية</span>
+        <span class="value" style="font-size:11px;direction:ltr">${sessionId.slice(0,24)}...</span>
+      </div>
+      <div class="info-row">
+        <span class="label">الحالة</span>
+        <span class="value" style="color:var(--green)">✓ مفعّلة</span>
+      </div>
+      <div class="divider"></div>
+      <a class="btn btn-primary" href="dashboard.html">انتقل للوحة التحكم ←</a>
+      <a class="btn btn-ghost" href="plans.html" style="margin-top:8px">عرض الباقات</a>
+    `
+  }
+
+  function showError(card, msg) {
+    card.innerHTML = `
+      <div class="error-icon">❌</div>
+      <div class="error-title">حدث خطأ</div>
+      <p class="subtitle">${msg}</p>
+      <div class="divider"></div>
+      <a class="btn btn-primary" href="plans.html">العودة للباقات</a>
+    `
+  }
+
+  activate()
+</script>
+</body>
+</html>
 
