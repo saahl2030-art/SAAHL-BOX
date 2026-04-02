@@ -397,4 +397,92 @@
   </div>
 
   <div class="faq-item">
-    <button class="faq-q" onclick="toggleFaq(th
+    <button class="faq-q" onclick="toggleFaq(this)">
+      هل يمكن للأعضاء رفع إيصالات الدفع؟
+      <span class="faq-icon">+</span>
+    </button>
+    <div class="faq-a">نعم، عند إرسال طلب الانضمام يمكن للعضو رفع إيصال الدفع الأول. كما يستطيع المدير رفع الإيصالات اللاحقة من لوحة التحكم.</div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-inner">
+    <h2>جاهز للبدء؟</h2>
+    <p>سجّل الآن مجاناً ولا تحتاج بطاقة ائتمان. جمعيتك الأولى جاهزة في دقيقتين.</p>
+    <a class="cta-btn" href="auth.html">ابدأ مجاناً الآن ←</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="footer-logo">س</div>
+    صندوق ساهل
+  </div>
+  <p>© 2026 صندوق ساهل — جميع الحقوق محفوظة</p>
+  <div class="footer-links">
+    <a href="index.html">الرئيسية</a>
+    <a href="auth.html">إنشاء حساب</a>
+    <a href="login.html">تسجيل الدخول</a>
+  </div>
+</footer>
+
+<script>
+  const SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+  const SUPABASE_ANON_KEY = 'sb_publishable_QIxCZZAQvM_tBEQqwZFSWRr7aVbEoJomV'
+
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item')
+    const isOpen = item.classList.contains('open')
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'))
+    if (!isOpen) item.classList.add('open')
+  }
+
+  async function startCheckout(plan) {
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    const { data: { session } } = await supabase.auth.getSession()
+
+    if (!session) {
+      // غير مسجل — أرسله للتسجيل مع حفظ الباقة
+      sessionStorage.setItem('selected_plan', plan)
+      window.location.href = 'auth.html?plan=' + plan
+      return
+    }
+
+    const btn = event.currentTarget
+    btn.textContent = '⏳ جاري التحضير...'
+    btn.disabled = true
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          plan,
+          user_id: session.user.id,
+          user_email: session.user.email,
+        }),
+      })
+
+      const data = await res.json()
+
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        alert('حدث خطأ: ' + (data.error || 'يرجى المحاولة مجدداً'))
+        btn.textContent = 'اشترك الآن'
+        btn.disabled = false
+      }
+    } catch (err) {
+      alert('خطأ في الاتصال بالخادم')
+      btn.textContent = 'اشترك الآن'
+      btn.disabled = false
+    }
+  }
+</script>
+</body>
+</html>
