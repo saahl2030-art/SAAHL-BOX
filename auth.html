@@ -152,7 +152,6 @@
                 </div>
               </div>
 
-              <!-- الباقات -->
               <div class="plans-list">
                 <label class="plan-option">
                   <input type="radio" name="plan" value="Free" checked>
@@ -267,7 +266,6 @@
     const msgBox     = document.getElementById('msgBox')
     const overlay    = document.getElementById('overlay')
 
-    // إظهار تنبيه الدفع عند اختيار باقة مدفوعة
     document.querySelectorAll('input[name="plan"]').forEach(radio => {
       radio.addEventListener('change', () => {
         const plan = radio.value
@@ -276,8 +274,6 @@
         submitBtn.textContent = plan === 'Free' ? 'إنشاء الحساب' : 'إنشاء الحساب والانتقال للدفع'
       })
     })
-
-    // صفحة التسجيل — لا نحول المستخدم تلقائياً
 
     async function redirectByRole(userId) {
       const { data: profile } = await supabase.from('profiles').select('role').eq('id', userId).single()
@@ -361,15 +357,14 @@
         })
         if (subError) throw subError
 
-        // 5) إذا Free → لوحة التحكم مباشرة
+        // 5) Free → لوحة التحكم مباشرة
         if (plan === 'Free') {
           showMsg('تم إنشاء الحساب والجمعية بنجاح. جاري التحويل...', 'success')
           setTimeout(() => { window.location.href = 'dashboard.html' }, 1000)
           return
         }
 
-        // 6) إذا مدفوع → Stripe Checkout
-        overlay.querySelector ? null : null
+        // 6) مدفوع → Stripe Checkout
         document.getElementById('overlay').textContent = 'جاري التحضير لصفحة الدفع...'
 
         const { data: { session: currentSession } } = await supabase.auth.getSession()
@@ -404,9 +399,17 @@
       }
     })
 
-    function showMsg(text, type) { msgBox.textContent=text; msgBox.className=`msg ${type} show` }
-    function clearMsg() { msgBox.className='msg'; msgBox.textContent='' }
+    function showMsg(text, type) { msgBox.textContent = text; msgBox.className = `msg ${type} show` }
+    function clearMsg() { msgBox.className = 'msg'; msgBox.textContent = '' }
     function mapError(msg) {
       if (!msg) return 'حدث خطأ غير معروف'
-      if (msg.includes('already registered'))  return 'هذا البريد مسجل مسبقًا. استخدم صفحة تسجيل الدخول.'
-      if (msg.in
+      if (msg.includes('already registered')) return 'هذا البريد مسجل مسبقًا. استخدم صفحة تسجيل الدخول.'
+      if (msg.includes('invalid login') || msg.includes('Invalid login')) return 'بيانات الدخول غير صحيحة.'
+      if (msg.includes('email not confirmed') || msg.includes('Email not confirmed')) return 'يرجى تأكيد بريدك الإلكتروني أولاً.'
+      if (msg.includes('password')) return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل.'
+      if (msg.includes('network') || msg.includes('fetch')) return 'خطأ في الاتصال. تحقق من الإنترنت وأعد المحاولة.'
+      return msg
+    }
+  </script>
+</body>
+</html>
