@@ -252,12 +252,11 @@
     </section>
   </main>
 
-  <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
     const SUPABASE_URL      = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
     const PLAN_LIMITS = { Free: 4, Basic: 10, Pro: 15, Business: 25 }
     const PLAN_GROUPS = { Free: 1, Basic: 3, Pro: 6, Business: 10 }
