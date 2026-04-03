@@ -277,10 +277,7 @@
       })
     })
 
-    ;(async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session) await redirectByRole(session.user.id)
-    })()
+    // صفحة التسجيل — لا نحول المستخدم تلقائياً
 
     async function redirectByRole(userId) {
       const { data: profile } = await supabase.from('profiles').select('role').eq('id', userId).single()
