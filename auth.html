@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<!-- v4 -->
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إنشاء حساب - صندوق ساهل</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#f4f8fc;--panel:#ffffff;--panel-soft:#f8fbff;
+      --line:#dfe8f1;--line-dark:#cfdbe7;
+      --text:#16324a;--muted:#6e8498;
+      --primary:#1f6fa5;--primary-dark:#185781;--primary-soft:#eaf5fd;
+      --green:#138a59;--green-soft:#e8f8f1;
+      --amber:#b7791f;--amber-soft:#fff5e4;
+      --red:#c53b3b;--red-soft:#fdeeee;
+      --blue:#2563eb;--blue-soft:#edf3ff;
+      --shadow:0 12px 30px rgba(15,40,64,0.08);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:"Tajawal",sans-serif;background:linear-gradient(180deg,#f8fbff 0%,#f3f7fb 100%);color:var(--text)}
+    a{text-decoration:none;color:inherit}
+    button,input{font-family:"Tajawal",sans-serif}
+    .container{width:min(1180px,calc(100% - 32px));margin:auto}
+    .topbar{padding:18px 0}
+    .topbar-inner{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow)}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand-logo{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary) 0%,#46a8d8 100%);color:#fff;font-size:22px;font-weight:900;box-shadow:0 10px 20px rgba(31,111,165,.22);flex:0 0 48px}
+    .brand h1{margin:0;font-size:21px;font-weight:900;line-height:1.1}
+    .brand p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .top-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{border:none;border-radius:14px;padding:12px 16px;cursor:pointer;font-size:14px;font-weight:900;transition:.2s ease;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+    .btn:hover{transform:translateY(-1px)}
+    .btn:disabled{opacity:.65;cursor:not-allowed;transform:none}
+    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 10px 20px rgba(31,111,165,.18)}
+    .btn-primary:hover{background:var(--primary-dark)}
+    .btn-soft{background:#fff;border:1px solid var(--line-dark);color:var(--text)}
+    .hero{padding:26px 0 16px;text-align:center}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:var(--primary-soft);color:var(--primary-dark);font-size:13px;font-weight:900;margin-bottom:14px}
+    .hero h2{margin:0;font-size:38px;font-weight:900;line-height:1.2}
+    .hero p{width:min(780px,100%);margin:14px auto 0;color:var(--muted);font-size:16px;line-height:1.9}
+    .layout{padding:14px 0 34px}
+    .layout-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;align-items:start}
+    .card{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:22px}
+    .card h3{margin:0;font-size:24px;font-weight:900}
+    .card-sub{margin:8px 0 0;color:var(--muted);font-size:14px;line-height:1.8}
+    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
+    .field-wrap.full{grid-column:1 / -1}
+    .label{display:block;margin-bottom:8px;color:var(--muted);font-size:13px;font-weight:800}
+    .field{width:100%;border:1px solid var(--line-dark);background:#fff;color:var(--text);border-radius:14px;padding:13px 14px;outline:none;font-size:14px;transition:.2s}
+    .field:focus{border-color:#96bdd8;box-shadow:0 0 0 4px rgba(31,111,165,.08)}
+    .plans-list{display:grid;gap:12px;margin-top:18px}
+    .plan-option{position:relative}
+    .plan-option input{position:absolute;inset:0;opacity:0;cursor:pointer}
+    .plan-box{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fff;transition:.2s ease;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .plan-option input:checked + .plan-box{border-color:#9fcae4;background:var(--primary-soft);box-shadow:0 0 0 4px rgba(31,111,165,.06)}
+    .plan-info h4{margin:0 0 6px;font-size:18px;font-weight:900}
+    .plan-info p{margin:0;color:var(--muted);font-size:13px;line-height:1.8}
+    .plan-meta{text-align:left}
+    .plan-price{font-size:28px;font-weight:900;line-height:1;white-space:nowrap}
+    .plan-price small{font-size:13px;color:var(--muted);font-weight:700}
+    .plan-tag{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900;margin-top:8px;white-space:nowrap}
+    .tag-primary{background:var(--primary-soft);color:var(--primary-dark)}
+    .tag-blue{background:var(--blue-soft);color:var(--blue)}
+    .tag-green{background:var(--green-soft);color:var(--green)}
+    .tag-amber{background:var(--amber-soft);color:var(--amber)}
+    .addons{margin-top:18px;padding:16px;border-radius:18px;background:linear-gradient(135deg,#f7fbff 0%,#eef7fd 100%);border:1px solid #d8e9f7}
+    .addons h4{margin:0 0 10px;font-size:17px;font-weight:900}
+    .addons ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+    .addons li{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:14px;font-weight:800}
+    .addons li span{color:var(--green);font-weight:900;white-space:nowrap}
+    .actions{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+    .notice{margin-top:14px;padding:12px 14px;border-radius:14px;background:#f8fbff;border:1px solid var(--line);color:var(--muted);font-size:13px;line-height:1.8}
+    .msg{display:none;margin-top:16px;padding:14px;border-radius:16px;font-size:14px;font-weight:900;line-height:1.8}
+    .msg.error{background:var(--red-soft);color:var(--red)}
+    .msg.success{background:var(--green-soft);color:var(--green)}
+    .msg.show{display:block}
+    .overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,.75);align-items:center;justify-content:center;z-index:999;font-size:16px;font-weight:700;color:var(--primary)}
+    .overlay.show{display:flex}
+    @media(max-width:980px){.layout-grid{grid-template-columns:1fr}}
+    @media(max-width:700px){.form-grid{grid-template-columns:1fr}.hero h2{font-size:30px}.hero p{font-size:15px}.plan-box{flex-direction:column}.plan-meta{text-align:right}}
+  </style>
+</head>
+<body>
+
+  <div class="overlay" id="overlay">جاري إنشاء الحساب...</div>
+
+  <header class="topbar">
+    <div class="container">
+      <div class="topbar-inner">
+        <div class="brand">
+          <div class="brand-logo">س</div>
+          <div>
+            <h1>صندوق ساهل</h1>
+            <p>إنشاء حساب مدير جمعية</p>
+          </div>
+        </div>
+        <div class="top-actions">
+          <a class="btn btn-soft" href="login.html">تسجيل الدخول</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badge">ابدأ الآن بخطة واضحة</div>
+        <h2>أنشئ حسابك وأنشئ جمعيتك من البداية</h2>
+        <p>هذه الصفحة مخصصة لمدير الجمعية فقط. اختر الباقة المناسبة، أدخل اسم الجمعية، ثم أنشئ الحساب.</p>
+      </div>
+    </section>
+
+    <section class="layout">
+      <div class="container">
+        <div class="layout-grid">
+
+          <div class="card">
+            <h3>بيانات الحساب والجمعية</h3>
+            <p class="card-sub">بعد إنشاء الحساب سيتم حفظ بياناتك وإنشاء الجمعية وربطها بحسابك.</p>
+
+            <form id="signupForm" novalidate>
+              <div class="form-grid">
+                <div>
+                  <label class="label" for="fullName">الاسم الكامل *</label>
+                  <input class="field" type="text" id="fullName" placeholder="اكتب الاسم الكامل" required>
+                </div>
+                <div>
+                  <label class="label" for="phone">رقم الهاتف</label>
+                  <input class="field" type="tel" id="phone" placeholder="05xxxxxxxx">
+                </div>
+                <div>
+                  <label class="label" for="email">البريد الإلكتروني *</label>
+                  <input class="field" type="email" id="email" placeholder="example@email.com" required>
+                </div>
+                <div>
+                  <label class="label" for="password">كلمة المرور *</label>
+                  <input class="field" type="password" id="password" placeholder="6 أحرف على الأقل" required minlength="6">
+                </div>
+                <div class="field-wrap full">
+                  <label class="label" for="societyName">اسم الجمعية *</label>
+                  <input class="field" type="text" id="societyName" placeholder="مثال: جمعية ساهل الأولى" required>
+                </div>
+                <div class="field-wrap full">
+                  <label class="label" for="monthlyAmount">المبلغ الشهري للجمعية (درهم) *</label>
+                  <input class="field" type="number" id="monthlyAmount" placeholder="مثال: 500" min="1" required>
+                </div>
+              </div>
+
+              <div class="plans-list">
+                <label class="plan-option">
+                  <input type="radio" name="plan" value="Free" checked>
+                  <div class="plan-box">
+                    <div class="plan-info">
+                      <h4>Free</h4>
+                      <p>1 جمعية · حد أقصى <strong>4 أعضاء</strong></p>
+                    </div>
+                    <div class="plan-meta">
+                      <div class="plan-price">0 <small>درهم</small></div>
+                      <div class="plan-tag tag-primary">مجانًا</div>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="plan-option">
+                  <input type="radio" name="plan" value="Basic">
+                  <div class="plan-box">
+                    <div class="plan-info">
+                      <h4>Basic</h4>
+                      <p>3 جمعيات · حد أقصى <strong>10 أعضاء</strong></p>
+                    </div>
+                    <div class="plan-meta">
+                      <div class="plan-price">39 <small>درهم</small></div>
+                      <div class="plan-tag tag-blue">للبداية</div>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="plan-option">
+                  <input type="radio" name="plan" value="Pro">
+                  <div class="plan-box">
+                    <div class="plan-info">
+                      <h4>Pro</h4>
+                      <p>6 جمعيات · حد أقصى <strong>15 عضو</strong></p>
+                    </div>
+                    <div class="plan-meta">
+                      <div class="plan-price">69 <small>درهم</small></div>
+                      <div class="plan-tag tag-green">الأكثر استخدامًا</div>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="plan-option">
+                  <input type="radio" name="plan" value="Business">
+                  <div class="plan-box">
+                    <div class="plan-info">
+                      <h4>Business</h4>
+                      <p>10 جمعيات · حد أقصى <strong>25 عضو</strong></p>
+                    </div>
+                    <div class="plan-meta">
+                      <div class="plan-price">99 <small>درهم</small></div>
+                      <div class="plan-tag tag-amber">تشغيل أكبر</div>
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <div class="notice">
+                عدد الأعضاء محدود حسب الباقة المختارة. لا يمكن إضافة أعضاء جدد بعد الوصول للحد الأقصى.
+              </div>
+
+              <div id="paymentNotice" style="display:none;margin-top:14px;padding:12px 14px;border-radius:14px;background:#fff5e4;border:1px solid #f5c842;color:#b7791f;font-size:13px;font-weight:800">
+                💳 ستُحوَّل لصفحة الدفع عبر Stripe بعد إنشاء الحساب
+              </div>
+
+              <div class="actions">
+                <button type="submit" class="btn btn-primary" id="submitBtn">إنشاء الحساب</button>
+                <a href="login.html" class="btn btn-soft">لدي حساب بالفعل</a>
+              </div>
+
+              <div class="msg" id="msgBox"></div>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3>حدود الباقات</h3>
+            <p class="card-sub">عدد الأعضاء المسموح به حسب كل باقة.</p>
+
+            <div class="addons">
+              <h4>جدول الباقات</h4>
+              <ul>
+                <li><strong>Free</strong><span>4 أعضاء</span></li>
+                <li><strong>Basic</strong><span>10 أعضاء</span></li>
+                <li><strong>Pro</strong><span>15 عضو</span></li>
+                <li><strong>Business</strong><span>25 عضو</span></li>
+              </ul>
+            </div>
+
+            <div class="notice">بعد إنشاء الحساب سيتم نقلك مباشرة إلى لوحة مدير الجمعية.</div>
+            <div class="notice">إذا كان البريد مسجلاً مسبقًا، استخدم صفحة تسجيل الدخول.</div>
+            <div class="notice">شهر البداية للجمعية سيكون الشهر الحالي تلقائياً.</div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL      = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+    const PLAN_LIMITS = { Free: 4, Basic: 10, Pro: 15, Business: 25 }
+    const PLAN_GROUPS = { Free: 1, Basic: 3, Pro: 6, Business: 10 }
+    const PLAN_PRICES = { Free: 0, Basic: 39, Pro: 69, Business: 99 }
+
+    const signupForm = document.getElementById('signupForm')
+    const submitBtn  = document.getElementById('submitBtn')
+    const msgBox     = document.getElementById('msgBox')
+    const overlay    = document.getElementById('overlay')
+
+    document.querySelectorAll('input[name="plan"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        const plan = radio.value
+        const notice = document.getElementById('paymentNotice')
+        notice.style.display = plan === 'Free' ? 'none' : 'block'
+        submitBtn.textContent = plan === 'Free' ? 'إنشاء الحساب' : 'إنشاء الحساب والانتقال للدفع'
+      })
+    })
+
+    async function redirectByRole(userId) {
+      const { data: profile } = await supabase.from('profiles').select('role').eq('id', userId).single()
+      window.location.href = profile?.role === 'admin' ? 'admin.html' : 'dashboard.html'
+    }
+
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      clearMsg()
+
+      const fullName      = document.getElementById('fullName').value.trim()
+      const phone         = document.getElementById('phone').value.trim()
+      const email         = document.getElementById('email').value.trim()
+      const password      = document.getElementById('password').value
+      const societyName   = document.getElementById('societyName').value.trim()
+      const monthlyAmount = parseFloat(document.getElementById('monthlyAmount').value)
+      const plan          = document.querySelector('input[name="plan"]:checked')?.value || 'Free'
+
+      if (!fullName || !email || !password || !societyName || !monthlyAmount) {
+        showMsg('أكمل جميع الحقول المطلوبة.', 'error'); return
+      }
+      if (password.length < 6) {
+        showMsg('كلمة المرور يجب أن تكون 6 أحرف على الأقل.', 'error'); return
+      }
+      if (isNaN(monthlyAmount) || monthlyAmount <= 0) {
+        showMsg('أدخل مبلغاً شهرياً صحيحاً.', 'error'); return
+      }
+
+      submitBtn.disabled    = true
+      submitBtn.textContent = 'جاري إنشاء الحساب...'
+      overlay.classList.add('show')
+
+      try {
+        // 1) إنشاء المستخدم
+        const { error: signUpError } = await supabase.auth.signUp({
+          email, password,
+          options: { data: { full_name: fullName, role: 'manager' } }
+        })
+
+        if (signUpError) {
+          if (signUpError.message?.toLowerCase().includes('already registered'))
+            throw new Error('هذا البريد مسجل مسبقًا. استخدم صفحة تسجيل الدخول.')
+          throw signUpError
+        }
+
+        // 2) تسجيل الدخول
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+        if (signInError) throw signInError
+
+        const userId = signInData?.user?.id
+        if (!userId) throw new Error('تعذر الحصول على معرف المستخدم.')
+
+        // 3) إنشاء الجمعية
+        const now = new Date()
+        const maxMembers = PLAN_LIMITS[plan] ?? 4
+        const maxGroups  = PLAN_GROUPS[plan] ?? 1
+
+        const { error: groupError } = await supabase.from('groups').insert({
+          manager_id:     userId,
+          name:           societyName,
+          monthly_amount: monthlyAmount,
+          total_members:  0,
+          start_month:    now.getMonth() + 1,
+          start_year:     now.getFullYear(),
+          status:         'active',
+          max_members:    maxMembers
+        })
+        if (groupError) throw groupError
+
+        // 4) إنشاء الاشتراك
+        const endDate = new Date()
+        endDate.setFullYear(endDate.getFullYear() + 1)
+
+        const { error: subError } = await supabase.from('subscriptions').insert({
+          manager_id: userId,
+          plan_name:  plan,
+          status:     plan === 'Free' ? 'active' : 'pending_payment',
+          start_date: now.toISOString().split('T')[0],
+          end_date:   endDate.toISOString().split('T')[0],
+          amount:     PLAN_PRICES[plan] ?? 0
+        })
+        if (subError) throw subError
+
+        // 5) Free → لوحة التحكم مباشرة
+        if (plan === 'Free') {
+          showMsg('تم إنشاء الحساب والجمعية بنجاح. جاري التحويل...', 'success')
+          setTimeout(() => { window.location.href = 'dashboard.html' }, 1000)
+          return
+        }
+
+        // 6) مدفوع → Stripe Checkout
+        document.getElementById('overlay').textContent = 'جاري التحضير لصفحة الدفع...'
+
+        const { data: { session: currentSession } } = await supabase.auth.getSession()
+
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentSession.access_token}`,
+          },
+          body: JSON.stringify({
+            plan: plan.toLowerCase(),
+            user_id: userId,
+            user_email: email,
+          }),
+        })
+
+        const data = await res.json()
+
+        if (data.url) {
+          window.location.href = data.url
+        } else {
+          throw new Error(data.error || 'تعذر الاتصال ببوابة الدفع')
+        }
+
+      } catch (err) {
+        console.error(err)
+        showMsg(mapError(err.message), 'error')
+        overlay.classList.remove('show')
+        submitBtn.disabled    = false
+        submitBtn.textContent = 'إنشاء الحساب'
+      }
+    })
+
+    function showMsg(text, type) { msgBox.textContent = text; msgBox.className = `msg ${type} show` }
+    function clearMsg() { msgBox.className = 'msg'; msgBox.textContent = '' }
+    function mapError(msg) {
+      if (!msg) return 'حدث خطأ غير معروف'
+      if (msg.includes('already registered')) return 'هذا البريد مسجل مسبقًا. استخدم صفحة تسجيل الدخول.'
+      if (msg.includes('invalid login') || msg.includes('Invalid login')) return 'بيانات الدخول غير صحيحة.'
+      if (msg.includes('email not confirmed') || msg.includes('Email not confirmed')) return 'يرجى تأكيد بريدك الإلكتروني أولاً.'
+      if (msg.includes('password')) return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل.'
+      if (msg.includes('network') || msg.includes('fetch')) return 'خطأ في الاتصال. تحقق من الإنترنت وأعد المحاولة.'
+      return msg
+    }
+  </script>
+</body>
+</html>
