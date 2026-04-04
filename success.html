@@ -47,9 +47,10 @@
 
 <script>
   const SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
-  const SUPABASE_ANON_KEY = 'sb_publishable_QIxCZZAQvM_tBEQqwZFSWRr7aVbEoJomV'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
 
-  const planNames = { free:'Free', basic:'Basic', pro:'Pro', business:'Business' }
+  const planNames  = { free:'Free', basic:'Basic', pro:'Pro', business:'Business' }
+  const planPrices = { free:0, basic:39, pro:69, business:99 }
   const planLimits = {
     free:     { max_groups:1,  max_members:4  },
     basic:    { max_groups:3,  max_members:10 },
@@ -58,11 +59,11 @@
   }
 
   async function activate() {
-    const params = new URLSearchParams(location.search)
-    const plan     = params.get('plan')?.toLowerCase()
-    const userId   = params.get('user_id')
-    const sessionId= params.get('session_id')
-    const card     = document.getElementById('mainCard')
+    const params    = new URLSearchParams(location.search)
+    const plan      = params.get('plan')?.toLowerCase()
+    const userId    = params.get('user_id')
+    const sessionId = params.get('session_id')
+    const card      = document.getElementById('mainCard')
 
     if (!plan || !userId || !sessionId) {
       showError(card, 'رابط غير صالح')
@@ -71,20 +72,28 @@
 
     try {
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-      const limits   = planLimits[plan]
+      const now = new Date()
+      const end = new Date(); end.setFullYear(end.getFullYear() + 1)
 
+      // تحديث الاشتراك الموجود أو إنشاء اشتراك جديد
       const { error } = await supabase
-        .from('profiles')
-        .update({
-          plan,
-          max_groups:  limits.max_groups,
-          max_members: limits.max_members,
-          stripe_session_id: sessionId,
-          plan_activated_at: new Date().toISOString(),
-        })
-        .eq('id', userId)
+        .from('subscriptions')
+        .upsert({
+          manager_id: userId,
+          plan_name:  planNames[plan] || plan,
+          status:     'active',
+          start_date: now.toISOString().split('T')[0],
+          end_date:   end.toISOString().split('T')[0],
+          amount:     planPrices[plan] || 0,
+        }, { onConflict: 'manager_id' })
 
       if (error) throw error
+
+      // تحديث max_members في groups الخاصة بهذا المدير
+      await supabase
+        .from('groups')
+        .update({ max_members: planLimits[plan].max_members })
+        .eq('manager_id', userId)
 
       showSuccess(card, plan, sessionId)
     } catch (err) {
@@ -128,4 +137,3 @@
 </script>
 </body>
 </html>
-
