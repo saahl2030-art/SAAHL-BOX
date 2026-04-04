@@ -132,6 +132,22 @@
 
     .links a:hover{ text-decoration:underline; }
 
+    .forgot{
+      display:block;
+      text-align:center;
+      margin-top:12px;
+      font-size:13px;
+      font-weight:700;
+      color:var(--muted);
+    }
+
+    .forgot a{
+      color:var(--primary);
+      text-decoration:none;
+    }
+
+    .forgot a:hover{ text-decoration:underline; }
+
     .msg{
       display:none;
       margin-top:16px;
@@ -205,6 +221,10 @@
 
     <div class="msg" id="msgBox"></div>
 
+    <div class="forgot">
+      <a href="reset.html">نسيت كلمة المرور؟</a>
+    </div>
+
     <div class="links">
       <a href="auth.html">إنشاء حساب جديد</a>
       <a href="index.html">الرئيسية</a>
@@ -214,12 +234,8 @@
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-    // ============================================================
-    // إعداد Supabase — ضع بياناتك الحقيقية هنا
-    // Project Settings > API > anon public
-    // ============================================================
     const SUPABASE_URL      = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'   // ← غيّر هذا
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
@@ -228,9 +244,6 @@
     const msgBox    = document.getElementById('msgBox')
     const overlay   = document.getElementById('overlay')
 
-    // ============================================================
-    // عند تحميل الصفحة: إذا كان مسجلاً دخل مسبقاً وجّهه
-    // ============================================================
     ;(async () => {
       overlay.classList.add('show')
       const { data: { session } } = await supabase.auth.getSession()
@@ -241,9 +254,6 @@
       overlay.classList.remove('show')
     })()
 
-    // ============================================================
-    // توجيه حسب الـ role
-    // ============================================================
     async function redirectByRole(userId) {
       const { data: profile, error } = await supabase
         .from('profiles')
@@ -264,9 +274,6 @@
       }
     }
 
-    // ============================================================
-    // تسجيل الدخول
-    // ============================================================
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault()
       clearMsg()
@@ -302,9 +309,6 @@
       }
     })
 
-    // ============================================================
-    // مساعدات
-    // ============================================================
     function showMsg(text, type) {
       msgBox.textContent = text
       msgBox.className   = `msg ${type} show`
