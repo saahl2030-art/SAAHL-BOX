@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>إعادة تعيين كلمة المرور - صندوق ساهل</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root{
+      --ink:#0a1628;--ink2:#1a2e4a;
+      --sky:#1f6fa5;--sky2:#46a8d8;--sky3:#eaf5fd;
+      --green:#138a59;--green-s:#e8f8f1;
+      --red:#c53b3b;--red-s:#fdeeee;
+      --white:#fff;--muted:#6e8498;--line:#dfe8f1;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Tajawal',sans-serif;background:linear-gradient(160deg,#f8fbff,#eaf5fd 50%,#f0f8f4);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{background:#fff;border-radius:28px;padding:40px 32px;max-width:440px;width:100%;box-shadow:0 20px 60px rgba(15,40,64,.12);border:1px solid var(--line)}
+    .logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--sky),var(--sky2));display:grid;place-items:center;color:#fff;font-size:24px;font-weight:900;margin:0 auto 20px}
+    h1{font-size:24px;font-weight:900;color:var(--ink);text-align:center;margin-bottom:8px}
+    .subtitle{font-size:14px;color:var(--muted);text-align:center;line-height:1.8;margin-bottom:28px}
+    .label{display:block;margin-bottom:8px;color:var(--muted);font-size:13px;font-weight:800}
+    .field{width:100%;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:14px;padding:13px 14px;outline:none;font-size:14px;font-family:'Tajawal',sans-serif;transition:.2s;margin-bottom:16px}
+    .field:focus{border-color:#96bdd8;box-shadow:0 0 0 4px rgba(31,111,165,.08)}
+    .btn{display:block;width:100%;padding:14px;border-radius:14px;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:900;text-align:center;border:none;cursor:pointer;transition:.2s;margin-top:4px}
+    .btn:disabled{opacity:.65;cursor:not-allowed}
+    .btn-primary{background:var(--sky);color:#fff;box-shadow:0 8px 20px rgba(31,111,165,.2)}
+    .btn-primary:hover:not(:disabled){background:var(--ink2)}
+    .msg{display:none;margin-top:16px;padding:13px;border-radius:13px;font-size:14px;font-weight:700;line-height:1.7;text-align:center}
+    .msg.success{background:var(--green-s);color:var(--green);display:block}
+    .msg.error{background:var(--red-s);color:var(--red);display:block}
+    .back{display:block;text-align:center;margin-top:20px;font-size:13px;font-weight:800;color:var(--muted)}
+    .back a{color:var(--sky)}
+    .divider{height:1px;background:var(--line);margin:20px 0}
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">س</div>
+
+  <!-- الخطوة 1: طلب إعادة التعيين -->
+  <div id="step1">
+    <h1>نسيت كلمة المرور؟</h1>
+    <p class="subtitle">أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين</p>
+
+    <label class="label" for="email">البريد الإلكتروني</label>
+    <input class="field" type="email" id="email" placeholder="example@email.com"/>
+
+    <button class="btn btn-primary" id="sendBtn" onclick="sendReset()">إرسال رابط الاسترداد</button>
+    <div class="msg" id="msg1"></div>
+
+    <div class="back">
+      تذكرت كلمة المرور؟ <a href="login.html">تسجيل الدخول</a>
+    </div>
+  </div>
+
+  <!-- الخطوة 2: تعيين كلمة مرور جديدة -->
+  <div id="step2" style="display:none">
+    <h1>كلمة مرور جديدة</h1>
+    <p class="subtitle">أدخل كلمة المرور الجديدة لحسابك</p>
+
+    <label class="label" for="newPassword">كلمة المرور الجديدة</label>
+    <input class="field" type="password" id="newPassword" placeholder="6 أحرف على الأقل" minlength="6"/>
+
+    <label class="label" for="confirmPassword">تأكيد كلمة المرور</label>
+    <input class="field" type="password" id="confirmPassword" placeholder="أعد كتابة كلمة المرور"/>
+
+    <button class="btn btn-primary" id="updateBtn" onclick="updatePassword()">تحديث كلمة المرور</button>
+    <div class="msg" id="msg2"></div>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL     = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+  // تحقق إذا الرابط يحتوي على token إعادة التعيين
+  window.addEventListener('load', async () => {
+    const hash = window.location.hash
+    if (hash && hash.includes('type=recovery')) {
+      document.getElementById('step1').style.display = 'none'
+      document.getElementById('step2').style.display = 'block'
+    }
+  })
+
+  async function sendReset() {
+    const email = document.getElementById('email').value.trim()
+    const msg   = document.getElementById('msg1')
+    const btn   = document.getElementById('sendBtn')
+    msg.className = 'msg'
+
+    if (!email) {
+      msg.textContent = 'أدخل بريدك الإلكتروني'
+      msg.className = 'msg error'
+      return
+    }
+
+    btn.disabled = true
+    btn.textContent = '⏳ جاري الإرسال...'
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://saahl2030-art.github.io/SAAHL-BOX/reset.html'
+    })
+
+    if (error) {
+      msg.textContent = 'حدث خطأ: ' + error.message
+      msg.className = 'msg error'
+      btn.disabled = false
+      btn.textContent = 'إرسال رابط الاسترداد'
+    } else {
+      msg.textContent = '✅ تم الإرسال! تحقق من بريدك الإلكتروني واضغط على الرابط.'
+      msg.className = 'msg success'
+      btn.disabled = true
+      btn.textContent = 'تم الإرسال'
+    }
+  }
+
+  async function updatePassword() {
+    const newPass     = document.getElementById('newPassword').value
+    const confirmPass = document.getElementById('confirmPassword').value
+    const msg         = document.getElementById('msg2')
+    const btn         = document.getElementById('updateBtn')
+    msg.className = 'msg'
+
+    if (!newPass || newPass.length < 6) {
+      msg.textContent = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'
+      msg.className = 'msg error'
+      return
+    }
+    if (newPass !== confirmPass) {
+      msg.textContent = 'كلمتا المرور غير متطابقتين'
+      msg.className = 'msg error'
+      return
+    }
+
+    btn.disabled = true
+    btn.textContent = '⏳ جاري التحديث...'
+
+    const { error } = await supabase.auth.updateUser({ password: newPass })
+
+    if (error) {
+      msg.textContent = 'حدث خطأ: ' + error.message
+      msg.className = 'msg error'
+      btn.disabled = false
+      btn.textContent = 'تحديث كلمة المرور'
+    } else {
+      msg.textContent = '✅ تم تحديث كلمة المرور بنجاح! جاري التحويل لتسجيل الدخول...'
+      msg.className = 'msg success'
+      setTimeout(() => { window.location.href = 'login.html' }, 2000)
+    }
+  }
+</script>
+</body>
+</html>
