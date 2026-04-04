@@ -185,7 +185,6 @@
       <div class="plan-price">
         <span class="amount">0</span>
         <span class="currency"> درهم</span>
-        
       </div>
       <div class="plan-price-yearly" id="yearly-free">مجاناً للأبد 🎉</div>
       <div class="plan-divider"></div>
@@ -209,7 +208,6 @@
       <div class="plan-price">
         <span class="amount" id="price-basic">39</span>
         <span class="currency"> درهم</span>
-        
       </div>
       <div class="plan-price-yearly" id="yearly-basic">374 درهم / سنة (توفير 94 درهم)</div>
       <div class="plan-divider"></div>
@@ -222,7 +220,7 @@
         <li class="included"><span class="check">✓</span>رفع الإيصالات</li>
         <li class="excluded"><span class="check">✕</span>دعم أولوي</li>
       </ul>
-      <button class="plan-btn plan-btn-ghost" onclick="startCheckout('basic')">اشترك الآن</button>
+      <button class="plan-btn plan-btn-ghost" onclick="startCheckout('basic', this)">اشترك الآن</button>
     </div>
 
     <!-- Pro -->
@@ -234,7 +232,6 @@
       <div class="plan-price">
         <span class="amount" id="price-pro">69</span>
         <span class="currency"> درهم</span>
-        
       </div>
       <div class="plan-price-yearly" id="yearly-pro">662 درهم / سنة (توفير 166 درهم)</div>
       <div class="plan-divider"></div>
@@ -247,7 +244,7 @@
         <li class="included"><span class="check">✓</span>رفع الإيصالات</li>
         <li class="included"><span class="check">✓</span>دعم أولوي</li>
       </ul>
-      <button class="plan-btn plan-btn-primary" onclick="startCheckout('pro')">اشترك الآن</button>
+      <button class="plan-btn plan-btn-primary" onclick="startCheckout('pro', this)">اشترك الآن</button>
     </div>
 
     <!-- Business -->
@@ -258,7 +255,6 @@
       <div class="plan-price">
         <span class="amount" id="price-business">99</span>
         <span class="currency"> درهم</span>
-        
       </div>
       <div class="plan-price-yearly" id="yearly-business">950 درهم / سنة (توفير 238 درهم)</div>
       <div class="plan-divider"></div>
@@ -271,7 +267,7 @@
         <li class="included"><span class="check">✓</span>رفع الإيصالات</li>
         <li class="included"><span class="check">✓</span>دعم أولوي</li>
       </ul>
-      <button class="plan-btn plan-btn-ghost" onclick="startCheckout('business')">اشترك الآن</button>
+      <button class="plan-btn plan-btn-ghost" onclick="startCheckout('business', this)">اشترك الآن</button>
     </div>
 
   </div>
@@ -439,18 +435,16 @@
     if (!isOpen) item.classList.add('open')
   }
 
-  async function startCheckout(plan) {
+  async function startCheckout(plan, btn) {
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
     const { data: { session } } = await supabase.auth.getSession()
 
     if (!session) {
-      // غير مسجل — أرسله للتسجيل مع حفظ الباقة
       sessionStorage.setItem('selected_plan', plan)
       window.location.href = 'auth.html?plan=' + plan
       return
     }
 
-    const btn = event.currentTarget
     btn.textContent = '⏳ جاري التحضير...'
     btn.disabled = true
 
