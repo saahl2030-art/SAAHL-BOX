@@ -67,10 +67,32 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
   const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-  if (window.location.hash.includes('type=recovery')) {
-    document.getElementById('step1').style.display = 'none'
-    document.getElementById('step2').style.display = 'block'
+  async function init() {
+    const hash = window.location.hash
+    if (hash && hash.includes('type=recovery')) {
+      const { data } = await sb.auth.getSession()
+      if (data?.session) {
+        document.getElementById('step1').style.display = 'none'
+        document.getElementById('step2').style.display = 'block'
+      } else {
+        const params = new URLSearchParams(hash.substring(1))
+        const access_token  = params.get('access_token')
+        const refresh_token = params.get('refresh_token')
+        if (access_token && refresh_token) {
+          const { error: e } = await sb.auth.setSession({ access_token, refresh_token })
+          if (!e) {
+            document.getElementById('step1').style.display = 'none'
+            document.getElementById('step2').style.display = 'block'
+          } else {
+            alert('رابط منتهي الصلاحية أو غير صالح. يرجى طلب رابط جديد.')
+            window.location.href = 'reset.html'
+          }
+        }
+      }
+    }
   }
+
+  init()
 
   window.sendReset = async function() {
     const email = document.getElementById('email').value.trim()
