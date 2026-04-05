@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>إعادة تعيين كلمة المرور - صندوق ساهل</title>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root{
       --ink:#0a1628;--ink2:#1a2e4a;
@@ -32,7 +31,6 @@
     .msg.error{background:var(--red-s);color:var(--red);display:block}
     .back{display:block;text-align:center;margin-top:20px;font-size:13px;font-weight:800;color:var(--muted)}
     .back a{color:var(--sky)}
-    .divider{height:1px;background:var(--line);margin:20px 0}
   </style>
 </head>
 <body>
@@ -40,53 +38,42 @@
 <div class="card">
   <div class="logo">س</div>
 
-  <!-- الخطوة 1: طلب إعادة التعيين -->
   <div id="step1">
     <h1>نسيت كلمة المرور؟</h1>
     <p class="subtitle">أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين</p>
-
     <label class="label" for="email">البريد الإلكتروني</label>
     <input class="field" type="email" id="email" placeholder="example@email.com"/>
-
     <button class="btn btn-primary" id="sendBtn" onclick="sendReset()">إرسال رابط الاسترداد</button>
     <div class="msg" id="msg1"></div>
-
-    <div class="back">
-      تذكرت كلمة المرور؟ <a href="login.html">تسجيل الدخول</a>
-    </div>
+    <div class="back">تذكرت كلمة المرور؟ <a href="login.html">تسجيل الدخول</a></div>
   </div>
 
-  <!-- الخطوة 2: تعيين كلمة مرور جديدة -->
   <div id="step2" style="display:none">
     <h1>كلمة مرور جديدة</h1>
     <p class="subtitle">أدخل كلمة المرور الجديدة لحسابك</p>
-
     <label class="label" for="newPassword">كلمة المرور الجديدة</label>
     <input class="field" type="password" id="newPassword" placeholder="6 أحرف على الأقل" minlength="6"/>
-
     <label class="label" for="confirmPassword">تأكيد كلمة المرور</label>
     <input class="field" type="password" id="confirmPassword" placeholder="أعد كتابة كلمة المرور"/>
-
     <button class="btn btn-primary" id="updateBtn" onclick="updatePassword()">تحديث كلمة المرور</button>
     <div class="msg" id="msg2"></div>
   </div>
 </div>
 
-<script>
-  const SUPABASE_URL     = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-  // تحقق إذا الرابط يحتوي على token إعادة التعيين
-  window.addEventListener('load', async () => {
-    const hash = window.location.hash
-    if (hash && hash.includes('type=recovery')) {
-      document.getElementById('step1').style.display = 'none'
-      document.getElementById('step2').style.display = 'block'
-    }
-  })
+  const sb = createClient(
+    'https://qxyrpnexybxmfmtrnzpg.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
+  )
 
-  async function sendReset() {
+  if (window.location.hash.includes('type=recovery')) {
+    document.getElementById('step1').style.display = 'none'
+    document.getElementById('step2').style.display = 'block'
+  }
+
+  window.sendReset = async function() {
     const email = document.getElementById('email').value.trim()
     const msg   = document.getElementById('msg1')
     const btn   = document.getElementById('sendBtn')
@@ -101,7 +88,7 @@
     btn.disabled = true
     btn.textContent = '⏳ جاري الإرسال...'
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
       redirectTo: 'https://saahl2030-art.github.io/SAAHL-BOX/reset.html'
     })
 
@@ -114,11 +101,11 @@
       msg.textContent = '✅ تم الإرسال! تحقق من بريدك الإلكتروني واضغط على الرابط.'
       msg.className = 'msg success'
       btn.disabled = true
-      btn.textContent = 'تم الإرسال'
+      btn.textContent = 'تم الإرسال ✓'
     }
   }
 
-  async function updatePassword() {
+  window.updatePassword = async function() {
     const newPass     = document.getElementById('newPassword').value
     const confirmPass = document.getElementById('confirmPassword').value
     const msg         = document.getElementById('msg2')
@@ -139,7 +126,7 @@
     btn.disabled = true
     btn.textContent = '⏳ جاري التحديث...'
 
-    const { error } = await supabase.auth.updateUser({ password: newPass })
+    const { error } = await sb.auth.updateUser({ password: newPass })
 
     if (error) {
       msg.textContent = 'حدث خطأ: ' + error.message
