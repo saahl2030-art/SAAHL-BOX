@@ -63,10 +63,9 @@
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-  const sb = createClient(
-    'https://qxyrpnexybxmfmtrnzpg.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
-  )
+  const SUPABASE_URL      = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
   if (window.location.hash.includes('type=recovery')) {
     document.getElementById('step1').style.display = 'none'
@@ -88,20 +87,27 @@
     btn.disabled = true
     btn.textContent = '⏳ جاري الإرسال...'
 
-    const { error } = await sb.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://saahl2030-art.github.io/SAAHL-BOX/reset.html'
-    })
+    try {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/send-reset-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      })
 
-    if (error) {
-      msg.textContent = 'حدث خطأ: ' + error.message
+      const data = await res.json()
+
+      if (data.success) {
+        msg.textContent = '✅ تم الإرسال! تحقق من بريدك الإلكتروني واضغط على الرابط.'
+        msg.className = 'msg success'
+        btn.textContent = 'تم الإرسال ✓'
+      } else {
+        throw new Error(data.error || 'فشل الإرسال')
+      }
+    } catch(err) {
+      msg.textContent = 'حدث خطأ: ' + err.message
       msg.className = 'msg error'
       btn.disabled = false
       btn.textContent = 'إرسال رابط الاسترداد'
-    } else {
-      msg.textContent = '✅ تم الإرسال! تحقق من بريدك الإلكتروني واضغط على الرابط.'
-      msg.className = 'msg success'
-      btn.disabled = true
-      btn.textContent = 'تم الإرسال ✓'
     }
   }
 
