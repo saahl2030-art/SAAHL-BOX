@@ -74,9 +74,9 @@
   const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
   async function init() {
-    const params = new URLSearchParams(window.location.search)
+    const params     = new URLSearchParams(window.location.search)
     const token_hash = params.get('token_hash')
-    const type = params.get('type')
+    const type       = params.get('type')
 
     if (token_hash && type === 'recovery') {
       const { error } = await sb.auth.verifyOtp({ token_hash, type: 'recovery' })
