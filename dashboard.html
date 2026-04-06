@@ -120,23 +120,27 @@
     .cycle-banner.completed{background:#e8f8f1;color:var(--green);border:1px solid #b7e4cf}
     .cycle-banner.stopped{background:var(--red-soft);color:var(--red);border:1px solid #f5c6c6}
     .cycle-banner.active{background:var(--primary-soft);color:var(--primary-dark);border:1px solid #c3dff0}
-
-    /* شريط سعة الأعضاء */
     .capacity-wrap{margin-top:12px;padding:12px;background:#f8fbff;border-radius:12px;border:1px solid var(--line)}
     .capacity-label{display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px}
     .capacity-track{height:8px;background:#e5eef5;border-radius:999px;overflow:hidden}
     .capacity-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--primary),#46a8d8);transition:.3s}
     .capacity-fill.near{background:linear-gradient(90deg,var(--amber),#f0a030)}
     .capacity-fill.full{background:linear-gradient(90deg,var(--red),#e05c5c)}
-
     .schedule-table{width:100%;min-width:700px;border-collapse:collapse}
     .schedule-table th{padding:12px 14px;text-align:right;background:#f7fbff;color:var(--muted);font-weight:900;font-size:12px;border-bottom:2px solid var(--line)}
     .schedule-table td{padding:12px 14px;text-align:right;border-bottom:1px solid var(--line);font-size:13px;font-weight:700}
     .schedule-table tr:last-child td{border-bottom:none}
     .schedule-table tr:hover td{background:#fcfeff}
 
-    @media(max-width:1280px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+    /* ── قسم الإيصالات ── */
+    .receipt-link-box{background:var(--primary-soft);border:1px solid #c3dff0;border-radius:14px;padding:16px;margin-bottom:16px}
+    .receipt-link-box p{font-size:13px;color:var(--muted);margin-bottom:10px;font-weight:700}
+    .receipt-link-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .receipt-link-row input{flex:1;border:1px solid var(--line-dark);background:#fff;border-radius:10px;padding:9px 12px;font-size:12px;outline:none;min-width:0}
+    .receipt-img{width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid var(--line);cursor:pointer}
+    .receipt-modal-img{width:100%;border-radius:12px;border:1px solid var(--line);margin-bottom:12px}
 
+    @media(max-width:1280px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:980px){
       .app{grid-template-columns:1fr}
       .sidebar{position:relative;height:auto;border-left:none;border-bottom:1px solid var(--line)}
@@ -144,7 +148,6 @@
       .content{padding:16px}
       .grid-2{grid-template-columns:1fr}
     }
-
     @media(max-width:640px){
       .menu{grid-template-columns:repeat(2,1fr)}
       .stats-grid{grid-template-columns:repeat(2,1fr)}
@@ -165,7 +168,6 @@
       .brand h1{font-size:16px}
       .manager-chip strong{font-size:13px}
     }
-
     @media(max-width:480px){
       .menu-btn{padding:10px 8px;font-size:12px;gap:6px}
       .menu-icon{width:26px;height:26px;font-size:13px;flex:0 0 26px}
@@ -244,6 +246,18 @@
   </div>
 </div>
 
+<!-- Modal: عرض الإيصال -->
+<div class="modal-overlay" id="receiptViewModal">
+  <div class="modal" style="max-width:600px">
+    <h3>إيصال الدفع</h3>
+    <div id="receiptViewContent"></div>
+    <div class="modal-actions">
+      <button class="btn btn-soft" onclick="closeModal('receiptViewModal')">إغلاق</button>
+      <button class="btn btn-success" id="confirmReceiptBtn">✅ تأكيد الاستلام</button>
+    </div>
+  </div>
+</div>
+
 <div class="app">
   <aside class="sidebar">
     <div class="brand">
@@ -265,6 +279,10 @@
         <div class="req-badge" id="reqBadge">0</div>
       </button>
       <button class="menu-btn" data-page="payments-page"><div class="menu-icon">💳</div><span>الدفعات</span></button>
+      <button class="menu-btn" data-page="receipts-page">
+        <div class="menu-icon">🧾</div><span>الإيصالات</span>
+        <div class="req-badge" id="receiptBadge">0</div>
+      </button>
       <button class="menu-btn" data-page="schedule-page"><div class="menu-icon">📅</div><span>جدول الدفعات</span></button>
       <button class="menu-btn" data-page="link-page"><div class="menu-icon">🔗</div><span>رابط الانضمام</span></button>
       <button class="menu-btn" data-page="plan-page"><div class="menu-icon">📦</div><span>الباقة</span></button>
@@ -314,7 +332,6 @@
               <span style="color:var(--muted);font-weight:700">شهر البداية</span><strong id="infoStartDate">—</strong>
             </div>
           </div>
-          <!-- شريط السعة -->
           <div class="capacity-wrap">
             <div class="capacity-label">
               <span>سعة الأعضاء</span>
@@ -412,6 +429,68 @@
       </div>
     </section>
 
+    <!-- ══════ قسم الإيصالات الجديد ══════ -->
+    <section class="page" id="receipts-page">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">🧾 إيصالات الأعضاء</div>
+            <div class="card-sub">الإيصالات المرفوعة من الأعضاء في انتظار التأكيد</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-soft btn-sm" onclick="loadReceipts()">🔄 تحديث</button>
+            <button class="btn btn-primary btn-sm" onclick="copyReceiptLink()">📋 نسخ رابط الرفع</button>
+          </div>
+        </div>
+
+        <!-- بوكس رابط الرفع الشهري -->
+        <div class="receipt-link-box">
+          <p>📤 أرسل هذا الرابط للأعضاء في بداية كل شهر ليرفعوا إيصالاتهم:</p>
+          <div class="receipt-link-row">
+            <input type="text" id="receiptLinkInput" readonly placeholder="جاري التحميل...">
+            <button class="btn btn-primary btn-sm" onclick="copyReceiptLink()">نسخ</button>
+            <button class="btn btn-soft btn-sm" onclick="shareReceiptWhatsApp()">واتساب 💬</button>
+          </div>
+        </div>
+
+        <!-- فلتر -->
+        <div class="filters">
+          <select class="select" id="receiptFilterStatus" onchange="loadReceipts()">
+            <option value="">كل الإيصالات</option>
+            <option value="pending">في الانتظار</option>
+            <option value="confirmed">مؤكدة</option>
+          </select>
+          <select class="select" id="receiptFilterMonth" onchange="loadReceipts()">
+            <option value="">كل الأشهر</option>
+            <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option>
+            <option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option>
+            <option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option>
+            <option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>العضو</th>
+                <th>الشهر</th>
+                <th>السنة</th>
+                <th>المبلغ</th>
+                <th>تاريخ الرفع</th>
+                <th>الإيصال</th>
+                <th>الحالة</th>
+                <th>إجراء</th>
+              </tr>
+            </thead>
+            <tbody id="receiptsBody">
+              <tr><td colspan="8" class="empty">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
     <!-- جدول الدفعات -->
     <section class="page" id="schedule-page">
       <div class="card">
@@ -474,9 +553,9 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 let currentUser = null, currentProfile = null, currentGroup = null, editingMemberId = null
+let currentReceiptPaymentId = null
 const loader = document.getElementById('pageLoader')
 
-// ════ التهيئة ════
 async function init() {
   loader.classList.add('show')
   try {
@@ -499,37 +578,30 @@ async function init() {
     loadRequests()
     loadPayments()
     loadSchedule()
+    loadReceipts()
     loadPlan()
     loadNotes()
     setJoinLink()
+    setReceiptLink()
 
   } catch(e) { console.error(e); window.location.href = 'login.html' }
   finally { loader.classList.remove('show') }
 }
 
-// ════ مساعد: جلب عدد الأعضاء الحاليين ════
 async function getMemberCount() {
   const { count } = await sb.from('members').select('*',{count:'exact',head:true})
     .eq('group_id', currentGroup.id).eq('status','active')
   return count || 0
 }
 
-// ════ تحديث شريط السعة ════
 function updateCapacityBar(current, max) {
   const pct  = Math.min(100, Math.round(current / max * 100))
   const fill = document.getElementById('capacityFill')
   const text = document.getElementById('capacityText')
   const side = document.getElementById('sidebarCapacity')
-
-  if (fill) {
-    fill.style.width = pct + '%'
-    fill.className = 'capacity-fill' + (pct >= 100 ? ' full' : pct >= 75 ? ' near' : '')
-  }
+  if (fill) { fill.style.width = pct + '%'; fill.className = 'capacity-fill' + (pct >= 100 ? ' full' : pct >= 75 ? ' near' : '') }
   if (text) text.textContent = `${current} من ${max} عضو (${pct}%)`
-  if (side) {
-    side.textContent = `${current} / ${max}`
-    side.style.color = pct >= 100 ? 'var(--red)' : pct >= 75 ? 'var(--amber)' : 'var(--green)'
-  }
+  if (side) { side.textContent = `${current} / ${max}`; side.style.color = pct >= 100 ? 'var(--red)' : pct >= 75 ? 'var(--amber)' : 'var(--green)' }
 }
 
 function updateSidebar() {
@@ -537,7 +609,6 @@ function updateSidebar() {
   document.getElementById('sidebarGroupName').textContent   = currentGroup.name || '—'
 }
 
-// ════ النظرة العامة ════
 async function updateOverview() {
   document.getElementById('infoGroupName').textContent   = currentGroup.name
   document.getElementById('infoManagerName').textContent = currentProfile.full_name
@@ -569,20 +640,13 @@ async function updateOverview() {
 
   const currentCount = await getMemberCount()
   const maxMembers   = currentGroup.max_members || 4
-
   document.getElementById('statTotal').textContent = currentCount
   updateCapacityBar(currentCount, maxMembers)
 
-  // تعطيل زر الإضافة إذا امتلأت الجمعية
   const addBtn = document.getElementById('addMemberBtn')
   if (addBtn) {
-    if (currentCount >= maxMembers) {
-      addBtn.disabled = true
-      addBtn.textContent = `الجمعية ممتلئة (${maxMembers}/${maxMembers})`
-    } else {
-      addBtn.disabled = false
-      addBtn.textContent = '+ إضافة عضو'
-    }
+    if (currentCount >= maxMembers) { addBtn.disabled = true; addBtn.textContent = `الجمعية ممتلئة (${maxMembers}/${maxMembers})` }
+    else { addBtn.disabled = false; addBtn.textContent = '+ إضافة عضو' }
   }
 
   const { data: paidList } = await sb.from('payments').select('id').eq('group_id',currentGroup.id).eq('status','paid')
@@ -609,10 +673,24 @@ async function updateOverview() {
         </div>
       </div>`).join('')
   }
+
+  // بادج الإيصالات المعلقة
+  const { count: pendingReceipts } = await sb.from('payments')
+    .select('*', { count: 'exact', head: true })
+    .eq('group_id', currentGroup.id)
+    .eq('receipt_status', 'pending')
+    .not('receipt_url', 'is', null)
+  updateReceiptBadge(pendingReceipts || 0)
 }
 
 function updateReqBadge(count) {
   const badge = document.getElementById('reqBadge')
+  if (count > 0) { badge.textContent=count; badge.classList.add('show') }
+  else badge.classList.remove('show')
+}
+
+function updateReceiptBadge(count) {
+  const badge = document.getElementById('receiptBadge')
   if (count > 0) { badge.textContent=count; badge.classList.add('show') }
   else badge.classList.remove('show')
 }
@@ -632,14 +710,9 @@ window.loadMembers = async function() {
   let q = sb.from('members').select('*').eq('group_id',currentGroup.id).order('join_month')
   if (month) q = q.eq('join_month',parseInt(month))
   if (year)  q = q.eq('join_year',parseInt(year))
-
   const { data, error } = await q
   const tbody = document.getElementById('membersBody')
-  if (error || !data || data.length===0) {
-    tbody.innerHTML=`<tr><td colspan="8" class="empty">${error?'خطأ في التحميل':'لا يوجد أعضاء'}</td></tr>`
-    document.getElementById('memberCount').textContent = '0 عضو'
-    return
-  }
+  if (error || !data || data.length===0) { tbody.innerHTML=`<tr><td colspan="8" class="empty">${error?'خطأ في التحميل':'لا يوجد أعضاء'}</td></tr>`; document.getElementById('memberCount').textContent = '0 عضو'; return }
   document.getElementById('memberCount').textContent = `${data.length} عضو من ${currentGroup.max_members||4}`
   tbody.innerHTML = data.map((m,i) => `
     <tr>
@@ -664,13 +737,9 @@ window.clearFilters = function() {
 }
 
 window.openAddMember = async function() {
-  // تحقق من الحد قبل فتح النموذج
   const current = await getMemberCount()
   const max     = currentGroup.max_members || 4
-  if (current >= max) {
-    alert(`وصلت الجمعية للحد الأقصى (${max} أعضاء). لا يمكن إضافة المزيد.`)
-    return
-  }
+  if (current >= max) { alert(`وصلت الجمعية للحد الأقصى (${max} أعضاء).`); return }
   editingMemberId = null
   document.getElementById('memberModalTitle').textContent = 'إضافة عضو'
   document.getElementById('m_fullName').value = ''
@@ -700,37 +769,22 @@ window.saveMember = async function() {
   const join_month   = parseInt(document.getElementById('m_month').value)
   const join_year    = parseInt(document.getElementById('m_year').value)
   const payout_order = parseInt(document.getElementById('m_order').value)||null
-
   if (!fullName||!join_month||!join_year) { showMsg('memberMsg','أكمل الحقول المطلوبة','error'); return }
   document.getElementById('memberSaveBtn').disabled = true
-
   let error
   if (editingMemberId) {
     ({error} = await sb.from('members').update({full_name:fullName,phone,join_month,join_year,payout_order}).eq('id',editingMemberId))
   } else {
-    // تحقق نهائي من الحد
     const current = await getMemberCount()
     const max     = currentGroup.max_members || 4
-    if (current >= max) {
-      showMsg('memberMsg',`الجمعية وصلت للحد الأقصى (${max} أعضاء)`, 'error')
-      document.getElementById('memberSaveBtn').disabled = false
-      return
-    }
-    const { data: existing } = await sb.from('members').select('id')
-      .eq('group_id',currentGroup.id).eq('join_month',join_month).eq('join_year',join_year)
-    if (existing&&existing.length>0) {
-      showMsg('memberMsg','هذا الشهر محجوز لعضو آخر','error')
-      document.getElementById('memberSaveBtn').disabled=false; return
-    }
+    if (current >= max) { showMsg('memberMsg',`الجمعية وصلت للحد الأقصى (${max} أعضاء)`,'error'); document.getElementById('memberSaveBtn').disabled=false; return }
+    const { data: existing } = await sb.from('members').select('id').eq('group_id',currentGroup.id).eq('join_month',join_month).eq('join_year',join_year)
+    if (existing&&existing.length>0) { showMsg('memberMsg','هذا الشهر محجوز لعضو آخر','error'); document.getElementById('memberSaveBtn').disabled=false; return }
     ;({error} = await sb.from('members').insert({group_id:currentGroup.id,full_name:fullName,phone,join_month,join_year,payout_order,status:'active'}))
   }
-
   document.getElementById('memberSaveBtn').disabled = false
   if (error) { showMsg('memberMsg','خطأ: '+error.message,'error'); return }
-  closeModal('memberModal')
-  loadMembers()
-  loadSchedule()
-  updateOverview()
+  closeModal('memberModal'); loadMembers(); loadSchedule(); updateOverview()
 }
 
 window.deleteMember = async function(id) {
@@ -789,6 +843,113 @@ window.loadPayments = async function() {
     </tr>`).join('')
 }
 
+// ════ الإيصالات ════
+window.loadReceipts = async function() {
+  const statusFilter = document.getElementById('receiptFilterStatus')?.value
+  const monthFilter  = document.getElementById('receiptFilterMonth')?.value
+
+  let q = sb.from('payments')
+    .select('*, members(full_name)')
+    .eq('group_id', currentGroup.id)
+    .not('receipt_url', 'is', null)
+    .order('updated_at', { ascending: false })
+
+  if (statusFilter) q = q.eq('receipt_status', statusFilter)
+  if (monthFilter)  q = q.eq('payment_month', parseInt(monthFilter))
+
+  const { data, error } = await q
+  const tbody = document.getElementById('receiptsBody')
+
+  if (error || !data || data.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" class="empty">${error ? 'خطأ في التحميل' : 'لا توجد إيصالات مرفوعة بعد'}</td></tr>`
+    updateReceiptBadge(0)
+    return
+  }
+
+  const pending = data.filter(p => p.receipt_status === 'pending').length
+  updateReceiptBadge(pending)
+
+  tbody.innerHTML = data.map(p => {
+    const isPending = p.receipt_status === 'pending' || !p.receipt_status
+    const isImage   = p.receipt_url && /\.(jpg|jpeg|png|gif|webp)/i.test(p.receipt_url)
+    return `<tr>
+      <td><strong>${p.members?.full_name || '—'}</strong></td>
+      <td>${monthName(p.payment_month)}</td>
+      <td>${p.payment_year}</td>
+      <td>${p.amount} درهم</td>
+      <td>${p.updated_at ? new Date(p.updated_at).toLocaleDateString('ar') : '—'}</td>
+      <td>
+        ${isImage
+          ? `<img src="${p.receipt_url}" class="receipt-img" onclick="viewReceipt('${p.id}','${escQ(p.members?.full_name||'')}','${p.receipt_url}',${p.payment_month},${p.payment_year})" title="اضغط للعرض">`
+          : `<a href="${p.receipt_url}" target="_blank" class="action-btn action-blue">📄 فتح PDF</a>`
+        }
+      </td>
+      <td>
+        ${isPending
+          ? `<span class="badge badge-amber">⏳ في الانتظار</span>`
+          : `<span class="badge badge-green">✅ مؤكد</span>`
+        }
+      </td>
+      <td>
+        ${isPending
+          ? `<button class="action-btn action-green" onclick="confirmReceipt('${p.id}')">✅ تأكيد</button>`
+          : `<span style="color:var(--muted);font-size:12px">تم التأكيد</span>`
+        }
+      </td>
+    </tr>`
+  }).join('')
+}
+
+window.viewReceipt = function(paymentId, memberName, url, month, year) {
+  currentReceiptPaymentId = paymentId
+  const content = document.getElementById('receiptViewContent')
+  content.innerHTML = `
+    <div style="margin-bottom:12px;font-size:14px;font-weight:700;color:var(--muted)">${memberName} — ${monthName(month)} ${year}</div>
+    <img src="${url}" class="receipt-modal-img" alt="إيصال الدفع">
+  `
+  const confirmBtn = document.getElementById('confirmReceiptBtn')
+  confirmBtn.onclick = () => confirmReceipt(paymentId)
+  openModal('receiptViewModal')
+}
+
+window.confirmReceipt = async function(paymentId) {
+  const { error } = await sb.from('payments').update({
+    receipt_status: 'confirmed',
+    status: 'paid',
+    paid_at: new Date().toISOString()
+  }).eq('id', paymentId)
+
+  if (error) { alert('خطأ: ' + error.message); return }
+  closeModal('receiptViewModal')
+  loadReceipts()
+  loadPayments()
+  loadSchedule()
+  updateOverview()
+}
+
+// ════ رابط رفع الإيصالات ════
+function setReceiptLink() {
+  const base = window.location.origin + window.location.pathname.replace(/[^/]*$/, '')
+  const link = `${base}receipt.html?token=${currentGroup.join_token}&month=${new Date().getMonth()+1}&year=${new Date().getFullYear()}`
+  const input = document.getElementById('receiptLinkInput')
+  if (input) input.value = link
+}
+
+window.copyReceiptLink = function() {
+  const input = document.getElementById('receiptLinkInput')
+  if (!input) return
+  navigator.clipboard.writeText(input.value).then(() => {
+    alert('تم نسخ رابط رفع الإيصالات ✅')
+  })
+}
+
+window.shareReceiptWhatsApp = function() {
+  const link = document.getElementById('receiptLinkInput')?.value
+  if (!link) return
+  const month = monthName(new Date().getMonth()+1)
+  window.open(`https://wa.me/?text=${encodeURIComponent(`🧾 أعضاء الجمعية الكرام،\nيرجى رفع إيصال دفع شهر ${month} عبر الرابط التالي:\n${link}`)}`, '_blank')
+}
+
 // ════ جدول الدفعات ════
 window.loadSchedule = async function() {
   const {data:members,error}=await sb.from('members').select('*').eq('group_id',currentGroup.id).order('join_year').order('join_month')
@@ -831,22 +992,14 @@ window.loadRequests = async function() {
     </tr>`).join('')
 }
 
-// ════ قبول الطلب مع تحقق من الحد ════
 window.approveRequest = async function(id,name,phone,month,year) {
-  // تحقق من الحد
   const current = await getMemberCount()
   const max     = currentGroup.max_members || 4
-  if (current >= max) {
-    alert(`لا يمكن قبول الطلب. الجمعية وصلت للحد الأقصى (${max} أعضاء).`)
-    return
-  }
-  // تحقق من الشهر
+  if (current >= max) { alert(`لا يمكن قبول الطلب. الجمعية وصلت للحد الأقصى (${max} أعضاء).`); return }
   const {data:existing}=await sb.from('members').select('id').eq('group_id',currentGroup.id).eq('join_month',month).eq('join_year',year)
   if(existing&&existing.length>0){alert('هذا الشهر محجوز مسبقاً.');return}
-
   await sb.from('join_requests').update({status:'approved'}).eq('id',id)
   await sb.from('members').insert({group_id:currentGroup.id,full_name:name,phone,join_month:month,join_year:year,status:'active'})
-
   loadRequests(); loadMembers(); loadSchedule(); updateOverview()
 }
 
@@ -943,6 +1096,7 @@ const pageTitles={
   'members-page':['الأعضاء','قائمة أعضاء الجمعية'],
   'requests-page':['طلبات الانضمام','الطلبات الواردة عبر رابط الانضمام'],
   'payments-page':['الدفعات','سجل دفعات الأعضاء'],
+  'receipts-page':['الإيصالات','إيصالات الأعضاء المرفوعة'],
   'schedule-page':['جدول الدفعات','جدول الدفعات الشهري'],
   'link-page':['رابط الانضمام','أرسل الرابط للأعضاء الجدد'],
   'plan-page':['الباقة الحالية','تفاصيل اشتراكك'],
