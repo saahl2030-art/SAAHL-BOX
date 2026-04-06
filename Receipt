@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>رفع إيصال الدفع - صندوق ساهل</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f4f8fc;--panel:#ffffff;--panel-soft:#f8fbff;
+      --line:#dfe8f1;--line-dark:#cfdbe7;
+      --text:#16324a;--muted:#6e8498;
+      --primary:#1f6fa5;--primary-dark:#185781;--primary-soft:#eaf5fd;
+      --green:#138a59;--green-soft:#e8f8f1;
+      --amber:#b7791f;--amber-soft:#fff5e4;
+      --red:#c53b3b;--red-soft:#fdeeee;
+      --shadow:0 12px 30px rgba(15,40,64,0.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Tajawal",sans-serif;background:linear-gradient(180deg,#f8fbff,#f3f7fb);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+    .wrap{width:100%;max-width:500px}
+    .brand{text-align:center;margin-bottom:28px}
+    .brand-logo{width:60px;height:60px;border-radius:18px;display:inline-grid;place-items:center;background:linear-gradient(135deg,var(--primary),#46a8d8);color:#fff;font-size:26px;font-weight:900;margin-bottom:10px}
+    .brand h1{font-size:22px;font-weight:900}
+    .brand p{color:var(--muted);font-size:13px;margin-top:4px}
+    .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px}
+    .card-title{font-size:18px;font-weight:900;margin-bottom:6px}
+    .card-sub{color:var(--muted);font-size:13px;margin-bottom:22px}
+    .label{display:block;margin-bottom:6px;color:var(--muted);font-size:12px;font-weight:800}
+    .field,.select{width:100%;border:1px solid var(--line-dark);background:#fff;color:var(--text);border-radius:12px;padding:12px 14px;outline:none;font-size:14px;font-family:"Tajawal",sans-serif}
+    .field:focus,.select:focus{border-color:#96bdd8;box-shadow:0 0 0 3px rgba(31,111,165,.08)}
+    .form-row{margin-bottom:16px}
+    .upload-area{border:2px dashed var(--line-dark);border-radius:14px;padding:28px 20px;text-align:center;cursor:pointer;transition:.2s;background:#fafcff;position:relative}
+    .upload-area:hover{border-color:var(--primary);background:var(--primary-soft)}
+    .upload-area.dragging{border-color:var(--primary);background:var(--primary-soft)}
+    .upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+    .upload-icon{font-size:36px;margin-bottom:10px}
+    .upload-text{font-size:14px;font-weight:800;color:var(--text)}
+    .upload-hint{font-size:12px;color:var(--muted);margin-top:4px}
+    .preview{margin-top:14px;display:none}
+    .preview img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+    .preview-name{font-size:12px;color:var(--muted);margin-top:6px;font-weight:700}
+    .btn{width:100%;border:none;border-radius:12px;padding:14px;cursor:pointer;font-size:15px;font-weight:900;transition:.2s;font-family:"Tajawal",sans-serif}
+    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 8px 16px rgba(31,111,165,.2);margin-top:20px}
+    .btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px)}
+    .btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none}
+    .msg{display:none;padding:12px 14px;border-radius:12px;font-size:13px;font-weight:700;margin-top:14px;text-align:center}
+    .msg.error{background:var(--red-soft);color:var(--red)}
+    .msg.success{background:var(--green-soft);color:var(--green)}
+    .msg.show{display:block}
+    .group-info{background:var(--primary-soft);border:1px solid #d3e9f8;border-radius:12px;padding:12px 14px;margin-bottom:20px;font-size:13px}
+    .group-info strong{display:block;font-size:15px;font-weight:900;color:var(--primary-dark);margin-bottom:4px}
+    .group-info span{color:var(--muted);font-weight:700}
+    .month-select{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .progress-bar{height:6px;background:#e5eef5;border-radius:999px;overflow:hidden;margin-top:10px;display:none}
+    .progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),#46a8d8);border-radius:999px;width:0%;transition:width .3s}
+    .success-state{text-align:center;padding:20px 0;display:none}
+    .success-state .check{font-size:56px;margin-bottom:14px}
+    .success-state h3{font-size:20px;font-weight:900;margin-bottom:8px}
+    .success-state p{color:var(--muted);font-size:13px}
+    .loader{display:none;position:fixed;inset:0;background:rgba(255,255,255,.85);z-index:200;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--primary)}
+    .loader.show{display:flex}
+    @media(max-width:480px){.card{padding:20px}.month-select{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<div class="loader" id="loader">جاري التحميل...</div>
+
+<div class="wrap">
+  <div class="brand">
+    <div class="brand-logo">س</div>
+    <h1>صندوق ساهل</h1>
+    <p>رفع إيصال الدفع الشهري</p>
+  </div>
+
+  <div class="card" id="mainCard">
+    <div id="groupInfo" class="group-info" style="display:none">
+      <strong id="groupName">—</strong>
+      <span id="groupAmount">—</span>
+    </div>
+
+    <div class="card-title">رفع الإيصال</div>
+    <div class="card-sub">اختر اسمك والشهر، ثم ارفع صورة إيصال التحويل البنكي</div>
+
+    <div class="form-row">
+      <label class="label">اسمك *</label>
+      <select class="select" id="memberSelect">
+        <option value="">— اختر اسمك —</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label class="label">شهر الدفع *</label>
+      <div class="month-select">
+        <select class="select" id="monthSelect">
+          <option value="1">يناير</option><option value="2">فبراير</option>
+          <option value="3">مارس</option><option value="4">أبريل</option>
+          <option value="5">مايو</option><option value="6">يونيو</option>
+          <option value="7">يوليو</option><option value="8">أغسطس</option>
+          <option value="9">سبتمبر</option><option value="10">أكتوبر</option>
+          <option value="11">نوفمبر</option><option value="12">ديسمبر</option>
+        </select>
+        <input class="field" type="number" id="yearInput" placeholder="السنة" value="">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label class="label">صورة الإيصال *</label>
+      <div class="upload-area" id="uploadArea">
+        <input type="file" id="fileInput" accept="image/*,application/pdf">
+        <div class="upload-icon">📎</div>
+        <div class="upload-text">اضغط لاختيار الملف أو اسحبه هنا</div>
+        <div class="upload-hint">صورة (JPG, PNG) أو PDF — حجم أقصى 5MB</div>
+      </div>
+      <div class="preview" id="preview">
+        <img id="previewImg" src="" alt="معاينة الإيصال">
+        <div class="preview-name" id="previewName"></div>
+      </div>
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <div class="msg" id="msg"></div>
+    <button class="btn btn-primary" id="submitBtn" onclick="submitReceipt()">رفع الإيصال ✅</button>
+
+    <!-- حالة النجاح -->
+    <div class="success-state" id="successState">
+      <div class="check">✅</div>
+      <h3>تم رفع الإيصال بنجاح!</h3>
+      <p>سيقوم المدير بمراجعة إيصالك وتأكيد الاستلام قريباً.</p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+const SUPABASE_URL      = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+const loader = document.getElementById('loader')
+let currentGroup = null
+
+async function init() {
+  loader.classList.add('show')
+  const params = new URLSearchParams(window.location.search)
+  const token  = params.get('token')
+  const month  = params.get('month')
+  const year   = params.get('year')
+
+  if (!token) {
+    showMsg('رابط غير صحيح. يرجى طلب الرابط من مدير الجمعية.', 'error')
+    loader.classList.remove('show')
+    return
+  }
+
+  // جلب الجمعية
+  const { data: group, error } = await sb.from('groups').select('*').eq('join_token', token).single()
+  if (error || !group) {
+    showMsg('الجمعية غير موجودة أو الرابط منتهي.', 'error')
+    loader.classList.remove('show')
+    return
+  }
+  currentGroup = group
+
+  // عرض معلومات الجمعية
+  document.getElementById('groupName').textContent  = group.name
+  document.getElementById('groupAmount').textContent = `المبلغ الشهري: ${group.monthly_amount} درهم`
+  document.getElementById('groupInfo').style.display = 'block'
+
+  // تعيين الشهر والسنة من الرابط إن وُجدا
+  if (month) document.getElementById('monthSelect').value = month
+  if (year)  document.getElementById('yearInput').value   = year
+  else       document.getElementById('yearInput').value   = new Date().getFullYear()
+
+  // جلب الأعضاء
+  const { data: members } = await sb.from('members').select('id, full_name').eq('group_id', group.id).eq('status', 'active').order('full_name')
+  const sel = document.getElementById('memberSelect')
+  if (members && members.length > 0) {
+    members.forEach(m => {
+      const opt = document.createElement('option')
+      opt.value = m.id
+      opt.textContent = m.full_name
+      sel.appendChild(opt)
+    })
+  }
+
+  loader.classList.remove('show')
+}
+
+// معاينة الملف
+document.getElementById('fileInput').addEventListener('change', function() {
+  const file = this.files[0]
+  if (!file) return
+  if (file.size > 5 * 1024 * 1024) {
+    showMsg('حجم الملف كبير جداً. الحد الأقصى 5MB.', 'error')
+    this.value = ''
+    return
+  }
+  document.getElementById('previewName').textContent = file.name
+  const preview = document.getElementById('preview')
+  preview.style.display = 'block'
+  if (file.type.startsWith('image/')) {
+    const reader = new FileReader()
+    reader.onload = e => { document.getElementById('previewImg').src = e.target.result; document.getElementById('previewImg').style.display = 'block' }
+    reader.readAsDataURL(file)
+  } else {
+    document.getElementById('previewImg').style.display = 'none'
+  }
+})
+
+// Drag & Drop
+const uploadArea = document.getElementById('uploadArea')
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragging') })
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragging'))
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault()
+  uploadArea.classList.remove('dragging')
+  const file = e.dataTransfer.files[0]
+  if (file) {
+    const dt = new DataTransfer()
+    dt.items.add(file)
+    document.getElementById('fileInput').files = dt.files
+    document.getElementById('fileInput').dispatchEvent(new Event('change'))
+  }
+})
+
+window.submitReceipt = async function() {
+  const memberId = document.getElementById('memberSelect').value
+  const month    = parseInt(document.getElementById('monthSelect').value)
+  const year     = parseInt(document.getElementById('yearInput').value)
+  const file     = document.getElementById('fileInput').files[0]
+
+  if (!memberId) { showMsg('يرجى اختيار اسمك من القائمة.', 'error'); return }
+  if (!month || !year) { showMsg('يرجى تحديد شهر وسنة الدفع.', 'error'); return }
+  if (!file) { showMsg('يرجى اختيار صورة الإيصال.', 'error'); return }
+
+  const btn = document.getElementById('submitBtn')
+  btn.disabled = true
+  btn.textContent = 'جاري الرفع...'
+  document.getElementById('progressBar').style.display = 'block'
+  document.getElementById('progressFill').style.width = '30%'
+
+  // رفع الملف لـ Storage
+  const ext      = file.name.split('.').pop()
+  const fileName = `${currentGroup.id}/${memberId}_${year}_${month}_${Date.now()}.${ext}`
+  const { data: uploadData, error: uploadError } = await sb.storage.from('receipts').upload(fileName, file, { cacheControl: '3600', upsert: false })
+
+  if (uploadError) {
+    showMsg('خطأ في رفع الملف: ' + uploadError.message, 'error')
+    btn.disabled = false; btn.textContent = 'رفع الإيصال ✅'
+    document.getElementById('progressBar').style.display = 'none'
+    return
+  }
+
+  document.getElementById('progressFill').style.width = '70%'
+
+  // جلب الرابط العام
+  const { data: urlData } = sb.storage.from('receipts').getPublicUrl(fileName)
+  const receiptUrl = urlData.publicUrl
+
+  // تحديث جدول payments
+  const { error: dbError } = await sb.from('payments').upsert({
+    group_id: currentGroup.id,
+    member_id: memberId,
+    payment_month: month,
+    payment_year: year,
+    amount: currentGroup.monthly_amount,
+    status: 'pending',
+    receipt_url: receiptUrl,
+    receipt_status: 'pending'
+  }, { onConflict: 'member_id,payment_month,payment_year' })
+
+  document.getElementById('progressFill').style.width = '100%'
+
+  if (dbError) {
+    showMsg('خطأ في حفظ البيانات: ' + dbError.message, 'error')
+    btn.disabled = false; btn.textContent = 'رفع الإيصال ✅'
+    return
+  }
+
+  // إظهار حالة النجاح
+  setTimeout(() => {
+    document.getElementById('progressBar').style.display = 'none'
+    document.getElementById('submitBtn').style.display   = 'none'
+    document.getElementById('successState').style.display = 'block'
+    document.getElementById('msg').className = 'msg'
+  }, 600)
+}
+
+function showMsg(text, type) {
+  const el = document.getElementById('msg')
+  el.textContent = text
+  el.className = `msg ${type} show`
+}
+
+init()
+</script>
+</body>
+</html>
