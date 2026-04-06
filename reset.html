@@ -125,7 +125,7 @@
     }
   }
 
-  window.updatePassword = async function() {
+window.updatePassword = async function() {
     const newPass     = document.getElementById('newPassword').value
     const confirmPass = document.getElementById('confirmPassword').value
     const msg         = document.getElementById('msg2')
@@ -146,6 +146,16 @@
     btn.disabled = true
     btn.textContent = '⏳ جاري التحديث...'
 
+    // التحقق من وجود session نشط
+    const { data: sessionData } = await sb.auth.getSession()
+    if (!sessionData?.session) {
+      msg.textContent = 'انتهت صلاحية الجلسة. يرجى طلب رابط جديد.'
+      msg.className = 'msg error'
+      btn.disabled = false
+      btn.textContent = 'تحديث كلمة المرور'
+      return
+    }
+
     const { error } = await sb.auth.updateUser({ password: newPass })
 
     if (error) {
@@ -154,6 +164,8 @@
       btn.disabled = false
       btn.textContent = 'تحديث كلمة المرور'
     } else {
+      // تسجيل الخروج بعد تغيير كلمة المرور لمنع الدخول بالقديمة
+      await sb.auth.signOut()
       msg.textContent = '✅ تم تحديث كلمة المرور بنجاح! جاري التحويل لتسجيل الدخول...'
       msg.className = 'msg success'
       setTimeout(() => { window.location.href = 'login.html' }, 2000)
