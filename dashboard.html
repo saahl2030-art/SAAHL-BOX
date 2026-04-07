@@ -82,7 +82,7 @@
     .badge-primary{background:var(--primary-soft);color:var(--primary-dark)}
     .badge-violet{background:var(--violet-soft);color:var(--violet)}
     .table-wrap{width:100%;overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
-    table{width:100%;min-width:800px;border-collapse:collapse}
+    table{width:100%;min-width:700px;border-collapse:collapse}
     thead{background:#f7fbff}
     th,td{padding:12px 14px;text-align:right;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle}
     th{color:var(--muted);font-weight:900;white-space:nowrap}
@@ -114,8 +114,8 @@
     .empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:14px;font-weight:700}
     .page-loader{display:none;position:fixed;inset:0;background:rgba(255,255,255,.85);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:12px;font-size:15px;font-weight:700;color:var(--primary)}
     .page-loader.show{display:flex}
-    .link-box{display:flex;align-items:center;gap:10px;background:#f8fbff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
-    .link-box input{flex:1;border:none;background:transparent;font-size:13px;color:var(--text);outline:none}
+    .link-box{display:flex;align-items:center;gap:10px;background:#f8fbff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;flex-wrap:wrap}
+    .link-box input{flex:1;border:none;background:transparent;font-size:13px;color:var(--text);outline:none;min-width:0}
     .cycle-banner{padding:14px 18px;border-radius:14px;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
     .cycle-banner.completed{background:#e8f8f1;color:var(--green);border:1px solid #b7e4cf}
     .cycle-banner.stopped{background:var(--red-soft);color:var(--red);border:1px solid #f5c6c6}
@@ -131,74 +131,36 @@
     .schedule-table td{padding:12px 14px;text-align:right;border-bottom:1px solid var(--line);font-size:13px;font-weight:700}
     .schedule-table tr:last-child td{border-bottom:none}
     .schedule-table tr:hover td{background:#fcfeff}
-
-    /* ── قسم الإيصالات ── */
-    .receipt-link-box{background:var(--primary-soft);border:1px solid #c3dff0;border-radius:14px;padding:16px;margin-bottom:16px}
-    .receipt-link-box p{font-size:13px;color:var(--muted);margin-bottom:10px;font-weight:700}
-    .receipt-link-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .receipt-link-row input{flex:1;border:1px solid var(--line-dark);background:#fff;border-radius:10px;padding:9px 12px;font-size:12px;outline:none;min-width:0}
-    .receipt-img{width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid var(--line);cursor:pointer}
-    .receipt-modal-img{width:100%;border-radius:12px;border:1px solid var(--line);margin-bottom:12px}
-
+    /* إيصالات */
+    .receipt-thumb{width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--line);cursor:pointer;transition:.2s;vertical-align:middle}
+    .receipt-thumb:hover{transform:scale(1.1);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+    .receipt-modal-img{width:100%;border-radius:12px;border:1px solid var(--line);margin-bottom:14px;max-height:65vh;object-fit:contain}
+    .no-receipt{color:#ccc;font-size:12px;font-weight:700}
+    .pending-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--amber);margin-right:4px;animation:pulse 1.5s infinite;vertical-align:middle}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    .receipt-link-section{background:linear-gradient(135deg,#f0f9ff,var(--primary-soft));border:1px solid #c3dff0;border-radius:14px;padding:16px;margin-bottom:18px}
+    .receipt-link-section h4{font-size:14px;font-weight:900;color:var(--primary-dark);margin-bottom:4px}
+    .receipt-link-section p{font-size:12px;color:var(--muted);margin-bottom:10px;font-weight:700}
     @media(max-width:1280px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:980px){
-      .app{grid-template-columns:1fr}
-      .sidebar{position:relative;height:auto;border-left:none;border-bottom:1px solid var(--line)}
-      .menu{display:grid;grid-template-columns:repeat(3,1fr)}
-      .content{padding:16px}
-      .grid-2{grid-template-columns:1fr}
-    }
-    @media(max-width:640px){
-      .menu{grid-template-columns:repeat(2,1fr)}
-      .stats-grid{grid-template-columns:repeat(2,1fr)}
-      .form-grid{grid-template-columns:1fr}
-      .topbar h2{font-size:20px}
-      .topbar{flex-direction:column;gap:10px}
-      .topbar-actions{width:100%}
-      .topbar-actions .btn{width:100%;justify-content:center}
-      .stat-card strong{font-size:20px}
-      .card{padding:14px}
-      .card-head{flex-direction:column;align-items:flex-start}
-      .cycle-banner{flex-direction:column;align-items:flex-start}
-      .link-box{flex-wrap:wrap}
-      .link-box input{width:100%;min-width:0}
-      .filters{flex-direction:column;align-items:stretch}
-      .filters .select,.filters .field{width:100%}
-      .modal{padding:16px;border-radius:14px}
-      .brand h1{font-size:16px}
-      .manager-chip strong{font-size:13px}
-    }
-    @media(max-width:480px){
-      .menu-btn{padding:10px 8px;font-size:12px;gap:6px}
-      .menu-icon{width:26px;height:26px;font-size:13px;flex:0 0 26px}
-      .stat-card{padding:12px}
-      .stat-card span{font-size:11px}
-      .stat-card strong{font-size:18px}
-      .content{padding:12px}
-      th,td{padding:9px 10px;font-size:12px}
-      .action-btn{padding:5px 7px;font-size:10px}
-      .btn-sm{padding:6px 10px;font-size:11px}
-    }
+    @media(max-width:980px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto;border-left:none;border-bottom:1px solid var(--line)}.menu{display:grid;grid-template-columns:repeat(3,1fr)}.content{padding:16px}.grid-2{grid-template-columns:1fr}}
+    @media(max-width:640px){.menu{grid-template-columns:repeat(2,1fr)}.stats-grid{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.topbar h2{font-size:20px}.topbar{flex-direction:column;gap:10px}.topbar-actions{width:100%}.topbar-actions .btn{width:100%;justify-content:center}.card{padding:14px}.card-head{flex-direction:column;align-items:flex-start}.cycle-banner{flex-direction:column;align-items:flex-start}.filters{flex-direction:column;align-items:stretch}.filters .select,.filters .field{width:100%}.modal{padding:16px;border-radius:14px}}
+    @media(max-width:480px){.menu-btn{padding:10px 8px;font-size:12px;gap:6px}.menu-icon{width:26px;height:26px;font-size:13px;flex:0 0 26px}.stat-card{padding:12px}.stat-card strong{font-size:18px}.content{padding:12px}th,td{padding:9px 10px;font-size:12px}.action-btn{padding:5px 7px;font-size:10px}.btn-sm{padding:6px 10px;font-size:11px}}
   </style>
 </head>
 <body>
 
 <div class="page-loader" id="pageLoader">جاري تحميل لوحة التحكم...</div>
 
-<!-- Modal: إضافة / تعديل عضو -->
+<!-- Modal: عضو -->
 <div class="modal-overlay" id="memberModal">
   <div class="modal">
     <h3 id="memberModalTitle">إضافة عضو</h3>
     <div class="form-grid">
       <div><label class="label">الاسم الكامل *</label><input class="field" id="m_fullName" type="text" placeholder="اسم العضو" style="width:100%"></div>
       <div><label class="label">رقم الهاتف</label><input class="field" id="m_phone" type="tel" placeholder="05xxxxxxxx" style="width:100%"></div>
-      <div>
-        <label class="label">شهر الاستلام *</label>
+      <div><label class="label">شهر الاستلام *</label>
         <select class="select" id="m_month" style="width:100%">
-          <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option>
-          <option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option>
-          <option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option>
-          <option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
+          <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option><option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option><option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option><option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
         </select>
       </div>
       <div><label class="label">السنة *</label><input class="field" id="m_year" type="number" placeholder="2024" style="width:100%"></div>
@@ -212,48 +174,33 @@
   </div>
 </div>
 
-<!-- Modal: تسجيل دفعة -->
-<div class="modal-overlay" id="paymentModal">
-  <div class="modal">
-    <h3>تسجيل دفعة</h3>
-    <input type="hidden" id="pay_memberId">
-    <div class="form-grid">
-      <div>
-        <label class="label">شهر الدفع *</label>
-        <select class="select" id="pay_month" style="width:100%">
-          <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option>
-          <option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option>
-          <option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option>
-          <option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
-        </select>
-      </div>
-      <div><label class="label">السنة *</label><input class="field" id="pay_year" type="number" placeholder="2024" style="width:100%"></div>
-      <div><label class="label">المبلغ (درهم) *</label><input class="field" id="pay_amount" type="number" placeholder="500" style="width:100%"></div>
-      <div><label class="label">تاريخ الاستحقاق</label><input class="field" id="pay_due" type="date" style="width:100%"></div>
-      <div>
-        <label class="label">حالة الدفع *</label>
-        <select class="select" id="pay_status" style="width:100%">
-          <option value="paid">مدفوع</option><option value="pending">معلق</option><option value="late">متأخر</option>
-        </select>
-      </div>
-      <div><label class="label">رابط الإيصال (اختياري)</label><input class="field" id="pay_receipt" type="url" placeholder="https://..." style="width:100%"></div>
-    </div>
-    <div class="msg" id="paymentMsg"></div>
+<!-- Modal: عرض الإيصال -->
+<div class="modal-overlay" id="receiptModal">
+  <div class="modal" style="max-width:580px">
+    <h3 id="receiptModalTitle">إيصال الدفع</h3>
+    <div id="receiptModalContent"></div>
     <div class="modal-actions">
-      <button class="btn btn-soft" onclick="closeModal('paymentModal')">إلغاء</button>
-      <button class="btn btn-primary" onclick="savePayment()">حفظ الدفعة</button>
+      <button class="btn btn-soft" onclick="closeModal('receiptModal')">إغلاق</button>
+      <button class="btn btn-success" id="confirmReceiptBtn" style="display:none" onclick="doConfirmReceipt()">✅ تأكيد الاستلام وتسجيل الدفعة</button>
     </div>
   </div>
 </div>
 
-<!-- Modal: عرض الإيصال -->
-<div class="modal-overlay" id="receiptViewModal">
-  <div class="modal" style="max-width:600px">
-    <h3>إيصال الدفع</h3>
-    <div id="receiptViewContent"></div>
+<!-- Modal: تعديل حالة -->
+<div class="modal-overlay" id="statusModal">
+  <div class="modal" style="max-width:360px">
+    <h3>تعديل حالة الدفعة</h3>
+    <input type="hidden" id="statusPaymentId">
+    <label class="label">الحالة الجديدة</label>
+    <select class="select" id="statusSelect" style="width:100%;margin-bottom:4px">
+      <option value="paid">✅ مدفوع</option>
+      <option value="pending">⏳ معلق</option>
+      <option value="late">🔴 متأخر</option>
+    </select>
+    <div class="msg" id="statusMsg"></div>
     <div class="modal-actions">
-      <button class="btn btn-soft" onclick="closeModal('receiptViewModal')">إغلاق</button>
-      <button class="btn btn-success" id="confirmReceiptBtn">✅ تأكيد الاستلام</button>
+      <button class="btn btn-soft" onclick="closeModal('statusModal')">إلغاء</button>
+      <button class="btn btn-primary" onclick="saveStatus()">حفظ</button>
     </div>
   </div>
 </div>
@@ -267,24 +214,15 @@
     <div class="manager-chip"><span>المدير</span><strong id="sidebarManagerName">...</strong></div>
     <div class="manager-chip" style="margin-top:8px"><span>الجمعية</span><strong id="sidebarGroupName">...</strong></div>
     <div class="manager-chip" style="margin-top:8px;background:var(--green-soft)">
-      <span>سعة الأعضاء</span>
-      <strong id="sidebarCapacity" style="color:var(--green)">— / —</strong>
+      <span>سعة الأعضاء</span><strong id="sidebarCapacity" style="color:var(--green)">— / —</strong>
     </div>
-
     <div class="menu" style="margin-top:16px">
       <button class="menu-btn active" data-page="overview-page"><div class="menu-icon">📋</div><span>نظرة عامة</span></button>
       <button class="menu-btn" data-page="members-page"><div class="menu-icon">👥</div><span>الأعضاء</span></button>
-      <button class="menu-btn" data-page="requests-page">
-        <div class="menu-icon">📨</div><span>طلبات الانضمام</span>
-        <div class="req-badge" id="reqBadge">0</div>
-      </button>
-      <button class="menu-btn" data-page="payments-page"><div class="menu-icon">💳</div><span>الدفعات</span></button>
-      <button class="menu-btn" data-page="receipts-page">
-        <div class="menu-icon">🧾</div><span>الإيصالات</span>
-        <div class="req-badge" id="receiptBadge">0</div>
-      </button>
+      <button class="menu-btn" data-page="requests-page"><div class="menu-icon">📨</div><span>طلبات الانضمام</span><div class="req-badge" id="reqBadge">0</div></button>
+      <button class="menu-btn" data-page="payments-page"><div class="menu-icon">💳</div><span>الدفعات والإيصالات</span><div class="req-badge" id="receiptBadge">0</div></button>
       <button class="menu-btn" data-page="schedule-page"><div class="menu-icon">📅</div><span>جدول الدفعات</span></button>
-      <button class="menu-btn" data-page="link-page"><div class="menu-icon">🔗</div><span>رابط الانضمام</span></button>
+      <button class="menu-btn" data-page="link-page"><div class="menu-icon">🔗</div><span>روابط الجمعية</span></button>
       <button class="menu-btn" data-page="plan-page"><div class="menu-icon">📦</div><span>الباقة</span></button>
       <button class="menu-btn" data-page="notes-page"><div class="menu-icon">📝</div><span>ملاحظات للإدارة</span></button>
       <button class="menu-btn" onclick="window.location.href='guide.html'"><div class="menu-icon">📖</div><span>دليل الاستخدام</span></button>
@@ -309,8 +247,8 @@
       <div class="stats-grid">
         <div class="stat-card"><span>الأعضاء الحاليين</span><strong id="statTotal">—</strong></div>
         <div class="stat-card"><span>الدفعات المسددة</span><strong id="statPaid">—</strong></div>
-        <div class="stat-card"><span>الدفعات المتأخرة</span><strong id="statLate">—</strong></div>
-        <div class="stat-card"><span>حالة الجمعية</span><strong id="statStatus">—</strong></div>
+        <div class="stat-card"><span>إيصالات بانتظار التأكيد</span><strong id="statReceipts" style="color:var(--amber)">—</strong></div>
+        <div class="stat-card"><span>الدفعات المتأخرة</span><strong id="statLate" style="color:var(--red)">—</strong></div>
       </div>
       <div class="grid-2">
         <div class="card">
@@ -319,38 +257,22 @@
             <span class="badge badge-green" id="groupStatusBadge">نشطة</span>
           </div>
           <div style="display:grid;gap:10px">
-            <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px">
-              <span style="color:var(--muted);font-weight:700">اسم الجمعية</span><strong id="infoGroupName">—</strong>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px">
-              <span style="color:var(--muted);font-weight:700">المدير</span><strong id="infoManagerName">—</strong>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px">
-              <span style="color:var(--muted);font-weight:700">المبلغ الشهري</span><strong id="infoAmount">—</strong>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px">
-              <span style="color:var(--muted);font-weight:700">شهر البداية</span><strong id="infoStartDate">—</strong>
-            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px"><span style="color:var(--muted);font-weight:700">اسم الجمعية</span><strong id="infoGroupName">—</strong></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px"><span style="color:var(--muted);font-weight:700">المدير</span><strong id="infoManagerName">—</strong></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px"><span style="color:var(--muted);font-weight:700">المبلغ الشهري</span><strong id="infoAmount">—</strong></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px"><span style="color:var(--muted);font-weight:700">شهر البداية</span><strong id="infoStartDate">—</strong></div>
           </div>
           <div class="capacity-wrap">
-            <div class="capacity-label">
-              <span>سعة الأعضاء</span>
-              <span id="capacityText">—</span>
-            </div>
-            <div class="capacity-track">
-              <div class="capacity-fill" id="capacityFill" style="width:0%"></div>
-            </div>
+            <div class="capacity-label"><span>سعة الأعضاء</span><span id="capacityText">—</span></div>
+            <div class="capacity-track"><div class="capacity-fill" id="capacityFill" style="width:0%"></div></div>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
             <button class="btn btn-primary btn-sm" onclick="switchPage('members-page')">عرض الأعضاء</button>
-            <button class="btn btn-soft btn-sm" onclick="switchPage('link-page')">رابط الانضمام</button>
+            <button class="btn btn-soft btn-sm" onclick="switchPage('payments-page')">الدفعات والإيصالات</button>
           </div>
         </div>
         <div class="card">
-          <div class="card-head">
-            <div class="card-title">آخر طلبات الانضمام</div>
-            <button class="btn btn-soft btn-sm" onclick="switchPage('requests-page')">عرض الكل</button>
-          </div>
+          <div class="card-head"><div class="card-title">آخر طلبات الانضمام</div><button class="btn btn-soft btn-sm" onclick="switchPage('requests-page')">عرض الكل</button></div>
           <div id="recentRequests"><div class="empty">لا توجد طلبات</div></div>
         </div>
       </div>
@@ -366,17 +288,14 @@
         <div class="filters">
           <select class="select" id="filterMonth" onchange="loadMembers()">
             <option value="">كل الأشهر</option>
-            <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option>
-            <option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option>
-            <option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option>
-            <option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
+            <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option><option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option><option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option><option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
           </select>
           <input class="field" id="filterYear" type="number" placeholder="السنة" style="width:110px" onchange="loadMembers()">
           <button class="btn btn-soft btn-sm" onclick="clearFilters()">مسح الفلتر</button>
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>#</th><th>الاسم</th><th>الهاتف</th><th>شهر الاستلام</th><th>السنة</th><th>الترتيب</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+            <thead><tr><th>#</th><th>الاسم</th><th>الهاتف</th><th>شهر الاستلام</th><th>السنة</th><th>الترتيب</th><th>الحالة</th><th>إجراء</th></tr></thead>
             <tbody id="membersBody"><tr><td colspan="8" class="empty">جاري التحميل...</td></tr></tbody>
           </table>
         </div>
@@ -399,93 +318,52 @@
       </div>
     </section>
 
-    <!-- الدفعات -->
+    <!-- الدفعات والإيصالات -->
     <section class="page" id="payments-page">
       <div class="card">
         <div class="card-head">
-          <div><div class="card-title">الدفعات</div><div class="card-sub">سجل كامل لدفعات الأعضاء</div></div>
+          <div><div class="card-title">💳 الدفعات والإيصالات</div><div class="card-sub">سجل شامل — يشمل الإيصالات المرفوعة من الأعضاء</div></div>
           <button class="btn btn-soft btn-sm" onclick="loadPayments()">🔄 تحديث</button>
         </div>
+
+        <!-- رابط الرفع الشهري -->
+        <div class="receipt-link-section">
+          <h4>📤 رابط رفع الإيصالات الشهري</h4>
+          <p>أرسله للأعضاء عبر واتساب في بداية كل شهر ليرفعوا إيصالاتهم مباشرة</p>
+          <div class="link-box">
+            <input type="text" id="receiptLinkInput" readonly>
+            <button class="btn btn-primary btn-sm" onclick="copyReceiptLink()">📋 نسخ</button>
+            <button class="btn btn-soft btn-sm" onclick="shareReceiptWhatsApp()">💬 واتساب</button>
+          </div>
+        </div>
+
+        <!-- فلاتر -->
         <div class="filters">
           <select class="select" id="payFilterMonth" onchange="loadPayments()">
             <option value="">كل الأشهر</option>
-            <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option>
-            <option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option>
-            <option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option>
-            <option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
+            <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option><option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option><option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option><option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
           </select>
-          <input class="field" id="payFilterYear" type="number" placeholder="السنة" style="width:110px" onchange="loadPayments()">
+          <input class="field" id="payFilterYear" type="number" placeholder="السنة" style="width:100px" onchange="loadPayments()">
           <select class="select" id="payFilterStatus" onchange="loadPayments()">
             <option value="">كل الحالات</option>
-            <option value="paid">مدفوع</option><option value="pending">معلق</option><option value="late">متأخر</option>
+            <option value="paid">✅ مدفوع</option>
+            <option value="pending">⏳ معلق</option>
+            <option value="late">🔴 متأخر</option>
           </select>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>العضو</th><th>المبلغ</th><th>الشهر</th><th>السنة</th><th>تاريخ الاستحقاق</th><th>تاريخ الدفع</th><th>الحالة</th><th>الإيصال</th><th>الإجراءات</th></tr></thead>
-            <tbody id="paymentsBody"><tr><td colspan="9" class="empty">جاري التحميل...</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════ قسم الإيصالات الجديد ══════ -->
-    <section class="page" id="receipts-page">
-      <div class="card">
-        <div class="card-head">
-          <div>
-            <div class="card-title">🧾 إيصالات الأعضاء</div>
-            <div class="card-sub">الإيصالات المرفوعة من الأعضاء في انتظار التأكيد</div>
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn btn-soft btn-sm" onclick="loadReceipts()">🔄 تحديث</button>
-            <button class="btn btn-primary btn-sm" onclick="copyReceiptLink()">📋 نسخ رابط الرفع</button>
-          </div>
-        </div>
-
-        <!-- بوكس رابط الرفع الشهري -->
-        <div class="receipt-link-box">
-          <p>📤 أرسل هذا الرابط للأعضاء في بداية كل شهر ليرفعوا إيصالاتهم:</p>
-          <div class="receipt-link-row">
-            <input type="text" id="receiptLinkInput" readonly placeholder="جاري التحميل...">
-            <button class="btn btn-primary btn-sm" onclick="copyReceiptLink()">نسخ</button>
-            <button class="btn btn-soft btn-sm" onclick="shareReceiptWhatsApp()">واتساب 💬</button>
-          </div>
-        </div>
-
-        <!-- فلتر -->
-        <div class="filters">
-          <select class="select" id="receiptFilterStatus" onchange="loadReceipts()">
+          <select class="select" id="payFilterReceipt" onchange="loadPayments()">
             <option value="">كل الإيصالات</option>
-            <option value="pending">في الانتظار</option>
-            <option value="confirmed">مؤكدة</option>
-          </select>
-          <select class="select" id="receiptFilterMonth" onchange="loadReceipts()">
-            <option value="">كل الأشهر</option>
-            <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option>
-            <option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option>
-            <option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option>
-            <option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
+            <option value="has">📎 مرفوع إيصال</option>
+            <option value="none">❌ بدون إيصال</option>
+            <option value="pending_confirm">⏳ بانتظار التأكيد</option>
           </select>
         </div>
 
         <div class="table-wrap">
           <table>
             <thead>
-              <tr>
-                <th>العضو</th>
-                <th>الشهر</th>
-                <th>السنة</th>
-                <th>المبلغ</th>
-                <th>تاريخ الرفع</th>
-                <th>الإيصال</th>
-                <th>الحالة</th>
-                <th>إجراء</th>
-              </tr>
+              <tr><th>العضو</th><th>الشهر / السنة</th><th>المبلغ</th><th>الإيصال</th><th>حالة الدفعة</th><th>تاريخ الدفع</th><th>إجراء</th></tr>
             </thead>
-            <tbody id="receiptsBody">
-              <tr><td colspan="8" class="empty">جاري التحميل...</td></tr>
-            </tbody>
+            <tbody id="paymentsBody"><tr><td colspan="7" class="empty">جاري التحميل...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -495,27 +373,39 @@
     <section class="page" id="schedule-page">
       <div class="card">
         <div class="card-head">
-          <div><div class="card-title">جدول الدفعات الشهري</div><div class="card-sub">كل الأعضاء مرتبين بالأشهر مع حالة دفعاتهم</div></div>
+          <div><div class="card-title">جدول الدفعات الشهري</div><div class="card-sub">كل الأعضاء مع حالة دفعاتهم وإيصالاتهم</div></div>
           <button class="btn btn-soft btn-sm" onclick="loadSchedule()">🔄 تحديث</button>
         </div>
         <div class="table-wrap">
           <table class="schedule-table">
-            <thead><tr><th>الترتيب</th><th>الاسم</th><th>الهاتف</th><th>شهر الاستلام</th><th>السنة</th><th>المبلغ</th><th>حالة الدفع</th><th>تاريخ الدفع</th><th>الإيصال</th><th>إجراء</th></tr></thead>
-            <tbody id="scheduleBody"><tr><td colspan="10" class="empty">جاري التحميل...</td></tr></tbody>
+            <thead><tr><th>#</th><th>الاسم</th><th>الهاتف</th><th>شهر الاستلام</th><th>السنة</th><th>المبلغ</th><th>حالة الدفع</th><th>الإيصال</th><th>تاريخ الدفع</th></tr></thead>
+            <tbody id="scheduleBody"><tr><td colspan="9" class="empty">جاري التحميل...</td></tr></tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- رابط الانضمام -->
+    <!-- روابط الجمعية -->
     <section class="page" id="link-page">
       <div class="card">
-        <div class="card-head"><div class="card-title">رابط الانضمام</div></div>
-        <p style="color:var(--muted);font-size:14px;margin-bottom:16px">أرسل هذا الرابط للأعضاء ليتمكنوا من تقديم طلب الانضمام لجمعيتك.</p>
-        <div class="link-box">
-          <input type="text" id="joinLinkInput" readonly placeholder="جاري التحميل...">
-          <button class="btn btn-primary btn-sm" onclick="copyJoinLink()">نسخ</button>
-          <button class="btn btn-soft btn-sm" onclick="shareWhatsApp()">واتساب</button>
+        <div class="card-head"><div class="card-title">🔗 روابط الجمعية</div></div>
+        <div style="margin-bottom:22px">
+          <div style="font-size:15px;font-weight:900;margin-bottom:6px">رابط انضمام الأعضاء الجدد</div>
+          <p style="color:var(--muted);font-size:13px;margin-bottom:12px">أرسله للأعضاء ليقدموا طلب الانضمام.</p>
+          <div class="link-box">
+            <input type="text" id="joinLinkInput" readonly>
+            <button class="btn btn-primary btn-sm" onclick="copyJoinLink()">نسخ</button>
+            <button class="btn btn-soft btn-sm" onclick="shareWhatsApp()">واتساب</button>
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--line);padding-top:22px">
+          <div style="font-size:15px;font-weight:900;margin-bottom:6px">رابط رفع الإيصالات الشهري</div>
+          <p style="color:var(--muted);font-size:13px;margin-bottom:12px">أرسله للأعضاء في بداية كل شهر ليرفعوا إيصالات دفعاتهم.</p>
+          <div class="link-box">
+            <input type="text" id="receiptLinkInput2" readonly>
+            <button class="btn btn-primary btn-sm" onclick="copyReceiptLink2()">نسخ</button>
+            <button class="btn btn-soft btn-sm" onclick="shareReceiptWhatsApp2()">واتساب</button>
+          </div>
         </div>
         <div class="msg" id="linkMsg" style="margin-top:10px"></div>
       </div>
@@ -547,580 +437,324 @@
 
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+const SUPABASE_URL='https://qxyrpnexybxmfmtrnzpg.supabase.co'
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
+const sb=createClient(SUPABASE_URL,SUPABASE_ANON_KEY)
+let currentUser=null,currentProfile=null,currentGroup=null,editingMemberId=null,pendingReceiptId=null
+const loader=document.getElementById('pageLoader')
 
-const SUPABASE_URL      = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-
-let currentUser = null, currentProfile = null, currentGroup = null, editingMemberId = null
-let currentReceiptPaymentId = null
-const loader = document.getElementById('pageLoader')
-
-async function init() {
+async function init(){
   loader.classList.add('show')
-  try {
-    const { data: { session } } = await sb.auth.getSession()
-    if (!session) { window.location.href = 'login.html'; return }
-    currentUser = session.user
-
-    const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single()
-    if (!profile) { window.location.href = 'login.html'; return }
-    if (profile.role !== 'manager') { window.location.href = 'admin.html'; return }
-    currentProfile = profile
-
-    const { data: group } = await sb.from('groups').select('*').eq('manager_id', currentUser.id).single()
-    if (!group) { showNoGroup(); loader.classList.remove('show'); return }
-    currentGroup = group
-
-    updateSidebar()
+  try{
+    const {data:{session}}=await sb.auth.getSession()
+    if(!session){window.location.href='login.html';return}
+    currentUser=session.user
+    const {data:p}=await sb.from('profiles').select('*').eq('id',currentUser.id).single()
+    if(!p){window.location.href='login.html';return}
+    if(p.role!=='manager'){window.location.href='admin.html';return}
+    currentProfile=p
+    const {data:g}=await sb.from('groups').select('*').eq('manager_id',currentUser.id).single()
+    if(!g){showNoGroup();loader.classList.remove('show');return}
+    currentGroup=g
+    document.getElementById('sidebarManagerName').textContent=p.full_name||'—'
+    document.getElementById('sidebarGroupName').textContent=g.name||'—'
+    setLinks()
     await updateOverview()
-    loadMembers()
-    loadRequests()
-    loadPayments()
-    loadSchedule()
-    loadReceipts()
-    loadPlan()
-    loadNotes()
-    setJoinLink()
-    setReceiptLink()
-
-  } catch(e) { console.error(e); window.location.href = 'login.html' }
-  finally { loader.classList.remove('show') }
+    loadMembers();loadRequests();loadPayments();loadSchedule();loadPlan();loadNotes()
+  }catch(e){console.error(e);window.location.href='login.html'}
+  finally{loader.classList.remove('show')}
 }
 
-async function getMemberCount() {
-  const { count } = await sb.from('members').select('*',{count:'exact',head:true})
-    .eq('group_id', currentGroup.id).eq('status','active')
-  return count || 0
+function setLinks(){
+  const base=window.location.origin+window.location.pathname.replace(/[^/]*$/,'')
+  const join=`${base}join.html?token=${currentGroup.join_token}`
+  const m=new Date().getMonth()+1,y=new Date().getFullYear()
+  const rec=`${base}receipt.html?token=${currentGroup.join_token}&month=${m}&year=${y}`
+  ;['joinLinkInput'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=join})
+  ;['receiptLinkInput','receiptLinkInput2'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=rec})
 }
 
-function updateCapacityBar(current, max) {
-  const pct  = Math.min(100, Math.round(current / max * 100))
-  const fill = document.getElementById('capacityFill')
-  const text = document.getElementById('capacityText')
-  const side = document.getElementById('sidebarCapacity')
-  if (fill) { fill.style.width = pct + '%'; fill.className = 'capacity-fill' + (pct >= 100 ? ' full' : pct >= 75 ? ' near' : '') }
-  if (text) text.textContent = `${current} من ${max} عضو (${pct}%)`
-  if (side) { side.textContent = `${current} / ${max}`; side.style.color = pct >= 100 ? 'var(--red)' : pct >= 75 ? 'var(--amber)' : 'var(--green)' }
+async function getMemberCount(){
+  const {count}=await sb.from('members').select('*',{count:'exact',head:true}).eq('group_id',currentGroup.id).eq('status','active')
+  return count||0
 }
 
-function updateSidebar() {
-  document.getElementById('sidebarManagerName').textContent = currentProfile.full_name || '—'
-  document.getElementById('sidebarGroupName').textContent   = currentGroup.name || '—'
+async function updateOverview(){
+  document.getElementById('infoGroupName').textContent=currentGroup.name
+  document.getElementById('infoManagerName').textContent=currentProfile.full_name
+  document.getElementById('infoAmount').textContent=currentGroup.monthly_amount+' درهم'
+  document.getElementById('infoStartDate').textContent=`${currentGroup.start_month}/${currentGroup.start_year}`
+  const smap={active:{l:'الجمعية نشطة',c:'active',b:'badge-green'},completed:{l:'اكتملت دورة الجمعية',c:'completed',b:'badge-blue'},stopped:{l:'الجمعية متوقفة',c:'stopped',b:'badge-red'},renewed:{l:'تم تجديد الجمعية',c:'active',b:'badge-violet'}}
+  const s=smap[currentGroup.status]||smap.active
+  document.getElementById('cycleBanner').className=`cycle-banner ${s.c}`
+  document.getElementById('cycleBannerText').textContent=s.l
+  document.getElementById('groupStatusBadge').className=`badge ${s.b}`
+  document.getElementById('groupStatusBadge').textContent=s.l
+  const ca=document.getElementById('cycleActions');ca.innerHTML=''
+  if(currentGroup.status==='active')ca.innerHTML=`<button class="btn btn-soft btn-sm" onclick="updateGroupStatus('completed')">✅ إنهاء الدورة</button><button class="btn btn-danger btn-sm" onclick="updateGroupStatus('stopped')">⏹ إيقاف</button>`
+  else if(['completed','stopped'].includes(currentGroup.status))ca.innerHTML=`<button class="btn btn-success btn-sm" onclick="updateGroupStatus('renewed')">🔄 تجديد</button>`
+  const cnt=await getMemberCount(),max=currentGroup.max_members||4
+  document.getElementById('statTotal').textContent=cnt
+  const pct=Math.min(100,Math.round(cnt/max*100))
+  const fill=document.getElementById('capacityFill')
+  fill.style.width=pct+'%';fill.className='capacity-fill'+(pct>=100?' full':pct>=75?' near':'')
+  document.getElementById('capacityText').textContent=`${cnt} من ${max} عضو (${pct}%)`
+  document.getElementById('sidebarCapacity').textContent=`${cnt} / ${max}`
+  document.getElementById('sidebarCapacity').style.color=pct>=100?'var(--red)':pct>=75?'var(--amber)':'var(--green)'
+  const ab=document.getElementById('addMemberBtn')
+  if(cnt>=max){ab.disabled=true;ab.textContent=`الجمعية ممتلئة (${max}/${max})`}else{ab.disabled=false;ab.textContent='+ إضافة عضو'}
+  const {data:paid}=await sb.from('payments').select('id').eq('group_id',currentGroup.id).eq('status','paid')
+  const {data:late}=await sb.from('payments').select('id').eq('group_id',currentGroup.id).eq('status','late')
+  const {data:recs}=await sb.from('payments').select('id').eq('group_id',currentGroup.id).eq('receipt_status','pending').not('receipt_url','is',null)
+  document.getElementById('statPaid').textContent=paid?.length??0
+  document.getElementById('statLate').textContent=late?.length??0
+  document.getElementById('statReceipts').textContent=recs?.length??0
+  updateReceiptBadge(recs?.length||0)
+  const {data:reqs}=await sb.from('join_requests').select('*').eq('group_id',currentGroup.id).eq('status','pending').order('created_at',{ascending:false}).limit(3)
+  updateReqBadge(reqs?.length||0)
+  const el=document.getElementById('recentRequests')
+  if(!reqs||!reqs.length){el.innerHTML='<div class="empty">لا توجد طلبات معلقة</div>'}
+  else el.innerHTML=reqs.map(r=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px;border-bottom:1px solid var(--line);font-size:13px"><div><strong>${r.full_name}</strong><div style="color:var(--muted)">${mn(r.requested_month)} ${r.requested_year}</div></div><div style="display:flex;gap:6px"><button class="action-btn action-green" onclick="approveRequest('${r.id}','${eq(r.full_name)}','${r.phone||''}',${r.requested_month},${r.requested_year})">قبول</button><button class="action-btn action-red" onclick="rejectRequest('${r.id}')">رفض</button></div></div>`).join('')
 }
 
-async function updateOverview() {
-  document.getElementById('infoGroupName').textContent   = currentGroup.name
-  document.getElementById('infoManagerName').textContent = currentProfile.full_name
-  document.getElementById('infoAmount').textContent      = currentGroup.monthly_amount + ' درهم'
-  document.getElementById('infoStartDate').textContent   = `${currentGroup.start_month}/${currentGroup.start_year}`
+function updateReqBadge(n){const b=document.getElementById('reqBadge');n>0?(b.textContent=n,b.classList.add('show')):b.classList.remove('show')}
+function updateReceiptBadge(n){const b=document.getElementById('receiptBadge');n>0?(b.textContent=n,b.classList.add('show')):b.classList.remove('show')}
 
-  const statusMap = {
-    active:    { label:'الجمعية نشطة', cls:'active', badge:'badge-green' },
-    completed: { label:'اكتملت دورة الجمعية', cls:'completed', badge:'badge-blue' },
-    stopped:   { label:'الجمعية متوقفة', cls:'stopped', badge:'badge-red' },
-    renewed:   { label:'تم تجديد الجمعية', cls:'active', badge:'badge-violet' }
-  }
-  const s = statusMap[currentGroup.status] || statusMap['active']
-  document.getElementById('cycleBanner').className = `cycle-banner ${s.cls}`
-  document.getElementById('cycleBannerText').textContent = s.label
-  document.getElementById('groupStatusBadge').className  = `badge ${s.badge}`
-  document.getElementById('groupStatusBadge').textContent = s.label
-  document.getElementById('statStatus').textContent = s.label
-
-  const cycleActions = document.getElementById('cycleActions')
-  cycleActions.innerHTML = ''
-  if (currentGroup.status === 'active') {
-    cycleActions.innerHTML = `
-      <button class="btn btn-soft btn-sm" onclick="updateGroupStatus('completed')">✅ إنهاء الدورة</button>
-      <button class="btn btn-danger btn-sm" onclick="updateGroupStatus('stopped')">⏹ إيقاف</button>`
-  } else if (['completed','stopped'].includes(currentGroup.status)) {
-    cycleActions.innerHTML = `<button class="btn btn-success btn-sm" onclick="updateGroupStatus('renewed')">🔄 تجديد</button>`
-  }
-
-  const currentCount = await getMemberCount()
-  const maxMembers   = currentGroup.max_members || 4
-  document.getElementById('statTotal').textContent = currentCount
-  updateCapacityBar(currentCount, maxMembers)
-
-  const addBtn = document.getElementById('addMemberBtn')
-  if (addBtn) {
-    if (currentCount >= maxMembers) { addBtn.disabled = true; addBtn.textContent = `الجمعية ممتلئة (${maxMembers}/${maxMembers})` }
-    else { addBtn.disabled = false; addBtn.textContent = '+ إضافة عضو' }
-  }
-
-  const { data: paidList } = await sb.from('payments').select('id').eq('group_id',currentGroup.id).eq('status','paid')
-  const { data: lateList } = await sb.from('payments').select('id').eq('group_id',currentGroup.id).eq('status','late')
-  document.getElementById('statPaid').textContent = paidList?.length ?? '0'
-  document.getElementById('statLate').textContent = lateList?.length ?? '0'
-
-  const { data: reqs } = await sb.from('join_requests')
-    .select('*').eq('group_id',currentGroup.id).eq('status','pending')
-    .order('created_at',{ascending:false}).limit(3)
-
-  updateReqBadge(reqs?.length || 0)
-
-  const recentEl = document.getElementById('recentRequests')
-  if (!reqs || reqs.length === 0) {
-    recentEl.innerHTML = '<div class="empty">لا توجد طلبات معلقة</div>'
-  } else {
-    recentEl.innerHTML = reqs.map(r => `
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;border-bottom:1px solid var(--line);font-size:13px">
-        <div><strong>${r.full_name}</strong><div style="color:var(--muted)">${monthName(r.requested_month)} ${r.requested_year}</div></div>
-        <div style="display:flex;gap:6px">
-          <button class="action-btn action-green" onclick="approveRequest('${r.id}','${escQ(r.full_name)}','${r.phone||''}',${r.requested_month},${r.requested_year})">قبول</button>
-          <button class="action-btn action-red" onclick="rejectRequest('${r.id}')">رفض</button>
-        </div>
-      </div>`).join('')
-  }
-
-  // بادج الإيصالات المعلقة
-  const { count: pendingReceipts } = await sb.from('payments')
-    .select('*', { count: 'exact', head: true })
-    .eq('group_id', currentGroup.id)
-    .eq('receipt_status', 'pending')
-    .not('receipt_url', 'is', null)
-  updateReceiptBadge(pendingReceipts || 0)
-}
-
-function updateReqBadge(count) {
-  const badge = document.getElementById('reqBadge')
-  if (count > 0) { badge.textContent=count; badge.classList.add('show') }
-  else badge.classList.remove('show')
-}
-
-function updateReceiptBadge(count) {
-  const badge = document.getElementById('receiptBadge')
-  if (count > 0) { badge.textContent=count; badge.classList.add('show') }
-  else badge.classList.remove('show')
-}
-
-window.updateGroupStatus = async function(newStatus) {
-  if (!confirm('هل تريد تغيير حالة الجمعية؟')) return
-  const { error } = await sb.from('groups').update({status:newStatus}).eq('id',currentGroup.id)
-  if (error) { alert('خطأ: '+error.message); return }
-  currentGroup.status = newStatus
-  updateOverview()
+window.updateGroupStatus=async function(s){
+  if(!confirm('تغيير حالة الجمعية؟'))return
+  await sb.from('groups').update({status:s}).eq('id',currentGroup.id)
+  currentGroup.status=s;updateOverview()
 }
 
 // ════ الأعضاء ════
-window.loadMembers = async function() {
-  const month = document.getElementById('filterMonth')?.value
-  const year  = document.getElementById('filterYear')?.value
-  let q = sb.from('members').select('*').eq('group_id',currentGroup.id).order('join_month')
-  if (month) q = q.eq('join_month',parseInt(month))
-  if (year)  q = q.eq('join_year',parseInt(year))
-  const { data, error } = await q
-  const tbody = document.getElementById('membersBody')
-  if (error || !data || data.length===0) { tbody.innerHTML=`<tr><td colspan="8" class="empty">${error?'خطأ في التحميل':'لا يوجد أعضاء'}</td></tr>`; document.getElementById('memberCount').textContent = '0 عضو'; return }
-  document.getElementById('memberCount').textContent = `${data.length} عضو من ${currentGroup.max_members||4}`
-  tbody.innerHTML = data.map((m,i) => `
-    <tr>
-      <td>${i+1}</td><td>${m.full_name}</td><td>${m.phone||'—'}</td>
-      <td>${monthName(m.join_month)}</td><td>${m.join_year}</td>
-      <td>${m.payout_order||'—'}</td>
-      <td><span class="badge ${statusBadge(m.status)}">${statusLabel(m.status)}</span></td>
-      <td>
-        <div class="td-actions">
-          <button class="action-btn action-blue" onclick="openEditMember('${m.id}','${escQ(m.full_name)}','${m.phone||''}',${m.join_month},${m.join_year},${m.payout_order||0})">تعديل</button>
-          <button class="action-btn action-green" onclick="openPaymentModal('${m.id}')">دفعة</button>
-          <button class="action-btn action-red" onclick="deleteMember('${m.id}')">حذف</button>
-        </div>
-      </td>
-    </tr>`).join('')
-}
-
-window.clearFilters = function() {
-  document.getElementById('filterMonth').value=''
-  document.getElementById('filterYear').value=''
-  loadMembers()
-}
-
-window.openAddMember = async function() {
-  const current = await getMemberCount()
-  const max     = currentGroup.max_members || 4
-  if (current >= max) { alert(`وصلت الجمعية للحد الأقصى (${max} أعضاء).`); return }
-  editingMemberId = null
-  document.getElementById('memberModalTitle').textContent = 'إضافة عضو'
-  document.getElementById('m_fullName').value = ''
-  document.getElementById('m_phone').value    = ''
-  document.getElementById('m_month').value    = new Date().getMonth()+1
-  document.getElementById('m_year').value     = new Date().getFullYear()
-  document.getElementById('m_order').value    = ''
-  clearMsg('memberMsg')
-  openModal('memberModal')
-}
-
-window.openEditMember = function(id,name,phone,month,year,order) {
-  editingMemberId = id
-  document.getElementById('memberModalTitle').textContent = 'تعديل بيانات العضو'
-  document.getElementById('m_fullName').value = name
-  document.getElementById('m_phone').value    = phone
-  document.getElementById('m_month').value    = month
-  document.getElementById('m_year').value     = year
-  document.getElementById('m_order').value    = order||''
-  clearMsg('memberMsg')
-  openModal('memberModal')
-}
-
-window.saveMember = async function() {
-  const fullName     = document.getElementById('m_fullName').value.trim()
-  const phone        = document.getElementById('m_phone').value.trim()
-  const join_month   = parseInt(document.getElementById('m_month').value)
-  const join_year    = parseInt(document.getElementById('m_year').value)
-  const payout_order = parseInt(document.getElementById('m_order').value)||null
-  if (!fullName||!join_month||!join_year) { showMsg('memberMsg','أكمل الحقول المطلوبة','error'); return }
-  document.getElementById('memberSaveBtn').disabled = true
-  let error
-  if (editingMemberId) {
-    ({error} = await sb.from('members').update({full_name:fullName,phone,join_month,join_year,payout_order}).eq('id',editingMemberId))
-  } else {
-    const current = await getMemberCount()
-    const max     = currentGroup.max_members || 4
-    if (current >= max) { showMsg('memberMsg',`الجمعية وصلت للحد الأقصى (${max} أعضاء)`,'error'); document.getElementById('memberSaveBtn').disabled=false; return }
-    const { data: existing } = await sb.from('members').select('id').eq('group_id',currentGroup.id).eq('join_month',join_month).eq('join_year',join_year)
-    if (existing&&existing.length>0) { showMsg('memberMsg','هذا الشهر محجوز لعضو آخر','error'); document.getElementById('memberSaveBtn').disabled=false; return }
-    ;({error} = await sb.from('members').insert({group_id:currentGroup.id,full_name:fullName,phone,join_month,join_year,payout_order,status:'active'}))
-  }
-  document.getElementById('memberSaveBtn').disabled = false
-  if (error) { showMsg('memberMsg','خطأ: '+error.message,'error'); return }
-  closeModal('memberModal'); loadMembers(); loadSchedule(); updateOverview()
-}
-
-window.deleteMember = async function(id) {
-  if (!confirm('هل تريد حذف هذا العضو؟')) return
-  await sb.from('members').delete().eq('id',id)
-  loadMembers(); loadSchedule(); updateOverview()
-}
-
-// ════ الدفعات ════
-window.openPaymentModal = function(memberId) {
-  document.getElementById('pay_memberId').value = memberId
-  document.getElementById('pay_month').value    = new Date().getMonth()+1
-  document.getElementById('pay_year').value     = new Date().getFullYear()
-  document.getElementById('pay_amount').value   = currentGroup.monthly_amount
-  document.getElementById('pay_status').value   = 'paid'
-  document.getElementById('pay_receipt').value  = ''
-  document.getElementById('pay_due').value      = ''
-  clearMsg('paymentMsg')
-  openModal('paymentModal')
-}
-
-window.savePayment = async function() {
-  const member_id     = document.getElementById('pay_memberId').value
-  const payment_month = parseInt(document.getElementById('pay_month').value)
-  const payment_year  = parseInt(document.getElementById('pay_year').value)
-  const amount        = parseFloat(document.getElementById('pay_amount').value)
-  const status        = document.getElementById('pay_status').value
-  const receipt_url   = document.getElementById('pay_receipt').value.trim()||null
-  const due_date      = document.getElementById('pay_due').value||null
-  if (!member_id||!payment_month||!payment_year||!amount) { showMsg('paymentMsg','أكمل الحقول المطلوبة','error'); return }
-  const {error} = await sb.from('payments').upsert({group_id:currentGroup.id,member_id,payment_month,payment_year,amount,status,receipt_url,due_date,paid_at:status==='paid'?new Date().toISOString():null},{onConflict:'member_id,payment_month,payment_year'})
-  if (error) { showMsg('paymentMsg','خطأ: '+error.message,'error'); return }
-  closeModal('paymentModal'); loadPayments(); loadSchedule(); updateOverview()
-}
-
-window.loadPayments = async function() {
-  const month=document.getElementById('payFilterMonth')?.value
-  const year=document.getElementById('payFilterYear')?.value
-  const status=document.getElementById('payFilterStatus')?.value
-  let q=sb.from('payments').select('*, members(full_name)').eq('group_id',currentGroup.id).order('payment_year').order('payment_month')
-  if(month) q=q.eq('payment_month',parseInt(month))
-  if(year)  q=q.eq('payment_year',parseInt(year))
-  if(status) q=q.eq('status',status)
+window.loadMembers=async function(){
+  const month=document.getElementById('filterMonth')?.value,year=document.getElementById('filterYear')?.value
+  let q=sb.from('members').select('*').eq('group_id',currentGroup.id).order('join_month')
+  if(month)q=q.eq('join_month',+month);if(year)q=q.eq('join_year',+year)
   const {data,error}=await q
-  const tbody=document.getElementById('paymentsBody')
-  if(error||!data||data.length===0){tbody.innerHTML=`<tr><td colspan="9" class="empty">${error?'خطأ':'لا توجد دفعات'}</td></tr>`;return}
-  tbody.innerHTML=data.map(p=>`
-    <tr>
-      <td>${p.members?.full_name||'—'}</td><td>${p.amount} درهم</td>
-      <td>${monthName(p.payment_month)}</td><td>${p.payment_year}</td>
-      <td>${p.due_date||'—'}</td>
-      <td>${p.paid_at?new Date(p.paid_at).toLocaleDateString('ar'):'—'}</td>
-      <td><span class="badge ${payStatusBadge(p.status)}">${payStatusLabel(p.status)}</span></td>
-      <td>${p.receipt_url?`<a href="${p.receipt_url}" target="_blank" class="action-btn action-blue">عرض</a>`:'—'}</td>
-      <td><button class="action-btn action-green" onclick="openPaymentModal('${p.member_id}')">تعديل</button></td>
-    </tr>`).join('')
+  const tb=document.getElementById('membersBody')
+  if(!data||!data.length){tb.innerHTML=`<tr><td colspan="8" class="empty">${error?'خطأ':'لا يوجد أعضاء'}</td></tr>`;document.getElementById('memberCount').textContent='0 عضو';return}
+  document.getElementById('memberCount').textContent=`${data.length} عضو من ${currentGroup.max_members||4}`
+  tb.innerHTML=data.map((m,i)=>`<tr><td>${i+1}</td><td>${m.full_name}</td><td>${m.phone||'—'}</td><td>${mn(m.join_month)}</td><td>${m.join_year}</td><td>${m.payout_order||'—'}</td><td><span class="badge ${sBadge(m.status)}">${sLabel(m.status)}</span></td><td><div class="td-actions"><button class="action-btn action-blue" onclick="openEditMember('${m.id}','${eq(m.full_name)}','${m.phone||''}',${m.join_month},${m.join_year},${m.payout_order||0})">تعديل</button><button class="action-btn action-red" onclick="deleteMember('${m.id}')">حذف</button></div></td></tr>`).join('')
+}
+window.clearFilters=function(){document.getElementById('filterMonth').value='';document.getElementById('filterYear').value='';loadMembers()}
+window.openAddMember=async function(){
+  const c=await getMemberCount(),max=currentGroup.max_members||4
+  if(c>=max){alert(`وصلت الجمعية للحد الأقصى (${max} أعضاء).`);return}
+  editingMemberId=null
+  document.getElementById('memberModalTitle').textContent='إضافة عضو'
+  ;['m_fullName','m_phone','m_order'].forEach(id=>document.getElementById(id).value='')
+  document.getElementById('m_month').value=new Date().getMonth()+1
+  document.getElementById('m_year').value=new Date().getFullYear()
+  clearMsg('memberMsg');openModal('memberModal')
+}
+window.openEditMember=function(id,name,phone,month,year,order){
+  editingMemberId=id
+  document.getElementById('memberModalTitle').textContent='تعديل بيانات العضو'
+  document.getElementById('m_fullName').value=name;document.getElementById('m_phone').value=phone
+  document.getElementById('m_month').value=month;document.getElementById('m_year').value=year
+  document.getElementById('m_order').value=order||''
+  clearMsg('memberMsg');openModal('memberModal')
+}
+window.saveMember=async function(){
+  const fullName=document.getElementById('m_fullName').value.trim(),phone=document.getElementById('m_phone').value.trim()
+  const join_month=+document.getElementById('m_month').value,join_year=+document.getElementById('m_year').value
+  const payout_order=+document.getElementById('m_order').value||null
+  if(!fullName||!join_month||!join_year){showMsg('memberMsg','أكمل الحقول المطلوبة','error');return}
+  document.getElementById('memberSaveBtn').disabled=true
+  let error
+  if(editingMemberId){({error}=await sb.from('members').update({full_name:fullName,phone,join_month,join_year,payout_order}).eq('id',editingMemberId))}
+  else{
+    const c=await getMemberCount(),max=currentGroup.max_members||4
+    if(c>=max){showMsg('memberMsg',`الجمعية وصلت للحد الأقصى (${max})`,'error');document.getElementById('memberSaveBtn').disabled=false;return}
+    const {data:ex}=await sb.from('members').select('id').eq('group_id',currentGroup.id).eq('join_month',join_month).eq('join_year',join_year)
+    if(ex&&ex.length){showMsg('memberMsg','هذا الشهر محجوز لعضو آخر','error');document.getElementById('memberSaveBtn').disabled=false;return}
+    ;({error}=await sb.from('members').insert({group_id:currentGroup.id,full_name:fullName,phone,join_month,join_year,payout_order,status:'active'}))
+  }
+  document.getElementById('memberSaveBtn').disabled=false
+  if(error){showMsg('memberMsg','خطأ: '+error.message,'error');return}
+  closeModal('memberModal');loadMembers();loadSchedule();updateOverview()
+}
+window.deleteMember=async function(id){
+  if(!confirm('حذف هذا العضو؟'))return
+  await sb.from('members').delete().eq('id',id)
+  loadMembers();loadSchedule();updateOverview()
 }
 
-// ════ الإيصالات ════
-window.loadReceipts = async function() {
-  const statusFilter = document.getElementById('receiptFilterStatus')?.value
-  const monthFilter  = document.getElementById('receiptFilterMonth')?.value
-
-  let q = sb.from('payments')
-    .select('*, members(full_name)')
-    .eq('group_id', currentGroup.id)
-    .not('receipt_url', 'is', null)
-    .order('updated_at', { ascending: false })
-
-  if (statusFilter) q = q.eq('receipt_status', statusFilter)
-  if (monthFilter)  q = q.eq('payment_month', parseInt(monthFilter))
-
-  const { data, error } = await q
-  const tbody = document.getElementById('receiptsBody')
-
-  if (error || !data || data.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8" class="empty">${error ? 'خطأ في التحميل' : 'لا توجد إيصالات مرفوعة بعد'}</td></tr>`
-    updateReceiptBadge(0)
-    return
-  }
-
-  const pending = data.filter(p => p.receipt_status === 'pending').length
-  updateReceiptBadge(pending)
-
-  tbody.innerHTML = data.map(p => {
-    const isPending = p.receipt_status === 'pending' || !p.receipt_status
-    const isImage   = p.receipt_url && /\.(jpg|jpeg|png|gif|webp)/i.test(p.receipt_url)
+// ════ الدفعات والإيصالات ════
+window.loadPayments=async function(){
+  const month=document.getElementById('payFilterMonth')?.value,year=document.getElementById('payFilterYear')?.value
+  const status=document.getElementById('payFilterStatus')?.value,rec=document.getElementById('payFilterReceipt')?.value
+  let q=sb.from('payments').select('*, members(full_name)').eq('group_id',currentGroup.id).order('payment_year',{ascending:false}).order('payment_month',{ascending:false})
+  if(month)q=q.eq('payment_month',+month);if(year)q=q.eq('payment_year',+year);if(status)q=q.eq('status',status)
+  if(rec==='has')q=q.not('receipt_url','is',null)
+  else if(rec==='none')q=q.is('receipt_url',null)
+  else if(rec==='pending_confirm')q=q.eq('receipt_status','pending').not('receipt_url','is',null)
+  const {data,error}=await q
+  const tb=document.getElementById('paymentsBody')
+  if(!data||!data.length){tb.innerHTML=`<tr><td colspan="7" class="empty">${error?'خطأ':'لا توجد دفعات'}</td></tr>`;return}
+  tb.innerHTML=data.map(p=>{
+    const hasR=!!p.receipt_url,isPdf=hasR&&/\.pdf$/i.test(p.receipt_url),isImg=hasR&&!isPdf
+    const rPending=hasR&&(p.receipt_status==='pending'||!p.receipt_status)
+    const rCell=hasR
+      ?(isImg?`<img src="${p.receipt_url}" class="receipt-thumb" onclick="viewReceipt('${p.id}','${eq(p.members?.full_name||'')}','${p.receipt_url}',${p.payment_month},${p.payment_year},${rPending})" title="اضغط للعرض">${rPending?'<span class="pending-dot"></span>':''}`
+        :`<a href="${p.receipt_url}" target="_blank" class="action-btn action-blue">📄 PDF</a>${rPending?'<span class="pending-dot"></span>':''}`)
+      :`<span class="no-receipt">—</span>`
+    const rBadge=hasR?(rPending?'<div><span class="badge badge-amber" style="font-size:10px;margin-top:4px">⏳ بانتظار التأكيد</span></div>':'<div><span class="badge badge-green" style="font-size:10px;margin-top:4px">✅ إيصال مؤكد</span></div>'):'<div><span class="badge" style="font-size:10px;margin-top:4px;background:#f2f5f8;color:#9aacba">لا يوجد إيصال</span></div>'
     return `<tr>
-      <td><strong>${p.members?.full_name || '—'}</strong></td>
-      <td>${monthName(p.payment_month)}</td>
-      <td>${p.payment_year}</td>
-      <td>${p.amount} درهم</td>
-      <td>${p.updated_at ? new Date(p.updated_at).toLocaleDateString('ar') : '—'}</td>
-      <td>
-        ${isImage
-          ? `<img src="${p.receipt_url}" class="receipt-img" onclick="viewReceipt('${p.id}','${escQ(p.members?.full_name||'')}','${p.receipt_url}',${p.payment_month},${p.payment_year})" title="اضغط للعرض">`
-          : `<a href="${p.receipt_url}" target="_blank" class="action-btn action-blue">📄 فتح PDF</a>`
-        }
-      </td>
-      <td>
-        ${isPending
-          ? `<span class="badge badge-amber">⏳ في الانتظار</span>`
-          : `<span class="badge badge-green">✅ مؤكد</span>`
-        }
-      </td>
-      <td>
-        ${isPending
-          ? `<button class="action-btn action-green" onclick="confirmReceipt('${p.id}')">✅ تأكيد</button>`
-          : `<span style="color:var(--muted);font-size:12px">تم التأكيد</span>`
-        }
-      </td>
+      <td><strong>${p.members?.full_name||'—'}</strong></td>
+      <td>${mn(p.payment_month)} ${p.payment_year}</td>
+      <td style="color:var(--primary-dark);font-weight:900">${p.amount} درهم</td>
+      <td>${rCell}</td>
+      <td><span class="badge ${pBadge(p.status)}">${pLabel(p.status)}</span>${rBadge}</td>
+      <td style="color:var(--muted);font-size:12px">${p.paid_at?new Date(p.paid_at).toLocaleDateString('ar-AE'):'—'}</td>
+      <td><div class="td-actions">
+        ${rPending&&hasR?`<button class="action-btn action-green" onclick="confirmReceipt('${p.id}')">✅ تأكيد</button>`:''}
+        <button class="action-btn action-amber" onclick="openStatusModal('${p.id}','${p.status}')">✏️ حالة</button>
+      </div></td>
     </tr>`
   }).join('')
 }
 
-window.viewReceipt = function(paymentId, memberName, url, month, year) {
-  currentReceiptPaymentId = paymentId
-  const content = document.getElementById('receiptViewContent')
-  content.innerHTML = `
-    <div style="margin-bottom:12px;font-size:14px;font-weight:700;color:var(--muted)">${memberName} — ${monthName(month)} ${year}</div>
-    <img src="${url}" class="receipt-modal-img" alt="إيصال الدفع">
-  `
-  const confirmBtn = document.getElementById('confirmReceiptBtn')
-  confirmBtn.onclick = () => confirmReceipt(paymentId)
-  openModal('receiptViewModal')
+window.viewReceipt=function(paymentId,memberName,url,month,year,isPending){
+  pendingReceiptId=paymentId
+  document.getElementById('receiptModalTitle').textContent=`إيصال — ${memberName}`
+  const isPdf=/\.pdf$/i.test(url)
+  document.getElementById('receiptModalContent').innerHTML=`
+    <div style="color:var(--muted);font-size:13px;font-weight:700;margin-bottom:12px">${mn(month)} ${year}</div>
+    ${isPdf?`<a href="${url}" target="_blank" class="btn btn-primary" style="margin-bottom:14px">📄 فتح PDF</a>`:`<img src="${url}" class="receipt-modal-img">`}
+    <div style="padding:10px 14px;border-radius:10px;font-size:13px;font-weight:800;${isPending?'background:var(--amber-soft);color:var(--amber)':'background:var(--green-soft);color:var(--green)'}">
+      ${isPending?'⏳ هذا الإيصال بانتظار تأكيدك':'✅ تم تأكيد هذا الإيصال مسبقاً'}
+    </div>`
+  const cb=document.getElementById('confirmReceiptBtn')
+  if(isPending){cb.style.display='inline-flex';cb.onclick=()=>confirmReceipt(paymentId)}else cb.style.display='none'
+  openModal('receiptModal')
 }
 
-window.confirmReceipt = async function(paymentId) {
-  const { error } = await sb.from('payments').update({
-    receipt_status: 'confirmed',
-    status: 'paid',
-    paid_at: new Date().toISOString()
-  }).eq('id', paymentId)
-
-  if (error) { alert('خطأ: ' + error.message); return }
-  closeModal('receiptViewModal')
-  loadReceipts()
-  loadPayments()
-  loadSchedule()
-  updateOverview()
+window.confirmReceipt=async function(id){
+  const {error}=await sb.from('payments').update({receipt_status:'confirmed',status:'paid',paid_at:new Date().toISOString()}).eq('id',id)
+  if(error){alert('خطأ: '+error.message);return}
+  closeModal('receiptModal');loadPayments();loadSchedule();updateOverview()
 }
+window.doConfirmReceipt=function(){if(pendingReceiptId)confirmReceipt(pendingReceiptId)}
 
-// ════ رابط رفع الإيصالات ════
-function setReceiptLink() {
-  const base = window.location.origin + window.location.pathname.replace(/[^/]*$/, '')
-  const link = `${base}receipt.html?token=${currentGroup.join_token}&month=${new Date().getMonth()+1}&year=${new Date().getFullYear()}`
-  const input = document.getElementById('receiptLinkInput')
-  if (input) input.value = link
+window.openStatusModal=function(id,s){
+  document.getElementById('statusPaymentId').value=id
+  document.getElementById('statusSelect').value=s
+  clearMsg('statusMsg');openModal('statusModal')
 }
-
-window.copyReceiptLink = function() {
-  const input = document.getElementById('receiptLinkInput')
-  if (!input) return
-  navigator.clipboard.writeText(input.value).then(() => {
-    alert('تم نسخ رابط رفع الإيصالات ✅')
-  })
-}
-
-window.shareReceiptWhatsApp = function() {
-  const link = document.getElementById('receiptLinkInput')?.value
-  if (!link) return
-  const month = monthName(new Date().getMonth()+1)
-  window.open(`https://wa.me/?text=${encodeURIComponent(`🧾 أعضاء الجمعية الكرام،\nيرجى رفع إيصال دفع شهر ${month} عبر الرابط التالي:\n${link}`)}`, '_blank')
+window.saveStatus=async function(){
+  const id=document.getElementById('statusPaymentId').value,s=document.getElementById('statusSelect').value
+  const {error}=await sb.from('payments').update({status:s,paid_at:s==='paid'?new Date().toISOString():null}).eq('id',id)
+  if(error){showMsg('statusMsg','خطأ: '+error.message,'error');return}
+  closeModal('statusModal');loadPayments();loadSchedule();updateOverview()
 }
 
 // ════ جدول الدفعات ════
-window.loadSchedule = async function() {
+window.loadSchedule=async function(){
   const {data:members,error}=await sb.from('members').select('*').eq('group_id',currentGroup.id).order('join_year').order('join_month')
-  const tbody=document.getElementById('scheduleBody')
-  if(error||!members||members.length===0){tbody.innerHTML=`<tr><td colspan="10" class="empty">لا يوجد أعضاء</td></tr>`;return}
-  const {data:payments}=await sb.from('payments').select('*').in('member_id',members.map(m=>m.id))
-  const payMap={}
-  payments?.forEach(p=>{payMap[p.member_id]=p})
-  tbody.innerHTML=members.map((m,i)=>{
-    const pay=payMap[m.id]
-    return `<tr>
-      <td>${i+1}</td><td><strong>${m.full_name}</strong></td><td>${m.phone||'—'}</td>
-      <td style="color:var(--primary-dark);font-weight:900">${monthName(m.join_month)}</td>
-      <td>${m.join_year}</td><td>${currentGroup.monthly_amount} درهم</td>
-      <td><span class="badge ${payStatusBadge(pay?.status||'pending')}">${payStatusLabel(pay?.status||'pending')}</span></td>
-      <td>${pay?.paid_at?new Date(pay.paid_at).toLocaleDateString('ar'):'—'}</td>
-      <td>${pay?.receipt_url?`<a href="${pay.receipt_url}" target="_blank" class="action-btn action-blue">عرض</a>`:'—'}</td>
-      <td><button class="action-btn action-primary" onclick="openPaymentModal('${m.id}')">تسجيل دفعة</button></td>
+  const tb=document.getElementById('scheduleBody')
+  if(!members||!members.length){tb.innerHTML=`<tr><td colspan="9" class="empty">لا يوجد أعضاء</td></tr>`;return}
+  const {data:pays}=await sb.from('payments').select('*').in('member_id',members.map(m=>m.id))
+  const pm={};pays?.forEach(p=>{pm[p.member_id]=p})
+  tb.innerHTML=members.map((m,i)=>{
+    const p=pm[m.id],hasR=!!p?.receipt_url,isPdf=hasR&&/\.pdf$/i.test(p.receipt_url)
+    const rPending=hasR&&(p.receipt_status==='pending'||!p.receipt_status)
+    return `<tr><td>${i+1}</td><td><strong>${m.full_name}</strong></td><td>${m.phone||'—'}</td>
+      <td style="color:var(--primary-dark);font-weight:900">${mn(m.join_month)}</td><td>${m.join_year}</td>
+      <td>${currentGroup.monthly_amount} درهم</td>
+      <td><span class="badge ${pBadge(p?.status||'pending')}">${pLabel(p?.status||'pending')}</span></td>
+      <td>${hasR?(isPdf?`<a href="${p.receipt_url}" target="_blank" class="action-btn action-blue">📄</a>`:
+        `<img src="${p.receipt_url}" class="receipt-thumb" onclick="viewReceipt('${p.id}','${eq(m.full_name)}','${p.receipt_url}',${m.join_month},${m.join_year},${rPending})">${rPending?'<span class="pending-dot"></span>':''}`)
+        :'<span class="no-receipt">—</span>'}</td>
+      <td style="color:var(--muted);font-size:12px">${p?.paid_at?new Date(p.paid_at).toLocaleDateString('ar-AE'):'—'}</td>
     </tr>`
   }).join('')
 }
 
 // ════ طلبات الانضمام ════
-window.loadRequests = async function() {
+window.loadRequests=async function(){
   const {data,error}=await sb.from('join_requests').select('*').eq('group_id',currentGroup.id).order('created_at',{ascending:false})
-  const tbody=document.getElementById('requestsBody')
-  if(error||!data||data.length===0){tbody.innerHTML=`<tr><td colspan="7" class="empty">${error?'خطأ':'لا توجد طلبات'}</td></tr>`;updateReqBadge(0);return}
+  const tb=document.getElementById('requestsBody')
+  if(!data||!data.length){tb.innerHTML=`<tr><td colspan="7" class="empty">${error?'خطأ':'لا توجد طلبات'}</td></tr>`;updateReqBadge(0);return}
   updateReqBadge(data.filter(r=>r.status==='pending').length)
-  tbody.innerHTML=data.map(r=>`
-    <tr>
-      <td>${r.full_name}</td><td>${r.phone||'—'}</td>
-      <td>${monthName(r.requested_month)}</td><td>${r.requested_year}</td>
-      <td>${new Date(r.created_at).toLocaleDateString('ar')}</td>
-      <td><span class="badge ${reqStatusBadge(r.status)}">${reqStatusLabel(r.status)}</span></td>
-      <td>${r.status==='pending'?`
-        <div class="td-actions">
-          <button class="action-btn action-green" onclick="approveRequest('${r.id}','${escQ(r.full_name)}','${r.phone||''}',${r.requested_month},${r.requested_year})">قبول</button>
-          <button class="action-btn action-red" onclick="rejectRequest('${r.id}')">رفض</button>
-        </div>`:'—'}</td>
-    </tr>`).join('')
+  tb.innerHTML=data.map(r=>`<tr><td>${r.full_name}</td><td>${r.phone||'—'}</td><td>${mn(r.requested_month)}</td><td>${r.requested_year}</td><td>${new Date(r.created_at).toLocaleDateString('ar')}</td><td><span class="badge ${rBadge(r.status)}">${rLabel(r.status)}</span></td><td>${r.status==='pending'?`<div class="td-actions"><button class="action-btn action-green" onclick="approveRequest('${r.id}','${eq(r.full_name)}','${r.phone||''}',${r.requested_month},${r.requested_year})">قبول</button><button class="action-btn action-red" onclick="rejectRequest('${r.id}')">رفض</button></div>`:'—'}</td></tr>`).join('')
 }
-
-window.approveRequest = async function(id,name,phone,month,year) {
-  const current = await getMemberCount()
-  const max     = currentGroup.max_members || 4
-  if (current >= max) { alert(`لا يمكن قبول الطلب. الجمعية وصلت للحد الأقصى (${max} أعضاء).`); return }
-  const {data:existing}=await sb.from('members').select('id').eq('group_id',currentGroup.id).eq('join_month',month).eq('join_year',year)
-  if(existing&&existing.length>0){alert('هذا الشهر محجوز مسبقاً.');return}
+window.approveRequest=async function(id,name,phone,month,year){
+  const c=await getMemberCount(),max=currentGroup.max_members||4
+  if(c>=max){alert(`الجمعية وصلت للحد الأقصى (${max}).`);return}
+  const {data:ex}=await sb.from('members').select('id').eq('group_id',currentGroup.id).eq('join_month',month).eq('join_year',year)
+  if(ex&&ex.length){alert('هذا الشهر محجوز مسبقاً.');return}
   await sb.from('join_requests').update({status:'approved'}).eq('id',id)
   await sb.from('members').insert({group_id:currentGroup.id,full_name:name,phone,join_month:month,join_year:year,status:'active'})
-  loadRequests(); loadMembers(); loadSchedule(); updateOverview()
+  loadRequests();loadMembers();loadSchedule();updateOverview()
 }
-
-window.rejectRequest = async function(id) {
-  if(!confirm('هل تريد رفض هذا الطلب؟')) return
+window.rejectRequest=async function(id){
+  if(!confirm('رفض هذا الطلب؟'))return
   await sb.from('join_requests').update({status:'rejected'}).eq('id',id)
-  loadRequests(); updateOverview()
+  loadRequests();updateOverview()
 }
 
-// ════ رابط الانضمام ════
-function setJoinLink() {
-  const base=window.location.origin+window.location.pathname.replace(/[^/]*$/,'')
-  const link=`${base}join.html?token=${currentGroup.join_token}`
-  const input=document.getElementById('joinLinkInput')
-  if(input) input.value=link
-}
-
-window.copyJoinLink=function(){
-  const input=document.getElementById('joinLinkInput')
-  if(!input) return
-  navigator.clipboard.writeText(input.value).then(()=>{
-    showMsg('linkMsg','تم نسخ الرابط','success')
-    setTimeout(()=>clearMsg('linkMsg'),2000)
-  })
-}
-
-window.shareWhatsApp=function(){
-  const link=document.getElementById('joinLinkInput')?.value
-  if(!link) return
-  window.open(`https://wa.me/?text=${encodeURIComponent('انضم إلى جمعيتي:\n'+link)}`,'_blank')
-}
+// ════ الروابط ════
+window.copyJoinLink=function(){const v=document.getElementById('joinLinkInput')?.value;if(!v)return;navigator.clipboard.writeText(v).then(()=>{showMsg('linkMsg','تم نسخ رابط الانضمام ✅','success');setTimeout(()=>clearMsg('linkMsg'),2000)})}
+window.shareWhatsApp=function(){const v=document.getElementById('joinLinkInput')?.value;if(!v)return;window.open(`https://wa.me/?text=${encodeURIComponent('انضم إلى جمعيتي:\n'+v)}`,'_blank')}
+window.copyReceiptLink=function(){const v=document.getElementById('receiptLinkInput')?.value;if(!v)return;navigator.clipboard.writeText(v).then(()=>alert('تم نسخ رابط الإيصالات ✅'))}
+window.shareReceiptWhatsApp=function(){const v=document.getElementById('receiptLinkInput')?.value;if(!v)return;window.open(`https://wa.me/?text=${encodeURIComponent(`🧾 أعضاء جمعية ${currentGroup.name} الكرام،\nيرجى رفع إيصال دفع شهر ${mn(new Date().getMonth()+1)} عبر الرابط:\n${v}`)}`,'_blank')}
+window.copyReceiptLink2=function(){copyReceiptLink()}
+window.shareReceiptWhatsApp2=function(){shareReceiptWhatsApp()}
 
 // ════ الباقة ════
-async function loadPlan() {
+async function loadPlan(){
   const {data}=await sb.from('subscriptions').select('*').eq('manager_id',currentUser.id).eq('status','active').single()
   const el=document.getElementById('planInfo')
   if(!data){el.innerHTML='<div class="empty">لا يوجد اشتراك نشط</div>';return}
-  el.innerHTML=`<div style="display:grid;gap:10px">
-    ${[['الباقة',data.plan_name],['الحالة','نشط'],['البداية',data.start_date],['الانتهاء',data.end_date||'غير محدد'],['المبلغ',data.amount+' درهم']].map(([k,v])=>`
-    <div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px">
-      <span style="color:var(--muted);font-weight:700">${k}</span><strong>${v}</strong>
-    </div>`).join('')}
-  </div>`
+  el.innerHTML=`<div style="display:grid;gap:10px">${[['الباقة',data.plan_name],['الحالة','نشط'],['البداية',data.start_date],['الانتهاء',data.end_date||'غير محدد'],['المبلغ',data.amount+' درهم']].map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px"><span style="color:var(--muted);font-weight:700">${k}</span><strong>${v}</strong></div>`).join('')}</div>`
 }
 
 // ════ الملاحظات ════
-async function loadNotes() {
+async function loadNotes(){
   const {data}=await sb.from('manager_notes').select('*').eq('manager_id',currentUser.id).order('created_at',{ascending:false})
   const el=document.getElementById('notesList')
-  if(!data||data.length===0){el.innerHTML='<div class="empty">لا توجد ملاحظات</div>';return}
-  el.innerHTML=data.map(n=>`<div style="padding:12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;font-size:13px">
-    <div style="color:var(--muted);margin-bottom:4px">${new Date(n.created_at).toLocaleDateString('ar')}</div>
-    <div>${n.note}</div></div>`).join('')
+  if(!data||!data.length){el.innerHTML='<div class="empty">لا توجد ملاحظات</div>';return}
+  el.innerHTML=data.map(n=>`<div style="padding:12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;font-size:13px"><div style="color:var(--muted);margin-bottom:4px">${new Date(n.created_at).toLocaleDateString('ar')}</div><div>${n.note}</div></div>`).join('')
 }
-
 window.saveNote=async function(){
   const note=document.getElementById('noteText').value.trim()
   if(!note){showMsg('noteMsg','اكتب ملاحظتك أولاً','error');return}
   const {error}=await sb.from('manager_notes').insert({manager_id:currentUser.id,group_id:currentGroup?.id,note})
   if(error){showMsg('noteMsg','خطأ: '+error.message,'error');return}
   document.getElementById('noteText').value=''
-  showMsg('noteMsg','تم إرسال الملاحظة','success')
-  loadNotes()
-  setTimeout(()=>clearMsg('noteMsg'),2000)
+  showMsg('noteMsg','تم إرسال الملاحظة','success');loadNotes();setTimeout(()=>clearMsg('noteMsg'),2000)
 }
 
 window.doLogout=async function(){await sb.auth.signOut();window.location.href='login.html'}
+function showNoGroup(){document.querySelector('.content').innerHTML=`<div style="text-align:center;padding:60px 20px"><div style="font-size:48px;margin-bottom:16px">🏛️</div><h2 style="font-size:22px;font-weight:900;margin-bottom:8px">لا توجد جمعية مرتبطة بحسابك</h2><p style="color:var(--muted);font-size:14px;margin-bottom:20px">يرجى إنشاء جمعية جديدة.</p><a href="auth.html" class="btn btn-primary">إنشاء جمعية جديدة</a></div>`}
 
-function showNoGroup(){
-  document.querySelector('.content').innerHTML=`
-    <div style="text-align:center;padding:60px 20px">
-      <div style="font-size:48px;margin-bottom:16px">🏛️</div>
-      <h2 style="font-size:22px;font-weight:900;margin-bottom:8px">لا توجد جمعية مرتبطة بحسابك</h2>
-      <p style="color:var(--muted);font-size:14px;margin-bottom:20px">يرجى إنشاء جمعية جديدة.</p>
-      <a href="auth.html" class="btn btn-primary">إنشاء جمعية جديدة</a>
-    </div>`
-}
-
-window.openModal  = id=>document.getElementById(id).classList.add('show')
-window.closeModal = id=>document.getElementById(id).classList.remove('show')
-function showMsg(id,text,type){const el=document.getElementById(id);if(!el)return;el.textContent=text;el.className=`msg ${type} show`}
+window.openModal=id=>document.getElementById(id).classList.add('show')
+window.closeModal=id=>document.getElementById(id).classList.remove('show')
+function showMsg(id,t,type){const el=document.getElementById(id);if(!el)return;el.textContent=t;el.className=`msg ${type} show`}
 function clearMsg(id){const el=document.getElementById(id);if(!el)return;el.className='msg';el.textContent=''}
-function monthName(m){return['','يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'][m]||m}
-function statusBadge(s){return{active:'badge-green',pending:'badge-amber',approved:'badge-blue',rejected:'badge-red'}[s]||'badge-primary'}
-function statusLabel(s){return{active:'نشط',pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s]||s}
-function payStatusBadge(s){return{paid:'badge-green',pending:'badge-amber',late:'badge-red'}[s]||'badge-primary'}
-function payStatusLabel(s){return{paid:'مدفوع',pending:'معلق',late:'متأخر'}[s]||s}
-function reqStatusBadge(s){return{pending:'badge-amber',approved:'badge-green',rejected:'badge-red'}[s]||'badge-primary'}
-function reqStatusLabel(s){return{pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s]||s}
-function escQ(str){return(str||'').replace(/'/g,"\\'")}
+function mn(m){return['','يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'][m]||m}
+function sBadge(s){return{active:'badge-green',pending:'badge-amber',approved:'badge-blue',rejected:'badge-red'}[s]||'badge-primary'}
+function sLabel(s){return{active:'نشط',pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s]||s}
+function pBadge(s){return{paid:'badge-green',pending:'badge-amber',late:'badge-red'}[s]||'badge-primary'}
+function pLabel(s){return{paid:'✅ مدفوع',pending:'⏳ معلق',late:'🔴 متأخر'}[s]||s}
+function rBadge(s){return{pending:'badge-amber',approved:'badge-green',rejected:'badge-red'}[s]||'badge-primary'}
+function rLabel(s){return{pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s]||s}
+function eq(s){return(s||'').replace(/'/g,"\\'")}
 
-const pageTitles={
-  'overview-page':['نظرة عامة','ملخص شامل لجمعيتك'],
-  'members-page':['الأعضاء','قائمة أعضاء الجمعية'],
-  'requests-page':['طلبات الانضمام','الطلبات الواردة عبر رابط الانضمام'],
-  'payments-page':['الدفعات','سجل دفعات الأعضاء'],
-  'receipts-page':['الإيصالات','إيصالات الأعضاء المرفوعة'],
-  'schedule-page':['جدول الدفعات','جدول الدفعات الشهري'],
-  'link-page':['رابط الانضمام','أرسل الرابط للأعضاء الجدد'],
-  'plan-page':['الباقة الحالية','تفاصيل اشتراكك'],
-  'notes-page':['ملاحظات للإدارة','تواصل مع المشرف العام'],
-}
+const PT={'overview-page':['نظرة عامة','ملخص شامل لجمعيتك'],'members-page':['الأعضاء','قائمة أعضاء الجمعية'],'requests-page':['طلبات الانضمام','الطلبات الواردة'],'payments-page':['الدفعات والإيصالات','سجل شامل للدفعات والإيصالات'],'schedule-page':['جدول الدفعات','جدول الدفعات الشهري'],'link-page':['روابط الجمعية','روابط الانضمام والإيصالات'],'plan-page':['الباقة الحالية','تفاصيل اشتراكك'],'notes-page':['ملاحظات للإدارة','تواصل مع المشرف العام']}
 
-window.switchPage=function(pageId){
+window.switchPage=function(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'))
   document.querySelectorAll('.menu-btn').forEach(b=>b.classList.remove('active'))
-  document.getElementById(pageId)?.classList.add('active')
-  document.querySelector(`[data-page="${pageId}"]`)?.classList.add('active')
-  const[title,sub]=pageTitles[pageId]||['لوحة التحكم','']
-  document.getElementById('pageTitle').textContent=title
-  document.getElementById('pageSubtitle').textContent=sub
+  document.getElementById(id)?.classList.add('active')
+  document.querySelector(`[data-page="${id}"]`)?.classList.add('active')
+  const[t,s]=PT[id]||['لوحة التحكم','']
+  document.getElementById('pageTitle').textContent=t;document.getElementById('pageSubtitle').textContent=s
   window.scrollTo({top:0,behavior:'smooth'})
 }
-
-document.querySelectorAll('.menu-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const target=btn.getAttribute('data-page')
-    if(target) switchPage(target)
-  })
-})
-
+document.querySelectorAll('.menu-btn').forEach(b=>{b.addEventListener('click',()=>{const t=b.getAttribute('data-page');if(t)switchPage(t)})})
 init()
 </script>
 </body>
