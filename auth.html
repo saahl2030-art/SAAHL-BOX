@@ -82,7 +82,7 @@
             <label class="plan-option"><input type="radio" name="plan" value="Pro"><div class="plan-box"><div class="plan-info"><h4>Pro</h4><p>6 جمعيات · حد أقصى <strong>15 عضو</strong></p></div><div class="plan-meta"><div class="plan-price">69 <small>درهم</small></div><div class="plan-tag tag-green">الأكثر استخدامًا</div></div></div></label>
             <label class="plan-option"><input type="radio" name="plan" value="Business"><div class="plan-box"><div class="plan-info"><h4>Business</h4><p>10 جمعيات · حد أقصى <strong>25 عضو</strong></p></div><div class="plan-meta"><div class="plan-price">99 <small>درهم</small></div><div class="plan-tag tag-amber">تشغيل أكبر</div></div></div></label>
           </div>
-          <div class="notice">عدد الأعضاء محدود حسب الباقة المختارة. لا يمكن إضافة أعضاء جدد بعد الوصول للحد الأقصى.</div>
+          <div class="notice">عدد الجمعيات والأعضاء محدود حسب الباقة المختارة. يمكنك إنشاء جمعيات إضافية لاحقاً من لوحة التحكم.</div>
           <div class="actions">
             <button type="submit" class="btn btn-primary" id="submitBtn">إنشاء الحساب</button>
             <a href="login.html" class="btn btn-soft">لدي حساب بالفعل</a>
@@ -91,16 +91,16 @@
         </form>
       </div>
       <div class="card">
-        <h3>حدود الباقات</h3><p class="card-sub">عدد الأعضاء المسموح به حسب كل باقة.</p>
+        <h3>حدود الباقات</h3><p class="card-sub">عدد الجمعيات والأعضاء حسب كل باقة.</p>
         <div class="addons"><h4>جدول الباقات</h4><ul>
-          <li><strong>Free</strong><span>4 أعضاء</span></li>
-          <li><strong>Basic</strong><span>10 أعضاء</span></li>
-          <li><strong>Pro</strong><span>15 عضو</span></li>
-          <li><strong>Business</strong><span>25 عضو</span></li>
+          <li><strong>Free</strong><span>1 جمعية · 4 أعضاء</span></li>
+          <li><strong>Basic</strong><span>3 جمعيات · 10 أعضاء</span></li>
+          <li><strong>Pro</strong><span>6 جمعيات · 15 عضو</span></li>
+          <li><strong>Business</strong><span>10 جمعيات · 25 عضو</span></li>
         </ul></div>
         <div class="notice">عند اختيار باقة مدفوعة ستُحوَّل لصفحة الدفع أولاً، ثم تعود للوحة التحكم.</div>
         <div class="notice">إذا كان البريد مسجلاً مسبقًا، استخدم صفحة تسجيل الدخول.</div>
-        <div class="notice">شهر البداية للجمعية سيكون الشهر الحالي تلقائياً.</div>
+        <div class="notice">يمكنك إنشاء جمعيات إضافية بعد تسجيل الدخول مباشرة من لوحة التحكم حسب باقتك.</div>
       </div>
     </div></div></section>
   </main>
@@ -109,8 +109,11 @@
     var SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co';
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8';
     var _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    var LIMITS = {Free:4, Basic:10, Pro:15, Business:25};
-    var PRICES = {Free:0, Basic:39, Pro:69, Business:99};
+
+    // حدود الباقات
+    var MEMBER_LIMITS = {Free:4, Basic:10, Pro:15, Business:25};
+    var GROUP_LIMITS  = {Free:1, Basic:3,  Pro:6,  Business:10};
+    var PRICES        = {Free:0, Basic:39, Pro:69, Business:99};
 
     document.getElementById('signupForm').addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -147,12 +150,19 @@
         var uid = r2.data.user.id;
         var accessToken = r2.data.session.access_token;
         var now = new Date();
+        var maxMembers = MEMBER_LIMITS[plan] || 4;
 
-        // 3. إنشاء الجمعية
+        // 3. إنشاء الجمعية الأولى
         var r3 = await _sb.from('groups').insert({
-          manager_id: uid, name: societyName, monthly_amount: monthlyAmount,
-          total_members: 0, start_month: now.getMonth()+1, start_year: now.getFullYear(),
-          status: 'active', max_members: LIMITS[plan] || 4
+          manager_id: uid,
+          name: societyName,
+          monthly_amount: monthlyAmount,
+          total_members: 0,
+          start_month: now.getMonth()+1,
+          start_year: now.getFullYear(),
+          status: 'active',
+          max_members: maxMembers,
+          join_token: Math.random().toString(36).substring(2,10).toUpperCase()
         });
         if (r3.error) throw r3.error;
 
@@ -173,7 +183,6 @@
 
         } else {
           // 5. إذا باقة مدفوعة → حوّل لـ Stripe
-          ov.querySelector ? null : null;
           document.getElementById('overlay').textContent = 'جاري التحويل لصفحة الدفع...';
 
           var res = await fetch(SUPABASE_URL + '/functions/v1/create-checkout', {
