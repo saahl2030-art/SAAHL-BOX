@@ -617,7 +617,7 @@ window.saveNewGroup=async function(){
   if(allGroups.length>=maxG){showMsg('ngMsg','وصلت للحد الأقصى في باقتك الحالية.','error');return}
   const btn=document.getElementById('ngSaveBtn')
   btn.disabled=true;btn.textContent='جاري الإنشاء...'
-  const token=Math.random().toString(36).substring(2,10).toUpperCase()
+ const token=crypto.randomUUID()
   const now=new Date()
   const{data:ng,error}=await sb.from('groups').insert({
     manager_id:currentUser.id,name,monthly_amount:amount,max_members:maxM,
