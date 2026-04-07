@@ -266,7 +266,22 @@ window.submitReceipt = async function() {
   const receiptUrl = urlData.publicUrl
 
   // تحديث جدول payments
-  const { error: dbError } = await sb.from('payments').upsert({
+// تحقق هل السجل موجود
+const { data: existing } = await sb.from('payments')
+  .select('id')
+  .eq('member_id', memberId)
+  .eq('payment_month', month)
+  .eq('payment_year', year)
+  .single()
+
+let dbError
+if (existing) {
+  const { error } = await sb.from('payments')
+    .update({ receipt_url: receiptUrl, receipt_status: 'pending' })
+    .eq('id', existing.id)
+  dbError = error
+} else {
+  const { error } = await sb.from('payments').insert({
     group_id: currentGroup.id,
     member_id: memberId,
     payment_month: month,
@@ -275,8 +290,9 @@ window.submitReceipt = async function() {
     status: 'pending',
     receipt_url: receiptUrl,
     receipt_status: 'pending'
-  }, { onConflict: 'member_id,payment_month,payment_year' })
-
+  })
+  dbError = error
+}
   document.getElementById('progressFill').style.width = '100%'
 
   if (dbError) {
