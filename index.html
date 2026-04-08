@@ -145,6 +145,13 @@
     .footer-links a{font-size:12px;font-weight:700;color:var(--muted);text-decoration:none}
     .footer-links a:hover{color:var(--sky)}
 
+    /* VIDEO */
+    .video-section{padding:70px 20px;background:#fff;border-top:1px solid var(--line)}
+    .video-inner{max-width:760px;margin:0 auto;text-align:center}
+    .video-wrapper{position:relative;width:100%;padding-bottom:177.77%;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(15,40,64,.15);border:1px solid var(--line)}
+    .video-wrapper iframe{position:absolute;inset:0;width:100%;height:100%;border-radius:20px}
+    @media(max-width:600px){.video-section{padding:50px 16px}}
+
     /* ANIMATIONS */
     @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
     .reveal{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease}
@@ -291,6 +298,24 @@
       <div class="step reveal"><div class="step-num">2️⃣</div><h3>أرسل رابط الانضمام</h3><p>انسخ رابط الانضمام وأرسله للأعضاء عبر واتساب أو أي وسيلة.</p></div>
       <div class="step reveal"><div class="step-num">3️⃣</div><h3>قبول الطلبات</h3><p>يصلك إشعار بطلبات الانضمام. اقبل أو ارفض — والعضو يُضاف تلقائياً.</p></div>
       <div class="step reveal"><div class="step-num">4️⃣</div><h3>تابع الدفعات</h3><p>سجّل دفعات الأعضاء، ارفع الإيصالات، وتابع من دفع ومن لم يدفع.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VIDEO ══ -->
+<div class="video-section reveal">
+  <div class="video-inner">
+    <div class="section-label" style="justify-content:center">شاهد كيف يعمل</div>
+    <h2>صندوق ساهل في دقيقة واحدة</h2>
+    <p class="section-sub" style="margin:10px auto 32px;text-align:center">فيديو توضيحي يشرح كيف تُدار الجمعية من البداية حتى النهاية.</p>
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/xHYDNcTZIkk"
+        title="صندوق ساهل — شرح المنصة"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
     </div>
   </div>
 </div>
