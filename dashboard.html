@@ -320,6 +320,8 @@
             <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px"><span style="color:var(--muted);font-weight:700">المدير</span><strong id="infoManagerName">—</strong></div>
             <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px"><span style="color:var(--muted);font-weight:700">المبلغ الشهري</span><strong id="infoAmount">—</strong></div>
             <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px"><span style="color:var(--muted);font-weight:700">شهر البداية</span><strong id="infoStartDate">—</strong></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px"><span style="color:var(--muted);font-weight:700">بداية الدورة الفعلية</span><strong id="infoActualStart">—</strong></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px"><span style="color:var(--muted);font-weight:700">نهاية الدورة المتوقعة</span><strong id="infoActualEnd">—</strong></div>
           </div>
           <div class="capacity-wrap">
             <div class="capacity-label"><span>سعة الأعضاء</span><span id="capacityText">—</span></div>
@@ -545,15 +547,39 @@ async function updateOverview(){
   document.getElementById('infoManagerName').textContent=currentProfile.full_name
   document.getElementById('infoAmount').textContent=currentGroup.monthly_amount+' درهم'
   document.getElementById('infoStartDate').textContent=`${currentGroup.start_month}/${currentGroup.start_year}`
+  const asEl=document.getElementById('infoActualStart')
+  const aeEl=document.getElementById('infoActualEnd')
+  if(asEl)asEl.textContent=currentGroup.actual_start_date?new Date(currentGroup.actual_start_date).toLocaleDateString('ar-AE'):'لم تبدأ بعد'
+  if(aeEl)aeEl.textContent=currentGroup.actual_end_date?new Date(currentGroup.actual_end_date).toLocaleDateString('ar-AE'):'—'
   const smap={active:{l:'الجمعية نشطة',c:'active',b:'badge-green'},completed:{l:'اكتملت دورة الجمعية',c:'completed',b:'badge-blue'},stopped:{l:'الجمعية متوقفة',c:'stopped',b:'badge-red'},renewed:{l:'تم تجديد الجمعية',c:'active',b:'badge-violet'}}
   const s=smap[currentGroup.status]||smap.active
   document.getElementById('cycleBanner').className=`cycle-banner ${s.c}`
-  document.getElementById('cycleBannerText').textContent=s.l
   document.getElementById('groupStatusBadge').className=`badge ${s.b}`
   document.getElementById('groupStatusBadge').textContent=s.l
   const ca=document.getElementById('cycleActions');ca.innerHTML=''
-  if(currentGroup.status==='active')ca.innerHTML=`<button class="btn btn-soft btn-sm" onclick="updateGroupStatus('completed')">✅ إنهاء الدورة</button><button class="btn btn-danger btn-sm" onclick="updateGroupStatus('stopped')">⏹ إيقاف</button>`
-  else if(['completed','stopped'].includes(currentGroup.status))ca.innerHTML=`<button class="btn btn-success btn-sm" onclick="updateGroupStatus('renewed')">🔄 تجديد</button>`
+  const hasStarted=!!currentGroup.actual_start_date
+  if(currentGroup.status==='active'){
+    if(!hasStarted){
+      document.getElementById('cycleBannerText').textContent='الجمعية نشطة — لم تبدأ الدورة بعد'
+      ca.innerHTML=`<button class="btn btn-success btn-sm" onclick="startCycle()">▶️ بدء الدورة</button><button class="btn btn-danger btn-sm" onclick="updateGroupStatus('stopped')">⏹ إيقاف</button>`
+    } else {
+      const endD=currentGroup.actual_end_date?new Date(currentGroup.actual_end_date).toLocaleDateString('ar-AE'):''
+      const daysLeft=currentGroup.actual_end_date?Math.ceil((new Date(currentGroup.actual_end_date)-new Date())/(1000*60*60*24)):null
+      let bannerTxt='الجمعية نشطة'
+      if(daysLeft!==null){
+        if(daysLeft<0)bannerTxt=`الجمعية نشطة — انتهت الدورة منذ ${Math.abs(daysLeft)} يوم`
+        else if(daysLeft<=5)bannerTxt=`الجمعية نشطة — تنتهي الدورة خلال ${daysLeft} أيام ⚠️`
+        else bannerTxt=`الجمعية نشطة — تنتهي الدورة في ${endD}`
+      }
+      document.getElementById('cycleBannerText').textContent=bannerTxt
+      ca.innerHTML=`<button class="btn btn-soft btn-sm" onclick="updateGroupStatus('completed')">✅ إنهاء الدورة</button><button class="btn btn-danger btn-sm" onclick="updateGroupStatus('stopped')">⏹ إيقاف</button>`
+    }
+  } else if(['completed','stopped'].includes(currentGroup.status)){
+    document.getElementById('cycleBannerText').textContent=s.l
+    ca.innerHTML=`<button class="btn btn-success btn-sm" onclick="renewCycle()">🔄 تجديد</button>`
+  } else {
+    document.getElementById('cycleBannerText').textContent=s.l
+  }
   const cnt=await getMemberCount(),max=currentGroup.max_members||4
   document.getElementById('statTotal').textContent=cnt
   const pct=Math.min(100,Math.round(cnt/max*100))
@@ -585,6 +611,43 @@ window.updateGroupStatus=async function(s){
   if(!confirm('تغيير حالة الجمعية؟'))return
   await sb.from('groups').update({status:s}).eq('id',currentGroup.id)
   currentGroup.status=s;updateOverview()
+}
+
+window.startCycle=async function(){
+  const cnt=await getMemberCount()
+  if(cnt<1){alert('لا يوجد أعضاء في الجمعية. أضف الأعضاء أولاً قبل بدء الدورة.');return}
+  if(!confirm(`بدء الدورة الآن؟\nعدد الأعضاء: ${cnt}\nمدة الدورة: ${cnt} شهر`))return
+  const today=new Date()
+  const startDate=today.toISOString().split('T')[0]
+  const endDate=new Date(new Date().setMonth(new Date().getMonth()+cnt)).toISOString().split('T')[0]
+  const{error}=await sb.from('groups').update({
+    actual_start_date:startDate,
+    actual_end_date:endDate,
+    status:'active'
+  }).eq('id',currentGroup.id)
+  if(error){alert('خطأ: '+error.message);return}
+  currentGroup.actual_start_date=startDate
+  currentGroup.actual_end_date=endDate
+  updateOverview()
+}
+
+window.renewCycle=async function(){
+  const cnt=await getMemberCount()
+  if(cnt<1){alert('لا يوجد أعضاء في الجمعية.');return}
+  if(!confirm(`تجديد الدورة؟\nعدد الأعضاء: ${cnt}\nمدة الدورة الجديدة: ${cnt} شهر`))return
+  const today=new Date()
+  const startDate=today.toISOString().split('T')[0]
+  const endDate=new Date(new Date().setMonth(new Date().getMonth()+cnt)).toISOString().split('T')[0]
+  const{error}=await sb.from('groups').update({
+    actual_start_date:startDate,
+    actual_end_date:endDate,
+    status:'active'
+  }).eq('id',currentGroup.id)
+  if(error){alert('خطأ: '+error.message);return}
+  currentGroup.actual_start_date=startDate
+  currentGroup.actual_end_date=endDate
+  currentGroup.status='active'
+  updateOverview()
 }
 
 // ── إنشاء جمعية جديدة ──
