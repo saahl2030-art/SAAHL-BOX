@@ -631,23 +631,9 @@ window.startCycle=async function(){
   updateOverview()
 }
 
-window.renewCycle=async function(){
-  const cnt=await getMemberCount()
-  if(cnt<1){alert('لا يوجد أعضاء في الجمعية.');return}
-  if(!confirm(`تجديد الدورة؟\nعدد الأعضاء: ${cnt}\nمدة الدورة الجديدة: ${cnt} شهر`))return
-  const today=new Date()
-  const startDate=today.toISOString().split('T')[0]
-  const endDate=new Date(new Date().setMonth(new Date().getMonth()+cnt)).toISOString().split('T')[0]
-  const{error}=await sb.from('groups').update({
-    actual_start_date:startDate,
-    actual_end_date:endDate,
-    status:'active'
-  }).eq('id',currentGroup.id)
-  if(error){alert('خطأ: '+error.message);return}
-  currentGroup.actual_start_date=startDate
-  currentGroup.actual_end_date=endDate
-  currentGroup.status='active'
-  updateOverview()
+window.renewCycle=function(){
+  if(!confirm('سيتم توجيهك لصفحة الباقات لتجديد اشتراكك. هل تريد المتابعة؟'))return
+  window.location.href='plans.html'
 }
 
 // ── إنشاء جمعية جديدة ──
