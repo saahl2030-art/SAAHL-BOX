@@ -614,7 +614,20 @@ function updateReceiptBadge(n){const b=document.getElementById('receiptBadge');n
 
 window.updateGroupStatus=async function(s){
   if(!confirm('تغيير حالة الجمعية؟'))return
-  await sb.from('groups').update({status:s}).eq('id',currentGroup.id)
+  const updates={status:s}
+  if(s==='active'){
+    const start=new Date()
+    const end=new Date()
+    const memberCount=await getMemberCount()
+    end.setMonth(end.getMonth()+memberCount)
+    updates.actual_start_date=start.toISOString().split('T')[0]
+    updates.actual_end_date=end.toISOString().split('T')[0]
+    // تحديث end_date في subscriptions
+    await sb.from('subscriptions').update({
+      end_date:end.toISOString().split('T')[0]
+    }).eq('manager_id',currentUser.id)
+  }
+  await sb.from('groups').update(updates).eq('id',currentGroup.id)
   currentGroup.status=s;updateOverview()
 }
 
