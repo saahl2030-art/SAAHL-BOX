@@ -171,6 +171,11 @@
     .ng-limit .lfill.full{background:var(--red)}
     .color-dot{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:middle;margin-left:4px;border:2px solid rgba(0,0,0,.1)}
 
+    .expired-overlay{position:fixed;inset:0;background:rgba(15,40,64,.7);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
+    .expired-card{background:#fff;border-radius:28px;padding:48px 36px;max-width:460px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+    .expired-icon{font-size:56px;margin-bottom:16px}
+    .expired-title{font-size:24px;font-weight:900;color:#c53b3b;margin-bottom:10px}
+    .expired-sub{font-size:14px;color:#6e8498;line-height:1.8;margin-bottom:28px}
     @media(max-width:1280px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:980px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto;border-left:none;border-bottom:1px solid var(--line)}.menu{display:grid;grid-template-columns:repeat(3,1fr)}.content{padding:16px}.grid-2{grid-template-columns:1fr}}
     @media(max-width:640px){.menu{grid-template-columns:repeat(2,1fr)}.stats-grid{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.topbar h2{font-size:20px}.topbar{flex-direction:column;gap:10px}.topbar-actions{width:100%}.topbar-actions .btn{width:100%;justify-content:center}.card{padding:14px}.card-head{flex-direction:column;align-items:flex-start}.cycle-banner{flex-direction:column;align-items:flex-start}.filters{flex-direction:column;align-items:stretch}.filters .select,.filters .field{width:100%}.modal{padding:16px;border-radius:14px}}
@@ -320,8 +325,6 @@
             <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px"><span style="color:var(--muted);font-weight:700">المدير</span><strong id="infoManagerName">—</strong></div>
             <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px"><span style="color:var(--muted);font-weight:700">المبلغ الشهري</span><strong id="infoAmount">—</strong></div>
             <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px"><span style="color:var(--muted);font-weight:700">شهر البداية</span><strong id="infoStartDate">—</strong></div>
-            <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px"><span style="color:var(--muted);font-weight:700">بداية الدورة الفعلية</span><strong id="infoActualStart">—</strong></div>
-            <div style="display:flex;justify-content:space-between;font-size:13px;padding:10px;background:#f8fbff;border-radius:10px"><span style="color:var(--muted);font-weight:700">نهاية الدورة المتوقعة</span><strong id="infoActualEnd">—</strong></div>
           </div>
           <div class="capacity-wrap">
             <div class="capacity-label"><span>سعة الأعضاء</span><span id="capacityText">—</span></div>
@@ -487,6 +490,29 @@ window.switchGroup=async function(gid){
   loader.classList.remove('show')
 }
 
+function showExpiredOverlay(name){
+  const overlay=document.createElement('div')
+  overlay.className='expired-overlay'
+  overlay.innerHTML=`
+    <div class="expired-card">
+      <div class="expired-icon">⏰</div>
+      <div class="expired-title">انتهى اشتراكك</div>
+      <p class="expired-sub">
+        مرحباً ${name}،<br>
+        دورة جمعيتك اكتملت وانتهى اشتراكك.<br>
+        لبدء دورة جديدة يرجى تجديد باقتك.
+      </p>
+      <a href="plans.html" style="display:block;background:#1f6fa5;color:#fff;border-radius:14px;padding:14px 28px;font-size:15px;font-weight:900;text-decoration:none;margin-bottom:10px">
+        🔄 تجديد الباقة
+      </a>
+      <a href="login.html" onclick="(async()=>{await sb.auth.signOut()})()" style="display:block;background:#f8fbff;color:#6e8498;border:1px solid #dfe8f1;border-radius:14px;padding:12px 28px;font-size:13px;font-weight:700;text-decoration:none">
+        تسجيل الخروج
+      </a>
+    </div>
+  `
+  document.body.appendChild(overlay)
+}
+
 async function init(){
   loader.classList.add('show')
   try{
@@ -498,9 +524,11 @@ async function init(){
     if(p.role!=='manager'){window.location.href='admin.html';return}
     currentProfile=p
     document.getElementById('sidebarManagerName').textContent=p.full_name||'—'
-    const{data:sub}=await sb.from('subscriptions').select('plan_name').eq('manager_id',currentUser.id).eq('status','active').single()
+    const{data:sub}=await sb.from('subscriptions').select('*').eq('manager_id',currentUser.id).order('created_at',{ascending:false}).limit(1).single()
+    const subStatus=sub?.status||'free'
     planName=(sub?.plan_name||'free').toLowerCase()
     memberLimit=MEMBER_LIMITS[planName]||4
+    if(subStatus==='expired'){showExpiredOverlay(p.full_name);loader.classList.remove('show');return}
     const{data:groups}=await sb.from('groups').select('*').eq('manager_id',currentUser.id).order('created_at',{ascending:true})
     allGroups=groups||[]
     if(!allGroups.length){showNoGroup();loader.classList.remove('show');return}
@@ -547,39 +575,15 @@ async function updateOverview(){
   document.getElementById('infoManagerName').textContent=currentProfile.full_name
   document.getElementById('infoAmount').textContent=currentGroup.monthly_amount+' درهم'
   document.getElementById('infoStartDate').textContent=`${currentGroup.start_month}/${currentGroup.start_year}`
-  const asEl=document.getElementById('infoActualStart')
-  const aeEl=document.getElementById('infoActualEnd')
-  if(asEl)asEl.textContent=currentGroup.actual_start_date?new Date(currentGroup.actual_start_date).toLocaleDateString('ar-AE'):'لم تبدأ بعد'
-  if(aeEl)aeEl.textContent=currentGroup.actual_end_date?new Date(currentGroup.actual_end_date).toLocaleDateString('ar-AE'):'—'
   const smap={active:{l:'الجمعية نشطة',c:'active',b:'badge-green'},completed:{l:'اكتملت دورة الجمعية',c:'completed',b:'badge-blue'},stopped:{l:'الجمعية متوقفة',c:'stopped',b:'badge-red'},renewed:{l:'تم تجديد الجمعية',c:'active',b:'badge-violet'}}
   const s=smap[currentGroup.status]||smap.active
   document.getElementById('cycleBanner').className=`cycle-banner ${s.c}`
+  document.getElementById('cycleBannerText').textContent=s.l
   document.getElementById('groupStatusBadge').className=`badge ${s.b}`
   document.getElementById('groupStatusBadge').textContent=s.l
   const ca=document.getElementById('cycleActions');ca.innerHTML=''
-  const hasStarted=!!currentGroup.actual_start_date
-  if(currentGroup.status==='active'){
-    if(!hasStarted){
-      document.getElementById('cycleBannerText').textContent='الجمعية نشطة — لم تبدأ الدورة بعد'
-      ca.innerHTML=`<button class="btn btn-success btn-sm" onclick="startCycle()">▶️ بدء الدورة</button><button class="btn btn-danger btn-sm" onclick="updateGroupStatus('stopped')">⏹ إيقاف</button>`
-    } else {
-      const endD=currentGroup.actual_end_date?new Date(currentGroup.actual_end_date).toLocaleDateString('ar-AE'):''
-      const daysLeft=currentGroup.actual_end_date?Math.ceil((new Date(currentGroup.actual_end_date)-new Date())/(1000*60*60*24)):null
-      let bannerTxt='الجمعية نشطة'
-      if(daysLeft!==null){
-        if(daysLeft<0)bannerTxt=`الجمعية نشطة — انتهت الدورة منذ ${Math.abs(daysLeft)} يوم`
-        else if(daysLeft<=5)bannerTxt=`الجمعية نشطة — تنتهي الدورة خلال ${daysLeft} أيام ⚠️`
-        else bannerTxt=`الجمعية نشطة — تنتهي الدورة في ${endD}`
-      }
-      document.getElementById('cycleBannerText').textContent=bannerTxt
-      ca.innerHTML=`<button class="btn btn-soft btn-sm" onclick="updateGroupStatus('completed')">✅ إنهاء الدورة</button><button class="btn btn-danger btn-sm" onclick="updateGroupStatus('stopped')">⏹ إيقاف</button>`
-    }
-  } else if(['completed','stopped'].includes(currentGroup.status)){
-    document.getElementById('cycleBannerText').textContent=s.l
-    ca.innerHTML=`<button class="btn btn-success btn-sm" onclick="renewCycle()">🔄 تجديد</button>`
-  } else {
-    document.getElementById('cycleBannerText').textContent=s.l
-  }
+  if(currentGroup.status==='active')ca.innerHTML=`<button class="btn btn-soft btn-sm" onclick="updateGroupStatus('completed')">✅ إنهاء الدورة</button><button class="btn btn-danger btn-sm" onclick="updateGroupStatus('stopped')">⏹ إيقاف</button>`
+  else if(['completed','stopped'].includes(currentGroup.status))ca.innerHTML=`<button class="btn btn-success btn-sm" onclick="updateGroupStatus('renewed')">🔄 تجديد</button>`
   const cnt=await getMemberCount(),max=currentGroup.max_members||4
   document.getElementById('statTotal').textContent=cnt
   const pct=Math.min(100,Math.round(cnt/max*100))
@@ -611,29 +615,6 @@ window.updateGroupStatus=async function(s){
   if(!confirm('تغيير حالة الجمعية؟'))return
   await sb.from('groups').update({status:s}).eq('id',currentGroup.id)
   currentGroup.status=s;updateOverview()
-}
-
-window.startCycle=async function(){
-  const cnt=await getMemberCount()
-  if(cnt<1){alert('لا يوجد أعضاء في الجمعية. أضف الأعضاء أولاً قبل بدء الدورة.');return}
-  if(!confirm(`بدء الدورة الآن؟\nعدد الأعضاء: ${cnt}\nمدة الدورة: ${cnt} شهر`))return
-  const today=new Date()
-  const startDate=today.toISOString().split('T')[0]
-  const endDate=new Date(new Date().setMonth(new Date().getMonth()+cnt)).toISOString().split('T')[0]
-  const{error}=await sb.from('groups').update({
-    actual_start_date:startDate,
-    actual_end_date:endDate,
-    status:'active'
-  }).eq('id',currentGroup.id)
-  if(error){alert('خطأ: '+error.message);return}
-  currentGroup.actual_start_date=startDate
-  currentGroup.actual_end_date=endDate
-  updateOverview()
-}
-
-window.renewCycle=function(){
-  if(!confirm('سيتم توجيهك لصفحة الباقات لتجديد اشتراكك. هل تريد المتابعة؟'))return
-  window.location.href='plans.html'
 }
 
 // ── إنشاء جمعية جديدة ──
