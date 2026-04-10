@@ -12,7 +12,6 @@
       --sky:#1f6fa5;--sky2:#46a8d8;--sky3:#eaf5fd;
       --green:#138a59;--green-s:#e8f8f1;
       --white:#fff;--muted:#6e8498;--line:#dfe8f1;
-      --gold:#f5c842;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'Tajawal',sans-serif;background:linear-gradient(160deg,#f8fbff,#eaf5fd 50%,#f0f8f4);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
@@ -41,22 +40,14 @@
 <div class="card" id="mainCard">
   <div class="loading">
     <div class="spinner"></div>
-    <p style="color:var(--muted);font-weight:700">جاري تفعيل باقتك...</p>
+    <p style="color:var(--muted);font-weight:700">جاري التحقق من الدفع...</p>
   </div>
 </div>
 
 <script>
   const SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
-
-  const planNames  = { free:'Free', basic:'Basic', pro:'Pro', business:'Business' }
-  const planPrices = { free:0, basic:39, pro:69, business:99 }
-  const planLimits = {
-    free:     { max_groups:1,  max_members:4  },
-    basic:    { max_groups:3,  max_members:10 },
-    pro:      { max_groups:6,  max_members:15 },
-    business: { max_groups:10, max_members:25 },
-  }
+  const planNames = { free:'Free', basic:'Basic', pro:'Pro', business:'Business' }
 
   async function activate() {
     const params    = new URLSearchParams(location.search)
@@ -72,30 +63,32 @@
 
     try {
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-      const now = new Date()
-      const end = new Date(); end.setFullYear(end.getFullYear() + 1)
+      const { data: { session } } = await supabase.auth.getSession()
 
-      // تحديث الاشتراك الموجود أو إنشاء اشتراك جديد
-      const { error } = await supabase
-        .from('subscriptions')
-        .upsert({
-          manager_id: userId,
-          plan_name:  planNames[plan] || plan,
-          status:     'active',
-          start_date: now.toISOString().split('T')[0],
-          end_date:   end.toISOString().split('T')[0],
-          amount:     planPrices[plan] || 0,
-        }, { onConflict: 'manager_id' })
+      if (!session) {
+        showError(card, 'انتهت جلستك. يرجى تسجيل الدخول مجدداً.')
+        return
+      }
 
-      if (error) throw error
+      // التحقق من الدفع عبر verify-payment
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/verify-payment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ session_id: sessionId, user_id: userId, plan }),
+      })
 
-      // تحديث max_members في groups الخاصة بهذا المدير
-      await supabase
-        .from('groups')
-        .update({ max_members: planLimits[plan].max_members })
-        .eq('manager_id', userId)
+      const data = await res.json()
+
+      if (!res.ok || !data.success) {
+        showError(card, data.error || 'فشل التحقق من الدفع')
+        return
+      }
 
       showSuccess(card, plan, sessionId)
+
     } catch (err) {
       showError(card, err.message)
     }
