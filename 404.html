@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>404 — صندوق ساهل</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --sky:#1f6fa5;--sky2:#46a8d8;--sky3:#eaf5fd;
+      --green:#138a59;--green-s:#e8f8f1;
+      --ink:#16324a;--muted:#6e8498;--line:#dfe8f1;
+      --white:#fff;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Tajawal',sans-serif;
+      background:linear-gradient(160deg,#f8fbff,#eaf5fd 50%,#f0f8f4);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+
+    .card{
+      background:#fff;
+      border-radius:28px;
+      border:1px solid var(--line);
+      padding:48px 36px;
+      max-width:460px;
+      width:100%;
+      text-align:center;
+      box-shadow:0 20px 60px rgba(15,40,64,.1);
+      animation:fadeIn .6s ease forwards;
+    }
+
+    /* الشعار يطفو */
+    .logo-wrap{
+      margin-bottom:24px;
+      animation:float 3s ease-in-out infinite;
+    }
+    .logo-wrap img{
+      width:72px;
+      height:72px;
+      object-fit:contain;
+      border-radius:18px;
+    }
+
+    /* رقم 404 */
+    .num{
+      font-size:90px;
+      font-weight:900;
+      line-height:1;
+      background:linear-gradient(135deg,var(--sky),var(--green));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+      margin-bottom:16px;
+      animation:pulse 2.5s ease-in-out infinite;
+    }
+
+    h1{
+      font-size:22px;
+      font-weight:900;
+      color:var(--ink);
+      margin-bottom:12px;
+    }
+
+    p{
+      font-size:14px;
+      color:var(--muted);
+      line-height:1.8;
+      margin-bottom:32px;
+    }
+
+    .btn-wrap{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-bottom:28px;
+    }
+
+    .btn{
+      border:none;
+      border-radius:14px;
+      padding:14px 28px;
+      font-family:'Tajawal',sans-serif;
+      font-size:14px;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .2s, filter .2s;
+      text-decoration:none;
+      display:block;
+    }
+    .btn:hover{transform:translateY(-2px)}
+
+    .btn-primary{
+      background:linear-gradient(135deg,var(--sky),var(--sky2));
+      color:#fff;
+      box-shadow:0 8px 20px rgba(31,111,165,.25);
+    }
+    .btn-primary:hover{filter:brightness(.92)}
+
+    .btn-ghost{
+      background:var(--sky3);
+      color:var(--sky);
+      border:1.5px solid #c3dff0;
+    }
+    .btn-ghost:hover{background:#d8eefb}
+
+    .footer-line{
+      border-top:1px solid var(--line);
+      padding-top:20px;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .footer-line a{
+      color:var(--sky);
+      text-decoration:none;
+      font-weight:700;
+    }
+
+    /* حركات */
+    @keyframes float{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-10px)}
+    }
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(24px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    @keyframes pulse{
+      0%,100%{opacity:1}
+      50%{opacity:.7}
+    }
+
+    @media(max-width:480px){
+      .card{padding:36px 20px}
+      .num{font-size:72px}
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <div class="logo-wrap">
+    <img src="assets/logo.png" alt="صندوق ساهل">
+  </div>
+
+  <div class="num">404</div>
+
+  <h1>الصفحة غير موجودة</h1>
+
+  <p>
+    يبدو أن الرابط الذي أدخلته غير صحيح<br>
+    أو أن الصفحة لم تعد موجودة.
+  </p>
+
+  <div class="btn-wrap">
+    <a class="btn btn-primary" href="index.html">← العودة للرئيسية</a>
+    <a class="btn btn-ghost" href="login.html">تسجيل الدخول</a>
+  </div>
+
+  <div class="footer-line">
+    <a href="index.html">صندوق ساهل</a> — منصة إدارة الجمعيات المالية
+  </div>
+
+</div>
+
+</body>
+</html>
