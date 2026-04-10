@@ -525,7 +525,7 @@ async function init(){
     currentProfile=p
     document.getElementById('sidebarManagerName').textContent=p.full_name||'—'
     const{data:sub}=await sb.from('subscriptions').select('*').eq('manager_id',currentUser.id).order('created_at',{ascending:false}).limit(1).single()
-    const subStatus=sub?.status||'free'
+    const subStatus=sub?.status||'none'
     planName=(sub?.plan_name||'free').toLowerCase()
     memberLimit=MEMBER_LIMITS[planName]||4
     if(subStatus==='expired'){showExpiredOverlay(p.full_name);loader.classList.remove('show');return}
