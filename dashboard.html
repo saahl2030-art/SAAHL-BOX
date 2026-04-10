@@ -525,7 +525,7 @@ async function init(){
     currentProfile=p
     document.getElementById('sidebarManagerName').textContent=p.full_name||'—'
 const{data:subs}=await sb.from('subscriptions').select('*').eq('manager_id',currentUser.id).order('created_at',{ascending:false}).limit(1)
-const sub=subs?.[0]||null
+    const sub=subs?.[0]||null
     const subStatus=sub?.status||'none'
     planName=(sub?.plan_name||'free').toLowerCase()
     memberLimit=MEMBER_LIMITS[planName]||4
