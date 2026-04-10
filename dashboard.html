@@ -623,9 +623,9 @@ window.updateGroupStatus=async function(s){
     updates.actual_start_date=start.toISOString().split('T')[0]
     updates.actual_end_date=end.toISOString().split('T')[0]
     // تحديث end_date في subscriptions
-    await sb.from('subscriptions').update({
-      end_date:end.toISOString().split('T')[0]
-    }).eq('manager_id',currentUser.id)
+   await sb.from('subscriptions').update({
+  end_date:end.toISOString().split('T')[0]
+}).eq('manager_id',currentGroup.manager_id)
   }
   await sb.from('groups').update(updates).eq('id',currentGroup.id)
   currentGroup.status=s;updateOverview()
