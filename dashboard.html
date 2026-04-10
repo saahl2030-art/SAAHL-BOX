@@ -505,7 +505,7 @@ function showExpiredOverlay(name){
       <a href="plans.html" style="display:block;background:#1f6fa5;color:#fff;border-radius:14px;padding:14px 28px;font-size:15px;font-weight:900;text-decoration:none;margin-bottom:10px">
         🔄 تجديد الباقة
       </a>
-      <a href="login.html" onclick="(async()=>{await sb.auth.signOut()})()" style="display:block;background:#f8fbff;color:#6e8498;border:1px solid #dfe8f1;border-radius:14px;padding:12px 28px;font-size:13px;font-weight:700;text-decoration:none">
+      <a href="login.html" style="display:block;background:#f8fbff;color:#6e8498;border:1px solid #dfe8f1;border-radius:14px;padding:12px 28px;font-size:13px;font-weight:700;text-decoration:none">
         تسجيل الخروج
       </a>
     </div>
@@ -524,12 +524,12 @@ async function init(){
     if(p.role!=='manager'){window.location.href='admin.html';return}
     currentProfile=p
     document.getElementById('sidebarManagerName').textContent=p.full_name||'—'
-const{data:subs}=await sb.from('subscriptions').select('*').eq('manager_id',currentUser.id).order('created_at',{ascending:false}).limit(1)
+    const{data:subs}=await sb.from('subscriptions').select('*').eq('manager_id',currentUser.id).order('created_at',{ascending:false}).limit(1)
     const sub=subs?.[0]||null
     const subStatus=sub?.status||'none'
+    if(subStatus==='expired'){showExpiredOverlay(p.full_name);loader.classList.remove('show');return}
     planName=(sub?.plan_name||'free').toLowerCase()
     memberLimit=MEMBER_LIMITS[planName]||4
-    if(subStatus==='expired'){showExpiredOverlay(p.full_name);loader.classList.remove('show');return}
     const{data:groups}=await sb.from('groups').select('*').eq('manager_id',currentUser.id).order('created_at',{ascending:true})
     allGroups=groups||[]
     if(!allGroups.length){showNoGroup();loader.classList.remove('show');return}
