@@ -38,7 +38,6 @@
     .nav-btn-primary{background:var(--sky);color:#fff;box-shadow:0 4px 14px rgba(31,111,165,.22)}
     .nav-btn-primary:hover{background:#185781}
 
-    /* همبرغر للموبايل */
     .nav-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;border:none;background:none}
     .nav-toggle span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;transition:.3s}
     .mobile-menu{display:none;position:fixed;inset:0;top:62px;background:#fff;z-index:99;padding:20px;flex-direction:column;gap:10px;border-top:1px solid var(--line)}
@@ -112,7 +111,8 @@
     .plan-card.featured{border-color:var(--sky);box-shadow:0 10px 36px rgba(31,111,165,.16)}
     .plan-featured-badge{position:absolute;top:-13px;right:50%;transform:translateX(50%);background:var(--sky);color:#fff;font-size:11px;font-weight:900;padding:4px 13px;border-radius:999px;white-space:nowrap}
     .plan-name{font-size:19px;font-weight:900;color:var(--ink);margin-bottom:5px}
-    .plan-desc{font-size:12px;color:var(--muted);margin-bottom:18px;line-height:1.6}
+    .plan-desc{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.6}
+    .plan-period{font-size:11px;color:var(--green);font-weight:800;margin-bottom:14px}
     .plan-price{font-size:34px;font-weight:900;color:var(--ink);line-height:1;margin-bottom:18px}
     .plan-price small{font-size:13px;color:var(--muted);font-weight:700}
     .plan-features{list-style:none;display:grid;gap:9px;margin-bottom:22px}
@@ -164,14 +164,12 @@
       .steps-grid{grid-template-columns:repeat(2,1fr);gap:28px}
       .steps-grid::before{display:none}
     }
-
     @media(max-width:768px){
       nav{padding:10px 16px}
       .nav-links{display:none}
       .nav-toggle{display:flex}
       .nav-brand{font-size:17px}
       .nav-logo{width:34px;height:34px;font-size:15px}
-
       .hero{padding:80px 16px 44px;min-height:auto}
       .hero h1{font-size:28px}
       .hero-sub{font-size:14px}
@@ -181,29 +179,23 @@
       .stat-pill{padding:9px 14px}
       .stat-pill strong{font-size:16px}
       .stat-pill span{font-size:10px}
-
       .section{padding:50px 16px}
       .section h2{font-size:24px}
       .features-grid{grid-template-columns:1fr;gap:12px}
       .feature-card{padding:20px 16px}
-
       .how-section{padding:50px 16px}
       .steps-grid{grid-template-columns:1fr;gap:20px}
       .step{padding:0}
       .step-num{width:58px;height:58px;font-size:22px;margin-bottom:14px}
-
       .plans-grid{grid-template-columns:1fr;gap:12px}
       .plan-card{padding:20px 16px}
       .plan-price{font-size:28px}
-
       .cta-section{padding:50px 16px}
       .cta-actions{flex-direction:column;align-items:stretch}
       .cta-btn-primary,.cta-btn-ghost{width:100%;justify-content:center;padding:15px}
-
       footer{flex-direction:column;text-align:center;padding:20px 16px}
       .footer-links{justify-content:center}
     }
-
     @media(max-width:480px){
       .hero h1{font-size:24px}
       .hero-actions{flex-direction:column;width:100%}
@@ -211,7 +203,6 @@
       .hero-stats{flex-direction:column;align-items:stretch}
       .stat-pill{justify-content:center}
     }
-
     @media(hover:none){
       .feature-card:hover,.plan-card:hover{transform:none}
       .btn-hero-primary:hover,.btn-hero-ghost:hover{transform:none}
@@ -253,7 +244,7 @@
   <div class="hero-dots"></div>
   <div class="hero-inner">
     <div class="hero-badge">
-    منصة إدارة الجمعيات المالية 
+      منصة إدارة الجمعيات المالية
     </div>
     <h1>أدِر جمعيتك المالية<br><span class="accent">بكل سهولة وثقة</span></h1>
     <p class="hero-sub">منصة رقمية متكاملة تُمكّن مدير الجمعية من إدارة الأعضاء، متابعة الدفعات، وإرسال روابط الانضمام — كل ذلك من مكان واحد.</p>
@@ -327,35 +318,72 @@
   <p class="section-sub">ابدأ مجاناً وطوّر باقتك عند الحاجة. لا رسوم خفية.</p>
   <div style="text-align:center;margin-bottom:28px">
     <span style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#1f6fa5,#138a59);color:#fff;font-size:16px;font-weight:900;padding:14px 28px;border-radius:50px;box-shadow:0 8px 24px rgba(31,111,165,0.3)">
-      💳 ادفع مرة واحدة فقط — لا اشتراك شهري
+      📅 اشتراك سنوي — ادفع مرة واحدة كل سنة
     </span>
   </div>
   <div class="plans-grid">
+
+    <!-- Free -->
     <div class="plan-card reveal">
-      <div class="plan-name">Free</div><div class="plan-desc">مثالية للبداية والتجربة</div>
+      <div class="plan-name">Free</div>
+      <div class="plan-desc">مثالية للبداية والتجربة</div>
+      <div class="plan-period">مجاناً للأبد 🎉</div>
       <div class="plan-price">0 <small>درهم</small></div>
-      <ul class="plan-features"><li>1 جمعية</li><li>حتى 4 أعضاء</li><li>رابط انضمام</li><li>تتبع الدفعات</li></ul>
+      <ul class="plan-features">
+        <li>1 جمعية</li>
+        <li>حتى 4 أعضاء</li>
+        <li>رابط انضمام</li>
+        <li>تتبع الدفعات</li>
+      </ul>
       <a class="plan-btn plan-btn-ghost" href="auth.html">ابدأ مجاناً</a>
     </div>
+
+    <!-- Basic -->
     <div class="plan-card reveal">
-      <div class="plan-name">Basic</div><div class="plan-desc">للجمعيات الصغيرة النشطة</div>
-      <div class="plan-price">39 <small>درهم</small></div>
-      <ul class="plan-features"><li>3 جمعيات</li><li>حتى 10 أعضاء</li><li>رفع الإيصالات</li><li>جدول الدفعات</li></ul>
+      <div class="plan-name">Basic</div>
+      <div class="plan-desc">للجمعيات الصغيرة النشطة</div>
+      <div class="plan-period">سنوياً · 0.16 درهم / يوم</div>
+      <div class="plan-price">59 <small>درهم</small></div>
+      <ul class="plan-features">
+        <li>3 جمعيات</li>
+        <li>حتى 10 أعضاء</li>
+        <li>رفع الإيصالات</li>
+        <li>جدول الدفعات</li>
+      </ul>
       <a class="plan-btn plan-btn-ghost" href="auth.html">اشترك الآن</a>
     </div>
+
+    <!-- Pro -->
     <div class="plan-card featured reveal">
       <div class="plan-featured-badge">⭐ الأكثر استخداماً</div>
-      <div class="plan-name">Pro</div><div class="plan-desc">للمدراء المحترفين</div>
-      <div class="plan-price">69 <small>درهم</small></div>
-      <ul class="plan-features"><li>6 جمعيات</li><li>حتى 15 عضو</li><li>جميع المميزات</li><li>دعم أولوي</li></ul>
+      <div class="plan-name">Pro</div>
+      <div class="plan-desc">للمدراء المحترفين</div>
+      <div class="plan-period">سنوياً · 0.27 درهم / يوم</div>
+      <div class="plan-price">99 <small>درهم</small></div>
+      <ul class="plan-features">
+        <li>6 جمعيات</li>
+        <li>حتى 15 عضو</li>
+        <li>جميع المميزات</li>
+        <li>دعم أولوي</li>
+      </ul>
       <a class="plan-btn plan-btn-primary" href="auth.html">اشترك الآن</a>
     </div>
+
+    <!-- Business -->
     <div class="plan-card reveal">
-      <div class="plan-name">Business</div><div class="plan-desc">للمؤسسات والشركات</div>
-      <div class="plan-price">99 <small>درهم</small></div>
-      <ul class="plan-features"><li>10 جمعيات</li><li>حتى 25 عضو</li><li>جميع المميزات</li><li>تقارير متقدمة</li></ul>
+      <div class="plan-name">Business</div>
+      <div class="plan-desc">للمؤسسات والشركات</div>
+      <div class="plan-period">سنوياً · 0.49 درهم / يوم</div>
+      <div class="plan-price">179 <small>درهم</small></div>
+      <ul class="plan-features">
+        <li>10 جمعيات</li>
+        <li>حتى 25 عضو</li>
+        <li>جميع المميزات</li>
+        <li>تقارير متقدمة</li>
+      </ul>
       <a class="plan-btn plan-btn-ghost" href="auth.html">اشترك الآن</a>
     </div>
+
   </div>
 </section>
 
@@ -373,7 +401,7 @@
 
 <!-- ══ FOOTER ══ -->
 <footer>
-<img src="assets/logo.png" style="width:32px;height:32px;object-fit:contain" alt="صندوق ساهل">
+  <img src="assets/logo.png" style="width:32px;height:32px;object-fit:contain" alt="صندوق ساهل">
   <p>© 2026 صندوق ساهل — جميع الحقوق محفوظة</p>
   <div class="footer-links">
     <a href="auth.html">إنشاء حساب</a>
@@ -384,18 +412,15 @@
 </footer>
 
 <script>
-  // Scroll reveal
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(el => { if(el.isIntersecting){el.target.classList.add('visible');observer.unobserve(el.target)} })
   }, {threshold:.08})
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
 
-  // Nav scroll
   window.addEventListener('scroll', () => {
     document.querySelector('nav').style.boxShadow = window.scrollY > 20 ? '0 4px 20px rgba(15,40,64,.1)' : 'none'
   })
 
-  // Mobile menu
   const toggle = document.getElementById('navToggle')
   const menu = document.getElementById('mobileMenu')
   toggle.addEventListener('click', () => {
@@ -415,7 +440,6 @@
     toggle.querySelectorAll('span').forEach(s=>s.style.cssText='')
   }
 
-  // إغلاق القائمة عند الضغط خارجها
   document.addEventListener('click', (e) => {
     if(!toggle.contains(e.target) && !menu.contains(e.target)) closeMobileMenu()
   })
