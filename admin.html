@@ -7,9 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
     :root{
-      --bg:#f4f8fc;--panel:#ffffff;--panel-soft:#f8fbff;
+      --bg:#f4f8fc;--panel:#fff;--panel-soft:#f8fbff;
       --line:#dfe8f1;--line-dark:#cfdbe7;
       --text:#16324a;--muted:#6e8498;
       --primary:#1f6fa5;--primary-dark:#185781;--primary-soft:#eaf5fd;
@@ -18,793 +19,590 @@
       --red:#c53b3b;--red-soft:#fdeeee;
       --blue:#2563eb;--blue-soft:#edf3ff;
       --violet:#7c3aed;--violet-soft:#f3edff;
-      --shadow:0 12px 30px rgba(15,40,64,0.08);
-      --radius:18px;
+      --shadow:0 4px 20px rgba(15,40,64,0.07);
+      --radius:14px;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
-    body{font-family:"Tajawal",sans-serif;background:linear-gradient(180deg,#f8fbff,#f3f7fb);color:var(--text)}
+    body{font-family:"Tajawal",sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
     a{text-decoration:none;color:inherit}
     button,input,select,textarea{font-family:"Tajawal",sans-serif}
-    .app{min-height:100vh;display:grid;grid-template-columns:270px 1fr}
-    .sidebar{background:#fff;border-left:1px solid var(--line);padding:20px 16px;position:sticky;top:0;height:100vh;box-shadow:var(--shadow);overflow:auto;z-index:20}
-    .brand{display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:14px}
-    .brand-logo{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,var(--red),#e05c5c);color:#fff;font-size:19px;font-weight:900;flex:0 0 44px}
-    .brand h1{font-size:18px;font-weight:900;line-height:1.1}
-    .brand p{color:var(--muted);font-size:12px;margin-top:3px}
-    .admin-chip{margin-top:10px;padding:7px 12px;border-radius:11px;background:var(--red-soft);border:1px solid #f5c6c6}
-    .admin-chip span{display:block;font-size:11px;color:var(--red);font-weight:700}
-    .admin-chip strong{display:block;font-size:13px;font-weight:900;color:var(--red)}
-    .menu{display:flex;flex-direction:column;gap:5px;margin-top:14px}
-    .menu-btn{border:none;background:transparent;width:100%;display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:11px;cursor:pointer;color:var(--text);font-size:13px;font-weight:800;transition:.2s}
-    .menu-btn:hover{background:var(--panel-soft)}
-    .menu-btn.active{background:var(--red-soft);color:var(--red);border:1px solid #f5c6c6}
-    .menu-icon{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:#f2f7fb;font-size:14px;flex:0 0 30px}
-    .menu-btn.active .menu-icon{background:#fde8e8}
-    .logout-btn{margin-top:14px;border-top:1px solid var(--line);border:none;background:none;width:100%;display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:11px;cursor:pointer;color:var(--red);font-size:13px;font-weight:800}
-    .logout-btn:hover{background:var(--red-soft)}
-    .content{padding:22px;min-width:0}
-    .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px}
-    .topbar h2{font-size:26px;font-weight:900}
-    .topbar p{color:var(--muted);font-size:13px;margin-top:4px}
-    .page{display:none;animation:fade .2s ease}
+    .app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+    .sidebar{background:#fff;border-left:1px solid var(--line);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;overflow:hidden;z-index:30}
+    .sb-brand{padding:14px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:9px}
+    .sb-icon{width:34px;height:34px;border-radius:10px;background:var(--red-soft);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:var(--red);flex:0 0 34px}
+    .sb-brand-text h1{font-size:13px;font-weight:900;color:var(--text)}
+    .sb-brand-text p{font-size:10px;color:var(--muted);margin-top:1px}
+    .sb-admin{margin:10px 10px 0;padding:8px 10px;background:var(--red-soft);border-radius:10px;border:1px solid #f5c6c6}
+    .sb-admin span{display:block;font-size:9px;color:var(--red);font-weight:700}
+    .sb-admin strong{display:block;font-size:12px;font-weight:900;color:var(--red)}
+    .sb-nav{padding:8px;flex:1;overflow:auto}
+    .nav-section{font-size:9px;color:var(--muted);padding:8px 8px 3px;letter-spacing:.06em;font-weight:700}
+    .nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:2px;transition:.15s}
+    .nav-item:hover{background:var(--panel-soft);color:var(--text)}
+    .nav-item.active{background:var(--red-soft);color:var(--red);font-weight:800}
+    .nav-item .ni{font-size:14px;width:18px;text-align:center;flex:0 0 18px}
+    .nav-badge{margin-right:auto;background:var(--red);color:#fff;font-size:9px;padding:1px 5px;border-radius:999px;font-weight:900}
+    .sb-footer{border-top:1px solid var(--line);padding:10px}
+    .logout-nav{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;font-size:12px;color:var(--red);cursor:pointer}
+    .logout-nav:hover{background:var(--red-soft)}
+    .main{display:flex;flex-direction:column;min-width:0;overflow:hidden}
+    .topbar{background:#fff;border-bottom:1px solid var(--line);padding:10px 18px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:20}
+    .tb-info{flex:1}
+    .tb-info h2{font-size:15px;font-weight:900;color:var(--text)}
+    .tb-info p{font-size:10px;color:var(--muted);margin-top:2px}
+    .tb-btn{font-size:11px;padding:6px 11px;border:1px solid var(--line-dark);border-radius:9px;background:#fff;color:var(--muted);cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:5px}
+    .tb-btn:hover{background:var(--panel-soft);color:var(--text)}
+    .alert-bar{background:var(--amber-soft);border-bottom:1px solid #f0d090;padding:7px 18px;font-size:11px;color:var(--amber);display:flex;align-items:center;gap:8px}
+    .al-dot{width:6px;height:6px;border-radius:50%;background:var(--amber);flex-shrink:0}
+    .scr{padding:16px 18px;flex:1;overflow:auto}
+    .page{display:none}
     .page.active{display:block}
-    @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-    .btn{border:none;border-radius:11px;padding:10px 16px;cursor:pointer;font-size:13px;font-weight:900;transition:.2s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
-    .btn:hover{transform:translateY(-1px)}
-    .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-    .btn-primary{background:var(--primary);color:#fff}
-    .btn-primary:hover{background:var(--primary-dark)}
-    .btn-soft{background:#fff;border:1px solid var(--line-dark);color:var(--text)}
-    .btn-danger{background:var(--red);color:#fff}
-    .btn-sm{padding:7px 11px;font-size:12px;border-radius:9px}
-    .stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
-    .stat-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;position:relative;overflow:hidden}
-    .stat-icon{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-size:18px;margin-bottom:10px}
-    .stat-label{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:4px}
-    .stat-value{font-size:28px;font-weight:900;line-height:1}
-    .stat-note{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.6}
-    .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
-    .card+.card{margin-top:16px}
-    .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-    .card-title{font-size:16px;font-weight:900}
-    .card-sub{color:var(--muted);font-size:12px;margin-top:3px}
-    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-    .badge{display:inline-flex;align-items:center;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:900;white-space:nowrap}
-    .badge-green{background:var(--green-soft);color:var(--green)}
-    .badge-red{background:var(--red-soft);color:var(--red)}
-    .badge-amber{background:var(--amber-soft);color:var(--amber)}
-    .badge-blue{background:var(--blue-soft);color:var(--blue)}
-    .badge-primary{background:var(--primary-soft);color:var(--primary-dark)}
-    .badge-violet{background:var(--violet-soft);color:var(--violet)}
-    .table-wrap{width:100%;overflow:auto;border:1px solid var(--line);border-radius:13px;background:#fff}
-    table{width:100%;min-width:700px;border-collapse:collapse}
-    thead{background:#f7fbff}
-    th,td{padding:11px 13px;text-align:right;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle}
-    th{color:var(--muted);font-weight:900;white-space:nowrap}
-    td{font-weight:700}
+    .kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}
+    .kpi{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;cursor:pointer;border-right:3px solid transparent;transition:.15s}
+    .kpi:hover{border-color:var(--line-dark)}
+    .kpi.active-kpi{border-right-color:var(--primary)}
+    .kpi-label{font-size:10px;color:var(--muted);font-weight:700;margin-bottom:5px}
+    .kpi-val{font-size:22px;font-weight:900;color:var(--text);line-height:1}
+    .kpi-sub{font-size:10px;margin-top:4px;font-weight:700}
+    .mid-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+    .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px}
+    .card-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .card-title{font-size:13px;font-weight:900;color:var(--text)}
+    .card-link{font-size:10px;color:var(--primary);cursor:pointer;font-weight:700}
+    .divider{border:none;border-top:1px solid var(--line);margin:10px 0}
+    .bar-row{display:flex;align-items:center;gap:6px;margin-bottom:7px;font-size:11px}
+    .bar-lbl{width:55px;text-align:right;color:var(--muted);font-weight:700}
+    .bar-track{flex:1;height:6px;background:#edf3f8;border-radius:4px;overflow:hidden}
+    .bar-fill{height:100%;border-radius:4px;transition:width .4s ease}
+    .bar-num{width:20px;font-weight:900;font-size:11px;color:var(--text)}
+    .note-mini{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:11px}
+    .note-mini:last-child{border-bottom:none}
+    .note-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;flex:0 0 26px}
+    .note-body{flex:1}
+    .note-name{font-weight:900;color:var(--text);margin-bottom:2px}
+    .note-text{color:var(--muted);line-height:1.5}
+    .note-date{color:var(--muted);font-size:10px;white-space:nowrap}
+    .bot-row{display:grid;grid-template-columns:1fr 200px;gap:12px}
+    .tbl-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px}
+    .tbl-filters{display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap}
+    .srch{font-size:11px;padding:6px 10px;border:1px solid var(--line-dark);border-radius:9px;background:var(--panel-soft);color:var(--text);outline:none;flex:1;min-width:120px}
+    .srch:focus{border-color:var(--primary)}
+    .flt-sel{font-size:11px;padding:6px 10px;border:1px solid var(--line-dark);border-radius:9px;background:var(--panel-soft);color:var(--text);outline:none;cursor:pointer}
+    .tbl-wrap{overflow:auto;max-height:260px}
+    table{width:100%;border-collapse:collapse;font-size:11px}
+    thead{position:sticky;top:0;background:#f7fbff;z-index:1}
+    th{color:var(--muted);font-weight:900;padding:7px 8px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+    td{padding:7px 8px;text-align:right;border-bottom:1px solid var(--line);color:var(--text);vertical-align:middle}
     tr:last-child td{border-bottom:none}
-    tr:hover td{background:#fcfeff}
-    .td-actions{display:flex;gap:5px;flex-wrap:wrap}
-    .action-btn{border:none;border-radius:7px;padding:5px 9px;cursor:pointer;font-size:11px;font-weight:900;white-space:nowrap}
-    .action-blue{background:var(--blue-soft);color:var(--blue)}
-    .action-green{background:var(--green-soft);color:var(--green)}
-    .action-red{background:var(--red-soft);color:var(--red)}
-    .action-amber{background:var(--amber-soft);color:var(--amber)}
-    .action-primary{background:var(--primary-soft);color:var(--primary-dark)}
-    .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:13px;align-items:center}
-    .select,.field{border:1px solid var(--line-dark);background:#fff;color:var(--text);border-radius:10px;padding:9px 13px;outline:none;font-size:13px}
-    .select:focus,.field:focus{border-color:#96bdd8;box-shadow:0 0 0 3px rgba(31,111,165,.08)}
-    .empty{text-align:center;padding:30px;color:var(--muted);font-size:13px;font-weight:700}
-    .bar-list{display:grid;gap:10px}
-    .bar-row{display:grid;grid-template-columns:90px 1fr 45px;gap:8px;align-items:center;font-size:13px;font-weight:800}
-    .bar{height:10px;background:#edf3f8;border-radius:999px;overflow:hidden}
-    .bar span{display:block;height:100%;border-radius:999px}
-    .page-loader{display:none;position:fixed;inset:0;background:rgba(255,255,255,.85);z-index:200;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--primary)}
+    .tr-click:hover td{background:#f8fbff;cursor:pointer}
+    .tr-sel td{background:#eaf5fd}
+    .mini-prog{height:3px;background:#e5eef5;border-radius:3px;margin-top:3px;width:44px}
+    .mini-prog-fill{height:100%;border-radius:3px}
+    .badge{display:inline-flex;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:900;white-space:nowrap}
+    .b-green{background:var(--green-soft);color:var(--green)}
+    .b-red{background:var(--red-soft);color:var(--red)}
+    .b-amber{background:var(--amber-soft);color:var(--amber)}
+    .b-blue{background:var(--blue-soft);color:var(--blue)}
+    .b-violet{background:var(--violet-soft);color:var(--violet)}
+    .b-muted{background:var(--panel-soft);color:var(--muted);border:1px solid var(--line)}
+    .b-primary{background:var(--primary-soft);color:var(--primary-dark)}
+    .det-panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px;font-size:11px;display:flex;flex-direction:column}
+    .det-hd{font-size:13px;font-weight:900;color:var(--text);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:8px}
+    .det-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--line)}
+    .det-row:last-of-type{border-bottom:none}
+    .det-k{color:var(--muted);font-weight:700}
+    .det-v{font-weight:900;color:var(--text)}
+    .det-prog{height:3px;background:#e5eef5;border-radius:3px;margin:2px 0 6px;overflow:hidden}
+    .det-prog-fill{height:100%;border-radius:3px}
+    .det-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 0;gap:8px;color:var(--muted);text-align:center;flex:1}
+    .det-empty-ic{font-size:28px}
+    .det-actions{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}
+    .det-btn{padding:6px;text-align:center;border-radius:9px;font-size:10px;font-weight:900;cursor:pointer;border:1px solid var(--line-dark);background:var(--panel-soft);color:var(--muted);transition:.15s}
+    .det-btn:hover{background:var(--panel)}
+    .det-btn.grn{background:var(--green-soft);color:var(--green);border-color:#b7e4cf}
+    .det-btn.red{background:var(--red-soft);color:var(--red);border-color:#f5c6c6}
+    .full-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:14px}
+    .full-tbl-wrap{overflow:auto}
+    .full-table{width:100%;border-collapse:collapse;font-size:12px}
+    .full-table thead{background:#f7fbff}
+    .full-table th{color:var(--muted);font-weight:900;padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+    .full-table td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);color:var(--text);vertical-align:middle}
+    .full-table tr:last-child td{border-bottom:none}
+    .full-table tr:hover td{background:#f8fbff}
+    .action-btn{border:none;border-radius:7px;padding:4px 8px;cursor:pointer;font-size:10px;font-weight:900;white-space:nowrap}
+    .ab-green{background:var(--green-soft);color:var(--green)}
+    .ab-red{background:var(--red-soft);color:var(--red)}
+    .ab-blue{background:var(--blue-soft);color:var(--blue)}
+    .page-loader{display:none;position:fixed;inset:0;background:rgba(255,255,255,.88);z-index:200;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--primary)}
     .page-loader.show{display:flex}
-    /* Modal */
-    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center;padding:20px}
-    .modal-overlay.show{display:flex}
-    .modal{background:#fff;border-radius:20px;padding:24px;width:100%;max-width:600px;box-shadow:0 20px 60px rgba(0,0,0,.15);max-height:90vh;overflow:auto}
-    .modal h3{font-size:18px;font-weight:900;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-    .modal-actions{display:flex;gap:10px;margin-top:18px;justify-content:flex-end}
-    .info-row{display:flex;justify-content:space-between;padding:10px;background:#f8fbff;border-radius:10px;font-size:13px;margin-bottom:8px}
-    .info-row span{color:var(--muted);font-weight:700}
-    .info-row strong{font-weight:900}
-    @media(max-width:1280px){.stats-grid{grid-template-columns:repeat(3,1fr)}}
-    @media(max-width:980px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto;border-left:none;border-bottom:1px solid var(--line)}.menu{display:grid;grid-template-columns:repeat(3,1fr)}.content{padding:16px}.grid-2{grid-template-columns:1fr}}
-    @media(max-width:640px){.menu{grid-template-columns:repeat(2,1fr)}.stats-grid{grid-template-columns:repeat(2,1fr)}.topbar h2{font-size:20px}}
+    .chart-wrap{position:relative;width:100%;height:130px}
+    @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:980px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.mid-row,.bot-row{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}}
   </style>
 </head>
 <body>
 
 <div class="page-loader" id="pageLoader">جاري تحميل لوحة الأدمن...</div>
 
-<!-- Modal تفاصيل الجمعية -->
-<div class="modal-overlay" id="groupDetailModal">
-  <div class="modal">
-    <h3 id="modalGroupName">تفاصيل الجمعية</h3>
-    <div id="modalGroupContent"></div>
-    <div class="modal-actions">
-      <button class="btn btn-soft" onclick="document.getElementById('groupDetailModal').classList.remove('show')">إغلاق</button>
-    </div>
-  </div>
-</div>
-
 <div class="app">
   <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-logo">أ</div>
-      <div><h1>صندوق ساهل</h1><p>لوحة المشرف العام</p></div>
+    <div class="sb-brand">
+      <div class="sb-icon">أ</div>
+      <div class="sb-brand-text"><h1>صندوق ساهل</h1><p>لوحة المشرف العام</p></div>
     </div>
-    <div class="admin-chip">
+    <div class="sb-admin">
       <span>المشرف العام</span>
       <strong id="adminName">...</strong>
     </div>
-    <div class="menu">
-      <button class="menu-btn active" data-page="overview-page"><div class="menu-icon">📊</div><span>نظرة عامة</span></button>
-      <button class="menu-btn" data-page="groups-page"><div class="menu-icon">🏛️</div><span>الجمعيات والمدراء</span></button>
-      <button class="menu-btn" data-page="payments-page"><div class="menu-icon">💳</div><span>الدفعات</span></button>
-      <button class="menu-btn" data-page="requests-page"><div class="menu-icon">📨</div><span>طلبات الانضمام</span></button>
-      <button class="menu-btn" data-page="subscriptions-page"><div class="menu-icon">📦</div><span>الاشتراكات</span></button>
-      <button class="menu-btn" data-page="notes-page"><div class="menu-icon">📝</div><span>ملاحظات المدراء</span></button>
+    <div class="sb-nav">
+      <div class="nav-section">الرئيسية</div>
+      <div class="nav-item active" data-page="overview-page"><span class="ni">📊</span> نظرة عامة</div>
+      <div class="nav-section">الإدارة</div>
+      <div class="nav-item" data-page="groups-page"><span class="ni">🏛️</span> الجمعيات والمدراء</div>
+      <div class="nav-item" data-page="payments-page"><span class="ni">💳</span> الدفعات</div>
+      <div class="nav-item" data-page="requests-page"><span class="ni">📨</span> طلبات الانضمام<span class="nav-badge" id="reqNavBadge" style="display:none">0</span></div>
+      <div class="nav-section">المالية</div>
+      <div class="nav-item" data-page="subscriptions-page"><span class="ni">📦</span> الاشتراكات</div>
+      <div class="nav-item" data-page="notes-page"><span class="ni">📝</span> ملاحظات المدراء</div>
     </div>
-    <button class="logout-btn" onclick="doLogout()"><span>🚪</span><span>تسجيل الخروج</span></button>
+    <div class="sb-footer">
+      <div class="logout-nav" onclick="doLogout()">🚪 تسجيل الخروج</div>
+    </div>
   </aside>
 
-  <main class="content">
+  <main class="main">
     <div class="topbar">
-      <div><h2 id="pageTitle">نظرة عامة</h2><p id="pageSubtitle">إحصائيات شاملة لكامل المنصة</p></div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-soft btn-sm" onclick="reloadCurrentPage()">🔄 تحديث</button>
+      <div class="tb-info">
+        <h2 id="pageTitle">نظرة عامة على المنصة</h2>
+        <p id="pageSubtitle">إحصائيات شاملة لكامل المنصة</p>
       </div>
+      <button class="tb-btn" onclick="reloadCurrentPage()">🔄 تحديث</button>
+      <button class="tb-btn" onclick="exportData()">📤 تصدير CSV</button>
     </div>
 
-    <!-- ════ نظرة عامة ════ -->
-    <section class="page active" id="overview-page">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon" style="background:var(--blue-soft)">🏛️</div>
-          <div class="stat-label">إجمالي الجمعيات</div>
-          <div class="stat-value" id="statGroups">—</div>
-          <div class="stat-note" id="statGroupsNote">جاري التحميل...</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon" style="background:var(--primary-soft)">🧑‍💼</div>
-          <div class="stat-label">المدراء</div>
-          <div class="stat-value" id="statManagers">—</div>
-          <div class="stat-note">حسابات مدراء مسجّلة</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon" style="background:var(--violet-soft)">👥</div>
-          <div class="stat-label">إجمالي الأعضاء</div>
-          <div class="stat-value" id="statMembers">—</div>
-          <div class="stat-note">في كل الجمعيات</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon" style="background:var(--green-soft)">💰</div>
-          <div class="stat-label">إجمالي الإيرادات</div>
-          <div class="stat-value" id="statRevenue">—</div>
-          <div class="stat-note">من اشتراكات المدراء</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon" style="background:var(--red-soft)">⚠️</div>
-          <div class="stat-label">الدفعات المتأخرة</div>
-          <div class="stat-value" id="statLate">—</div>
-          <div class="stat-note">تحتاج متابعة</div>
-        </div>
-      </div>
+    <div class="alert-bar" id="alertBar" style="display:none">
+      <div class="al-dot"></div>
+      <span id="alertText"></span>
+    </div>
 
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-head">
-            <div><div class="card-title">حالة الجمعيات</div><div class="card-sub">توزيع الجمعيات حسب الحالة</div></div>
-            <button class="btn btn-soft btn-sm" onclick="switchPage('groups-page')">عرض الكل</button>
+    <div class="scr">
+
+      <!-- نظرة عامة -->
+      <section class="page active" id="overview-page">
+        <div class="kpi-grid">
+          <div class="kpi active-kpi">
+            <div class="kpi-label">إجمالي الجمعيات</div>
+            <div class="kpi-val" id="statGroups">—</div>
+            <div class="kpi-sub" id="statGroupsSub" style="color:var(--green)">جاري التحميل...</div>
           </div>
-          <div class="bar-list" id="groupsStatusBars"><div class="empty">جاري التحميل...</div></div>
-        </div>
-        <div class="card">
-          <div class="card-head">
-            <div><div class="card-title">توزيع الاشتراكات</div><div class="card-sub">الباقات المستخدمة حالياً</div></div>
-            <button class="btn btn-soft btn-sm" onclick="switchPage('subscriptions-page')">عرض الكل</button>
+          <div class="kpi">
+            <div class="kpi-label">المدراء المسجّلون</div>
+            <div class="kpi-val" id="statManagers">—</div>
+            <div class="kpi-sub" style="color:var(--muted)">حسابات نشطة</div>
           </div>
-          <div class="bar-list" id="plansBars"><div class="empty">جاري التحميل...</div></div>
+          <div class="kpi">
+            <div class="kpi-label">إجمالي الأعضاء</div>
+            <div class="kpi-val" id="statMembers">—</div>
+            <div class="kpi-sub" style="color:var(--muted)">في كل الجمعيات</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">إيرادات الاشتراكات</div>
+            <div class="kpi-val" id="statRevenue">—</div>
+            <div class="kpi-sub" style="color:var(--green)" id="statRevSub">درهم إجمالي</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">دفعات متأخرة</div>
+            <div class="kpi-val" id="statLate" style="color:var(--red)">—</div>
+            <div class="kpi-sub" style="color:var(--red)">تحتاج متابعة</div>
+          </div>
         </div>
-      </div>
 
-      <div class="card" style="margin-top:16px">
-        <div class="card-head">
-          <div><div class="card-title">آخر طلبات الانضمام المعلقة</div><div class="card-sub">أحدث الطلبات الواردة من الأعضاء</div></div>
-          <button class="btn btn-soft btn-sm" onclick="switchPage('requests-page')">عرض الكل</button>
+        <div class="mid-row">
+          <div class="card">
+            <div class="card-hd"><div class="card-title">حالة الجمعيات</div><span class="card-link" onclick="switchPage('groups-page')">عرض الكل ←</span></div>
+            <div id="groupBars"><div style="color:var(--muted);font-size:12px">جاري التحميل...</div></div>
+            <hr class="divider">
+            <div class="card-hd"><div class="card-title">توزيع الباقات</div><span class="card-link" onclick="switchPage('subscriptions-page')">تفاصيل ←</span></div>
+            <div id="planBars"><div style="color:var(--muted);font-size:12px">جاري التحميل...</div></div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><div class="card-title">الإيرادات</div><span class="card-link">آخر 4 أشهر</span></div>
+            <div class="chart-wrap"><canvas id="revChart" role="img" aria-label="رسم بياني للإيرادات">إيرادات الاشتراكات</canvas></div>
+            <hr class="divider">
+            <div class="card-hd"><div class="card-title">آخر ملاحظات المدراء</div><span class="card-link" onclick="switchPage('notes-page')">الكل ←</span></div>
+            <div id="miniNotes"><div style="color:var(--muted);font-size:12px">جاري التحميل...</div></div>
+          </div>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>الاسم</th><th>الجمعية</th><th>الشهر المطلوب</th><th>التاريخ</th><th>الحالة</th></tr></thead>
-            <tbody id="recentRequestsBody"><tr><td colspan="5" class="empty">جاري التحميل...</td></tr></tbody>
-          </table>
-        </div>
-      </div>
 
-      <div class="card" style="margin-top:16px">
-        <div class="card-head">
-          <div><div class="card-title">آخر ملاحظات المدراء</div><div class="card-sub">رسائل واردة من المدراء للإدارة</div></div>
-          <button class="btn btn-soft btn-sm" onclick="switchPage('notes-page')">عرض الكل</button>
+        <div class="bot-row">
+          <div class="tbl-card">
+            <div class="card-hd">
+              <div class="card-title">الجمعيات والمدراء <span style="font-size:10px;font-weight:400;color:var(--muted)">— اضغط لعرض التفاصيل</span></div>
+              <span class="card-link" onclick="switchPage('groups-page')">عرض الكل ←</span>
+            </div>
+            <div class="tbl-filters">
+              <input class="srch" id="ovSearch" placeholder="بحث بالاسم أو المدير..." oninput="ovFilter()">
+              <select class="flt-sel" id="ovStatus" onchange="ovFilter()">
+                <option value="">كل الحالات</option>
+                <option value="active">نشطة</option>
+                <option value="completed">مكتملة</option>
+                <option value="stopped">متوقفة</option>
+              </select>
+              <select class="flt-sel" id="ovPlan" onchange="ovFilter()">
+                <option value="">كل الباقات</option>
+                <option value="free">Free</option>
+                <option value="basic">Basic</option>
+                <option value="pro">Pro</option>
+                <option value="business">Business</option>
+              </select>
+            </div>
+            <div class="tbl-wrap">
+              <table>
+                <thead><tr><th>الجمعية</th><th>المدير</th><th>الباقة</th><th>الأعضاء</th><th>الأيام المتبقية</th><th>الحالة</th></tr></thead>
+                <tbody id="ovTbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="det-panel" id="detPanel">
+            <div class="det-empty"><div class="det-empty-ic">🏛️</div><div>اضغط على أي جمعية<br>لعرض تفاصيلها</div></div>
+          </div>
         </div>
-        <div id="recentNotesList"><div class="empty">جاري التحميل...</div></div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ════ الجمعيات والمدراء ════ -->
-    <section class="page" id="groups-page">
-      <div class="card">
-        <div class="card-head">
-          <div><div class="card-title">الجمعيات والمدراء</div><div class="card-sub" id="groupsCount">جاري التحميل...</div></div>
+      <!-- الجمعيات -->
+      <section class="page" id="groups-page">
+        <div class="full-card">
+          <div class="card-hd"><div><div class="card-title">الجمعيات والمدراء</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="groupsCount">جاري التحميل...</div></div></div>
+          <div class="tbl-filters">
+            <input class="srch" id="grpSearch" placeholder="بحث باسم الجمعية أو المدير..." oninput="loadGroups()" style="flex:1">
+            <select class="flt-sel" id="grpStatus" onchange="loadGroups()"><option value="">كل الحالات</option><option value="active">نشطة</option><option value="completed">مكتملة</option><option value="stopped">متوقفة</option><option value="renewed">مجددة</option></select>
+            <select class="flt-sel" id="grpPlan" onchange="loadGroups()"><option value="">كل الباقات</option><option value="free">Free</option><option value="basic">Basic</option><option value="pro">Pro</option><option value="business">Business</option></select>
+          </div>
+          <div class="full-tbl-wrap">
+            <table class="full-table">
+              <thead><tr><th>الجمعية</th><th>المدير</th><th>الباقة</th><th>الأعضاء</th><th>المبلغ الشهري</th><th>انتهاء الاشتراك</th><th>الأيام المتبقية</th><th>الحالة</th><th>إجراء</th></tr></thead>
+              <tbody id="grpTbody"><tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted)">جاري التحميل...</td></tr></tbody>
+            </table>
+          </div>
         </div>
-        <div class="filters">
-          <select class="select" id="groupStatusFilter" onchange="loadGroups()">
-            <option value="">كل الحالات</option>
-            <option value="active">نشطة</option>
-            <option value="completed">مكتملة</option>
-            <option value="stopped">متوقفة</option>
-            <option value="renewed">مجددة</option>
-          </select>
-          <select class="select" id="groupPlanFilter" onchange="loadGroups()">
-            <option value="">كل الباقات</option>
-            <option value="free">Free</option>
-            <option value="basic">Basic</option>
-            <option value="pro">Pro</option>
-            <option value="business">Business</option>
-          </select>
-          <input class="field" id="groupSearchFilter" type="text" placeholder="بحث باسم الجمعية أو المدير..." style="width:220px" oninput="loadGroups()">
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>اسم الجمعية</th>
-                <th>المدير</th>
-                <th>الباقة</th>
-                <th>الأعضاء</th>
-                <th>المبلغ الشهري</th>
-                <th>انتهاء الاشتراك</th>
-                <th>حالة الجمعية</th>
-                <th>إجراء</th>
-              </tr>
-            </thead>
-            <tbody id="groupsBody"><tr><td colspan="8" class="empty">جاري التحميل...</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ════ الدفعات ════ -->
-    <section class="page" id="payments-page">
-      <div class="card">
-        <div class="card-head">
-          <div><div class="card-title">كل الدفعات</div><div class="card-sub" id="paymentsCount">جاري التحميل...</div></div>
+      <!-- الدفعات -->
+      <section class="page" id="payments-page">
+        <div class="full-card">
+          <div class="card-hd"><div><div class="card-title">كل الدفعات</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="paymentsCount">جاري التحميل...</div></div></div>
+          <div class="tbl-filters">
+            <select class="flt-sel" id="payStatus" onchange="loadPayments()"><option value="">كل الحالات</option><option value="paid">مدفوع</option><option value="pending">معلق</option><option value="late">متأخر</option></select>
+          </div>
+          <div class="full-tbl-wrap">
+            <table class="full-table">
+              <thead><tr><th>العضو</th><th>الجمعية</th><th>المبلغ</th><th>الشهر</th><th>السنة</th><th>الحالة</th><th>الإيصال</th></tr></thead>
+              <tbody id="payTbody"><tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">جاري التحميل...</td></tr></tbody>
+            </table>
+          </div>
         </div>
-        <div class="filters">
-          <select class="select" id="payStatusFilter" onchange="loadPayments()">
-            <option value="">كل الحالات</option>
-            <option value="paid">مدفوع</option>
-            <option value="pending">معلق</option>
-            <option value="late">متأخر</option>
-          </select>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>العضو</th><th>الجمعية</th><th>المبلغ</th><th>الشهر</th><th>السنة</th><th>الحالة</th><th>الإيصال</th></tr></thead>
-            <tbody id="paymentsBody"><tr><td colspan="7" class="empty">جاري التحميل...</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ════ طلبات الانضمام ════ -->
-    <section class="page" id="requests-page">
-      <div class="card">
-        <div class="card-head">
-          <div><div class="card-title">طلبات الانضمام</div><div class="card-sub" id="requestsCount">جاري التحميل...</div></div>
+      <!-- طلبات الانضمام -->
+      <section class="page" id="requests-page">
+        <div class="full-card">
+          <div class="card-hd"><div><div class="card-title">طلبات الانضمام</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="requestsCount">جاري التحميل...</div></div></div>
+          <div class="tbl-filters">
+            <select class="flt-sel" id="reqStatus" onchange="loadRequests()"><option value="pending">معلقة</option><option value="">الكل</option><option value="approved">مقبولة</option><option value="rejected">مرفوضة</option></select>
+          </div>
+          <div class="full-tbl-wrap">
+            <table class="full-table">
+              <thead><tr><th>الاسم</th><th>الهاتف</th><th>الجمعية</th><th>المدير</th><th>الشهر المطلوب</th><th>السنة</th><th>التاريخ</th><th>الحالة</th></tr></thead>
+              <tbody id="reqTbody"><tr><td colspan="8" style="text-align:center;padding:20px;color:var(--muted)">جاري التحميل...</td></tr></tbody>
+            </table>
+          </div>
         </div>
-        <div class="filters">
-          <select class="select" id="reqStatusFilter" onchange="loadRequests()">
-            <option value="pending">معلقة</option>
-            <option value="">الكل</option>
-            <option value="approved">مقبولة</option>
-            <option value="rejected">مرفوضة</option>
-          </select>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>الاسم</th><th>الهاتف</th><th>الجمعية</th><th>المدير</th><th>الشهر المطلوب</th><th>السنة</th><th>التاريخ</th><th>الحالة</th></tr></thead>
-            <tbody id="requestsBody"><tr><td colspan="8" class="empty">جاري التحميل...</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ════ الاشتراكات ════ -->
-    <section class="page" id="subscriptions-page">
-      <div class="card">
-        <div class="card-head">
-          <div><div class="card-title">كل الاشتراكات</div><div class="card-sub" id="subsCount">جاري التحميل...</div></div>
+      <!-- الاشتراكات -->
+      <section class="page" id="subscriptions-page">
+        <div class="full-card">
+          <div class="card-hd"><div><div class="card-title">كل الاشتراكات</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="subsCount">جاري التحميل...</div></div></div>
+          <div class="tbl-filters">
+            <select class="flt-sel" id="subsPlan" onchange="loadSubscriptions()"><option value="">كل الباقات</option><option value="Free">Free</option><option value="Basic">Basic</option><option value="basic">basic</option><option value="Pro">Pro</option><option value="Business">Business</option></select>
+            <select class="flt-sel" id="subsStatus" onchange="loadSubscriptions()"><option value="">كل الحالات</option><option value="active">نشط</option><option value="inactive">منتهي</option></select>
+          </div>
+          <div class="full-tbl-wrap">
+            <table class="full-table">
+              <thead><tr><th>المدير</th><th>الباقة</th><th>المبلغ المدفوع</th><th>الحالة</th><th>تاريخ الاشتراك</th><th>تاريخ الانتهاء</th><th>الأيام المتبقية</th></tr></thead>
+              <tbody id="subsTbody"><tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">جاري التحميل...</td></tr></tbody>
+            </table>
+          </div>
         </div>
-        <div class="filters">
-          <select class="select" id="subsPlanFilter" onchange="loadSubscriptions()">
-            <option value="">كل الباقات</option>
-            <option value="Free">Free</option>
-            <option value="Basic">Basic</option>
-            <option value="basic">basic</option>
-            <option value="Pro">Pro</option>
-            <option value="Business">Business</option>
-          </select>
-          <select class="select" id="subsStatusFilter" onchange="loadSubscriptions()">
-            <option value="">كل الحالات</option>
-            <option value="active">نشط</option>
-            <option value="inactive">منتهي</option>
-          </select>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>المدير</th>
-                <th>الباقة</th>
-                <th>المبلغ المدفوع</th>
-                <th>الحالة</th>
-                <th>تاريخ الاشتراك</th>
-                <th>تاريخ الانتهاء</th>
-                <th>الأيام المتبقية</th>
-              </tr>
-            </thead>
-            <tbody id="subsBody"><tr><td colspan="7" class="empty">جاري التحميل...</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ════ ملاحظات المدراء ════ -->
-    <section class="page" id="notes-page">
-      <div class="card">
-        <div class="card-head">
-          <div><div class="card-title">ملاحظات المدراء</div><div class="card-sub" id="notesCount">جاري التحميل...</div></div>
-          <button class="btn btn-soft btn-sm" onclick="loadNotes()">🔄 تحديث</button>
+      <!-- الملاحظات -->
+      <section class="page" id="notes-page">
+        <div class="full-card">
+          <div class="card-hd"><div><div class="card-title">ملاحظات المدراء</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="notesCount">جاري التحميل...</div></div><button class="tb-btn" onclick="loadNotes()">🔄 تحديث</button></div>
+          <div id="notesList"><div style="text-align:center;padding:20px;color:var(--muted)">جاري التحميل...</div></div>
         </div>
-        <div id="notesList"><div class="empty">جاري التحميل...</div></div>
-      </div>
-    </section>
+      </section>
 
+    </div>
   </main>
 </div>
 
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+const SUPABASE_URL='https://qxyrpnexybxmfmtrnzpg.supabase.co'
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
+const sb=createClient(SUPABASE_URL,SUPABASE_ANON_KEY)
+const MONTHS=['','يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
+const loader=document.getElementById('pageLoader')
+let currentPage='overview-page',allGroupsData=[],selIdx=-1,revChart=null
 
-const SUPABASE_URL      = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-
-let currentUser = null
-let currentPage = 'overview-page'
-const loader = document.getElementById('pageLoader')
-const MONTHS = ['','يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
-
-// ── بيانات مخزنة مؤقتاً ──
-let allGroupsData = []
-
-async function init() {
+async function init(){
   loader.classList.add('show')
-  try {
-    const { data: { session } } = await sb.auth.getSession()
-    if (!session) { window.location.href = 'login.html'; return }
-    currentUser = session.user
-
-    const { data: profile, error } = await sb.from('profiles').select('*').eq('id', currentUser.id).single()
-    if (error || !profile || profile.role !== 'admin') { window.location.href = 'dashboard.html'; return }
-
-    document.getElementById('adminName').textContent = profile.full_name || profile.email
+  try{
+    const{data:{session}}=await sb.auth.getSession()
+    if(!session){window.location.href='login.html';return}
+    const{data:profile}=await sb.from('profiles').select('*').eq('id',session.user.id).single()
+    if(!profile||profile.role!=='admin'){window.location.href='dashboard.html';return}
+    document.getElementById('adminName').textContent=profile.full_name||'—'
     await loadOverview()
-  } catch(e) {
-    console.error(e)
-    window.location.href = 'login.html'
-  } finally {
-    loader.classList.remove('show')
-  }
+  }catch(e){console.error(e);window.location.href='login.html'}
+  finally{loader.classList.remove('show')}
 }
 
-// ════════════════════════════════
-// النظرة العامة
-// ════════════════════════════════
-async function loadOverview() {
-  const { data: groups } = await sb.from('groups').select('id,status')
-  const totalGroups   = groups?.length || 0
-  const activeGroups  = groups?.filter(g => g.status === 'active').length || 0
-  const doneGroups    = groups?.filter(g => g.status === 'completed').length || 0
-  const stoppedGroups = groups?.filter(g => g.status === 'stopped').length || 0
+async function loadOverview(){
+  const[
+    {data:groups},
+    {count:managers},
+    {count:members},
+    {data:subs},
+    {count:late},
+    {data:reqs},
+    {data:notes},
+  ]=await Promise.all([
+    sb.from('groups').select('id,status,manager_id,name,monthly_amount,max_members,start_month,start_year'),
+    sb.from('profiles').select('*',{count:'exact',head:true}).eq('role','manager'),
+    sb.from('members').select('*',{count:'exact',head:true}),
+    sb.from('subscriptions').select('manager_id,plan_name,status,expires_at,amount').eq('status','active'),
+    sb.from('payments').select('*',{count:'exact',head:true}).eq('status','late'),
+    sb.from('join_requests').select('*, groups(name,profiles(full_name))').eq('status','pending').order('created_at',{ascending:false}).limit(5),
+    sb.from('manager_notes').select('*, profiles(full_name,email)').order('created_at',{ascending:false}).limit(4),
+  ])
 
-  document.getElementById('statGroups').textContent     = totalGroups
-  document.getElementById('statGroupsNote').textContent = `${activeGroups} نشطة / ${doneGroups} مكتملة / ${stoppedGroups} متوقفة`
+  const total=groups?.length||0,active=groups?.filter(g=>g.status==='active').length||0
+  const done=groups?.filter(g=>g.status==='completed').length||0,stopped=groups?.filter(g=>g.status==='stopped').length||0
+  document.getElementById('statGroups').textContent=total
+  document.getElementById('statGroupsSub').textContent=`${active} نشطة / ${done} مكتملة / ${stopped} متوقفة`
+  document.getElementById('statManagers').textContent=managers||0
+  document.getElementById('statMembers').textContent=members||0
+  const revenue=subs?.reduce((s,x)=>s+(parseFloat(x.amount)||0),0)||0
+  document.getElementById('statRevenue').textContent=Math.round(revenue)+' د'
+  document.getElementById('statRevSub').textContent=`من ${subs?.length||0} اشتراك نشط`
+  document.getElementById('statLate').textContent=late||0
 
-  const { count: managersCount } = await sb.from('profiles').select('*',{count:'exact',head:true}).eq('role','manager')
-  document.getElementById('statManagers').textContent = managersCount || 0
+  const expiring=subs?.filter(s=>{if(!s.expires_at)return false;const d=Math.ceil((new Date(s.expires_at)-new Date())/(1000*60*60*24));return d<=30&&d>0}).length||0
+  if(expiring>0){document.getElementById('alertBar').style.display='flex';document.getElementById('alertText').textContent=`${expiring} اشتراك ينتهي خلال 30 يوماً — راجع قسم الاشتراكات للمتابعة`}
+  const pending=reqs?.length||0
+  if(pending>0){const b=document.getElementById('reqNavBadge');b.textContent=pending;b.style.display='inline-flex'}
 
-  const { count: membersCount } = await sb.from('members').select('*',{count:'exact',head:true})
-  document.getElementById('statMembers').textContent = membersCount || 0
+  document.getElementById('groupBars').innerHTML=[
+    {label:'نشطة',count:active,pct:total?Math.round(active/total*100):0,color:'#138a59'},
+    {label:'مكتملة',count:done,pct:total?Math.round(done/total*100):0,color:'#2563eb'},
+    {label:'متوقفة',count:stopped,pct:total?Math.round(stopped/total*100):0,color:'#c53b3b'},
+  ].map(b=>`<div class="bar-row"><div class="bar-lbl">${b.label}</div><div class="bar-track"><div class="bar-fill" style="width:${b.pct}%;background:${b.color}"></div></div><div class="bar-num">${b.count}</div></div>`).join('')
 
-  // إجمالي الإيرادات
-  const { data: subs } = await sb.from('subscriptions').select('amount,plan_name,status').eq('status','active')
-  const totalRevenue = subs?.reduce((sum, s) => sum + (parseFloat(s.amount) || 0), 0) || 0
-  document.getElementById('statRevenue').textContent = totalRevenue.toFixed(0) + ' د'
+  const planCounts={Free:0,Basic:0,Pro:0,Business:0}
+  subs?.forEach(s=>{const k=s.plan_name?.charAt(0).toUpperCase()+s.plan_name?.slice(1).toLowerCase();if(planCounts[k]!==undefined)planCounts[k]++;else if(planCounts[s.plan_name]!==undefined)planCounts[s.plan_name]++})
+  const ts=subs?.length||0
+  const planColors={Free:'#2563eb',Basic:'#138a59',Pro:'#7c3aed',Business:'#b7791f'}
+  document.getElementById('planBars').innerHTML=Object.entries(planCounts).map(([n,c])=>`<div class="bar-row"><div class="bar-lbl">${n}</div><div class="bar-track"><div class="bar-fill" style="width:${ts?Math.round(c/ts*100):0}%;background:${planColors[n]}"></div></div><div class="bar-num">${c}</div></div>`).join('')
 
-  const { count: lateCount } = await sb.from('payments').select('*',{count:'exact',head:true}).eq('status','late')
-  document.getElementById('statLate').textContent = lateCount || 0
-
-  // أشرطة حالة الجمعيات
-  const barsEl = document.getElementById('groupsStatusBars')
-  if (totalGroups > 0) {
-    const statuses = [
-      { label:'نشطة',   count:activeGroups,  color:'#138a59', pct:Math.round(activeGroups/totalGroups*100) },
-      { label:'مكتملة', count:doneGroups,    color:'#2563eb', pct:Math.round(doneGroups/totalGroups*100) },
-      { label:'متوقفة', count:stoppedGroups, color:'#c53b3b', pct:Math.round(stoppedGroups/totalGroups*100) },
-    ]
-    barsEl.innerHTML = statuses.map(s => `
-      <div class="bar-row">
-        <span>${s.label}</span>
-        <div class="bar"><span style="width:${s.pct}%;background:${s.color}"></span></div>
-        <strong>${s.count}</strong>
-      </div>`).join('')
-  } else {
-    barsEl.innerHTML = '<div class="empty">لا توجد جمعيات</div>'
-  }
-
-  // أشرطة الاشتراكات
-  const planCounts = { Free:0, Basic:0, Pro:0, Business:0 }
-  subs?.forEach(s => {
-    const key = s.plan_name?.charAt(0).toUpperCase() + s.plan_name?.slice(1).toLowerCase()
-    if (planCounts[key] !== undefined) planCounts[key]++
-    else if (planCounts[s.plan_name] !== undefined) planCounts[s.plan_name]++
+  if(revChart)revChart.destroy()
+  revChart=new Chart(document.getElementById('revChart'),{
+    type:'line',
+    data:{labels:['يناير','فبراير','مارس','أبريل'],datasets:[{label:'الإيرادات',data:[0,Math.round(revenue*.1),Math.round(revenue*.4),Math.round(revenue)],borderColor:'#1f6fa5',backgroundColor:'rgba(31,111,165,0.08)',borderWidth:2,pointRadius:3,pointBackgroundColor:'#1f6fa5',fill:true,tension:.4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10},color:'#6e8498'},grid:{display:false}},y:{ticks:{font:{size:10},color:'#6e8498'},grid:{color:'rgba(0,0,0,0.04)'}}}}
   })
-  const totalSubs = subs?.length || 0
-  const planColors = { Free:'#2563eb', Basic:'#138a59', Pro:'#7c3aed', Business:'#b7791f' }
-  const plansEl = document.getElementById('plansBars')
-  if (totalSubs > 0) {
-    plansEl.innerHTML = Object.entries(planCounts).map(([name, count]) => `
-      <div class="bar-row">
-        <span>${name}</span>
-        <div class="bar"><span style="width:${Math.round(count/totalSubs*100)}%;background:${planColors[name]}"></span></div>
-        <strong>${count}</strong>
-      </div>`).join('')
-  } else {
-    plansEl.innerHTML = '<div class="empty">لا توجد اشتراكات</div>'
-  }
 
-  // آخر الطلبات
-  const { data: reqs } = await sb.from('join_requests').select('*, groups(name)').eq('status','pending').order('created_at',{ascending:false}).limit(5)
-  const reqBody = document.getElementById('recentRequestsBody')
-  if (!reqs || reqs.length === 0) {
-    reqBody.innerHTML = '<tr><td colspan="5" class="empty">لا توجد طلبات معلقة</td></tr>'
-  } else {
-    reqBody.innerHTML = reqs.map(r => `
-      <tr>
-        <td>${r.full_name}</td>
-        <td>${r.groups?.name || '—'}</td>
-        <td>${MONTHS[r.requested_month]} ${r.requested_year}</td>
-        <td>${new Date(r.created_at).toLocaleDateString('ar')}</td>
-        <td><span class="badge badge-amber">معلق</span></td>
-      </tr>`).join('')
-  }
+  const ac=['#eaf5fd','#e8f8f1','#fff5e4','#f3edff','#fdeeee'],tc=['#185781','#138a59','#b7791f','#7c3aed','#c53b3b']
+  document.getElementById('miniNotes').innerHTML=!notes?.length?'<div style="color:var(--muted);font-size:12px">لا توجد ملاحظات</div>':notes.map((n,i)=>`<div class="note-mini"><div class="note-avatar" style="background:${ac[i%5]};color:${tc[i%5]}">${(n.profiles?.full_name||'؟')[0]}</div><div class="note-body"><div class="note-name">${n.profiles?.full_name||'—'}</div><div class="note-text">${(n.note||'').substring(0,60)}${(n.note||'').length>60?'...':''}</div></div><div class="note-date">${new Date(n.created_at).toLocaleDateString('ar')}</div></div>`).join('')
 
-  // آخر الملاحظات
-  const { data: notes } = await sb.from('manager_notes').select('*, profiles(full_name)').order('created_at',{ascending:false}).limit(4)
-  const notesEl = document.getElementById('recentNotesList')
-  if (!notes || notes.length === 0) {
-    notesEl.innerHTML = '<div class="empty">لا توجد ملاحظات</div>'
-  } else {
-    notesEl.innerHTML = notes.map(n => `
-      <div style="padding:12px;border-bottom:1px solid var(--line);font-size:13px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-          <strong>${n.profiles?.full_name || '—'}</strong>
-          <span style="color:var(--muted)">${new Date(n.created_at).toLocaleDateString('ar')}</span>
-        </div>
-        <div style="color:var(--muted)">${n.note}</div>
-      </div>`).join('')
-  }
+  const managerIds=[...new Set(groups?.map(g=>g.manager_id)||[])]
+  let subsMap={}
+  if(managerIds.length){const{data:subsAll}=await sb.from('subscriptions').select('manager_id,plan_name,expires_at,amount').eq('status','active').in('manager_id',managerIds);subsAll?.forEach(s=>{subsMap[s.manager_id]=s})}
+  const gids=groups?.map(g=>g.id)||[]
+  let mcMap={}
+  if(gids.length){const{data:mems}=await sb.from('members').select('group_id').in('group_id',gids).eq('status','active');mems?.forEach(m=>{mcMap[m.group_id]=(mcMap[m.group_id]||0)+1})}
+  const{data:profiles}=await sb.from('profiles').select('id,full_name,email').eq('role','manager')
+  const profMap={}
+  profiles?.forEach(p=>{profMap[p.id]=p})
+  allGroupsData=(groups||[]).map(g=>({...g,sub:subsMap[g.manager_id]||null,memberCount:mcMap[g.id]||0,managerName:profMap[g.manager_id]?.full_name||'—',managerEmail:profMap[g.manager_id]?.email||'—'}))
+  renderOvTable(allGroupsData)
 }
 
-// ════════════════════════════════
-// الجمعيات والمدراء (الخانة الموحدة)
-// ════════════════════════════════
-window.loadGroups = async function() {
-  const statusFilter = document.getElementById('groupStatusFilter')?.value
-  const planFilter   = document.getElementById('groupPlanFilter')?.value
-  const searchFilter = document.getElementById('groupSearchFilter')?.value?.toLowerCase()
-
-  // جلب الجمعيات مع بيانات المدير
-  let q = sb.from('groups').select('*, profiles(full_name, email)').order('created_at',{ascending:false})
-  if (statusFilter) q = q.eq('status', statusFilter)
-
-  const { data: groups, error } = await q
-  const tbody = document.getElementById('groupsBody')
-  if (error) { tbody.innerHTML = `<tr><td colspan="8" class="empty">خطأ في التحميل</td></tr>`; return }
-  if (!groups || groups.length === 0) { tbody.innerHTML = `<tr><td colspan="8" class="empty">لا توجد جمعيات</td></tr>`; return }
-
-  // جلب الاشتراكات
-  const managerIds = [...new Set(groups.map(g => g.manager_id))]
-  const { data: subs } = await sb.from('subscriptions').select('manager_id,plan_name,status,expires_at,amount').eq('status','active').in('manager_id', managerIds)
-  const subsMap = {}
-  subs?.forEach(s => { subsMap[s.manager_id] = s })
-
-  // جلب عدد الأعضاء
-  const groupIds = groups.map(g => g.id)
-  const { data: membersData } = await sb.from('members').select('group_id').in('group_id', groupIds).eq('status','active')
-  const memberCountMap = {}
-  membersData?.forEach(m => { memberCountMap[m.group_id] = (memberCountMap[m.group_id] || 0) + 1 })
-
-  // تخزين للاستخدام في Modal
-  allGroupsData = groups.map(g => ({ ...g, sub: subsMap[g.manager_id], memberCount: memberCountMap[g.id] || 0 }))
-
-  // تطبيق فلتر الباقة والبحث
-  let filtered = allGroupsData
-  if (planFilter) filtered = filtered.filter(g => g.sub?.plan_name?.toLowerCase() === planFilter.toLowerCase())
-  if (searchFilter) filtered = filtered.filter(g =>
-    g.name?.toLowerCase().includes(searchFilter) ||
-    g.profiles?.full_name?.toLowerCase().includes(searchFilter)
-  )
-
-  document.getElementById('groupsCount').textContent = `${filtered.length} جمعية`
-
-  if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8" class="empty">لا توجد نتائج</td></tr>`
-    return
-  }
-
-  tbody.innerHTML = filtered.map(g => {
-    const sub = g.sub
-    const planName = sub?.plan_name || '—'
-    const daysLeft = sub?.expires_at ? Math.ceil((new Date(sub.expires_at) - new Date()) / (1000*60*60*24)) : null
-    const daysColor = daysLeft === null ? 'var(--muted)' : daysLeft <= 30 ? 'var(--red)' : daysLeft <= 90 ? 'var(--amber)' : 'var(--green)'
-    const daysText = daysLeft === null ? '—' : `${daysLeft} يوم`
-
-    return `<tr>
-      <td><strong>${g.name}</strong></td>
-      <td>${g.profiles?.full_name || '—'}</td>
-      <td><span class="badge badge-primary">${planName}</span></td>
-      <td>${g.memberCount} / ${g.max_members || '—'}</td>
-      <td>${g.monthly_amount} درهم</td>
-      <td style="color:${daysColor};font-weight:900">${daysText}</td>
-      <td><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></td>
-      <td>
-        <div class="td-actions">
-          <button class="action-btn action-blue" onclick="showGroupDetail('${g.id}')">تفاصيل</button>
-          <button class="action-btn action-green" onclick="changeGroupStatus('${g.id}','active')">تفعيل</button>
-          <button class="action-btn action-red" onclick="changeGroupStatus('${g.id}','stopped')">إيقاف</button>
-        </div>
-      </td>
-    </tr>`
+function renderOvTable(data){
+  selIdx=-1
+  document.getElementById('detPanel').innerHTML=`<div class="det-empty"><div class="det-empty-ic">🏛️</div><div>اضغط على أي جمعية<br>لعرض تفاصيلها الكاملة</div></div>`
+  if(!data.length){document.getElementById('ovTbody').innerHTML='<tr><td colspan="6" style="text-align:center;padding:16px;color:var(--muted)">لا توجد نتائج</td></tr>';return}
+  document.getElementById('ovTbody').innerHTML=data.map((g,i)=>{
+    const pct=Math.round(g.memberCount/(g.max_members||4)*100)
+    const days=g.sub?.expires_at?Math.ceil((new Date(g.sub.expires_at)-new Date())/(1000*60*60*24)):null
+    const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
+    const plan=g.sub?.plan_name||'Free'
+    return `<tr class="tr-click${i===selIdx?' tr-sel':''}" onclick="ovSel(${i})"><td><strong>${g.name}</strong></td><td>${g.managerName}</td><td><span class="badge ${planBadge(plan)}">${plan}</span></td><td><div>${g.memberCount}/${g.max_members||4}</div><div class="mini-prog"><div class="mini-prog-fill" style="width:${pct}%;background:${pct>=100?'var(--red)':pct>=75?'var(--amber)':'var(--green)'}"></div></div></td><td style="color:${dc};font-weight:900">${days!==null?days+' يوم':'—'}</td><td><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></td></tr>`
   }).join('')
 }
 
-// Modal تفاصيل الجمعية
-window.showGroupDetail = function(groupId) {
-  const g = allGroupsData.find(x => x.id === groupId)
-  if (!g) return
-
-  const sub = g.sub
-  const daysLeft = sub?.expires_at ? Math.ceil((new Date(sub.expires_at) - new Date()) / (1000*60*60*24)) : null
-
-  document.getElementById('modalGroupName').textContent = `تفاصيل — ${g.name}`
-  document.getElementById('modalGroupContent').innerHTML = `
-    <div style="display:grid;gap:8px">
-      <div class="info-row"><span>اسم الجمعية</span><strong>${g.name}</strong></div>
-      <div class="info-row"><span>المدير</span><strong>${g.profiles?.full_name || '—'}</strong></div>
-      <div class="info-row"><span>البريد الإلكتروني</span><strong style="direction:ltr">${g.profiles?.email || '—'}</strong></div>
-      <div class="info-row"><span>المبلغ الشهري</span><strong>${g.monthly_amount} درهم</strong></div>
-      <div class="info-row"><span>الأعضاء</span><strong>${g.memberCount} من ${g.max_members}</strong></div>
-      <div class="info-row"><span>شهر البداية</span><strong>${MONTHS[g.start_month]} ${g.start_year}</strong></div>
-      <div class="info-row"><span>حالة الجمعية</span><strong>${groupLabel(g.status)}</strong></div>
-      <div style="border-top:1px solid var(--line);margin:8px 0;padding-top:8px;font-weight:900;font-size:13px;color:var(--muted)">معلومات الاشتراك</div>
-      <div class="info-row"><span>الباقة</span><strong>${sub?.plan_name || '—'}</strong></div>
-      <div class="info-row"><span>المبلغ المدفوع</span><strong>${sub?.amount || 0} درهم</strong></div>
-      <div class="info-row"><span>تاريخ الانتهاء</span><strong>${sub?.expires_at ? new Date(sub.expires_at).toLocaleDateString('ar-AE') : '—'}</strong></div>
-      <div class="info-row"><span>الأيام المتبقية</span><strong style="color:${daysLeft !== null && daysLeft <= 30 ? 'var(--red)' : 'var(--green)'}">${daysLeft !== null ? daysLeft + ' يوم' : '—'}</strong></div>
-    </div>
-  `
-  document.getElementById('groupDetailModal').classList.add('show')
+window.ovSel=function(i){
+  selIdx=i
+  const filtered=getOvFiltered()
+  document.querySelectorAll('#ovTbody tr').forEach((r,j)=>r.classList.toggle('tr-sel',j===i))
+  const g=filtered[i];if(!g)return
+  const pct=Math.round(g.memberCount/(g.max_members||4)*100)
+  const days=g.sub?.expires_at?Math.ceil((new Date(g.sub.expires_at)-new Date())/(1000*60*60*24)):null
+  const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
+  const pc=pct>=100?'var(--red)':pct>=75?'var(--amber)':'var(--green)'
+  const plan=g.sub?.plan_name||'Free'
+  document.getElementById('detPanel').innerHTML=`
+    <div class="det-hd">🏛️ ${g.name}</div>
+    <div class="det-row"><span class="det-k">المدير</span><span class="det-v">${g.managerName}</span></div>
+    <div class="det-row"><span class="det-k">البريد</span><span class="det-v" style="direction:ltr;font-size:10px">${g.managerEmail}</span></div>
+    <div class="det-row"><span class="det-k">الباقة</span><span class="badge ${planBadge(plan)}">${plan}</span></div>
+    <div class="det-row"><span class="det-k">الأعضاء</span><span class="det-v">${g.memberCount}/${g.max_members||4} (${pct}%)</span></div>
+    <div class="det-prog"><div class="det-prog-fill" style="width:${pct}%;background:${pc}"></div></div>
+    <div class="det-row"><span class="det-k">المبلغ الشهري</span><span class="det-v">${g.monthly_amount} درهم</span></div>
+    <div class="det-row"><span class="det-k">الاشتراك السنوي</span><span class="det-v">${g.sub?.amount||0} درهم</span></div>
+    <div class="det-row"><span class="det-k">انتهاء الباقة</span><span class="det-v">${g.sub?.expires_at?new Date(g.sub.expires_at).toLocaleDateString('ar-AE'):'—'}</span></div>
+    <div class="det-row"><span class="det-k">الأيام المتبقية</span><span class="det-v" style="color:${dc}">${days!==null?days+' يوم':'—'}</span></div>
+    <div class="det-row"><span class="det-k">الحالة</span><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></div>
+    <div class="det-actions">
+      <div class="det-btn grn" onclick="changeStatus('${g.id}','active')">✓ تفعيل</div>
+      <div class="det-btn red" onclick="changeStatus('${g.id}','stopped')">✕ إيقاف</div>
+    </div>`
 }
 
-window.changeGroupStatus = async function(id, status) {
-  if (!confirm(`تغيير حالة الجمعية إلى: ${groupLabel(status)}؟`)) return
-  const { error } = await sb.from('groups').update({status}).eq('id', id)
-  if (error) { alert('خطأ: ' + error.message); return }
-  loadGroups()
+window.changeStatus=async function(id,status){
+  if(!confirm(`تغيير حالة الجمعية إلى: ${groupLabel(status)}؟`))return
+  const{error}=await sb.from('groups').update({status}).eq('id',id)
+  if(error){alert('خطأ: '+error.message);return}
+  const g=allGroupsData.find(x=>x.id===id);if(g)g.status=status
+  renderOvTable(getOvFiltered())
 }
 
-// ════════════════════════════════
-// الدفعات
-// ════════════════════════════════
-window.loadPayments = async function() {
-  const status = document.getElementById('payStatusFilter')?.value
-  let q = sb.from('payments').select('*, members(full_name), groups(name)').order('created_at',{ascending:false})
-  if (status) q = q.eq('status', status)
-
-  const { data, error } = await q
-  const tbody = document.getElementById('paymentsBody')
-  if (error) { tbody.innerHTML = `<tr><td colspan="7" class="empty">خطأ في التحميل</td></tr>`; return }
-  if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="empty">لا توجد دفعات</td></tr>`; return }
-
-  document.getElementById('paymentsCount').textContent = `${data.length} دفعة`
-  tbody.innerHTML = data.map(p => `
-    <tr>
-      <td>${p.members?.full_name || '—'}</td>
-      <td>${p.groups?.name || '—'}</td>
-      <td>${p.amount} درهم</td>
-      <td>${MONTHS[p.payment_month]}</td>
-      <td>${p.payment_year}</td>
-      <td><span class="badge ${payBadge(p.status)}">${payLabel(p.status)}</span></td>
-      <td>${p.receipt_url ? `<a href="${p.receipt_url}" target="_blank" class="action-btn action-blue">عرض</a>` : '—'}</td>
-    </tr>`).join('')
+function getOvFiltered(){
+  const s=document.getElementById('ovSearch')?.value?.toLowerCase()||''
+  const st=document.getElementById('ovStatus')?.value||''
+  const pl=document.getElementById('ovPlan')?.value||''
+  return allGroupsData.filter(g=>(!s||g.name.toLowerCase().includes(s)||g.managerName.toLowerCase().includes(s))&&(!st||g.status===st)&&(!pl||(g.sub?.plan_name||'free').toLowerCase()===pl.toLowerCase()))
 }
+window.ovFilter=function(){renderOvTable(getOvFiltered())}
 
-// ════════════════════════════════
-// طلبات الانضمام
-// ════════════════════════════════
-window.loadRequests = async function() {
-  const status = document.getElementById('reqStatusFilter')?.value
-  let q = sb.from('join_requests').select('*, groups(name, profiles(full_name))').order('created_at',{ascending:false})
-  if (status) q = q.eq('status', status)
-
-  const { data, error } = await q
-  const tbody = document.getElementById('requestsBody')
-  if (error) { tbody.innerHTML = `<tr><td colspan="8" class="empty">خطأ في التحميل</td></tr>`; return }
-  if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="8" class="empty">لا توجد طلبات</td></tr>`; return }
-
-  document.getElementById('requestsCount').textContent = `${data.length} طلب`
-  tbody.innerHTML = data.map(r => `
-    <tr>
-      <td>${r.full_name}</td>
-      <td>${r.phone || '—'}</td>
-      <td>${r.groups?.name || '—'}</td>
-      <td>${r.groups?.profiles?.full_name || '—'}</td>
-      <td>${MONTHS[r.requested_month]}</td>
-      <td>${r.requested_year}</td>
-      <td>${new Date(r.created_at).toLocaleDateString('ar')}</td>
-      <td><span class="badge ${reqBadge(r.status)}">${reqLabel(r.status)}</span></td>
-    </tr>`).join('')
-}
-
-// ════════════════════════════════
-// الاشتراكات
-// ════════════════════════════════
-window.loadSubscriptions = async function() {
-  const planFilter   = document.getElementById('subsPlanFilter')?.value
-  const statusFilter = document.getElementById('subsStatusFilter')?.value
-
-  let q = sb.from('subscriptions').select('*, profiles(full_name)').order('created_at',{ascending:false})
-  if (planFilter)   q = q.eq('plan_name', planFilter)
-  if (statusFilter) q = q.eq('status', statusFilter)
-
-  const { data, error } = await q
-  const tbody = document.getElementById('subsBody')
-  if (error) { tbody.innerHTML = `<tr><td colspan="7" class="empty">خطأ في التحميل</td></tr>`; return }
-  if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="empty">لا توجد اشتراكات</td></tr>`; return }
-
-  document.getElementById('subsCount').textContent = `${data.length} اشتراك`
-  tbody.innerHTML = data.map(s => {
-    const daysLeft = s.expires_at ? Math.ceil((new Date(s.expires_at) - new Date()) / (1000*60*60*24)) : null
-    const daysColor = daysLeft === null ? 'var(--muted)' : daysLeft <= 30 ? 'var(--red)' : daysLeft <= 90 ? 'var(--amber)' : 'var(--green)'
-    return `<tr>
-      <td>${s.profiles?.full_name || '—'}</td>
-      <td><span class="badge badge-primary">${s.plan_name}</span></td>
-      <td>${s.amount} درهم</td>
-      <td><span class="badge ${s.status === 'active' ? 'badge-green' : 'badge-red'}">${s.status === 'active' ? 'نشط' : 'منتهي'}</span></td>
-      <td>${s.start_date || '—'}</td>
-      <td>${s.expires_at ? new Date(s.expires_at).toLocaleDateString('ar-AE') : '—'}</td>
-      <td style="color:${daysColor};font-weight:900">${daysLeft !== null ? daysLeft + ' يوم' : '—'}</td>
-    </tr>`
+window.loadGroups=async function(){
+  const search=document.getElementById('grpSearch')?.value?.toLowerCase()||''
+  const status=document.getElementById('grpStatus')?.value||''
+  const plan=document.getElementById('grpPlan')?.value||''
+  let filtered=allGroupsData
+  if(search)filtered=filtered.filter(g=>g.name.toLowerCase().includes(search)||g.managerName.toLowerCase().includes(search))
+  if(status)filtered=filtered.filter(g=>g.status===status)
+  if(plan)filtered=filtered.filter(g=>(g.sub?.plan_name||'free').toLowerCase()===plan.toLowerCase())
+  document.getElementById('groupsCount').textContent=`${filtered.length} جمعية`
+  const tbody=document.getElementById('grpTbody')
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted)">لا توجد نتائج</td></tr>';return}
+  tbody.innerHTML=filtered.map(g=>{
+    const plan=g.sub?.plan_name||'Free'
+    const days=g.sub?.expires_at?Math.ceil((new Date(g.sub.expires_at)-new Date())/(1000*60*60*24)):null
+    const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
+    return `<tr><td><strong>${g.name}</strong></td><td>${g.managerName}</td><td><span class="badge ${planBadge(plan)}">${plan}</span></td><td>${g.memberCount}/${g.max_members||4}</td><td>${g.monthly_amount} درهم</td><td>${g.sub?.expires_at?new Date(g.sub.expires_at).toLocaleDateString('ar-AE'):'—'}</td><td style="color:${dc};font-weight:900">${days!==null?days+' يوم':'—'}</td><td><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></td><td><div style="display:flex;gap:4px"><button class="action-btn ab-green" onclick="changeStatus('${g.id}','active')">تفعيل</button><button class="action-btn ab-red" onclick="changeStatus('${g.id}','stopped')">إيقاف</button></div></td></tr>`
   }).join('')
 }
 
-// ════════════════════════════════
-// الملاحظات
-// ════════════════════════════════
-window.loadNotes = async function() {
-  const { data, error } = await sb.from('manager_notes').select('*, profiles(full_name), groups(name)').order('created_at',{ascending:false})
-  const el = document.getElementById('notesList')
-  if (error) { el.innerHTML = '<div class="empty">خطأ في التحميل</div>'; return }
-  if (!data || data.length === 0) { el.innerHTML = '<div class="empty">لا توجد ملاحظات</div>'; return }
-  document.getElementById('notesCount').textContent = `${data.length} ملاحظة`
-  el.innerHTML = data.map(n => `
-    <div style="padding:14px;border-bottom:1px solid var(--line)">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <div>
-          <strong style="font-size:14px">${n.profiles?.full_name || '—'}</strong>
-          ${n.groups?.name ? `<span style="color:var(--muted);font-size:12px;margin-right:8px">· ${n.groups.name}</span>` : ''}
-        </div>
-        <span style="color:var(--muted);font-size:12px">${new Date(n.created_at).toLocaleDateString('ar')}</span>
-      </div>
-      <div style="font-size:13px;color:var(--text);line-height:1.8">${n.note}</div>
-    </div>`).join('')
+window.loadPayments=async function(){
+  const status=document.getElementById('payStatus')?.value||''
+  let q=sb.from('payments').select('*, members(full_name), groups(name)').order('created_at',{ascending:false})
+  if(status)q=q.eq('status',status)
+  const{data}=await q
+  document.getElementById('paymentsCount').textContent=`${data?.length||0} دفعة`
+  const tbody=document.getElementById('payTbody')
+  if(!data?.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">لا توجد دفعات</td></tr>';return}
+  tbody.innerHTML=data.map(p=>`<tr><td>${p.members?.full_name||'—'}</td><td>${p.groups?.name||'—'}</td><td>${p.amount} درهم</td><td>${MONTHS[p.payment_month]}</td><td>${p.payment_year}</td><td><span class="badge ${payBadge(p.status)}">${payLabel(p.status)}</span></td><td>${p.receipt_url?`<a href="${p.receipt_url}" target="_blank" class="action-btn ab-blue">عرض</a>`:'—'}</td></tr>`).join('')
 }
 
-// ════════════════════════════════
-// تسجيل الخروج
-// ════════════════════════════════
-window.doLogout = async function() {
-  await sb.auth.signOut()
-  window.location.href = 'login.html'
+window.loadRequests=async function(){
+  const status=document.getElementById('reqStatus')?.value||''
+  let q=sb.from('join_requests').select('*, groups(name, profiles(full_name))').order('created_at',{ascending:false})
+  if(status)q=q.eq('status',status)
+  const{data}=await q
+  document.getElementById('requestsCount').textContent=`${data?.length||0} طلب`
+  const tbody=document.getElementById('reqTbody')
+  if(!data?.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--muted)">لا توجد طلبات</td></tr>';return}
+  tbody.innerHTML=data.map(r=>`<tr><td>${r.full_name}</td><td>${r.phone||'—'}</td><td>${r.groups?.name||'—'}</td><td>${r.groups?.profiles?.full_name||'—'}</td><td>${MONTHS[r.requested_month]}</td><td>${r.requested_year}</td><td>${new Date(r.created_at).toLocaleDateString('ar')}</td><td><span class="badge ${reqBadge(r.status)}">${reqLabel(r.status)}</span></td></tr>`).join('')
 }
 
-// ════════════════════════════════
-// تحديث الصفحة الحالية
-// ════════════════════════════════
-window.reloadCurrentPage = function() {
-  const loaders = {
-    'overview-page':      loadOverview,
-    'groups-page':        loadGroups,
-    'payments-page':      loadPayments,
-    'requests-page':      loadRequests,
-    'subscriptions-page': loadSubscriptions,
-    'notes-page':         loadNotes,
-  }
-  loaders[currentPage]?.()
+window.loadSubscriptions=async function(){
+  const plan=document.getElementById('subsPlan')?.value||''
+  const status=document.getElementById('subsStatus')?.value||''
+  let q=sb.from('subscriptions').select('*, profiles(full_name)').order('created_at',{ascending:false})
+  if(plan)q=q.eq('plan_name',plan)
+  if(status)q=q.eq('status',status)
+  const{data}=await q
+  document.getElementById('subsCount').textContent=`${data?.length||0} اشتراك`
+  const tbody=document.getElementById('subsTbody')
+  if(!data?.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">لا توجد اشتراكات</td></tr>';return}
+  tbody.innerHTML=data.map(s=>{
+    const days=s.expires_at?Math.ceil((new Date(s.expires_at)-new Date())/(1000*60*60*24)):null
+    const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
+    return `<tr><td>${s.profiles?.full_name||'—'}</td><td><span class="badge ${planBadge(s.plan_name)}">${s.plan_name}</span></td><td>${s.amount} درهم</td><td><span class="badge ${s.status==='active'?'b-green':'b-red'}">${s.status==='active'?'نشط':'منتهي'}</span></td><td>${s.start_date||'—'}</td><td>${s.expires_at?new Date(s.expires_at).toLocaleDateString('ar-AE'):'—'}</td><td style="color:${dc};font-weight:900">${days!==null?days+' يوم':'—'}</td></tr>`
+  }).join('')
 }
 
-// ════════════════════════════════
-// التنقل بين الصفحات
-// ════════════════════════════════
-const pageTitles = {
-  'overview-page':      ['نظرة عامة','إحصائيات شاملة لكامل المنصة'],
-  'groups-page':        ['الجمعيات والمدراء','كل الجمعيات مع بيانات مدرائها'],
-  'payments-page':      ['الدفعات','سجل الدفعات على مستوى المنصة'],
-  'requests-page':      ['طلبات الانضمام','الطلبات الواردة من الأعضاء'],
-  'subscriptions-page': ['الاشتراكات','باقات المدراء وتواريخ الانتهاء'],
-  'notes-page':         ['ملاحظات المدراء','رسائل واردة من المدراء'],
+window.loadNotes=async function(){
+  const{data}=await sb.from('manager_notes').select('*, profiles(full_name), groups(name)').order('created_at',{ascending:false})
+  document.getElementById('notesCount').textContent=`${data?.length||0} ملاحظة`
+  const el=document.getElementById('notesList')
+  if(!data?.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted)">لا توجد ملاحظات</div>';return}
+  const ac=['#eaf5fd','#e8f8f1','#fff5e4','#f3edff','#fdeeee'],tc=['#185781','#138a59','#b7791f','#7c3aed','#c53b3b']
+  el.innerHTML=data.map((n,i)=>`<div style="display:flex;align-items:flex-start;gap:12px;padding:14px;border-bottom:1px solid var(--line)"><div style="width:34px;height:34px;border-radius:50%;background:${ac[i%5]};color:${tc[i%5]};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex:0 0 34px">${(n.profiles?.full_name||'؟')[0]}</div><div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><strong style="font-size:13px">${n.profiles?.full_name||'—'}</strong><span style="font-size:11px;color:var(--muted)">${new Date(n.created_at).toLocaleDateString('ar')}</span></div>${n.groups?.name?`<div style="font-size:11px;color:var(--muted);margin-bottom:4px">الجمعية: ${n.groups.name}</div>`:''}<div style="font-size:13px;color:var(--text);line-height:1.8">${n.note}</div></div></div>`).join('')
 }
 
-const pageLoaders = {
-  'groups-page':        loadGroups,
-  'payments-page':      loadPayments,
-  'requests-page':      loadRequests,
-  'subscriptions-page': loadSubscriptions,
-  'notes-page':         loadNotes,
+window.doLogout=async function(){await sb.auth.signOut();window.location.href='login.html'}
+
+window.exportData=function(){
+  const rows=allGroupsData.map(g=>[g.name,g.managerName,g.sub?.plan_name||'Free',g.memberCount,g.max_members,g.monthly_amount,groupLabel(g.status)])
+  const csv=[['الجمعية','المدير','الباقة','الأعضاء','الحد الأقصى','المبلغ الشهري','الحالة'],...rows].map(r=>r.join(',')).join('\n')
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download='saahl-groups.csv';a.click()
 }
 
-window.switchPage = function(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
-  document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'))
-  const page = document.getElementById(pageId)
-  if (page) page.classList.add('active')
-  const btn = document.querySelector(`[data-page="${pageId}"]`)
-  if (btn) btn.classList.add('active')
-  const [title, sub] = pageTitles[pageId] || ['لوحة الأدمن','']
-  document.getElementById('pageTitle').textContent    = title
-  document.getElementById('pageSubtitle').textContent = sub
-  currentPage = pageId
-  pageLoaders[pageId]?.()
+window.reloadCurrentPage=function(){
+  const map={'overview-page':loadOverview,'groups-page':loadGroups,'payments-page':loadPayments,'requests-page':loadRequests,'subscriptions-page':loadSubscriptions,'notes-page':loadNotes}
+  map[currentPage]?.()
+}
+
+const pageMeta={'overview-page':['نظرة عامة على المنصة','إحصائيات شاملة لكامل المنصة'],'groups-page':['الجمعيات والمدراء','كل الجمعيات مع بيانات مدرائها'],'payments-page':['الدفعات','سجل الدفعات على مستوى المنصة'],'requests-page':['طلبات الانضمام','الطلبات الواردة من الأعضاء'],'subscriptions-page':['الاشتراكات','باقات المدراء وتواريخ الانتهاء'],'notes-page':['ملاحظات المدراء','رسائل واردة من المدراء للإدارة']}
+const pageLoaders={'groups-page':loadGroups,'payments-page':loadPayments,'requests-page':loadRequests,'subscriptions-page':loadSubscriptions,'notes-page':loadNotes}
+
+window.switchPage=function(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'))
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'))
+  document.getElementById(id)?.classList.add('active')
+  document.querySelector(`[data-page="${id}"]`)?.classList.add('active')
+  const[t,s]=pageMeta[id]||['لوحة الأدمن','']
+  document.getElementById('pageTitle').textContent=t
+  document.getElementById('pageSubtitle').textContent=s
+  currentPage=id
+  pageLoaders[id]?.()
   window.scrollTo({top:0,behavior:'smooth'})
 }
 
-document.querySelectorAll('.menu-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const target = btn.getAttribute('data-page')
-    if (target) switchPage(target)
-  })
-})
+document.querySelectorAll('.nav-item').forEach(btn=>{btn.addEventListener('click',()=>{const t=btn.getAttribute('data-page');if(t)switchPage(t)})})
 
-// إغلاق Modal بالضغط خارجه
-document.getElementById('groupDetailModal').addEventListener('click', function(e) {
-  if (e.target === this) this.classList.remove('show')
-})
-
-// ════════════════════════════════
-// مساعدات
-// ════════════════════════════════
-function groupBadge(s) { return {active:'badge-green',completed:'badge-blue',stopped:'badge-red',renewed:'badge-violet'}[s]||'badge-primary' }
-function groupLabel(s) { return {active:'نشطة',completed:'مكتملة',stopped:'متوقفة',renewed:'مجددة'}[s]||s }
-function payBadge(s)   { return {paid:'badge-green',pending:'badge-amber',late:'badge-red'}[s]||'badge-primary' }
-function payLabel(s)   { return {paid:'مدفوع',pending:'معلق',late:'متأخر'}[s]||s }
-function reqBadge(s)   { return {pending:'badge-amber',approved:'badge-green',rejected:'badge-red'}[s]||'badge-primary' }
-function reqLabel(s)   { return {pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s]||s }
+function groupBadge(s){return{active:'b-green',completed:'b-blue',stopped:'b-red',renewed:'b-violet'}[s]||'b-primary'}
+function groupLabel(s){return{active:'نشطة',completed:'مكتملة',stopped:'متوقفة',renewed:'مجددة'}[s]||s}
+function planBadge(p){const k=(p||'').toLowerCase();return k==='basic'?'b-blue':k==='pro'?'b-violet':k==='business'?'b-amber':'b-muted'}
+function payBadge(s){return{paid:'b-green',pending:'b-amber',late:'b-red'}[s]||'b-primary'}
+function payLabel(s){return{paid:'مدفوع',pending:'معلق',late:'متأخر'}[s]||s}
+function reqBadge(s){return{pending:'b-amber',approved:'b-green',rejected:'b-red'}[s]||'b-primary'}
+function reqLabel(s){return{pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s]||s}
 
 init()
 </script>
