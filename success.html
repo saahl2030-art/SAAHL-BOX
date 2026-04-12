@@ -143,6 +143,7 @@
 
 <script>
   const SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
   const PLAN_NAMES = { basic: 'Basic', pro: 'Pro', business: 'Business' }
 
   function showState(id) {
@@ -185,11 +186,12 @@
     }
 
     try {
-      // استدعاء مباشر بدون Authorization header
       const res = await fetch(`${SUPABASE_URL}/functions/v1/verify-payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
         },
         body: JSON.stringify({ session_id, plan, user_id }),
       })
@@ -201,7 +203,6 @@
         return
       }
 
-      // نجاح
       const planName = PLAN_NAMES[plan] || plan
       document.getElementById('plan-badge').textContent = '🎉 باقة ' + planName
       showState('state-success')
