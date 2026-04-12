@@ -843,7 +843,7 @@ window.copyReceiptLink2=function(){copyReceiptLink()}
 window.shareReceiptWhatsApp2=function(){shareReceiptWhatsApp()}
 
 async function loadPlan(){
-  const{data}=await sb.from('subscriptions').select('*').eq('manager_id',currentUser.id).eq('status','active').single()
+const{data}=await sb.from('subscriptions').select('*').eq('manager_id',currentUser.id).order('created_at',{ascending:false}).limit(1).single()
   const el=document.getElementById('planInfo')
   if(!data){el.innerHTML='<div class="empty">لا يوجد اشتراك نشط</div>';return}
   const pL={free:'المجاني',basic:'الأساسي',pro:'الاحترافي',business:'الأعمال'}
