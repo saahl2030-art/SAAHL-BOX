@@ -333,7 +333,7 @@
       var r3=await _sb.from('groups').insert({
         manager_id:uid, name:societyName, monthly_amount:monthlyAmount,
         total_members:0, start_month:now.getMonth()+1, start_year:now.getFullYear(),
-        status:'active', max_members:MEMBER_LIMITS[plan]||4,
+        status:'active', max_members:4,
         join_token:crypto.randomUUID()
       });
       if(r3.error) throw r3.error;
