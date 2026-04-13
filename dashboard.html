@@ -647,7 +647,7 @@ const smap={active:{l:'الجمعية نشطة',c:'active',b:'badge-green'},pend
   const ca=document.getElementById('cycleActions');ca.innerHTML=''
 if(currentGroup.status==='pending')ca.innerHTML=`<button class="btn btn-success btn-sm" onclick="updateGroupStatus('active')">🚀 بدء الدورة</button>`
 else if(currentGroup.status==='active')ca.innerHTML=`<button class="btn btn-soft btn-sm" onclick="updateGroupStatus('completed')">✅ إنهاء الدورة</button><button class="btn btn-danger btn-sm" onclick="updateGroupStatus('stopped')">⏹ إيقاف</button>`
-  else if(['completed','stopped'].includes(currentGroup.status))ca.innerHTML=`<button class="btn btn-success btn-sm" onclick="updateGroupStatus('renewed')">🔄 تجديد</button>`
+else if(['completed','stopped'].includes(currentGroup.status))ca.innerHTML=`<button class="btn btn-success btn-sm" onclick="updateGroupStatus('pending')">🔄 تجديد</button>`
   const cnt=await getMemberCount(),max=currentGroup.max_members||4
   document.getElementById('statTotal').textContent=cnt
   const pct=Math.min(100,Math.round(cnt/max*100))
