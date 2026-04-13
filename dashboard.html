@@ -722,7 +722,7 @@ window.saveNewGroup=async function(){
   const{data:ng,error}=await sb.from('groups').insert({
     manager_id:currentUser.id,name,monthly_amount:amount,max_members:maxM,
     total_members:0,start_month:now.getMonth()+1,start_year:now.getFullYear(),
-    status:'active',join_token:token
+    status:'pending',join_token:token
   }).select().single()
   btn.disabled=false;btn.textContent='إنشاء'
   if(error){showMsg('ngMsg','خطأ: '+error.message,'error');return}
