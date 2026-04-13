@@ -877,30 +877,23 @@ function watchNewGroups() {
 async function init() {
   loader.classList.add('show')
   loadNotificationsFromStorage()
+
   try {
-    // انتظر قليلاً للتأكد من تحميل الجلسة
     await new Promise(r => setTimeout(r, 300))
 
-    const { data: sessionData, error: sessionError } = await sb.auth.getSession()
-    if (sessionError || !sessionData?.session) {
+    const { data: sessionData } = await sb.auth.getSession()
+    if (!sessionData?.session) {
       loader.classList.remove('show')
       window.location.href = 'login.html'
       return
     }
     const session = sessionData.session
 
-    const { data: profile, error: profileError } = await sb.from('profiles').select('*').eq('id', session.user.id).single()
+    const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single()
 
-    // إذا لم يُوجد profile أو حدث خطأ — لا نعيد توجيه، نعرض رسالة
-    if (profileError || !profile) {
+    if (!profile) {
       loader.classList.remove('show')
-      document.body.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:Tajawal,sans-serif;flex-direction:column;gap:12px;color:#c53b3b">
-        <div style="font-size:32px">⚠️</div>
-        <div style="font-size:16px;font-weight:900">تعذّر تحميل ملف المستخدم</div>
-        <div style="font-size:13px;color:#718096">تأكد من اتصالك بالإنترنت ثم أعد المحاولة</div>
-        <button onclick="window.location.reload()" style="margin-top:8px;padding:10px 24px;border:none;border-radius:10px;background:#1f6fa5;color:#fff;font-family:Tajawal,sans-serif;font-size:14px;font-weight:900;cursor:pointer">إعادة المحاولة</button>
-        <a href="login.html" style="font-size:12px;color:#718096;margin-top:4px">تسجيل الدخول</a>
-      </div>`
+      showErrorScreen('تعذّر تحميل ملف المستخدم — تأكد من اتصالك بالإنترنت')
       return
     }
 
@@ -911,21 +904,26 @@ async function init() {
     }
 
     document.getElementById('adminName').textContent = profile.full_name || '—'
+    loader.classList.remove('show')
     await loadOverview()
     watchNewGroups()
+
   } catch (e) {
     console.error('Admin init error:', e)
     loader.classList.remove('show')
-    document.body.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:Tajawal,sans-serif;flex-direction:column;gap:12px;color:#c53b3b">
-      <div style="font-size:32px">⚠️</div>
-      <div style="font-size:16px;font-weight:900">حدث خطأ غير متوقع</div>
-      <div style="font-size:13px;color:#718096">${e?.message || 'يرجى المحاولة مجدداً'}</div>
-      <button onclick="window.location.reload()" style="margin-top:8px;padding:10px 24px;border:none;border-radius:10px;background:#1f6fa5;color:#fff;font-family:Tajawal,sans-serif;font-size:14px;font-weight:900;cursor:pointer">إعادة المحاولة</button>
+    showErrorScreen(e?.message || 'يرجى المحاولة مجدداً')
+  }
+}
+
+function showErrorScreen(msg) {
+  document.body.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:Tajawal,sans-serif;flex-direction:column;gap:12px;background:#f0f4f8">
+      <div style="font-size:40px">⚠️</div>
+      <div style="font-size:17px;font-weight:900;color:#c53b3b">حدث خطأ</div>
+      <div style="font-size:13px;color:#718096;max-width:320px;text-align:center;line-height:1.7">${msg}</div>
+      <button onclick="window.location.reload()" style="margin-top:10px;padding:11px 28px;border:none;border-radius:11px;background:#1f6fa5;color:#fff;font-family:Tajawal,sans-serif;font-size:14px;font-weight:900;cursor:pointer">إعادة المحاولة</button>
       <a href="login.html" style="font-size:12px;color:#718096;margin-top:4px">تسجيل الدخول</a>
     </div>`
-  } finally {
-    loader.classList.remove('show')
-  }
 }
 
 async function loadOverview() {
