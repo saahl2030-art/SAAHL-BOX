@@ -177,6 +177,8 @@
       <div class="nav-sec">المالية</div>
       <button class="nav-item" data-page="subscriptions-page"><span class="nav-icon">📦</span>الاشتراكات</button>
       <button class="nav-item" data-page="notes-page"><span class="nav-icon">📝</span>ملاحظات المدراء</button>
+      <div class="nav-sec">التحديثات</div>
+      <button class="nav-item" data-page="broadcast-page"><span class="nav-icon">📢</span>إرسال إشعار</button>
       <div class="nav-sec">الإشعارات</div>
       <button class="nav-item" id="notifBtn" onclick="openNotifPanel()">
         <span class="nav-icon">🔔</span>الإشعارات
@@ -335,6 +337,34 @@ https://saahl2030-art.github.io/SAAHL-BOX/
         </div>
       </section>
 
+      <!-- إرسال إشعار للمدراء -->
+      <section class="page" id="broadcast-page">
+        <div class="full-card" style="max-width:580px">
+          <div class="card-hd">
+            <div>
+              <div class="card-title">📢 إرسال إشعار للمدراء</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:3px">يصل الإشعار لجميع المدراء عند دخولهم للوحة التحكم</div>
+            </div>
+          </div>
+          <div style="margin-bottom:14px">
+            <label style="display:block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px">عنوان الإشعار *</label>
+            <input class="srch" id="bcTitle" type="text" placeholder="مثال: تحديث جديد في المنصة" style="width:100%">
+          </div>
+          <div style="margin-bottom:18px">
+            <label style="display:block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px">تفاصيل التحديث *</label>
+            <textarea id="bcBody" rows="5" style="width:100%;border:1px solid var(--border2);border-radius:10px;padding:11px 13px;font-family:Tajawal,sans-serif;font-size:13px;color:var(--text);background:var(--surface2);outline:none;resize:vertical;line-height:1.7" placeholder="اكتب تفاصيل التحديث هنا..."></textarea>
+          </div>
+          <button onclick="sendBroadcast()" style="width:100%;padding:13px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-family:Tajawal,sans-serif;font-size:14px;font-weight:900;cursor:pointer">📢 إرسال للجميع</button>
+          <div id="bcMsg" style="display:none;margin-top:10px;padding:9px 13px;border-radius:9px;font-size:12px;font-weight:700"></div>
+
+          <!-- سجل الإشعارات السابقة -->
+          <div style="margin-top:24px;border-top:1px solid var(--border);padding-top:18px">
+            <div style="font-size:13px;font-weight:900;margin-bottom:12px">📋 الإشعارات السابقة</div>
+            <div id="bcHistory"><div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">جاري التحميل...</div></div>
+          </div>
+        </div>
+      </section>
+
     </div>
   </main>
 </div>
@@ -386,7 +416,52 @@ function watchGroups(){
   }).subscribe()
 }
 
-// INIT — بدون finally لمنع تعارض DOM
+// BROADCAST
+window.sendBroadcast=async function(){
+  const title=$('bcTitle').value.trim()
+  const body=$('bcBody').value.trim()
+  const msg=$('bcMsg')
+  if(!title||!body){
+    msg.style.display='block'
+    msg.style.background='var(--red-soft)'
+    msg.style.color='var(--red)'
+    msg.textContent='يرجى ملء العنوان والتفاصيل'
+    return
+  }
+  const{error}=await sb.from('notifications').insert({title,body})
+  if(error){
+    msg.style.display='block'
+    msg.style.background='var(--red-soft)'
+    msg.style.color='var(--red)'
+    msg.textContent='خطأ: '+error.message
+    return
+  }
+  msg.style.display='block'
+  msg.style.background='var(--green-soft)'
+  msg.style.color='var(--green)'
+  msg.textContent='✅ تم إرسال الإشعار لجميع المدراء'
+  $('bcTitle').value=''
+  $('bcBody').value=''
+  setTimeout(()=>msg.style.display='none',3000)
+  loadBcHistory()
+}
+
+async function loadBcHistory(){
+  const{data}=await sb.from('notifications').select('*').order('created_at',{ascending:false}).limit(10)
+  const el=$('bcHistory')
+  if(!data?.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">لا توجد إشعارات سابقة</div>';return}
+  el.innerHTML=data.map(n=>`
+    <div style="padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--surface2)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <strong style="font-size:13px">📢 ${n.title}</strong>
+        <span style="font-size:11px;color:var(--muted)">${new Date(n.created_at).toLocaleDateString('ar-AE')}</span>
+      </div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6">${n.body}</div>
+    </div>
+  `).join('')
+}
+
+// INIT
 async function init(){
   $('pageLoader').classList.add('show')
   loadNotifs()
@@ -500,8 +575,22 @@ window.exportCSV=function(){
   const csv=[['الجمعية','المدير','البريد','الباقة','الأعضاء','الحد','المبلغ','الحالة'],...rows].map(r=>r.join(',')).join('\n')
   const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download='saahl.csv';a.click()
 }
-const META={'overview-page':['نظرة عامة على المنصة','إحصائيات شاملة لكامل المنصة'],'groups-page':['الجمعيات والمدراء','كل الجمعيات مع بيانات مدرائها'],'payments-page':['الدفعات','سجل الدفعات على مستوى المنصة'],'invite-page':['إرسال رابط التسجيل','أرسل دعوة تسجيل عبر واتساب'],'subscriptions-page':['الاشتراكات','باقات المدراء وتواريخ الانتهاء'],'notes-page':['ملاحظات المدراء','رسائل واردة من المدراء للإدارة']}
-const LOADERS={'groups-page':()=>loadGroups(),'payments-page':()=>loadPayments(),'subscriptions-page':()=>loadSubscriptions(),'notes-page':()=>loadNotes()}
+const META={
+  'overview-page':['نظرة عامة على المنصة','إحصائيات شاملة لكامل المنصة'],
+  'groups-page':['الجمعيات والمدراء','كل الجمعيات مع بيانات مدرائها'],
+  'payments-page':['الدفعات','سجل الدفعات على مستوى المنصة'],
+  'invite-page':['إرسال رابط التسجيل','أرسل دعوة تسجيل عبر واتساب'],
+  'subscriptions-page':['الاشتراكات','باقات المدراء وتواريخ الانتهاء'],
+  'notes-page':['ملاحظات المدراء','رسائل واردة من المدراء للإدارة'],
+  'broadcast-page':['إرسال إشعار','أرسل تحديثاً لجميع المدراء']
+}
+const LOADERS={
+  'groups-page':()=>loadGroups(),
+  'payments-page':()=>loadPayments(),
+  'subscriptions-page':()=>loadSubscriptions(),
+  'notes-page':()=>loadNotes(),
+  'broadcast-page':()=>loadBcHistory()
+}
 window.switchPage=function(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'))
   document.querySelectorAll('[data-page]').forEach(b=>b.classList.remove('active'))
