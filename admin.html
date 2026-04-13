@@ -431,9 +431,8 @@
       <div class="nav-item" data-page="payments-page">
         <span class="nav-icon">💳</span> الدفعات
       </div>
-      <div class="nav-item" data-page="requests-page">
-        <span class="nav-icon">📨</span> طلبات الانضمام
-        <span class="nav-badge" id="reqNavBadge" style="display:none">0</span>
+      <div class="nav-item" data-page="invite-page">
+        <span class="nav-icon">📤</span> إرسال رابط التسجيل
       </div>
 
       <div class="nav-section">المالية</div>
@@ -546,53 +545,20 @@
           </div>
         </div>
 
-        <div class="grid-3-1">
-          <div class="card">
-            <div class="card-hd">
-              <div>
-                <div class="card-title">الجمعيات والمدراء</div>
-                <div style="font-size:11px;color:var(--muted);margin-top:2px">اضغط على أي جمعية لعرض تفاصيلها</div>
-              </div>
-              <span class="card-link" onclick="switchPage('groups-page')">عرض الكل ←</span>
+        <div class="grid-2" style="margin-bottom:0">
+          <div class="card" style="display:flex;align-items:center;justify-content:space-between;padding:18px 22px;gap:12px">
+            <div>
+              <div style="font-size:13px;font-weight:900;margin-bottom:4px">🏛️ الجمعيات والمدراء</div>
+              <div style="font-size:12px;color:var(--muted)">عرض كل الجمعيات مع تفاصيل المدراء وإجراء التعديلات</div>
             </div>
-            <div class="tbl-filters">
-              <input class="srch" id="ovSearch" placeholder="بحث بالاسم أو المدير..." oninput="ovFilter()">
-              <select class="flt-sel" id="ovStatus" onchange="ovFilter()">
-                <option value="">كل الحالات</option>
-                <option value="active">نشطة</option>
-                <option value="completed">مكتملة</option>
-                <option value="stopped">متوقفة</option>
-              </select>
-              <select class="flt-sel" id="ovPlan" onchange="ovFilter()">
-                <option value="">كل الباقات</option>
-                <option value="free">Free</option>
-                <option value="basic">Basic</option>
-                <option value="pro">Pro</option>
-                <option value="business">Business</option>
-              </select>
-            </div>
-            <div class="tbl-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>الجمعية</th>
-                    <th>المدير</th>
-                    <th>الباقة</th>
-                    <th>الأعضاء</th>
-                    <th>الأيام المتبقية</th>
-                    <th>الحالة</th>
-                  </tr>
-                </thead>
-                <tbody id="ovTbody"></tbody>
-              </table>
-            </div>
+            <button class="tb-btn" style="flex-shrink:0;white-space:nowrap" onclick="switchPage('groups-page')">عرض الكل ←</button>
           </div>
-
-          <div class="det-panel" id="detPanel">
-            <div class="det-empty">
-              <div class="det-empty-ic">🏛️</div>
-              <div style="font-size:13px;font-weight:700">اضغط على أي جمعية<br>لعرض تفاصيلها الكاملة</div>
+          <div class="card" style="display:flex;align-items:center;justify-content:space-between;padding:18px 22px;gap:12px">
+            <div>
+              <div style="font-size:13px;font-weight:900;margin-bottom:4px">📤 إرسال رابط التسجيل</div>
+              <div style="font-size:12px;color:var(--muted)">أرسل رابط إنشاء حساب جديد عبر واتساب لأي شخص</div>
             </div>
+            <button class="tb-btn" style="flex-shrink:0;white-space:nowrap" onclick="switchPage('invite-page')">إرسال ←</button>
           </div>
         </div>
 
@@ -678,32 +644,60 @@
         </div>
       </section>
 
-      <!-- ── طلبات الانضمام ── -->
-      <section class="page" id="requests-page">
-        <div class="full-card">
+      <!-- ── إرسال رابط التسجيل ── -->
+      <section class="page" id="invite-page">
+        <div class="full-card" style="max-width:600px">
           <div class="card-hd">
             <div>
-              <div class="card-title">طلبات الانضمام</div>
-              <div style="font-size:11px;color:var(--muted);margin-top:2px" id="requestsCount">جاري التحميل...</div>
+              <div class="card-title">📤 إرسال رابط التسجيل عبر واتساب</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:3px">أرسل رابط إنشاء حساب مدير جمعية جديد لأي شخص مباشرة عبر واتساب</div>
             </div>
           </div>
-          <div class="tbl-filters">
-            <select class="flt-sel" id="reqStatus" onchange="loadRequests()">
-              <option value="pending">معلقة</option>
-              <option value="">الكل</option>
-              <option value="approved">مقبولة</option>
-              <option value="rejected">مرفوضة</option>
-            </select>
+
+          <!-- الرابط الثابت -->
+          <div style="margin-bottom:20px">
+            <div style="font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px">رابط التسجيل العام</div>
+            <div style="display:flex;align-items:center;gap:8px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px">
+              <input type="text" id="inviteLink" readonly
+                style="flex:1;border:none;background:transparent;font-size:12px;color:var(--text);outline:none;direction:ltr"
+                value="https://saahl2030-art.github.io/SAAHL-BOX/auth.html">
+              <button class="tb-btn" onclick="copyInviteLink()" style="flex-shrink:0">📋 نسخ</button>
+            </div>
+            <div style="font-size:11px;color:var(--muted);margin-top:6px">هذا الرابط يوجّه الشخص مباشرة لصفحة إنشاء الحساب</div>
           </div>
-          <div class="full-tbl-wrap">
-            <table class="full-table">
-              <thead>
-                <tr><th>الاسم</th><th>الهاتف</th><th>الجمعية</th><th>المدير</th><th>الشهر المطلوب</th><th>السنة</th><th>التاريخ</th><th>الحالة</th></tr>
-              </thead>
-              <tbody id="reqTbody">
-                <tr><td colspan="8" style="text-align:center;padding:24px;color:var(--muted)">جاري التحميل...</td></tr>
-              </tbody>
-            </table>
+
+          <!-- إرسال برسالة مخصصة -->
+          <div style="border-top:1px solid var(--border);padding-top:20px">
+            <div style="font-size:12px;font-weight:800;color:var(--muted);margin-bottom:10px">إرسال رسالة واتساب مخصصة</div>
+
+            <div style="margin-bottom:12px">
+              <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px">رقم الهاتف (اختياري)</label>
+              <input class="srch" type="tel" id="invitePhone" placeholder="مثال: 971501234567 (بدون +)" style="width:100%;direction:ltr">
+              <div style="font-size:11px;color:var(--muted);margin-top:4px">اتركه فارغاً لفتح واتساب بدون تحديد رقم</div>
+            </div>
+
+            <div style="margin-bottom:16px">
+              <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px">نص الرسالة</label>
+              <textarea id="inviteMsg" rows="5"
+                style="width:100%;border:1px solid var(--border2);border-radius:10px;padding:12px;font-family:Tajawal,sans-serif;font-size:13px;color:var(--text);background:var(--surface2);outline:none;resize:vertical;line-height:1.7">مرحباً 👋
+نود دعوتك للانضمام إلى منصة صندوق ساهل لإدارة الجمعيات المالية.
+
+يمكنك إنشاء حسابك وبدء إدارة جمعيتك من هذا الرابط:
+https://saahl2030-art.github.io/SAAHL-BOX/auth.html
+
+المنصة مجانية للبدء ✨</textarea>
+            </div>
+
+            <div style="display:flex;gap:8px">
+              <button onclick="sendWhatsApp()" style="flex:1;padding:13px;border:none;border-radius:10px;background:#25d366;color:#fff;font-family:Tajawal,sans-serif;font-size:14px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s">
+                💬 إرسال عبر واتساب
+              </button>
+              <button onclick="resetInviteMsg()" class="tb-btn">↺ إعادة تعيين</button>
+            </div>
+
+            <div id="inviteCopyMsg" style="display:none;margin-top:12px;padding:10px 14px;background:var(--green-soft);border-radius:9px;font-size:12px;font-weight:700;color:var(--green)">
+              ✅ تم نسخ الرابط
+            </div>
           </div>
         </div>
       </section>
@@ -1236,7 +1230,28 @@ window.loadNotes = async function() {
   </div>`).join('')
 }
 
-window.doLogout = async function() { await sb.auth.signOut(); window.location.href = 'login.html' }
+window.copyInviteLink = function() {
+  const link = document.getElementById('inviteLink')?.value
+  if (!link) return
+  navigator.clipboard.writeText(link).then(() => {
+    const msg = document.getElementById('inviteCopyMsg')
+    if (msg) { msg.style.display = 'block'; setTimeout(() => { msg.style.display = 'none' }, 2000) }
+  })
+}
+
+window.sendWhatsApp = function() {
+  const phone = (document.getElementById('invitePhone')?.value || '').replace(/\D/g, '')
+  const msg = document.getElementById('inviteMsg')?.value || ''
+  const encoded = encodeURIComponent(msg)
+  const url = phone ? `https://wa.me/${phone}?text=${encoded}` : `https://wa.me/?text=${encoded}`
+  window.open(url, '_blank')
+}
+
+const DEFAULT_INVITE_MSG = `مرحباً 👋\nنود دعوتك للانضمام إلى منصة صندوق ساهل لإدارة الجمعيات المالية.\n\nيمكنك إنشاء حسابك وبدء إدارة جمعيتك من هذا الرابط:\nhttps://saahl2030-art.github.io/SAAHL-BOX/auth.html\n\nالمنصة مجانية للبدء ✨`
+window.resetInviteMsg = function() {
+  const el = document.getElementById('inviteMsg')
+  if (el) el.value = DEFAULT_INVITE_MSG
+}
 
 window.exportData = function() {
   const rows = allGroupsData.map(g => [g.name, g.managerName, g.managerEmail, g.sub?.plan_name||'Free', g.memberCount, g.max_members, g.monthly_amount, groupLabel(g.status)])
@@ -1253,13 +1268,13 @@ const pageMeta = {
   'overview-page': ['نظرة عامة على المنصة', 'إحصائيات شاملة لكامل المنصة'],
   'groups-page': ['الجمعيات والمدراء', 'كل الجمعيات مع بيانات مدرائها'],
   'payments-page': ['الدفعات', 'سجل الدفعات على مستوى المنصة'],
-  'requests-page': ['طلبات الانضمام', 'الطلبات الواردة من الأعضاء'],
+  'invite-page': ['إرسال رابط التسجيل', 'أرسل دعوة تسجيل عبر واتساب'],
   'subscriptions-page': ['الاشتراكات', 'باقات المدراء وتواريخ الانتهاء'],
   'notes-page': ['ملاحظات المدراء', 'رسائل واردة من المدراء للإدارة']
 }
 const pageLoaders = {
   'groups-page': loadGroups, 'payments-page': loadPayments,
-  'requests-page': loadRequests, 'subscriptions-page': loadSubscriptions, 'notes-page': loadNotes
+  'subscriptions-page': loadSubscriptions, 'notes-page': loadNotes
 }
 
 window.switchPage = function(id) {
