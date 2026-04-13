@@ -169,7 +169,6 @@
     .expiry-warning-bar{position:fixed;top:0;left:0;right:0;z-index:250;background:#b7791f;color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:900;box-shadow:0 2px 10px rgba(0,0,0,.2)}
     .expiry-warning-bar a{background:#fff;color:#b7791f;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:900;text-decoration:none}
     .expiry-warning-bar button{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;line-height:1}
-    /* ── بطاقة الترقية ── */
     .upgrade-card{background:linear-gradient(135deg,#f0f9ff,var(--primary-soft));border:1px solid #c3dff0;border-radius:16px;padding:24px;text-align:center;margin-top:16px}
     .upgrade-card .upgrade-icon{font-size:40px;margin-bottom:12px}
     .upgrade-card h3{font-size:17px;font-weight:900;color:var(--text);margin-bottom:6px}
@@ -178,6 +177,14 @@
     .upgrade-btn:hover{background:var(--primary-dark);transform:translateY(-1px)}
     .renew-btn{display:block;text-align:center;margin-top:12px;padding:10px;border-radius:12px;background:var(--gc-soft);color:var(--gc);font-size:13px;font-weight:900;text-decoration:none;transition:.2s}
     .renew-btn:hover{background:#d3e9f8}
+    /* ── نافذة الإشعارات ── */
+    .notif-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:400;align-items:center;justify-content:center;padding:20px}
+    .notif-modal-overlay.show{display:flex}
+    .notif-modal{background:#fff;border-radius:24px;padding:32px 28px;width:100%;max-width:480px;box-shadow:0 24px 64px rgba(0,0,0,.18);text-align:center}
+    .notif-modal-icon{font-size:48px;margin-bottom:12px}
+    .notif-modal-title{font-size:20px;font-weight:900;margin-bottom:10px;color:var(--text)}
+    .notif-modal-body{font-size:14px;color:var(--muted);line-height:1.9;margin-bottom:24px;text-align:right;background:#f8fbff;border-radius:12px;padding:14px}
+    .notif-modal-date{font-size:11px;color:var(--muted);margin-bottom:20px}
     @media(max-width:1280px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:980px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto;border-left:none;border-bottom:1px solid var(--line)}.menu{display:grid;grid-template-columns:repeat(3,1fr)}.content{padding:16px}.grid-2{grid-template-columns:1fr}}
     @media(max-width:640px){.menu{grid-template-columns:repeat(2,1fr)}.stats-grid{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.topbar h2{font-size:20px}.topbar{flex-direction:column;gap:10px}.topbar-actions{width:100%}.topbar-actions .btn{width:100%;justify-content:center}.card{padding:14px}.card-head{flex-direction:column;align-items:flex-start}.cycle-banner{flex-direction:column;align-items:flex-start}.filters{flex-direction:column;align-items:stretch}.filters .select,.filters .field{width:100%}.modal{padding:16px;border-radius:14px}}
@@ -186,6 +193,17 @@
 </head>
 <body>
 <div class="page-loader" id="pageLoader">جاري تحميل لوحة التحكم...</div>
+
+<!-- نافذة الإشعارات -->
+<div class="notif-modal-overlay" id="notifModalOverlay">
+  <div class="notif-modal">
+    <div class="notif-modal-icon">📢</div>
+    <div class="notif-modal-title" id="notifModalTitle"></div>
+    <div class="notif-modal-body" id="notifModalBody"></div>
+    <div class="notif-modal-date" id="notifModalDate"></div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="markNotifRead()">✓ تم الاطلاع</button>
+  </div>
+</div>
 
 <!-- MEMBER MODAL -->
 <div class="modal-overlay" id="memberModal"><div class="modal">
@@ -401,7 +419,6 @@
       </div>
     </section>
 
-    <!-- ── قسم الباقة ── -->
     <section class="page" id="plan-page">
       <div class="card">
         <div class="card-head"><div class="card-title">الباقة الحالية</div></div>
@@ -444,6 +461,7 @@ const MEMBER_LIMITS={free:4,basic:10,pro:15,business:25}
 let currentUser=null,currentProfile=null,currentGroup=null
 let allGroups=[],planName='free',memberLimit=4,groupIdx=0
 let editingMemberId=null,pendingReceiptId=null
+let currentNotifId=null
 const loader=document.getElementById('pageLoader')
 
 function gc(){return COLORS[groupIdx%COLORS.length]}
@@ -475,6 +493,34 @@ function buildSelect(){
   btnNew.title=allGroups.length>=maxG?`وصلت للحد (${maxG}) — ترقية الباقة مطلوبة`:`إنشاء جمعية جديدة (${maxG-allGroups.length} متبقية)`
 }
 
+// ── نظام الإشعارات ──
+async function checkNotifications(userId){
+  try{
+    // جلب آخر إشعار
+    const{data:notifs}=await sb.from('notifications').select('*').order('created_at',{ascending:false}).limit(1)
+    if(!notifs||!notifs.length)return
+    const notif=notifs[0]
+    // التحقق إذا قرأه المدير
+    const{data:read}=await sb.from('notification_reads').select('id').eq('notification_id',notif.id).eq('manager_id',userId)
+    if(read&&read.length)return
+    // عرض الإشعار
+    currentNotifId=notif.id
+    document.getElementById('notifModalTitle').textContent=notif.title
+    document.getElementById('notifModalBody').textContent=notif.body
+    document.getElementById('notifModalDate').textContent=new Date(notif.created_at).toLocaleDateString('ar-AE')
+    document.getElementById('notifModalOverlay').classList.add('show')
+  }catch(e){console.error('notification error',e)}
+}
+
+window.markNotifRead=async function(){
+  if(!currentNotifId||!currentUser)return
+  try{
+    await sb.from('notification_reads').insert({notification_id:currentNotifId,manager_id:currentUser.id})
+  }catch(e){console.error(e)}
+  document.getElementById('notifModalOverlay').classList.remove('show')
+  currentNotifId=null
+}
+
 window.switchGroup=async function(gid){
   if(!gid)return
   loader.classList.add('show')
@@ -498,19 +544,10 @@ function showExpiredOverlay(name){
     <div class="expired-card">
       <div class="expired-icon">⏰</div>
       <div class="expired-title">انتهى اشتراكك</div>
-      <p class="expired-sub">
-        مرحباً ${name}،<br>
-        انتهت صلاحية اشتراكك.<br>
-        لمواصلة إدارة جمعياتك يرجى تجديد باقتك.
-      </p>
-      <a href="plans.html" style="display:block;background:#1f6fa5;color:#fff;border-radius:14px;padding:14px 28px;font-size:15px;font-weight:900;text-decoration:none;margin-bottom:10px">
-        🔄 تجديد الباقة
-      </a>
-      <a href="login.html" style="display:block;background:#f8fbff;color:#6e8498;border:1px solid #dfe8f1;border-radius:14px;padding:12px 28px;font-size:13px;font-weight:700;text-decoration:none">
-        تسجيل الخروج
-      </a>
-    </div>
-  `
+      <p class="expired-sub">مرحباً ${name}،<br>انتهت صلاحية اشتراكك.<br>لمواصلة إدارة جمعياتك يرجى تجديد باقتك.</p>
+      <a href="plans.html" style="display:block;background:#1f6fa5;color:#fff;border-radius:14px;padding:14px 28px;font-size:15px;font-weight:900;text-decoration:none;margin-bottom:10px">🔄 تجديد الباقة</a>
+      <a href="login.html" style="display:block;background:#f8fbff;color:#6e8498;border:1px solid #dfe8f1;border-radius:14px;padding:12px 28px;font-size:13px;font-weight:700;text-decoration:none">تسجيل الخروج</a>
+    </div>`
   document.body.appendChild(overlay)
 }
 
@@ -520,13 +557,7 @@ function showExpiryWarning(days){
   const bar=document.createElement('div')
   bar.id='expiryWarningBar'
   bar.className='expiry-warning-bar'
-  bar.innerHTML=`
-    <span>⚠️ اشتراكك ينتهي خلال <strong>${days} يوم</strong> — جدد الآن لتجنب توقف خدماتك</span>
-    <div style="display:flex;gap:10px;align-items:center">
-      <a href="plans.html">تجديد الآن</a>
-      <button onclick="document.getElementById('expiryWarningBar').remove()">✕</button>
-    </div>
-  `
+  bar.innerHTML=`<span>⚠️ اشتراكك ينتهي خلال <strong>${days} يوم</strong> — جدد الآن لتجنب توقف خدماتك</span><div style="display:flex;gap:10px;align-items:center"><a href="plans.html">تجديد الآن</a><button onclick="document.getElementById('expiryWarningBar').remove()">✕</button></div>`
   document.body.prepend(bar)
 }
 
@@ -546,24 +577,13 @@ async function init(){
     const sub=subs?.[0]||null
     const subStatus=sub?.status||'none'
 
-    if(subStatus==='expired'){
-      showExpiredOverlay(p.full_name)
-      loader.classList.remove('show')
-      return
-    }
+    if(subStatus==='expired'){showExpiredOverlay(p.full_name);loader.classList.remove('show');return}
 
     if(sub?.expires_at){
-      const now=new Date()
-      const expiresAt=new Date(sub.expires_at)
+      const now=new Date(),expiresAt=new Date(sub.expires_at)
       const daysLeft=Math.ceil((expiresAt-now)/(1000*60*60*24))
-      if(daysLeft<=0){
-        showExpiredOverlay(p.full_name)
-        loader.classList.remove('show')
-        return
-      }
-      if(daysLeft<=30){
-        showExpiryWarning(daysLeft)
-      }
+      if(daysLeft<=0){showExpiredOverlay(p.full_name);loader.classList.remove('show');return}
+      if(daysLeft<=30)showExpiryWarning(daysLeft)
     }
 
     planName=(sub?.plan_name||'free').toLowerCase()
@@ -583,6 +603,10 @@ async function init(){
     await updateOverview()
     await loadMemberFilter()
     loadMembers();loadRequests();loadPayments();loadSchedule();loadPlan();loadNotes()
+
+    // فحص الإشعارات بعد تحميل الصفحة
+    await checkNotifications(currentUser.id)
+
   }catch(e){console.error(e);window.location.href='login.html'}
   finally{loader.classList.remove('show')}
 }
@@ -654,15 +678,12 @@ window.updateGroupStatus=async function(s){
   if(!confirm('تغيير حالة الجمعية؟'))return
   const updates={status:s}
   if(s==='active'){
-    const start=new Date()
-    const end=new Date()
+    const start=new Date(),end=new Date()
     const memberCount=await getMemberCount()
     end.setMonth(end.getMonth()+memberCount)
     updates.actual_start_date=start.toISOString().split('T')[0]
     updates.actual_end_date=end.toISOString().split('T')[0]
-    await sb.from('subscriptions').update({
-      end_date:end.toISOString().split('T')[0]
-    }).eq('manager_id',currentGroup.manager_id)
+    await sb.from('subscriptions').update({end_date:end.toISOString().split('T')[0]}).eq('manager_id',currentGroup.manager_id)
   }
   await sb.from('groups').update(updates).eq('id',currentGroup.id)
   currentGroup.status=s;updateOverview()
@@ -705,9 +726,7 @@ window.saveNewGroup=async function(){
   }).select().single()
   btn.disabled=false;btn.textContent='إنشاء'
   if(error){showMsg('ngMsg','خطأ: '+error.message,'error');return}
-  allGroups.push(ng)
-  buildSelect()
-  closeModal('newGroupModal')
+  allGroups.push(ng);buildSelect();closeModal('newGroupModal')
   document.getElementById('groupSelect').value=ng.id
   await switchGroup(ng.id)
 }
@@ -849,55 +868,25 @@ window.shareReceiptWhatsApp=function(){const v=document.getElementById('receiptL
 window.copyReceiptLink2=function(){copyReceiptLink()}
 window.shareReceiptWhatsApp2=function(){shareReceiptWhatsApp()}
 
-// ── دالة loadPlan المُحدَّثة ──
 async function loadPlan(){
   const{data}=await sb.from('subscriptions').select('*').eq('manager_id',currentUser.id).order('created_at',{ascending:false}).limit(1).single()
   const el=document.getElementById('planInfo')
-
-  // لا يوجد اشتراك — باقة مجانية
   if(!data){
-    el.innerHTML=`
-      <div class="upgrade-card">
-        <div class="upgrade-icon">🔓</div>
-        <h3>أنت على الباقة المجانية</h3>
-        <p>باقتك الحالية تتيح جمعية واحدة بحد أقصى 4 أعضاء.<br>ترقّ الآن للوصول لجمعيات متعددة وأعضاء أكثر.</p>
-        <a href="plans.html" class="upgrade-btn">🚀 ترقية باقتك الآن</a>
-      </div>
-    `
+    el.innerHTML=`<div class="upgrade-card"><div class="upgrade-icon">🔓</div><h3>أنت على الباقة المجانية</h3><p>باقتك الحالية تتيح جمعية واحدة بحد أقصى 4 أعضاء.<br>ترقّ الآن للوصول لجمعيات متعددة وأعضاء أكثر.</p><a href="plans.html" class="upgrade-btn">🚀 ترقية باقتك الآن</a></div>`
     return
   }
-
   const pL={free:'المجاني',basic:'الأساسي',pro:'الاحترافي',business:'الأعمال'}
   const maxG=PLAN_LIMITS[planName]||1
   let daysLeftHtml=''
   if(data.expires_at){
-    const now=new Date()
-    const exp=new Date(data.expires_at)
+    const now=new Date(),exp=new Date(data.expires_at)
     const days=Math.ceil((exp-now)/(1000*60*60*24))
     const color=days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
     daysLeftHtml=`<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px"><span style="color:var(--muted);font-weight:700">الأيام المتبقية</span><strong style="color:${color}">${days} يوم</strong></div>`
   }
-
   const atLimit=allGroups.length>=maxG
-  const limitHtml=atLimit
-    ?`<div style="padding:10px;background:var(--amber-soft);border-radius:10px;font-size:13px;color:var(--amber);font-weight:800">وصلت للحد الأقصى — <a href="plans.html" style="color:var(--amber);text-decoration:underline">ترقية الباقة</a></div>`
-    :`<button class="btn btn-primary btn-sm" onclick="openNewGroupModal()" style="width:fit-content;margin-top:4px">➕ إنشاء جمعية جديدة</button>`
-
-  el.innerHTML=`
-    <div style="display:grid;gap:10px">
-      ${[
-        ['الباقة', pL[planName]||data.plan_name],
-        ['الحالة','✅ نشط'],
-        ['الجمعيات المستخدمة',`${allGroups.length} من ${maxG}`],
-        ['تاريخ الاشتراك', data.start_date||'—'],
-        ['تاريخ الانتهاء', data.expires_at?new Date(data.expires_at).toLocaleDateString('ar-AE'):'غير محدد'],
-        ['المبلغ المدفوع', data.amount+' درهم'],
-      ].map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px"><span style="color:var(--muted);font-weight:700">${k}</span><strong>${v}</strong></div>`).join('')}
-      ${daysLeftHtml}
-      ${limitHtml}
-      <a href="plans.html" class="renew-btn">🔄 تجديد أو ترقية الباقة</a>
-    </div>
-  `
+  const limitHtml=atLimit?`<div style="padding:10px;background:var(--amber-soft);border-radius:10px;font-size:13px;color:var(--amber);font-weight:800">وصلت للحد الأقصى — <a href="plans.html" style="color:var(--amber);text-decoration:underline">ترقية الباقة</a></div>`:`<button class="btn btn-primary btn-sm" onclick="openNewGroupModal()" style="width:fit-content;margin-top:4px">➕ إنشاء جمعية جديدة</button>`
+  el.innerHTML=`<div style="display:grid;gap:10px">${[['الباقة',pL[planName]||data.plan_name],['الحالة','✅ نشط'],['الجمعيات المستخدمة',`${allGroups.length} من ${maxG}`],['تاريخ الاشتراك',data.start_date||'—'],['تاريخ الانتهاء',data.expires_at?new Date(data.expires_at).toLocaleDateString('ar-AE'):'غير محدد'],['المبلغ المدفوع',data.amount+' درهم']].map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px"><span style="color:var(--muted);font-weight:700">${k}</span><strong>${v}</strong></div>`).join('')}${daysLeftHtml}${limitHtml}<a href="plans.html" class="renew-btn">🔄 تجديد أو ترقية الباقة</a></div>`
 }
 
 async function loadNotes(){
