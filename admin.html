@@ -5,240 +5,554 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>لوحة الأدمن - صندوق ساهل</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
-    :root{
-      --bg:#f4f8fc;--panel:#fff;--panel-soft:#f8fbff;
-      --line:#dfe8f1;--line-dark:#cfdbe7;
-      --text:#16324a;--muted:#6e8498;
-      --primary:#1f6fa5;--primary-dark:#185781;--primary-soft:#eaf5fd;
-      --green:#138a59;--green-soft:#e8f8f1;
-      --amber:#b7791f;--amber-soft:#fff5e4;
-      --red:#c53b3b;--red-soft:#fdeeee;
-      --blue:#2563eb;--blue-soft:#edf3ff;
-      --violet:#7c3aed;--violet-soft:#f3edff;
-      --shadow:0 4px 20px rgba(15,40,64,0.07);
-      --radius:14px;
+    :root {
+      --bg: #f0f4f8;
+      --surface: #ffffff;
+      --surface2: #f7fafc;
+      --border: #e2e8f0;
+      --border2: #cbd5e0;
+      --text: #1a202c;
+      --text2: #4a5568;
+      --muted: #718096;
+      --primary: #1f6fa5;
+      --primary-soft: #ebf4fb;
+      --green: #138a59;
+      --green-soft: #e6f4ee;
+      --amber: #b7791f;
+      --amber-soft: #fef3e2;
+      --red: #c53b3b;
+      --red-soft: #fdf0f0;
+      --blue: #2563eb;
+      --blue-soft: #eff6ff;
+      --violet: #7c3aed;
+      --violet-soft: #f5f3ff;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow: 0 4px 16px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 40px rgba(0,0,0,0.08);
+      --radius: 12px;
+      --radius-lg: 16px;
     }
-    *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{font-family:"Tajawal",sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-    a{text-decoration:none;color:inherit}
-    button,input,select,textarea{font-family:"Tajawal",sans-serif}
-    .app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
-    .sidebar{background:#fff;border-left:1px solid var(--line);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;overflow:hidden;z-index:30}
-    .sb-brand{padding:14px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:9px}
-    .sb-icon{width:34px;height:34px;border-radius:10px;background:var(--red-soft);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:var(--red);flex:0 0 34px}
-    .sb-brand-text h1{font-size:13px;font-weight:900;color:var(--text)}
-    .sb-brand-text p{font-size:10px;color:var(--muted);margin-top:1px}
-    .sb-admin{margin:10px 10px 0;padding:8px 10px;background:var(--red-soft);border-radius:10px;border:1px solid #f5c6c6}
-    .sb-admin span{display:block;font-size:9px;color:var(--red);font-weight:700}
-    .sb-admin strong{display:block;font-size:12px;font-weight:900;color:var(--red)}
-    .sb-nav{padding:8px;flex:1;overflow:auto}
-    .nav-section{font-size:9px;color:var(--muted);padding:8px 8px 3px;letter-spacing:.06em;font-weight:700}
-    .nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:2px;transition:.15s}
-    .nav-item:hover{background:var(--panel-soft);color:var(--text)}
-    .nav-item.active{background:var(--red-soft);color:var(--red);font-weight:800}
-    .nav-item .ni{font-size:14px;width:18px;text-align:center;flex:0 0 18px}
-    .nav-badge{margin-right:auto;background:var(--red);color:#fff;font-size:9px;padding:1px 5px;border-radius:999px;font-weight:900}
-    .sb-footer{border-top:1px solid var(--line);padding:10px}
-    .logout-nav{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;font-size:12px;color:var(--red);cursor:pointer}
-    .logout-nav:hover{background:var(--red-soft)}
-    .main{display:flex;flex-direction:column;min-width:0;overflow:hidden}
-    .topbar{background:#fff;border-bottom:1px solid var(--line);padding:10px 18px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:20}
-    .tb-info{flex:1}
-    .tb-info h2{font-size:15px;font-weight:900;color:var(--text)}
-    .tb-info p{font-size:10px;color:var(--muted);margin-top:2px}
-    .tb-btn{font-size:11px;padding:6px 11px;border:1px solid var(--line-dark);border-radius:9px;background:#fff;color:var(--muted);cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:5px}
-    .tb-btn:hover{background:var(--panel-soft);color:var(--text)}
-    .alert-bar{background:var(--amber-soft);border-bottom:1px solid #f0d090;padding:7px 18px;font-size:11px;color:var(--amber);display:flex;align-items:center;gap:8px}
-    .al-dot{width:6px;height:6px;border-radius:50%;background:var(--amber);flex-shrink:0}
-    .scr{padding:16px 18px;flex:1;overflow:auto}
-    .page{display:none}
-    .page.active{display:block}
-    .kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}
-    .kpi{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;cursor:pointer;border-right:3px solid transparent;transition:.15s}
-    .kpi:hover{border-color:var(--line-dark)}
-    .kpi.active-kpi{border-right-color:var(--primary)}
-    .kpi-label{font-size:10px;color:var(--muted);font-weight:700;margin-bottom:5px}
-    .kpi-val{font-size:22px;font-weight:900;color:var(--text);line-height:1}
-    .kpi-sub{font-size:10px;margin-top:4px;font-weight:700}
-    .mid-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
-    .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px}
-    .card-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-    .card-title{font-size:13px;font-weight:900;color:var(--text)}
-    .card-link{font-size:10px;color:var(--primary);cursor:pointer;font-weight:700}
-    .divider{border:none;border-top:1px solid var(--line);margin:10px 0}
-    .bar-row{display:flex;align-items:center;gap:6px;margin-bottom:7px;font-size:11px}
-    .bar-lbl{width:55px;text-align:right;color:var(--muted);font-weight:700}
-    .bar-track{flex:1;height:6px;background:#edf3f8;border-radius:4px;overflow:hidden}
-    .bar-fill{height:100%;border-radius:4px;transition:width .4s ease}
-    .bar-num{width:20px;font-weight:900;font-size:11px;color:var(--text)}
-    .note-mini{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:11px}
-    .note-mini:last-child{border-bottom:none}
-    .note-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;flex:0 0 26px}
-    .note-body{flex:1}
-    .note-name{font-weight:900;color:var(--text);margin-bottom:2px}
-    .note-text{color:var(--muted);line-height:1.5}
-    .note-date{color:var(--muted);font-size:10px;white-space:nowrap}
-    .bot-row{display:grid;grid-template-columns:1fr 200px;gap:12px}
-    .tbl-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px}
-    .tbl-filters{display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap}
-    .srch{font-size:11px;padding:6px 10px;border:1px solid var(--line-dark);border-radius:9px;background:var(--panel-soft);color:var(--text);outline:none;flex:1;min-width:120px}
-    .srch:focus{border-color:var(--primary)}
-    .flt-sel{font-size:11px;padding:6px 10px;border:1px solid var(--line-dark);border-radius:9px;background:var(--panel-soft);color:var(--text);outline:none;cursor:pointer}
-    .tbl-wrap{overflow:auto;max-height:260px}
-    table{width:100%;border-collapse:collapse;font-size:11px}
-    thead{position:sticky;top:0;background:#f7fbff;z-index:1}
-    th{color:var(--muted);font-weight:900;padding:7px 8px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
-    td{padding:7px 8px;text-align:right;border-bottom:1px solid var(--line);color:var(--text);vertical-align:middle}
-    tr:last-child td{border-bottom:none}
-    .tr-click:hover td{background:#f8fbff;cursor:pointer}
-    .tr-sel td{background:#eaf5fd}
-    .mini-prog{height:3px;background:#e5eef5;border-radius:3px;margin-top:3px;width:44px}
-    .mini-prog-fill{height:100%;border-radius:3px}
-    .badge{display:inline-flex;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:900;white-space:nowrap}
-    .b-green{background:var(--green-soft);color:var(--green)}
-    .b-red{background:var(--red-soft);color:var(--red)}
-    .b-amber{background:var(--amber-soft);color:var(--amber)}
-    .b-blue{background:var(--blue-soft);color:var(--blue)}
-    .b-violet{background:var(--violet-soft);color:var(--violet)}
-    .b-muted{background:var(--panel-soft);color:var(--muted);border:1px solid var(--line)}
-    .b-primary{background:var(--primary-soft);color:var(--primary-dark)}
-    .det-panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px;font-size:11px;display:flex;flex-direction:column}
-    .det-hd{font-size:13px;font-weight:900;color:var(--text);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:8px}
-    .det-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--line)}
-    .det-row:last-of-type{border-bottom:none}
-    .det-k{color:var(--muted);font-weight:700}
-    .det-v{font-weight:900;color:var(--text)}
-    .det-prog{height:3px;background:#e5eef5;border-radius:3px;margin:2px 0 6px;overflow:hidden}
-    .det-prog-fill{height:100%;border-radius:3px}
-    .det-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 0;gap:8px;color:var(--muted);text-align:center;flex:1}
-    .det-empty-ic{font-size:28px}
-    .det-actions{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}
-    .det-btn{padding:6px;text-align:center;border-radius:9px;font-size:10px;font-weight:900;cursor:pointer;border:1px solid var(--line-dark);background:var(--panel-soft);color:var(--muted);transition:.15s}
-    .det-btn:hover{background:var(--panel)}
-    .det-btn.grn{background:var(--green-soft);color:var(--green);border-color:#b7e4cf}
-    .det-btn.red{background:var(--red-soft);color:var(--red);border-color:#f5c6c6}
-    .full-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:14px}
-    .full-tbl-wrap{overflow:auto}
-    .full-table{width:100%;border-collapse:collapse;font-size:12px}
-    .full-table thead{background:#f7fbff}
-    .full-table th{color:var(--muted);font-weight:900;padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
-    .full-table td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);color:var(--text);vertical-align:middle}
-    .full-table tr:last-child td{border-bottom:none}
-    .full-table tr:hover td{background:#f8fbff}
-    .action-btn{border:none;border-radius:7px;padding:4px 8px;cursor:pointer;font-size:10px;font-weight:900;white-space:nowrap}
-    .ab-green{background:var(--green-soft);color:var(--green)}
-    .ab-red{background:var(--red-soft);color:var(--red)}
-    .ab-blue{background:var(--blue-soft);color:var(--blue)}
-    .page-loader{display:none;position:fixed;inset:0;background:rgba(255,255,255,.88);z-index:200;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--primary)}
-    .page-loader.show{display:flex}
-    .chart-wrap{position:relative;width:100%;height:130px}
-    @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
-    @media(max-width:980px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.mid-row,.bot-row{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: "Tajawal", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    a { text-decoration: none; color: inherit; }
+    button, input, select, textarea { font-family: "Tajawal", sans-serif; }
+
+    /* ─── LAYOUT ─── */
+    .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      position: sticky; top: 0; height: 100vh;
+      display: flex; flex-direction: column;
+      overflow: hidden; z-index: 30;
+    }
+    .sb-header {
+      padding: 20px 16px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sb-logo {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+    }
+    .sb-logo-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), #46a8d8);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 17px; font-weight: 900; flex: 0 0 38px;
+    }
+    .sb-logo h1 { font-size: 15px; font-weight: 900; }
+    .sb-logo p { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .sb-admin-chip {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 10px; border-radius: 10px;
+      background: var(--red-soft); border: 1px solid #f5c6c6;
+    }
+    .sb-admin-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); flex: 0 0 7px; }
+    .sb-admin-chip span { font-size: 10px; color: var(--red); font-weight: 700; }
+    .sb-admin-chip strong { font-size: 12px; font-weight: 900; color: var(--red); }
+
+    .sb-nav { padding: 12px 8px; flex: 1; overflow-y: auto; }
+    .nav-section { font-size: 9px; color: var(--muted); padding: 10px 10px 4px; letter-spacing: .08em; font-weight: 800; text-transform: uppercase; }
+    .nav-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 9px 10px; border-radius: 10px;
+      font-size: 13px; color: var(--text2);
+      cursor: pointer; margin-bottom: 2px; transition: .15s;
+      position: relative;
+    }
+    .nav-item:hover { background: var(--surface2); color: var(--text); }
+    .nav-item.active { background: var(--primary-soft); color: var(--primary); font-weight: 800; }
+    .nav-icon { font-size: 15px; width: 20px; text-align: center; flex: 0 0 20px; }
+    .nav-badge {
+      margin-right: auto; background: var(--red); color: #fff;
+      font-size: 9px; padding: 2px 6px; border-radius: 999px; font-weight: 900;
+    }
+
+    /* إشعار الجرس */
+    .notif-btn {
+      position: relative; display: flex; align-items: center; gap: 9px;
+      padding: 9px 10px; border-radius: 10px;
+      font-size: 13px; color: var(--text2);
+      cursor: pointer; margin-bottom: 2px; transition: .15s;
+      border: none; background: none; width: 100%;
+    }
+    .notif-btn:hover { background: var(--surface2); color: var(--text); }
+    .notif-btn.active { background: var(--primary-soft); color: var(--primary); font-weight: 800; }
+    .notif-dot {
+      position: absolute; top: 6px; right: 10px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--red); border: 2px solid var(--surface);
+      display: none;
+    }
+    .notif-dot.show { display: block; }
+
+    .sb-footer {
+      border-top: 1px solid var(--border); padding: 10px 8px;
+    }
+    .logout-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 9px 10px; border-radius: 10px;
+      font-size: 13px; color: var(--red); cursor: pointer; transition: .15s;
+    }
+    .logout-item:hover { background: var(--red-soft); }
+
+    /* ─── MAIN ─── */
+    .main { display: flex; flex-direction: column; min-width: 0; }
+
+    /* TOPBAR */
+    .topbar {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 14px 24px; display: flex; align-items: center; gap: 12px;
+      position: sticky; top: 0; z-index: 20;
+    }
+    .tb-info { flex: 1; }
+    .tb-info h2 { font-size: 17px; font-weight: 900; }
+    .tb-info p { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .tb-actions { display: flex; gap: 8px; }
+    .tb-btn {
+      font-size: 12px; padding: 7px 13px;
+      border: 1px solid var(--border2); border-radius: 9px;
+      background: var(--surface); color: var(--text2);
+      cursor: pointer; transition: .15s;
+      display: inline-flex; align-items: center; gap: 5px; font-weight: 700;
+    }
+    .tb-btn:hover { background: var(--surface2); border-color: var(--primary); color: var(--primary); }
+
+    /* ALERT */
+    .alert-bar {
+      background: var(--amber-soft); border-bottom: 1px solid #f0d090;
+      padding: 8px 24px; font-size: 12px; color: var(--amber);
+      display: none; align-items: center; gap: 8px; font-weight: 700;
+    }
+    .alert-bar.show { display: flex; }
+
+    /* CONTENT */
+    .content { padding: 20px 24px; flex: 1; }
+    .page { display: none; }
+    .page.active { display: block; animation: fadeIn .2s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ─── KPI GRID ─── */
+    .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+    .kpi {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 16px;
+      box-shadow: var(--shadow-sm);
+      border-top: 3px solid transparent; transition: .2s;
+    }
+    .kpi:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+    .kpi.k-blue { border-top-color: var(--primary); }
+    .kpi.k-green { border-top-color: var(--green); }
+    .kpi.k-amber { border-top-color: var(--amber); }
+    .kpi.k-red { border-top-color: var(--red); }
+    .kpi.k-violet { border-top-color: var(--violet); }
+    .kpi-icon { font-size: 18px; margin-bottom: 8px; }
+    .kpi-label { font-size: 11px; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
+    .kpi-val { font-size: 26px; font-weight: 900; line-height: 1; }
+    .kpi-sub { font-size: 11px; font-weight: 700; margin-top: 4px; color: var(--muted); }
+
+    /* ─── GRID LAYOUTS ─── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .grid-3-1 { display: grid; grid-template-columns: 1fr 280px; gap: 16px; }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+    .card-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .card-title { font-size: 14px; font-weight: 900; }
+    .card-link { font-size: 11px; color: var(--primary); cursor: pointer; font-weight: 700; }
+    .card-link:hover { text-decoration: underline; }
+
+    /* BARS */
+    .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; font-size: 12px; }
+    .bar-lbl { width: 52px; text-align: right; color: var(--muted); font-weight: 700; }
+    .bar-track { flex: 1; height: 7px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; transition: width .5s ease; }
+    .bar-num { width: 22px; font-weight: 900; color: var(--text); text-align: left; }
+
+    /* CHART */
+    .chart-wrap { position: relative; height: 140px; }
+
+    /* NOTES MINI */
+    .note-mini { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+    .note-mini:last-child { border-bottom: none; padding-bottom: 0; }
+    .note-av { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; flex: 0 0 30px; }
+    .note-body { flex: 1; min-width: 0; }
+    .note-name { font-weight: 900; margin-bottom: 2px; }
+    .note-text { color: var(--muted); line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .note-date { font-size: 10px; color: var(--muted); white-space: nowrap; }
+
+    /* ─── TABLE ─── */
+    .tbl-filters { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+    .srch {
+      font-size: 12px; padding: 7px 12px;
+      border: 1px solid var(--border2); border-radius: 9px;
+      background: var(--surface2); color: var(--text); outline: none; flex: 1; min-width: 160px;
+    }
+    .srch:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(31,111,165,.06); }
+    .flt-sel {
+      font-size: 12px; padding: 7px 10px;
+      border: 1px solid var(--border2); border-radius: 9px;
+      background: var(--surface2); color: var(--text); outline: none; cursor: pointer;
+    }
+    .tbl-wrap { overflow: auto; border-radius: 10px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead { background: var(--surface2); }
+    th { color: var(--muted); font-weight: 800; padding: 9px 12px; text-align: right; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    td { padding: 9px 12px; text-align: right; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    .tr-click:hover td { background: var(--surface2); cursor: pointer; }
+    .tr-sel td { background: var(--primary-soft) !important; }
+
+    /* BADGES */
+    .badge { display: inline-flex; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 800; white-space: nowrap; }
+    .b-green { background: var(--green-soft); color: var(--green); }
+    .b-red { background: var(--red-soft); color: var(--red); }
+    .b-amber { background: var(--amber-soft); color: var(--amber); }
+    .b-blue { background: var(--blue-soft); color: var(--blue); }
+    .b-violet { background: var(--violet-soft); color: var(--violet); }
+    .b-muted { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+    .b-primary { background: var(--primary-soft); color: var(--primary); }
+
+    /* MINI PROGRESS */
+    .mini-prog { height: 4px; background: var(--border); border-radius: 3px; margin-top: 4px; width: 50px; }
+    .mini-prog-fill { height: 100%; border-radius: 3px; }
+
+    /* ─── DETAIL PANEL ─── */
+    .det-panel {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 18px;
+      box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .det-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; padding: 40px 20px; text-align: center; color: var(--muted); gap: 10px; }
+    .det-empty-ic { font-size: 36px; opacity: .4; }
+    .det-title { font-size: 14px; font-weight: 900; padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .det-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+    .det-row:last-of-type { border-bottom: none; }
+    .det-k { color: var(--muted); font-weight: 700; }
+    .det-v { font-weight: 900; }
+    .det-prog { height: 4px; background: var(--border); border-radius: 3px; margin: 6px 0 10px; overflow: hidden; }
+    .det-prog-fill { height: 100%; border-radius: 3px; }
+    .det-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+    .det-btn {
+      padding: 7px; text-align: center; border-radius: 9px;
+      font-size: 11px; font-weight: 900; cursor: pointer;
+      border: 1px solid var(--border); background: var(--surface2);
+      color: var(--text2); transition: .15s;
+    }
+    .det-btn:hover { background: var(--surface); }
+    .det-btn.grn { background: var(--green-soft); color: var(--green); border-color: #b7e4cf; }
+    .det-btn.red { background: var(--red-soft); color: var(--red); border-color: #f5c6c6; }
+
+    /* ─── FULL PAGE TABLES ─── */
+    .full-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 18px;
+      box-shadow: var(--shadow-sm); margin-bottom: 16px;
+    }
+    .full-tbl-wrap { overflow: auto; border-radius: 10px; border: 1px solid var(--border); }
+    .full-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .full-table thead { background: var(--surface2); }
+    .full-table th { color: var(--muted); font-weight: 800; padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    .full-table td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .full-table tr:last-child td { border-bottom: none; }
+    .full-table tr:hover td { background: var(--surface2); }
+    .action-btn { border: none; border-radius: 7px; padding: 4px 9px; cursor: pointer; font-size: 11px; font-weight: 800; white-space: nowrap; }
+    .ab-green { background: var(--green-soft); color: var(--green); }
+    .ab-red { background: var(--red-soft); color: var(--red); }
+    .ab-blue { background: var(--blue-soft); color: var(--blue); }
+
+    /* ─── NOTIFICATIONS PANEL ─── */
+    .notif-panel {
+      position: fixed; top: 0; left: 0; bottom: 0; width: 360px;
+      background: var(--surface); border-right: 1px solid var(--border);
+      box-shadow: var(--shadow-lg); z-index: 200;
+      display: flex; flex-direction: column;
+      transform: translateX(-100%); transition: transform .3s ease;
+    }
+    .notif-panel.open { transform: translateX(0); }
+    .notif-panel-hd {
+      padding: 18px 16px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .notif-panel-hd h3 { font-size: 15px; font-weight: 900; }
+    .notif-close { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--muted); padding: 4px; border-radius: 6px; }
+    .notif-close:hover { background: var(--surface2); }
+    .notif-list { flex: 1; overflow-y: auto; padding: 8px; }
+    .notif-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px; border-radius: 10px; margin-bottom: 4px;
+      background: var(--surface2); border: 1px solid var(--border);
+      cursor: pointer; transition: .15s;
+    }
+    .notif-item:hover { border-color: var(--primary-soft); }
+    .notif-item.unread { background: var(--primary-soft); border-color: #c3dff0; }
+    .notif-item-ic {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--green-soft); display: flex; align-items: center;
+      justify-content: center; font-size: 16px; flex: 0 0 36px;
+    }
+    .notif-item-body { flex: 1; min-width: 0; }
+    .notif-item-title { font-size: 12px; font-weight: 900; margin-bottom: 3px; }
+    .notif-item-sub { font-size: 11px; color: var(--muted); line-height: 1.5; }
+    .notif-item-time { font-size: 10px; color: var(--muted); margin-top: 4px; }
+    .notif-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; color: var(--muted); text-align: center; gap: 10px; }
+    .notif-empty-ic { font-size: 40px; opacity: .3; }
+    .notif-footer { padding: 12px 16px; border-top: 1px solid var(--border); }
+    .notif-mark-btn {
+      width: 100%; padding: 9px; border: none; border-radius: 9px;
+      background: var(--primary-soft); color: var(--primary);
+      font-family: "Tajawal", sans-serif; font-size: 12px; font-weight: 900;
+      cursor: pointer; transition: .15s;
+    }
+    .notif-mark-btn:hover { background: #d3e9f8; }
+    .notif-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.3); z-index: 199;
+    }
+    .notif-overlay.show { display: block; }
+
+    /* LOADER */
+    .page-loader {
+      display: none; position: fixed; inset: 0;
+      background: rgba(255,255,255,.88); z-index: 300;
+      align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: var(--primary);
+      flex-direction: column; gap: 12px;
+    }
+    .page-loader.show { display: flex; }
+    .spinner { width: 32px; height: 32px; border: 3px solid var(--primary-soft); border-top-color: var(--primary); border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* NOTES PAGE */
+    .note-card {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 16px; border-bottom: 1px solid var(--border);
+    }
+    .note-card:last-child { border-bottom: none; }
+    .note-card-av { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; flex: 0 0 38px; }
+    .note-card-body { flex: 1; }
+    .note-card-hd { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .note-card-name { font-size: 13px; font-weight: 900; }
+    .note-card-date { font-size: 11px; color: var(--muted); }
+    .note-card-group { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+    .note-card-text { font-size: 13px; color: var(--text); line-height: 1.75; }
+
+    @media(max-width:1200px) { .kpi-grid { grid-template-columns: repeat(3,1fr); } }
+    @media(max-width:980px) { .app { grid-template-columns: 1fr; } .sidebar { position: relative; height: auto; } .grid-2, .grid-3-1 { grid-template-columns: 1fr; } .kpi-grid { grid-template-columns: repeat(2,1fr); } }
   </style>
 </head>
 <body>
 
-<div class="page-loader" id="pageLoader">جاري تحميل لوحة الأدمن...</div>
+<div class="page-loader" id="pageLoader">
+  <div class="spinner"></div>
+  جاري تحميل لوحة الأدمن...
+</div>
+
+<!-- Notification Overlay -->
+<div class="notif-overlay" id="notifOverlay" onclick="closeNotifPanel()"></div>
+
+<!-- Notification Panel -->
+<div class="notif-panel" id="notifPanel">
+  <div class="notif-panel-hd">
+    <h3>🔔 الإشعارات</h3>
+    <button class="notif-close" onclick="closeNotifPanel()">✕</button>
+  </div>
+  <div class="notif-list" id="notifList">
+    <div class="notif-empty">
+      <div class="notif-empty-ic">🔔</div>
+      <div>لا توجد إشعارات</div>
+    </div>
+  </div>
+  <div class="notif-footer">
+    <button class="notif-mark-btn" onclick="markAllRead()">✓ تحديد الكل كمقروء</button>
+  </div>
+</div>
 
 <div class="app">
+  <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="sb-brand">
-      <div class="sb-icon">أ</div>
-      <div class="sb-brand-text"><h1>صندوق ساهل</h1><p>لوحة المشرف العام</p></div>
+    <div class="sb-header">
+      <div class="sb-logo">
+        <div class="sb-logo-icon">س</div>
+        <div>
+          <h1>صندوق ساهل</h1>
+          <p>لوحة المشرف العام</p>
+        </div>
+      </div>
+      <div class="sb-admin-chip">
+        <div class="sb-admin-dot"></div>
+        <div>
+          <span>المشرف العام</span>
+          <strong id="adminName">...</strong>
+        </div>
+      </div>
     </div>
-    <div class="sb-admin">
-      <span>المشرف العام</span>
-      <strong id="adminName">...</strong>
-    </div>
+
     <div class="sb-nav">
       <div class="nav-section">الرئيسية</div>
-      <div class="nav-item active" data-page="overview-page"><span class="ni">📊</span> نظرة عامة</div>
+      <div class="nav-item active" data-page="overview-page">
+        <span class="nav-icon">📊</span> نظرة عامة
+      </div>
+
       <div class="nav-section">الإدارة</div>
-      <div class="nav-item" data-page="groups-page"><span class="ni">🏛️</span> الجمعيات والمدراء</div>
-      <div class="nav-item" data-page="payments-page"><span class="ni">💳</span> الدفعات</div>
-      <div class="nav-item" data-page="requests-page"><span class="ni">📨</span> طلبات الانضمام<span class="nav-badge" id="reqNavBadge" style="display:none">0</span></div>
+      <div class="nav-item" data-page="groups-page">
+        <span class="nav-icon">🏛️</span> الجمعيات والمدراء
+      </div>
+      <div class="nav-item" data-page="payments-page">
+        <span class="nav-icon">💳</span> الدفعات
+      </div>
+      <div class="nav-item" data-page="requests-page">
+        <span class="nav-icon">📨</span> طلبات الانضمام
+        <span class="nav-badge" id="reqNavBadge" style="display:none">0</span>
+      </div>
+
       <div class="nav-section">المالية</div>
-      <div class="nav-item" data-page="subscriptions-page"><span class="ni">📦</span> الاشتراكات</div>
-      <div class="nav-item" data-page="notes-page"><span class="ni">📝</span> ملاحظات المدراء</div>
+      <div class="nav-item" data-page="subscriptions-page">
+        <span class="nav-icon">📦</span> الاشتراكات
+      </div>
+      <div class="nav-item" data-page="notes-page">
+        <span class="nav-icon">📝</span> ملاحظات المدراء
+      </div>
+
+      <div class="nav-section">الإشعارات</div>
+      <button class="notif-btn" id="notifNavBtn" onclick="openNotifPanel()">
+        <span class="nav-icon">🔔</span> الإشعارات
+        <span class="nav-badge" id="notifNavBadge" style="display:none">0</span>
+        <div class="notif-dot" id="notifDot"></div>
+      </button>
     </div>
+
     <div class="sb-footer">
-      <div class="logout-nav" onclick="doLogout()">🚪 تسجيل الخروج</div>
+      <div class="logout-item" onclick="doLogout()">
+        <span class="nav-icon">🚪</span> تسجيل الخروج
+      </div>
     </div>
   </aside>
 
+  <!-- MAIN -->
   <main class="main">
     <div class="topbar">
       <div class="tb-info">
         <h2 id="pageTitle">نظرة عامة على المنصة</h2>
         <p id="pageSubtitle">إحصائيات شاملة لكامل المنصة</p>
       </div>
-      <button class="tb-btn" onclick="reloadCurrentPage()">🔄 تحديث</button>
-      <button class="tb-btn" onclick="exportData()">📤 تصدير CSV</button>
+      <div class="tb-actions">
+        <button class="tb-btn" onclick="reloadCurrentPage()">🔄 تحديث</button>
+        <button class="tb-btn" onclick="exportData()">📤 تصدير CSV</button>
+      </div>
     </div>
 
-    <div class="alert-bar" id="alertBar" style="display:none">
-      <div class="al-dot"></div>
-      <span id="alertText"></span>
+    <div class="alert-bar" id="alertBar">
+      ⚠️ <span id="alertText"></span>
     </div>
 
-    <div class="scr">
+    <div class="content">
 
-      <!-- نظرة عامة -->
+      <!-- ── نظرة عامة ── -->
       <section class="page active" id="overview-page">
+
         <div class="kpi-grid">
-          <div class="kpi active-kpi">
+          <div class="kpi k-blue">
+            <div class="kpi-icon">🏛️</div>
             <div class="kpi-label">إجمالي الجمعيات</div>
             <div class="kpi-val" id="statGroups">—</div>
-            <div class="kpi-sub" id="statGroupsSub" style="color:var(--green)">جاري التحميل...</div>
+            <div class="kpi-sub" id="statGroupsSub">جاري التحميل...</div>
           </div>
-          <div class="kpi">
+          <div class="kpi k-green">
+            <div class="kpi-icon">👤</div>
             <div class="kpi-label">المدراء المسجّلون</div>
             <div class="kpi-val" id="statManagers">—</div>
-            <div class="kpi-sub" style="color:var(--muted)">حسابات نشطة</div>
+            <div class="kpi-sub">حسابات نشطة</div>
           </div>
-          <div class="kpi">
+          <div class="kpi k-violet">
+            <div class="kpi-icon">👥</div>
             <div class="kpi-label">إجمالي الأعضاء</div>
             <div class="kpi-val" id="statMembers">—</div>
-            <div class="kpi-sub" style="color:var(--muted)">في كل الجمعيات</div>
+            <div class="kpi-sub">في كل الجمعيات</div>
           </div>
-          <div class="kpi">
+          <div class="kpi k-amber">
+            <div class="kpi-icon">💰</div>
             <div class="kpi-label">إيرادات الاشتراكات</div>
             <div class="kpi-val" id="statRevenue">—</div>
-            <div class="kpi-sub" style="color:var(--green)" id="statRevSub">درهم إجمالي</div>
+            <div class="kpi-sub" id="statRevSub">درهم إجمالي</div>
           </div>
-          <div class="kpi">
+          <div class="kpi k-red">
+            <div class="kpi-icon">⚠️</div>
             <div class="kpi-label">دفعات متأخرة</div>
             <div class="kpi-val" id="statLate" style="color:var(--red)">—</div>
             <div class="kpi-sub" style="color:var(--red)">تحتاج متابعة</div>
           </div>
         </div>
 
-        <div class="mid-row">
+        <div class="grid-2">
           <div class="card">
-            <div class="card-hd"><div class="card-title">حالة الجمعيات</div><span class="card-link" onclick="switchPage('groups-page')">عرض الكل ←</span></div>
-            <div id="groupBars"><div style="color:var(--muted);font-size:12px">جاري التحميل...</div></div>
-            <hr class="divider">
-            <div class="card-hd"><div class="card-title">توزيع الباقات</div><span class="card-link" onclick="switchPage('subscriptions-page')">تفاصيل ←</span></div>
-            <div id="planBars"><div style="color:var(--muted);font-size:12px">جاري التحميل...</div></div>
+            <div class="card-hd">
+              <div class="card-title">حالة الجمعيات</div>
+              <span class="card-link" onclick="switchPage('groups-page')">عرض الكل ←</span>
+            </div>
+            <div id="groupBars"></div>
+            <div style="border-top:1px solid var(--border);margin:14px 0"></div>
+            <div class="card-hd" style="margin-bottom:10px">
+              <div class="card-title">توزيع الباقات</div>
+              <span class="card-link" onclick="switchPage('subscriptions-page')">تفاصيل ←</span>
+            </div>
+            <div id="planBars"></div>
           </div>
+
           <div class="card">
-            <div class="card-hd"><div class="card-title">الإيرادات</div><span class="card-link">آخر 4 أشهر</span></div>
-            <div class="chart-wrap"><canvas id="revChart" role="img" aria-label="رسم بياني للإيرادات">إيرادات الاشتراكات</canvas></div>
-            <hr class="divider">
-            <div class="card-hd"><div class="card-title">آخر ملاحظات المدراء</div><span class="card-link" onclick="switchPage('notes-page')">الكل ←</span></div>
-            <div id="miniNotes"><div style="color:var(--muted);font-size:12px">جاري التحميل...</div></div>
+            <div class="card-hd">
+              <div class="card-title">الإيرادات</div>
+              <span style="font-size:11px;color:var(--muted)">آخر 4 أشهر</span>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="revChart"></canvas>
+            </div>
+            <div style="border-top:1px solid var(--border);margin:14px 0"></div>
+            <div class="card-hd" style="margin-bottom:10px">
+              <div class="card-title">آخر ملاحظات المدراء</div>
+              <span class="card-link" onclick="switchPage('notes-page')">الكل ←</span>
+            </div>
+            <div id="miniNotes"></div>
           </div>
         </div>
 
-        <div class="bot-row">
-          <div class="tbl-card">
+        <div class="grid-3-1">
+          <div class="card">
             <div class="card-hd">
-              <div class="card-title">الجمعيات والمدراء <span style="font-size:10px;font-weight:400;color:var(--muted)">— اضغط لعرض التفاصيل</span></div>
+              <div>
+                <div class="card-title">الجمعيات والمدراء</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:2px">اضغط على أي جمعية لعرض تفاصيلها</div>
+              </div>
               <span class="card-link" onclick="switchPage('groups-page')">عرض الكل ←</span>
             </div>
             <div class="tbl-filters">
@@ -259,89 +573,189 @@
             </div>
             <div class="tbl-wrap">
               <table>
-                <thead><tr><th>الجمعية</th><th>المدير</th><th>الباقة</th><th>الأعضاء</th><th>الأيام المتبقية</th><th>الحالة</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>الجمعية</th>
+                    <th>المدير</th>
+                    <th>الباقة</th>
+                    <th>الأعضاء</th>
+                    <th>الأيام المتبقية</th>
+                    <th>الحالة</th>
+                  </tr>
+                </thead>
                 <tbody id="ovTbody"></tbody>
               </table>
             </div>
           </div>
+
           <div class="det-panel" id="detPanel">
-            <div class="det-empty"><div class="det-empty-ic">🏛️</div><div>اضغط على أي جمعية<br>لعرض تفاصيلها</div></div>
+            <div class="det-empty">
+              <div class="det-empty-ic">🏛️</div>
+              <div style="font-size:13px;font-weight:700">اضغط على أي جمعية<br>لعرض تفاصيلها الكاملة</div>
+            </div>
           </div>
         </div>
+
       </section>
 
-      <!-- الجمعيات -->
+      <!-- ── الجمعيات ── -->
       <section class="page" id="groups-page">
         <div class="full-card">
-          <div class="card-hd"><div><div class="card-title">الجمعيات والمدراء</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="groupsCount">جاري التحميل...</div></div></div>
+          <div class="card-hd">
+            <div>
+              <div class="card-title">الجمعيات والمدراء</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px" id="groupsCount">جاري التحميل...</div>
+            </div>
+          </div>
           <div class="tbl-filters">
-            <input class="srch" id="grpSearch" placeholder="بحث باسم الجمعية أو المدير..." oninput="loadGroups()" style="flex:1">
-            <select class="flt-sel" id="grpStatus" onchange="loadGroups()"><option value="">كل الحالات</option><option value="active">نشطة</option><option value="completed">مكتملة</option><option value="stopped">متوقفة</option><option value="renewed">مجددة</option></select>
-            <select class="flt-sel" id="grpPlan" onchange="loadGroups()"><option value="">كل الباقات</option><option value="free">Free</option><option value="basic">Basic</option><option value="pro">Pro</option><option value="business">Business</option></select>
+            <input class="srch" id="grpSearch" placeholder="بحث باسم الجمعية أو المدير..." oninput="loadGroups()">
+            <select class="flt-sel" id="grpStatus" onchange="loadGroups()">
+              <option value="">كل الحالات</option>
+              <option value="active">نشطة</option>
+              <option value="completed">مكتملة</option>
+              <option value="stopped">متوقفة</option>
+              <option value="renewed">مجددة</option>
+            </select>
+            <select class="flt-sel" id="grpPlan" onchange="loadGroups()">
+              <option value="">كل الباقات</option>
+              <option value="free">Free</option>
+              <option value="basic">Basic</option>
+              <option value="pro">Pro</option>
+              <option value="business">Business</option>
+            </select>
           </div>
           <div class="full-tbl-wrap">
             <table class="full-table">
-              <thead><tr><th>الجمعية</th><th>المدير</th><th>الباقة</th><th>الأعضاء</th><th>المبلغ الشهري</th><th>انتهاء الاشتراك</th><th>الأيام المتبقية</th><th>الحالة</th><th>إجراء</th></tr></thead>
-              <tbody id="grpTbody"><tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted)">جاري التحميل...</td></tr></tbody>
+              <thead>
+                <tr>
+                  <th>الجمعية</th>
+                  <th>المدير</th>
+                  <th>البريد</th>
+                  <th>الباقة</th>
+                  <th>الأعضاء</th>
+                  <th>المبلغ الشهري</th>
+                  <th>انتهاء الاشتراك</th>
+                  <th>الأيام المتبقية</th>
+                  <th>الحالة</th>
+                  <th>إجراء</th>
+                </tr>
+              </thead>
+              <tbody id="grpTbody">
+                <tr><td colspan="10" style="text-align:center;padding:24px;color:var(--muted)">جاري التحميل...</td></tr>
+              </tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- الدفعات -->
+      <!-- ── الدفعات ── -->
       <section class="page" id="payments-page">
         <div class="full-card">
-          <div class="card-hd"><div><div class="card-title">كل الدفعات</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="paymentsCount">جاري التحميل...</div></div></div>
+          <div class="card-hd">
+            <div>
+              <div class="card-title">كل الدفعات</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px" id="paymentsCount">جاري التحميل...</div>
+            </div>
+          </div>
           <div class="tbl-filters">
-            <select class="flt-sel" id="payStatus" onchange="loadPayments()"><option value="">كل الحالات</option><option value="paid">مدفوع</option><option value="pending">معلق</option><option value="late">متأخر</option></select>
+            <select class="flt-sel" id="payStatus" onchange="loadPayments()">
+              <option value="">كل الحالات</option>
+              <option value="paid">مدفوع</option>
+              <option value="pending">معلق</option>
+              <option value="late">متأخر</option>
+            </select>
           </div>
           <div class="full-tbl-wrap">
             <table class="full-table">
-              <thead><tr><th>العضو</th><th>الجمعية</th><th>المبلغ</th><th>الشهر</th><th>السنة</th><th>الحالة</th><th>الإيصال</th></tr></thead>
-              <tbody id="payTbody"><tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">جاري التحميل...</td></tr></tbody>
+              <thead>
+                <tr><th>العضو</th><th>الجمعية</th><th>المبلغ</th><th>الشهر</th><th>السنة</th><th>الحالة</th><th>الإيصال</th></tr>
+              </thead>
+              <tbody id="payTbody">
+                <tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted)">جاري التحميل...</td></tr>
+              </tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- طلبات الانضمام -->
+      <!-- ── طلبات الانضمام ── -->
       <section class="page" id="requests-page">
         <div class="full-card">
-          <div class="card-hd"><div><div class="card-title">طلبات الانضمام</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="requestsCount">جاري التحميل...</div></div></div>
+          <div class="card-hd">
+            <div>
+              <div class="card-title">طلبات الانضمام</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px" id="requestsCount">جاري التحميل...</div>
+            </div>
+          </div>
           <div class="tbl-filters">
-            <select class="flt-sel" id="reqStatus" onchange="loadRequests()"><option value="pending">معلقة</option><option value="">الكل</option><option value="approved">مقبولة</option><option value="rejected">مرفوضة</option></select>
+            <select class="flt-sel" id="reqStatus" onchange="loadRequests()">
+              <option value="pending">معلقة</option>
+              <option value="">الكل</option>
+              <option value="approved">مقبولة</option>
+              <option value="rejected">مرفوضة</option>
+            </select>
           </div>
           <div class="full-tbl-wrap">
             <table class="full-table">
-              <thead><tr><th>الاسم</th><th>الهاتف</th><th>الجمعية</th><th>المدير</th><th>الشهر المطلوب</th><th>السنة</th><th>التاريخ</th><th>الحالة</th></tr></thead>
-              <tbody id="reqTbody"><tr><td colspan="8" style="text-align:center;padding:20px;color:var(--muted)">جاري التحميل...</td></tr></tbody>
+              <thead>
+                <tr><th>الاسم</th><th>الهاتف</th><th>الجمعية</th><th>المدير</th><th>الشهر المطلوب</th><th>السنة</th><th>التاريخ</th><th>الحالة</th></tr>
+              </thead>
+              <tbody id="reqTbody">
+                <tr><td colspan="8" style="text-align:center;padding:24px;color:var(--muted)">جاري التحميل...</td></tr>
+              </tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- الاشتراكات -->
+      <!-- ── الاشتراكات ── -->
       <section class="page" id="subscriptions-page">
         <div class="full-card">
-          <div class="card-hd"><div><div class="card-title">كل الاشتراكات</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="subsCount">جاري التحميل...</div></div></div>
+          <div class="card-hd">
+            <div>
+              <div class="card-title">كل الاشتراكات</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px" id="subsCount">جاري التحميل...</div>
+            </div>
+          </div>
           <div class="tbl-filters">
-            <select class="flt-sel" id="subsPlan" onchange="loadSubscriptions()"><option value="">كل الباقات</option><option value="Free">Free</option><option value="Basic">Basic</option><option value="basic">basic</option><option value="Pro">Pro</option><option value="Business">Business</option></select>
-            <select class="flt-sel" id="subsStatus" onchange="loadSubscriptions()"><option value="">كل الحالات</option><option value="active">نشط</option><option value="inactive">منتهي</option></select>
+            <select class="flt-sel" id="subsPlan" onchange="loadSubscriptions()">
+              <option value="">كل الباقات</option>
+              <option value="basic">Basic</option>
+              <option value="pro">Pro</option>
+              <option value="business">Business</option>
+            </select>
+            <select class="flt-sel" id="subsStatus" onchange="loadSubscriptions()">
+              <option value="">كل الحالات</option>
+              <option value="active">نشط</option>
+              <option value="inactive">منتهي</option>
+            </select>
           </div>
           <div class="full-tbl-wrap">
             <table class="full-table">
-              <thead><tr><th>المدير</th><th>الباقة</th><th>المبلغ المدفوع</th><th>الحالة</th><th>تاريخ الاشتراك</th><th>تاريخ الانتهاء</th><th>الأيام المتبقية</th></tr></thead>
-              <tbody id="subsTbody"><tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">جاري التحميل...</td></tr></tbody>
+              <thead>
+                <tr><th>المدير</th><th>الباقة</th><th>المبلغ المدفوع</th><th>الحالة</th><th>تاريخ الاشتراك</th><th>تاريخ الانتهاء</th><th>الأيام المتبقية</th></tr>
+              </thead>
+              <tbody id="subsTbody">
+                <tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted)">جاري التحميل...</td></tr>
+              </tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- الملاحظات -->
+      <!-- ── ملاحظات المدراء ── -->
       <section class="page" id="notes-page">
         <div class="full-card">
-          <div class="card-hd"><div><div class="card-title">ملاحظات المدراء</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="notesCount">جاري التحميل...</div></div><button class="tb-btn" onclick="loadNotes()">🔄 تحديث</button></div>
-          <div id="notesList"><div style="text-align:center;padding:20px;color:var(--muted)">جاري التحميل...</div></div>
+          <div class="card-hd">
+            <div>
+              <div class="card-title">ملاحظات المدراء</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px" id="notesCount">جاري التحميل...</div>
+            </div>
+            <button class="tb-btn" onclick="loadNotes()">🔄 تحديث</button>
+          </div>
+          <div id="notesList">
+            <div style="text-align:center;padding:24px;color:var(--muted)">جاري التحميل...</div>
+          </div>
         </div>
       </section>
 
@@ -351,130 +765,327 @@
 
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-const SUPABASE_URL='https://qxyrpnexybxmfmtrnzpg.supabase.co'
-const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
-const sb=createClient(SUPABASE_URL,SUPABASE_ANON_KEY)
-const MONTHS=['','يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
-const loader=document.getElementById('pageLoader')
-let currentPage='overview-page',allGroupsData=[],selIdx=-1,revChart=null
+const SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+const MONTHS = ['','يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
+const loader = document.getElementById('pageLoader')
+let currentPage = 'overview-page', allGroupsData = [], selIdx = -1, revChart = null
+let notifications = [], unreadCount = 0
 
-async function init(){
-  loader.classList.add('show')
-  try{
-    const{data:{session}}=await sb.auth.getSession()
-    if(!session){window.location.href='login.html';return}
-    const{data:profile}=await sb.from('profiles').select('*').eq('id',session.user.id).single()
-    if(!profile||profile.role!=='admin'){window.location.href='dashboard.html';return}
-    document.getElementById('adminName').textContent=profile.full_name||'—'
-    await loadOverview()
-  }catch(e){console.error(e);window.location.href='login.html'}
-  finally{loader.classList.remove('show')}
+// ─── NOTIFICATIONS ───
+function loadNotificationsFromStorage() {
+  try {
+    const stored = localStorage.getItem('saahl_admin_notifs')
+    notifications = stored ? JSON.parse(stored) : []
+  } catch { notifications = [] }
+  updateNotifUI()
 }
 
-async function loadOverview(){
-  const[
-    {data:groups},
-    {count:managers},
-    {count:members},
-    {data:subs},
-    {count:late},
-    {data:reqs},
-    {data:notes},
-  ]=await Promise.all([
-    sb.from('groups').select('id,status,manager_id,name,monthly_amount,max_members,start_month,start_year'),
-    sb.from('profiles').select('*',{count:'exact',head:true}).eq('role','manager'),
-    sb.from('members').select('*',{count:'exact',head:true}),
-    sb.from('subscriptions').select('manager_id,plan_name,status,expires_at,amount').eq('status','active'),
-    sb.from('payments').select('*',{count:'exact',head:true}).eq('status','late'),
-    sb.from('join_requests').select('*, groups(name,profiles(full_name))').eq('status','pending').order('created_at',{ascending:false}).limit(5),
-    sb.from('manager_notes').select('*, profiles(full_name,email)').order('created_at',{ascending:false}).limit(4),
-  ])
-
-  const total=groups?.length||0,active=groups?.filter(g=>g.status==='active').length||0
-  const done=groups?.filter(g=>g.status==='completed').length||0,stopped=groups?.filter(g=>g.status==='stopped').length||0
-  document.getElementById('statGroups').textContent=total
-  document.getElementById('statGroupsSub').textContent=`${active} نشطة / ${done} مكتملة / ${stopped} متوقفة`
-  document.getElementById('statManagers').textContent=managers||0
-  document.getElementById('statMembers').textContent=members||0
-  const revenue=subs?.reduce((s,x)=>s+(parseFloat(x.amount)||0),0)||0
-  document.getElementById('statRevenue').textContent=Math.round(revenue)+' د'
-  document.getElementById('statRevSub').textContent=`من ${subs?.length||0} اشتراك نشط`
-  document.getElementById('statLate').textContent=late||0
-
-  const expiring=subs?.filter(s=>{if(!s.expires_at)return false;const d=Math.ceil((new Date(s.expires_at)-new Date())/(1000*60*60*24));return d<=30&&d>0}).length||0
-  if(expiring>0){document.getElementById('alertBar').style.display='flex';document.getElementById('alertText').textContent=`${expiring} اشتراك ينتهي خلال 30 يوماً — راجع قسم الاشتراكات للمتابعة`}
-  const pending=reqs?.length||0
-  if(pending>0){const b=document.getElementById('reqNavBadge');b.textContent=pending;b.style.display='inline-flex'}
-
-  document.getElementById('groupBars').innerHTML=[
-    {label:'نشطة',count:active,pct:total?Math.round(active/total*100):0,color:'#138a59'},
-    {label:'مكتملة',count:done,pct:total?Math.round(done/total*100):0,color:'#2563eb'},
-    {label:'متوقفة',count:stopped,pct:total?Math.round(stopped/total*100):0,color:'#c53b3b'},
-  ].map(b=>`<div class="bar-row"><div class="bar-lbl">${b.label}</div><div class="bar-track"><div class="bar-fill" style="width:${b.pct}%;background:${b.color}"></div></div><div class="bar-num">${b.count}</div></div>`).join('')
-
-  const planCounts={Free:0,Basic:0,Pro:0,Business:0}
-  subs?.forEach(s=>{const k=s.plan_name?.charAt(0).toUpperCase()+s.plan_name?.slice(1).toLowerCase();if(planCounts[k]!==undefined)planCounts[k]++;else if(planCounts[s.plan_name]!==undefined)planCounts[s.plan_name]++})
-  const ts=subs?.length||0
-  const planColors={Free:'#2563eb',Basic:'#138a59',Pro:'#7c3aed',Business:'#b7791f'}
-  document.getElementById('planBars').innerHTML=Object.entries(planCounts).map(([n,c])=>`<div class="bar-row"><div class="bar-lbl">${n}</div><div class="bar-track"><div class="bar-fill" style="width:${ts?Math.round(c/ts*100):0}%;background:${planColors[n]}"></div></div><div class="bar-num">${c}</div></div>`).join('')
-
-  if(revChart)revChart.destroy()
-  revChart=new Chart(document.getElementById('revChart'),{
-    type:'line',
-    data:{labels:['يناير','فبراير','مارس','أبريل'],datasets:[{label:'الإيرادات',data:[0,Math.round(revenue*.1),Math.round(revenue*.4),Math.round(revenue)],borderColor:'#1f6fa5',backgroundColor:'rgba(31,111,165,0.08)',borderWidth:2,pointRadius:3,pointBackgroundColor:'#1f6fa5',fill:true,tension:.4}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10},color:'#6e8498'},grid:{display:false}},y:{ticks:{font:{size:10},color:'#6e8498'},grid:{color:'rgba(0,0,0,0.04)'}}}}
-  })
-
-  const ac=['#eaf5fd','#e8f8f1','#fff5e4','#f3edff','#fdeeee'],tc=['#185781','#138a59','#b7791f','#7c3aed','#c53b3b']
-  document.getElementById('miniNotes').innerHTML=!notes?.length?'<div style="color:var(--muted);font-size:12px">لا توجد ملاحظات</div>':notes.map((n,i)=>`<div class="note-mini"><div class="note-avatar" style="background:${ac[i%5]};color:${tc[i%5]}">${(n.profiles?.full_name||'؟')[0]}</div><div class="note-body"><div class="note-name">${n.profiles?.full_name||'—'}</div><div class="note-text">${(n.note||'').substring(0,60)}${(n.note||'').length>60?'...':''}</div></div><div class="note-date">${new Date(n.created_at).toLocaleDateString('ar')}</div></div>`).join('')
-
-  const managerIds=[...new Set(groups?.map(g=>g.manager_id)||[])]
-  let subsMap={}
-  if(managerIds.length){const{data:subsAll}=await sb.from('subscriptions').select('manager_id,plan_name,expires_at,amount').eq('status','active').in('manager_id',managerIds);subsAll?.forEach(s=>{subsMap[s.manager_id]=s})}
-  const gids=groups?.map(g=>g.id)||[]
-  let mcMap={}
-  if(gids.length){const{data:mems}=await sb.from('members').select('group_id').in('group_id',gids).eq('status','active');mems?.forEach(m=>{mcMap[m.group_id]=(mcMap[m.group_id]||0)+1})}
-  const{data:profiles}=await sb.from('profiles').select('id,full_name,email').eq('role','manager')
-  const profMap={}
-  profiles?.forEach(p=>{profMap[p.id]=p})
-  allGroupsData=(groups||[]).map(g=>({...g,sub:subsMap[g.manager_id]||null,memberCount:mcMap[g.id]||0,managerName:profMap[g.manager_id]?.full_name||'—',managerEmail:profMap[g.manager_id]?.email||'—'}))
-  renderOvTable(allGroupsData)
+function saveNotifications() {
+  try { localStorage.setItem('saahl_admin_notifs', JSON.stringify(notifications)) } catch {}
 }
 
-function renderOvTable(data){
-  selIdx=-1
-  document.getElementById('detPanel').innerHTML=`<div class="det-empty"><div class="det-empty-ic">🏛️</div><div>اضغط على أي جمعية<br>لعرض تفاصيلها الكاملة</div></div>`
-  if(!data.length){document.getElementById('ovTbody').innerHTML='<tr><td colspan="6" style="text-align:center;padding:16px;color:var(--muted)">لا توجد نتائج</td></tr>';return}
-  document.getElementById('ovTbody').innerHTML=data.map((g,i)=>{
-    const pct=Math.round(g.memberCount/(g.max_members||4)*100)
-    const days=g.sub?.expires_at?Math.ceil((new Date(g.sub.expires_at)-new Date())/(1000*60*60*24)):null
-    const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
-    const plan=g.sub?.plan_name||'Free'
-    return `<tr class="tr-click${i===selIdx?' tr-sel':''}" onclick="ovSel(${i})"><td><strong>${g.name}</strong></td><td>${g.managerName}</td><td><span class="badge ${planBadge(plan)}">${plan}</span></td><td><div>${g.memberCount}/${g.max_members||4}</div><div class="mini-prog"><div class="mini-prog-fill" style="width:${pct}%;background:${pct>=100?'var(--red)':pct>=75?'var(--amber)':'var(--green)'}"></div></div></td><td style="color:${dc};font-weight:900">${days!==null?days+' يوم':'—'}</td><td><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></td></tr>`
+function addNotification(icon, title, sub) {
+  const notif = {
+    id: Date.now() + Math.random(),
+    icon, title, sub,
+    time: new Date().toISOString(),
+    read: false
+  }
+  notifications.unshift(notif)
+  if (notifications.length > 50) notifications = notifications.slice(0, 50)
+  saveNotifications()
+  updateNotifUI()
+}
+
+function updateNotifUI() {
+  unreadCount = notifications.filter(n => !n.read).length
+  const badge = document.getElementById('notifNavBadge')
+  const dot = document.getElementById('notifDot')
+  if (unreadCount > 0) {
+    badge.textContent = unreadCount
+    badge.style.display = 'inline-flex'
+    dot.classList.add('show')
+  } else {
+    badge.style.display = 'none'
+    dot.classList.remove('show')
+  }
+  renderNotifList()
+}
+
+function renderNotifList() {
+  const el = document.getElementById('notifList')
+  if (!notifications.length) {
+    el.innerHTML = `<div class="notif-empty"><div class="notif-empty-ic">🔔</div><div>لا توجد إشعارات</div></div>`
+    return
+  }
+  el.innerHTML = notifications.map(n => {
+    const timeAgo = getTimeAgo(new Date(n.time))
+    return `<div class="notif-item ${n.read ? '' : 'unread'}" onclick="markRead('${n.id}')">
+      <div class="notif-item-ic">${n.icon}</div>
+      <div class="notif-item-body">
+        <div class="notif-item-title">${n.title}</div>
+        <div class="notif-item-sub">${n.sub}</div>
+        <div class="notif-item-time">${timeAgo}</div>
+      </div>
+    </div>`
   }).join('')
 }
 
-window.ovSel=function(i){
-  selIdx=i
-  const filtered=getOvFiltered()
-  document.querySelectorAll('#ovTbody tr').forEach((r,j)=>r.classList.toggle('tr-sel',j===i))
-  const g=filtered[i];if(!g)return
-  const pct=Math.round(g.memberCount/(g.max_members||4)*100)
-  const days=g.sub?.expires_at?Math.ceil((new Date(g.sub.expires_at)-new Date())/(1000*60*60*24)):null
-  const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
-  const pc=pct>=100?'var(--red)':pct>=75?'var(--amber)':'var(--green)'
-  const plan=g.sub?.plan_name||'Free'
-  document.getElementById('detPanel').innerHTML=`
-    <div class="det-hd">🏛️ ${g.name}</div>
+function getTimeAgo(date) {
+  const diff = Math.floor((Date.now() - date) / 1000)
+  if (diff < 60) return 'الآن'
+  if (diff < 3600) return `منذ ${Math.floor(diff/60)} دقيقة`
+  if (diff < 86400) return `منذ ${Math.floor(diff/3600)} ساعة`
+  return date.toLocaleDateString('ar-AE')
+}
+
+window.markRead = function(id) {
+  const n = notifications.find(x => String(x.id) === String(id))
+  if (n) { n.read = true; saveNotifications(); updateNotifUI() }
+}
+
+window.markAllRead = function() {
+  notifications.forEach(n => n.read = true)
+  saveNotifications(); updateNotifUI()
+}
+
+window.openNotifPanel = function() {
+  document.getElementById('notifPanel').classList.add('open')
+  document.getElementById('notifOverlay').classList.add('show')
+}
+
+window.closeNotifPanel = function() {
+  document.getElementById('notifPanel').classList.remove('open')
+  document.getElementById('notifOverlay').classList.remove('show')
+}
+
+// مراقبة إنشاء جمعيات جديدة عبر Realtime
+function watchNewGroups() {
+  sb.channel('admin-groups-watch')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'groups' }, async (payload) => {
+      const g = payload.new
+      // جلب اسم المدير
+      let managerName = '—'
+      if (g.manager_id) {
+        const { data: prof } = await sb.from('profiles').select('full_name').eq('id', g.manager_id).single()
+        managerName = prof?.full_name || '—'
+      }
+      addNotification('🏛️', `جمعية جديدة: ${g.name}`, `المدير: ${managerName} · المبلغ: ${g.monthly_amount} درهم`)
+      // تحديث البيانات
+      loadOverview()
+    })
+    .subscribe()
+}
+
+// ─── INIT ───
+async function init() {
+  loader.classList.add('show')
+  loadNotificationsFromStorage()
+  try {
+    const { data: { session } } = await sb.auth.getSession()
+    if (!session) { window.location.href = 'login.html'; return }
+    const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single()
+    if (!profile || profile.role !== 'admin') { window.location.href = 'dashboard.html'; return }
+    document.getElementById('adminName').textContent = profile.full_name || '—'
+    await loadOverview()
+    watchNewGroups()
+  } catch (e) { console.error(e); window.location.href = 'login.html' }
+  finally { loader.classList.remove('show') }
+}
+
+async function loadOverview() {
+  const [
+    { data: groups },
+    { count: managers },
+    { count: members },
+    { data: subs },
+    { count: late },
+    { data: reqs },
+    { data: notes },
+  ] = await Promise.all([
+    sb.from('groups').select('id,status,manager_id,name,monthly_amount,max_members,start_month,start_year'),
+    sb.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'manager'),
+    sb.from('members').select('*', { count: 'exact', head: true }),
+    sb.from('subscriptions').select('manager_id,plan_name,status,expires_at,amount').eq('status', 'active'),
+    sb.from('payments').select('*', { count: 'exact', head: true }).eq('status', 'late'),
+    sb.from('join_requests').select('*, groups(name,profiles(full_name))').eq('status', 'pending').order('created_at', { ascending: false }).limit(5),
+    sb.from('manager_notes').select('*, profiles(full_name,email)').order('created_at', { ascending: false }).limit(4),
+  ])
+
+  const total = groups?.length || 0
+  const active = groups?.filter(g => g.status === 'active').length || 0
+  const done = groups?.filter(g => g.status === 'completed').length || 0
+  const stopped = groups?.filter(g => g.status === 'stopped').length || 0
+
+  document.getElementById('statGroups').textContent = total
+  document.getElementById('statGroupsSub').textContent = `${active} نشطة · ${done} مكتملة · ${stopped} متوقفة`
+  document.getElementById('statManagers').textContent = managers || 0
+  document.getElementById('statMembers').textContent = members || 0
+
+  const revenue = subs?.reduce((s, x) => s + (parseFloat(x.amount) || 0), 0) || 0
+  document.getElementById('statRevenue').textContent = Math.round(revenue) + ' د'
+  document.getElementById('statRevSub').textContent = `من ${subs?.length || 0} اشتراك نشط`
+  document.getElementById('statLate').textContent = late || 0
+
+  const expiring = subs?.filter(s => {
+    if (!s.expires_at) return false
+    const d = Math.ceil((new Date(s.expires_at) - new Date()) / (1000*60*60*24))
+    return d <= 30 && d > 0
+  }).length || 0
+
+  const alertBar = document.getElementById('alertBar')
+  if (expiring > 0) {
+    alertBar.classList.add('show')
+    document.getElementById('alertText').textContent = `${expiring} اشتراك ينتهي خلال 30 يوماً — راجع قسم الاشتراكات`
+  } else { alertBar.classList.remove('show') }
+
+  const pending = reqs?.length || 0
+  const reqBadge = document.getElementById('reqNavBadge')
+  if (pending > 0) { reqBadge.textContent = pending; reqBadge.style.display = 'inline-flex' }
+  else reqBadge.style.display = 'none'
+
+  // شريط حالة الجمعيات
+  document.getElementById('groupBars').innerHTML = [
+    { label: 'نشطة', count: active, pct: total ? Math.round(active/total*100) : 0, color: 'var(--green)' },
+    { label: 'مكتملة', count: done, pct: total ? Math.round(done/total*100) : 0, color: 'var(--blue)' },
+    { label: 'متوقفة', count: stopped, pct: total ? Math.round(stopped/total*100) : 0, color: 'var(--red)' },
+  ].map(b => `<div class="bar-row">
+    <div class="bar-lbl">${b.label}</div>
+    <div class="bar-track"><div class="bar-fill" style="width:${b.pct}%;background:${b.color}"></div></div>
+    <div class="bar-num">${b.count}</div>
+  </div>`).join('')
+
+  // شريط الباقات
+  const planCounts = { Free: 0, Basic: 0, Pro: 0, Business: 0 }
+  subs?.forEach(s => {
+    const k = (s.plan_name || '').charAt(0).toUpperCase() + (s.plan_name || '').slice(1).toLowerCase()
+    if (planCounts[k] !== undefined) planCounts[k]++
+    else if (planCounts[s.plan_name] !== undefined) planCounts[s.plan_name]++
+  })
+  const ts = subs?.length || 1
+  const planColors = { Free: 'var(--muted)', Basic: 'var(--blue)', Pro: 'var(--violet)', Business: 'var(--amber)' }
+  document.getElementById('planBars').innerHTML = Object.entries(planCounts).map(([n, c]) => `<div class="bar-row">
+    <div class="bar-lbl">${n}</div>
+    <div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/ts*100)}%;background:${planColors[n]}"></div></div>
+    <div class="bar-num">${c}</div>
+  </div>`).join('')
+
+  // الرسم البياني
+  if (revChart) revChart.destroy()
+  revChart = new Chart(document.getElementById('revChart'), {
+    type: 'line',
+    data: {
+      labels: ['يناير', 'فبراير', 'مارس', 'أبريل'],
+      datasets: [{
+        label: 'الإيرادات',
+        data: [0, Math.round(revenue*.1), Math.round(revenue*.4), Math.round(revenue)],
+        borderColor: '#1f6fa5',
+        backgroundColor: 'rgba(31,111,165,0.07)',
+        borderWidth: 2, pointRadius: 4,
+        pointBackgroundColor: '#fff', pointBorderColor: '#1f6fa5', pointBorderWidth: 2,
+        fill: true, tension: .4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { font: { size: 11, family: 'Tajawal' }, color: '#718096' }, grid: { display: false } },
+        y: { ticks: { font: { size: 11, family: 'Tajawal' }, color: '#718096' }, grid: { color: 'rgba(0,0,0,0.04)' } }
+      }
+    }
+  })
+
+  // آخر ملاحظات
+  const ac = ['#ebf4fb','#e6f4ee','#fef3e2','#f5f3ff','#fdf0f0']
+  const tc = ['#1f6fa5','#138a59','#b7791f','#7c3aed','#c53b3b']
+  document.getElementById('miniNotes').innerHTML = !notes?.length
+    ? '<div style="color:var(--muted);font-size:12px;text-align:center;padding:12px">لا توجد ملاحظات</div>'
+    : notes.map((n, i) => `<div class="note-mini">
+        <div class="note-av" style="background:${ac[i%5]};color:${tc[i%5]}">${(n.profiles?.full_name||'؟')[0]}</div>
+        <div class="note-body">
+          <div class="note-name">${n.profiles?.full_name||'—'}</div>
+          <div class="note-text">${(n.note||'').substring(0,55)}${(n.note||'').length>55?'...':''}</div>
+        </div>
+        <div class="note-date">${new Date(n.created_at).toLocaleDateString('ar')}</div>
+      </div>`).join('')
+
+  // بناء بيانات الجمعيات
+  const managerIds = [...new Set(groups?.map(g => g.manager_id) || [])]
+  let subsMap = {}
+  if (managerIds.length) {
+    const { data: subsAll } = await sb.from('subscriptions').select('manager_id,plan_name,expires_at,amount').eq('status','active').in('manager_id', managerIds)
+    subsAll?.forEach(s => { subsMap[s.manager_id] = s })
+  }
+  const gids = groups?.map(g => g.id) || []
+  let mcMap = {}
+  if (gids.length) {
+    const { data: mems } = await sb.from('members').select('group_id').in('group_id', gids).eq('status','active')
+    mems?.forEach(m => { mcMap[m.group_id] = (mcMap[m.group_id]||0)+1 })
+  }
+  const { data: profiles } = await sb.from('profiles').select('id,full_name,email').eq('role','manager')
+  const profMap = {}
+  profiles?.forEach(p => { profMap[p.id] = p })
+
+  allGroupsData = (groups||[]).map(g => ({
+    ...g,
+    sub: subsMap[g.manager_id] || null,
+    memberCount: mcMap[g.id] || 0,
+    managerName: profMap[g.manager_id]?.full_name || '—',
+    managerEmail: profMap[g.manager_id]?.email || '—'
+  }))
+  renderOvTable(allGroupsData)
+}
+
+function renderOvTable(data) {
+  selIdx = -1
+  document.getElementById('detPanel').innerHTML = `<div class="det-empty"><div class="det-empty-ic">🏛️</div><div style="font-size:13px;font-weight:700">اضغط على أي جمعية<br>لعرض تفاصيلها الكاملة</div></div>`
+  if (!data.length) {
+    document.getElementById('ovTbody').innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">لا توجد نتائج</td></tr>'
+    return
+  }
+  document.getElementById('ovTbody').innerHTML = data.map((g, i) => {
+    const pct = Math.round(g.memberCount / (g.max_members||4) * 100)
+    const days = g.sub?.expires_at ? Math.ceil((new Date(g.sub.expires_at)-new Date())/(1000*60*60*24)) : null
+    const dc = days===null ? 'var(--muted)' : days<=30 ? 'var(--red)' : days<=90 ? 'var(--amber)' : 'var(--green)'
+    const plan = g.sub?.plan_name || 'Free'
+    return `<tr class="tr-click" onclick="ovSel(${i})">
+      <td><strong>${g.name}</strong></td>
+      <td>${g.managerName}</td>
+      <td><span class="badge ${planBadge(plan)}">${plan}</span></td>
+      <td>
+        <div style="font-weight:800">${g.memberCount}/${g.max_members||4}</div>
+        <div class="mini-prog"><div class="mini-prog-fill" style="width:${pct}%;background:${pct>=100?'var(--red)':pct>=75?'var(--amber)':'var(--green)'}"></div></div>
+      </td>
+      <td style="color:${dc};font-weight:900">${days!==null ? days+' يوم' : '—'}</td>
+      <td><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></td>
+    </tr>`
+  }).join('')
+}
+
+window.ovSel = function(i) {
+  selIdx = i
+  document.querySelectorAll('#ovTbody tr').forEach((r, j) => r.classList.toggle('tr-sel', j===i))
+  const filtered = getOvFiltered()
+  const g = filtered[i]; if (!g) return
+  const pct = Math.round(g.memberCount / (g.max_members||4) * 100)
+  const days = g.sub?.expires_at ? Math.ceil((new Date(g.sub.expires_at)-new Date())/(1000*60*60*24)) : null
+  const dc = days===null ? 'var(--muted)' : days<=30 ? 'var(--red)' : days<=90 ? 'var(--amber)' : 'var(--green)'
+  const pc = pct>=100 ? 'var(--red)' : pct>=75 ? 'var(--amber)' : 'var(--green)'
+  const plan = g.sub?.plan_name || 'Free'
+  document.getElementById('detPanel').innerHTML = `
+    <div class="det-title">🏛️ ${g.name}</div>
     <div class="det-row"><span class="det-k">المدير</span><span class="det-v">${g.managerName}</span></div>
-    <div class="det-row"><span class="det-k">البريد</span><span class="det-v" style="direction:ltr;font-size:10px">${g.managerEmail}</span></div>
+    <div class="det-row"><span class="det-k">البريد</span><span class="det-v" style="direction:ltr;font-size:11px">${g.managerEmail}</span></div>
     <div class="det-row"><span class="det-k">الباقة</span><span class="badge ${planBadge(plan)}">${plan}</span></div>
-    <div class="det-row"><span class="det-k">الأعضاء</span><span class="det-v">${g.memberCount}/${g.max_members||4} (${pct}%)</span></div>
+    <div class="det-row"><span class="det-k">الأعضاء</span><span class="det-v">${g.memberCount}/${g.max_members||4} · ${pct}%</span></div>
     <div class="det-prog"><div class="det-prog-fill" style="width:${pct}%;background:${pc}"></div></div>
     <div class="det-row"><span class="det-k">المبلغ الشهري</span><span class="det-v">${g.monthly_amount} درهم</span></div>
     <div class="det-row"><span class="det-k">الاشتراك السنوي</span><span class="det-v">${g.sub?.amount||0} درهم</span></div>
-    <div class="det-row"><span class="det-k">انتهاء الباقة</span><span class="det-v">${g.sub?.expires_at?new Date(g.sub.expires_at).toLocaleDateString('ar-AE'):'—'}</span></div>
-    <div class="det-row"><span class="det-k">الأيام المتبقية</span><span class="det-v" style="color:${dc}">${days!==null?days+' يوم':'—'}</span></div>
+    <div class="det-row"><span class="det-k">انتهاء الباقة</span><span class="det-v">${g.sub?.expires_at ? new Date(g.sub.expires_at).toLocaleDateString('ar-AE') : '—'}</span></div>
+    <div class="det-row"><span class="det-k">الأيام المتبقية</span><span class="det-v" style="color:${dc}">${days!==null ? days+' يوم' : '—'}</span></div>
     <div class="det-row"><span class="det-k">الحالة</span><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></div>
     <div class="det-actions">
       <div class="det-btn grn" onclick="changeStatus('${g.id}','active')">✓ تفعيل</div>
@@ -482,127 +1093,199 @@ window.ovSel=function(i){
     </div>`
 }
 
-window.changeStatus=async function(id,status){
-  if(!confirm(`تغيير حالة الجمعية إلى: ${groupLabel(status)}؟`))return
-  const{error}=await sb.from('groups').update({status}).eq('id',id)
-  if(error){alert('خطأ: '+error.message);return}
-  const g=allGroupsData.find(x=>x.id===id);if(g)g.status=status
+window.changeStatus = async function(id, status) {
+  if (!confirm(`تغيير حالة الجمعية إلى: ${groupLabel(status)}؟`)) return
+  const { error } = await sb.from('groups').update({ status }).eq('id', id)
+  if (error) { alert('خطأ: '+error.message); return }
+  const g = allGroupsData.find(x => x.id===id); if (g) g.status = status
   renderOvTable(getOvFiltered())
+  loadGroups()
 }
 
-function getOvFiltered(){
-  const s=document.getElementById('ovSearch')?.value?.toLowerCase()||''
-  const st=document.getElementById('ovStatus')?.value||''
-  const pl=document.getElementById('ovPlan')?.value||''
-  return allGroupsData.filter(g=>(!s||g.name.toLowerCase().includes(s)||g.managerName.toLowerCase().includes(s))&&(!st||g.status===st)&&(!pl||(g.sub?.plan_name||'free').toLowerCase()===pl.toLowerCase()))
+function getOvFiltered() {
+  const s = (document.getElementById('ovSearch')?.value||'').toLowerCase()
+  const st = document.getElementById('ovStatus')?.value||''
+  const pl = document.getElementById('ovPlan')?.value||''
+  return allGroupsData.filter(g =>
+    (!s || g.name.toLowerCase().includes(s) || g.managerName.toLowerCase().includes(s)) &&
+    (!st || g.status===st) &&
+    (!pl || (g.sub?.plan_name||'free').toLowerCase()===pl.toLowerCase())
+  )
 }
-window.ovFilter=function(){renderOvTable(getOvFiltered())}
+window.ovFilter = function() { renderOvTable(getOvFiltered()) }
 
-window.loadGroups=async function(){
-  const search=document.getElementById('grpSearch')?.value?.toLowerCase()||''
-  const status=document.getElementById('grpStatus')?.value||''
-  const plan=document.getElementById('grpPlan')?.value||''
-  let filtered=allGroupsData
-  if(search)filtered=filtered.filter(g=>g.name.toLowerCase().includes(search)||g.managerName.toLowerCase().includes(search))
-  if(status)filtered=filtered.filter(g=>g.status===status)
-  if(plan)filtered=filtered.filter(g=>(g.sub?.plan_name||'free').toLowerCase()===plan.toLowerCase())
-  document.getElementById('groupsCount').textContent=`${filtered.length} جمعية`
-  const tbody=document.getElementById('grpTbody')
-  if(!filtered.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted)">لا توجد نتائج</td></tr>';return}
-  tbody.innerHTML=filtered.map(g=>{
-    const plan=g.sub?.plan_name||'Free'
-    const days=g.sub?.expires_at?Math.ceil((new Date(g.sub.expires_at)-new Date())/(1000*60*60*24)):null
-    const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
-    return `<tr><td><strong>${g.name}</strong></td><td>${g.managerName}</td><td><span class="badge ${planBadge(plan)}">${plan}</span></td><td>${g.memberCount}/${g.max_members||4}</td><td>${g.monthly_amount} درهم</td><td>${g.sub?.expires_at?new Date(g.sub.expires_at).toLocaleDateString('ar-AE'):'—'}</td><td style="color:${dc};font-weight:900">${days!==null?days+' يوم':'—'}</td><td><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></td><td><div style="display:flex;gap:4px"><button class="action-btn ab-green" onclick="changeStatus('${g.id}','active')">تفعيل</button><button class="action-btn ab-red" onclick="changeStatus('${g.id}','stopped')">إيقاف</button></div></td></tr>`
+window.loadGroups = async function() {
+  const search = (document.getElementById('grpSearch')?.value||'').toLowerCase()
+  const status = document.getElementById('grpStatus')?.value||''
+  const plan = document.getElementById('grpPlan')?.value||''
+  let filtered = allGroupsData
+  if (search) filtered = filtered.filter(g => g.name.toLowerCase().includes(search) || g.managerName.toLowerCase().includes(search))
+  if (status) filtered = filtered.filter(g => g.status===status)
+  if (plan) filtered = filtered.filter(g => (g.sub?.plan_name||'free').toLowerCase()===plan.toLowerCase())
+  document.getElementById('groupsCount').textContent = `${filtered.length} جمعية`
+  const tbody = document.getElementById('grpTbody')
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:24px;color:var(--muted)">لا توجد نتائج</td></tr>'
+    return
+  }
+  tbody.innerHTML = filtered.map(g => {
+    const plan = g.sub?.plan_name || 'Free'
+    const days = g.sub?.expires_at ? Math.ceil((new Date(g.sub.expires_at)-new Date())/(1000*60*60*24)) : null
+    const dc = days===null ? 'var(--muted)' : days<=30 ? 'var(--red)' : days<=90 ? 'var(--amber)' : 'var(--green)'
+    return `<tr>
+      <td><strong>${g.name}</strong></td>
+      <td>${g.managerName}</td>
+      <td style="direction:ltr;font-size:11px;color:var(--muted)">${g.managerEmail}</td>
+      <td><span class="badge ${planBadge(plan)}">${plan}</span></td>
+      <td>${g.memberCount}/${g.max_members||4}</td>
+      <td>${g.monthly_amount} درهم</td>
+      <td>${g.sub?.expires_at ? new Date(g.sub.expires_at).toLocaleDateString('ar-AE') : '—'}</td>
+      <td style="color:${dc};font-weight:900">${days!==null ? days+' يوم' : '—'}</td>
+      <td><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <button class="action-btn ab-green" onclick="changeStatus('${g.id}','active')">تفعيل</button>
+          <button class="action-btn ab-red" onclick="changeStatus('${g.id}','stopped')">إيقاف</button>
+        </div>
+      </td>
+    </tr>`
   }).join('')
 }
 
-window.loadPayments=async function(){
-  const status=document.getElementById('payStatus')?.value||''
-  let q=sb.from('payments').select('*, members(full_name), groups(name)').order('created_at',{ascending:false})
-  if(status)q=q.eq('status',status)
-  const{data}=await q
-  document.getElementById('paymentsCount').textContent=`${data?.length||0} دفعة`
-  const tbody=document.getElementById('payTbody')
-  if(!data?.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">لا توجد دفعات</td></tr>';return}
-  tbody.innerHTML=data.map(p=>`<tr><td>${p.members?.full_name||'—'}</td><td>${p.groups?.name||'—'}</td><td>${p.amount} درهم</td><td>${MONTHS[p.payment_month]}</td><td>${p.payment_year}</td><td><span class="badge ${payBadge(p.status)}">${payLabel(p.status)}</span></td><td>${p.receipt_url?`<a href="${p.receipt_url}" target="_blank" class="action-btn ab-blue">عرض</a>`:'—'}</td></tr>`).join('')
+window.loadPayments = async function() {
+  const status = document.getElementById('payStatus')?.value||''
+  let q = sb.from('payments').select('*, members(full_name), groups(name)').order('created_at',{ascending:false})
+  if (status) q = q.eq('status', status)
+  const { data } = await q
+  document.getElementById('paymentsCount').textContent = `${data?.length||0} دفعة`
+  const tbody = document.getElementById('payTbody')
+  if (!data?.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted)">لا توجد دفعات</td></tr>'; return }
+  tbody.innerHTML = data.map(p => `<tr>
+    <td>${p.members?.full_name||'—'}</td>
+    <td>${p.groups?.name||'—'}</td>
+    <td style="font-weight:900;color:var(--primary)">${p.amount} درهم</td>
+    <td>${MONTHS[p.payment_month]||p.payment_month}</td>
+    <td>${p.payment_year}</td>
+    <td><span class="badge ${payBadge(p.status)}">${payLabel(p.status)}</span></td>
+    <td>${p.receipt_url ? `<a href="${p.receipt_url}" target="_blank" class="action-btn ab-blue">عرض</a>` : '—'}</td>
+  </tr>`).join('')
 }
 
-window.loadRequests=async function(){
-  const status=document.getElementById('reqStatus')?.value||''
-  let q=sb.from('join_requests').select('*, groups(name, profiles(full_name))').order('created_at',{ascending:false})
-  if(status)q=q.eq('status',status)
-  const{data}=await q
-  document.getElementById('requestsCount').textContent=`${data?.length||0} طلب`
-  const tbody=document.getElementById('reqTbody')
-  if(!data?.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--muted)">لا توجد طلبات</td></tr>';return}
-  tbody.innerHTML=data.map(r=>`<tr><td>${r.full_name}</td><td>${r.phone||'—'}</td><td>${r.groups?.name||'—'}</td><td>${r.groups?.profiles?.full_name||'—'}</td><td>${MONTHS[r.requested_month]}</td><td>${r.requested_year}</td><td>${new Date(r.created_at).toLocaleDateString('ar')}</td><td><span class="badge ${reqBadge(r.status)}">${reqLabel(r.status)}</span></td></tr>`).join('')
+window.loadRequests = async function() {
+  const status = document.getElementById('reqStatus')?.value||''
+  let q = sb.from('join_requests').select('*, groups(name, profiles(full_name))').order('created_at',{ascending:false})
+  if (status) q = q.eq('status', status)
+  const { data } = await q
+  document.getElementById('requestsCount').textContent = `${data?.length||0} طلب`
+  const tbody = document.getElementById('reqTbody')
+  if (!data?.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--muted)">لا توجد طلبات</td></tr>'; return }
+  tbody.innerHTML = data.map(r => `<tr>
+    <td>${r.full_name}</td>
+    <td>${r.phone||'—'}</td>
+    <td>${r.groups?.name||'—'}</td>
+    <td>${r.groups?.profiles?.full_name||'—'}</td>
+    <td>${MONTHS[r.requested_month]||r.requested_month}</td>
+    <td>${r.requested_year}</td>
+    <td>${new Date(r.created_at).toLocaleDateString('ar')}</td>
+    <td><span class="badge ${reqBadge(r.status)}">${reqLabel(r.status)}</span></td>
+  </tr>`).join('')
 }
 
-window.loadSubscriptions=async function(){
-  const plan=document.getElementById('subsPlan')?.value||''
-  const status=document.getElementById('subsStatus')?.value||''
-  let q=sb.from('subscriptions').select('*, profiles(full_name)').order('created_at',{ascending:false})
-  if(plan)q=q.eq('plan_name',plan)
-  if(status)q=q.eq('status',status)
-  const{data}=await q
-  document.getElementById('subsCount').textContent=`${data?.length||0} اشتراك`
-  const tbody=document.getElementById('subsTbody')
-  if(!data?.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">لا توجد اشتراكات</td></tr>';return}
-  tbody.innerHTML=data.map(s=>{
-    const days=s.expires_at?Math.ceil((new Date(s.expires_at)-new Date())/(1000*60*60*24)):null
-    const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
-    return `<tr><td>${s.profiles?.full_name||'—'}</td><td><span class="badge ${planBadge(s.plan_name)}">${s.plan_name}</span></td><td>${s.amount} درهم</td><td><span class="badge ${s.status==='active'?'b-green':'b-red'}">${s.status==='active'?'نشط':'منتهي'}</span></td><td>${s.start_date||'—'}</td><td>${s.expires_at?new Date(s.expires_at).toLocaleDateString('ar-AE'):'—'}</td><td style="color:${dc};font-weight:900">${days!==null?days+' يوم':'—'}</td></tr>`
+window.loadSubscriptions = async function() {
+  const plan = document.getElementById('subsPlan')?.value||''
+  const status = document.getElementById('subsStatus')?.value||''
+  let q = sb.from('subscriptions').select('*, profiles(full_name)').order('created_at',{ascending:false})
+  if (plan) q = q.ilike('plan_name', plan)
+  if (status) q = q.eq('status', status)
+  const { data } = await q
+  document.getElementById('subsCount').textContent = `${data?.length||0} اشتراك`
+  const tbody = document.getElementById('subsTbody')
+  if (!data?.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted)">لا توجد اشتراكات</td></tr>'; return }
+  tbody.innerHTML = data.map(s => {
+    const days = s.expires_at ? Math.ceil((new Date(s.expires_at)-new Date())/(1000*60*60*24)) : null
+    const dc = days===null ? 'var(--muted)' : days<=30 ? 'var(--red)' : days<=90 ? 'var(--amber)' : 'var(--green)'
+    return `<tr>
+      <td><strong>${s.profiles?.full_name||'—'}</strong></td>
+      <td><span class="badge ${planBadge(s.plan_name)}">${s.plan_name}</span></td>
+      <td style="font-weight:900;color:var(--primary)">${s.amount} درهم</td>
+      <td><span class="badge ${s.status==='active'?'b-green':'b-red'}">${s.status==='active'?'نشط':'منتهي'}</span></td>
+      <td>${s.start_date||'—'}</td>
+      <td>${s.expires_at ? new Date(s.expires_at).toLocaleDateString('ar-AE') : '—'}</td>
+      <td style="color:${dc};font-weight:900">${days!==null ? days+' يوم' : '—'}</td>
+    </tr>`
   }).join('')
 }
 
-window.loadNotes=async function(){
-  const{data}=await sb.from('manager_notes').select('*, profiles(full_name), groups(name)').order('created_at',{ascending:false})
-  document.getElementById('notesCount').textContent=`${data?.length||0} ملاحظة`
-  const el=document.getElementById('notesList')
-  if(!data?.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted)">لا توجد ملاحظات</div>';return}
-  const ac=['#eaf5fd','#e8f8f1','#fff5e4','#f3edff','#fdeeee'],tc=['#185781','#138a59','#b7791f','#7c3aed','#c53b3b']
-  el.innerHTML=data.map((n,i)=>`<div style="display:flex;align-items:flex-start;gap:12px;padding:14px;border-bottom:1px solid var(--line)"><div style="width:34px;height:34px;border-radius:50%;background:${ac[i%5]};color:${tc[i%5]};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex:0 0 34px">${(n.profiles?.full_name||'؟')[0]}</div><div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><strong style="font-size:13px">${n.profiles?.full_name||'—'}</strong><span style="font-size:11px;color:var(--muted)">${new Date(n.created_at).toLocaleDateString('ar')}</span></div>${n.groups?.name?`<div style="font-size:11px;color:var(--muted);margin-bottom:4px">الجمعية: ${n.groups.name}</div>`:''}<div style="font-size:13px;color:var(--text);line-height:1.8">${n.note}</div></div></div>`).join('')
+window.loadNotes = async function() {
+  const { data } = await sb.from('manager_notes').select('*, profiles(full_name,email), groups(name)').order('created_at',{ascending:false})
+  document.getElementById('notesCount').textContent = `${data?.length||0} ملاحظة`
+  const el = document.getElementById('notesList')
+  if (!data?.length) { el.innerHTML = '<div style="text-align:center;padding:32px;color:var(--muted)">لا توجد ملاحظات</div>'; return }
+  const ac = ['#ebf4fb','#e6f4ee','#fef3e2','#f5f3ff','#fdf0f0']
+  const tc = ['#1f6fa5','#138a59','#b7791f','#7c3aed','#c53b3b']
+  el.innerHTML = data.map((n, i) => `<div class="note-card">
+    <div class="note-card-av" style="background:${ac[i%5]};color:${tc[i%5]}">${(n.profiles?.full_name||'؟')[0]}</div>
+    <div class="note-card-body">
+      <div class="note-card-hd">
+        <div class="note-card-name">${n.profiles?.full_name||'—'}</div>
+        <div class="note-card-date">${new Date(n.created_at).toLocaleDateString('ar-AE')}</div>
+      </div>
+      ${n.groups?.name ? `<div class="note-card-group">الجمعية: ${n.groups.name}</div>` : ''}
+      <div class="note-card-text">${n.note}</div>
+    </div>
+  </div>`).join('')
 }
 
-window.doLogout=async function(){await sb.auth.signOut();window.location.href='login.html'}
+window.doLogout = async function() { await sb.auth.signOut(); window.location.href = 'login.html' }
 
-window.exportData=function(){
-  const rows=allGroupsData.map(g=>[g.name,g.managerName,g.sub?.plan_name||'Free',g.memberCount,g.max_members,g.monthly_amount,groupLabel(g.status)])
-  const csv=[['الجمعية','المدير','الباقة','الأعضاء','الحد الأقصى','المبلغ الشهري','الحالة'],...rows].map(r=>r.join(',')).join('\n')
-  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download='saahl-groups.csv';a.click()
+window.exportData = function() {
+  const rows = allGroupsData.map(g => [g.name, g.managerName, g.managerEmail, g.sub?.plan_name||'Free', g.memberCount, g.max_members, g.monthly_amount, groupLabel(g.status)])
+  const csv = [['الجمعية','المدير','البريد','الباقة','الأعضاء','الحد الأقصى','المبلغ الشهري','الحالة'], ...rows].map(r => r.join(',')).join('\n')
+  const a = document.createElement('a'); a.href = 'data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv); a.download = 'saahl-groups.csv'; a.click()
 }
 
-window.reloadCurrentPage=function(){
-  const map={'overview-page':loadOverview,'groups-page':loadGroups,'payments-page':loadPayments,'requests-page':loadRequests,'subscriptions-page':loadSubscriptions,'notes-page':loadNotes}
+window.reloadCurrentPage = function() {
+  const map = { 'overview-page': loadOverview, 'groups-page': loadGroups, 'payments-page': loadPayments, 'requests-page': loadRequests, 'subscriptions-page': loadSubscriptions, 'notes-page': loadNotes }
   map[currentPage]?.()
 }
 
-const pageMeta={'overview-page':['نظرة عامة على المنصة','إحصائيات شاملة لكامل المنصة'],'groups-page':['الجمعيات والمدراء','كل الجمعيات مع بيانات مدرائها'],'payments-page':['الدفعات','سجل الدفعات على مستوى المنصة'],'requests-page':['طلبات الانضمام','الطلبات الواردة من الأعضاء'],'subscriptions-page':['الاشتراكات','باقات المدراء وتواريخ الانتهاء'],'notes-page':['ملاحظات المدراء','رسائل واردة من المدراء للإدارة']}
-const pageLoaders={'groups-page':loadGroups,'payments-page':loadPayments,'requests-page':loadRequests,'subscriptions-page':loadSubscriptions,'notes-page':loadNotes}
-
-window.switchPage=function(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'))
-  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'))
-  document.getElementById(id)?.classList.add('active')
-  document.querySelector(`[data-page="${id}"]`)?.classList.add('active')
-  const[t,s]=pageMeta[id]||['لوحة الأدمن','']
-  document.getElementById('pageTitle').textContent=t
-  document.getElementById('pageSubtitle').textContent=s
-  currentPage=id
-  pageLoaders[id]?.()
-  window.scrollTo({top:0,behavior:'smooth'})
+const pageMeta = {
+  'overview-page': ['نظرة عامة على المنصة', 'إحصائيات شاملة لكامل المنصة'],
+  'groups-page': ['الجمعيات والمدراء', 'كل الجمعيات مع بيانات مدرائها'],
+  'payments-page': ['الدفعات', 'سجل الدفعات على مستوى المنصة'],
+  'requests-page': ['طلبات الانضمام', 'الطلبات الواردة من الأعضاء'],
+  'subscriptions-page': ['الاشتراكات', 'باقات المدراء وتواريخ الانتهاء'],
+  'notes-page': ['ملاحظات المدراء', 'رسائل واردة من المدراء للإدارة']
+}
+const pageLoaders = {
+  'groups-page': loadGroups, 'payments-page': loadPayments,
+  'requests-page': loadRequests, 'subscriptions-page': loadSubscriptions, 'notes-page': loadNotes
 }
 
-document.querySelectorAll('.nav-item').forEach(btn=>{btn.addEventListener('click',()=>{const t=btn.getAttribute('data-page');if(t)switchPage(t)})})
+window.switchPage = function(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'))
+  document.getElementById(id)?.classList.add('active')
+  document.querySelector(`[data-page="${id}"]`)?.classList.add('active')
+  const [t, s] = pageMeta[id] || ['لوحة الأدمن', '']
+  document.getElementById('pageTitle').textContent = t
+  document.getElementById('pageSubtitle').textContent = s
+  currentPage = id
+  pageLoaders[id]?.()
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 
-function groupBadge(s){return{active:'b-green',completed:'b-blue',stopped:'b-red',renewed:'b-violet'}[s]||'b-primary'}
-function groupLabel(s){return{active:'نشطة',completed:'مكتملة',stopped:'متوقفة',renewed:'مجددة'}[s]||s}
-function planBadge(p){const k=(p||'').toLowerCase();return k==='basic'?'b-blue':k==='pro'?'b-violet':k==='business'?'b-amber':'b-muted'}
-function payBadge(s){return{paid:'b-green',pending:'b-amber',late:'b-red'}[s]||'b-primary'}
-function payLabel(s){return{paid:'مدفوع',pending:'معلق',late:'متأخر'}[s]||s}
-function reqBadge(s){return{pending:'b-amber',approved:'b-green',rejected:'b-red'}[s]||'b-primary'}
-function reqLabel(s){return{pending:'معلق',approved:'مقبول',rejected:'مرفوض'}[s]||s}
+document.querySelectorAll('.nav-item').forEach(btn => {
+  btn.addEventListener('click', () => { const t = btn.getAttribute('data-page'); if (t) switchPage(t) })
+})
+
+function groupBadge(s) { return { active:'b-green', completed:'b-blue', stopped:'b-red', renewed:'b-violet' }[s] || 'b-muted' }
+function groupLabel(s) { return { active:'نشطة', completed:'مكتملة', stopped:'متوقفة', renewed:'مجددة' }[s] || s }
+function planBadge(p) { const k=(p||'').toLowerCase(); return k==='basic'?'b-blue':k==='pro'?'b-violet':k==='business'?'b-amber':'b-muted' }
+function payBadge(s) { return { paid:'b-green', pending:'b-amber', late:'b-red' }[s] || 'b-muted' }
+function payLabel(s) { return { paid:'مدفوع', pending:'معلق', late:'متأخر' }[s] || s }
+function reqBadge(s) { return { pending:'b-amber', approved:'b-green', rejected:'b-red' }[s] || 'b-muted' }
+function reqLabel(s) { return { pending:'معلق', approved:'مقبول', rejected:'مرفوض' }[s] || s }
 
 init()
 </script>
