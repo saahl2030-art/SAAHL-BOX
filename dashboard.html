@@ -638,14 +638,15 @@ async function updateOverview(){
   document.getElementById('infoManagerName').textContent=currentProfile.full_name
   document.getElementById('infoAmount').textContent=currentGroup.monthly_amount+' درهم'
   document.getElementById('infoStartDate').textContent=`${currentGroup.start_month}/${currentGroup.start_year}`
-  const smap={active:{l:'الجمعية نشطة',c:'active',b:'badge-green'},completed:{l:'اكتملت دورة الجمعية',c:'completed',b:'badge-blue'},stopped:{l:'الجمعية متوقفة',c:'stopped',b:'badge-red'},renewed:{l:'تم تجديد الجمعية',c:'active',b:'badge-violet'}}
+const smap={active:{l:'الجمعية نشطة',c:'active',b:'badge-green'},pending:{l:'لم تبدأ بعد',c:'stopped',b:'badge-amber'},completed:{l:'اكتملت دورة الجمعية',c:'completed',b:'badge-blue'},stopped:{l:'الجمعية متوقفة',c:'stopped',b:'badge-red'},renewed:{l:'تم تجديد الجمعية',c:'active',b:'badge-violet'}}
   const s=smap[currentGroup.status]||smap.active
   document.getElementById('cycleBanner').className=`cycle-banner ${s.c}`
   document.getElementById('cycleBannerText').textContent=s.l
   document.getElementById('groupStatusBadge').className=`badge ${s.b}`
   document.getElementById('groupStatusBadge').textContent=s.l
   const ca=document.getElementById('cycleActions');ca.innerHTML=''
-  if(currentGroup.status==='active')ca.innerHTML=`<button class="btn btn-soft btn-sm" onclick="updateGroupStatus('completed')">✅ إنهاء الدورة</button><button class="btn btn-danger btn-sm" onclick="updateGroupStatus('stopped')">⏹ إيقاف</button>`
+if(currentGroup.status==='pending')ca.innerHTML=`<button class="btn btn-success btn-sm" onclick="updateGroupStatus('active')">🚀 بدء الدورة</button>`
+else if(currentGroup.status==='active')ca.innerHTML=`<button class="btn btn-soft btn-sm" onclick="updateGroupStatus('completed')">✅ إنهاء الدورة</button><button class="btn btn-danger btn-sm" onclick="updateGroupStatus('stopped')">⏹ إيقاف</button>`
   else if(['completed','stopped'].includes(currentGroup.status))ca.innerHTML=`<button class="btn btn-success btn-sm" onclick="updateGroupStatus('renewed')">🔄 تجديد</button>`
   const cnt=await getMemberCount(),max=currentGroup.max_members||4
   document.getElementById('statTotal').textContent=cnt
