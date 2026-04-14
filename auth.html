@@ -1,1 +1,374 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إنشاء حساب - صندوق ساهل</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f4f8fc;--panel:#fff;--panel-soft:#f8fbff;
+      --line:#dfe8f1;--line-dark:#cfdbe7;
+      --text:#16324a;--muted:#6e8498;
+      --primary:#1f6fa5;--primary-dark:#185781;--primary-soft:#eaf5fd;
+      --green:#138a59;--green-soft:#e8f8f1;
+      --amber:#b7791f;--amber-soft:#fff5e4;
+      --red:#c53b3b;--red-soft:#fdeeee;
+      --blue:#2563eb;--blue-soft:#edf3ff;
+      --shadow:0 8px 24px rgba(15,40,64,0.08);
+      --r:16px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+    body{font-family:"Tajawal",sans-serif;background:linear-gradient(180deg,#f8fbff,#f3f7fb);color:var(--text);min-height:100vh}
+    a{text-decoration:none;color:inherit}
+    button,input{font-family:"Tajawal",sans-serif}
 
+    .topbar{padding:10px 16px;background:rgba(248,251,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+    .topbar-inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .brand-logo{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),#46a8d8);color:#fff;font-size:17px;font-weight:900;flex:0 0 38px;box-shadow:0 4px 12px rgba(31,111,165,.2)}
+    .brand-text h1{font-size:17px;font-weight:900;line-height:1.1}
+    .brand-text p{font-size:11px;color:var(--muted);margin-top:1px}
+    .nav-links{display:flex;gap:8px}
+    .btn{border:none;border-radius:11px;padding:9px 14px;cursor:pointer;font-size:13px;font-weight:800;transition:.18s;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+    .btn:active{transform:scale(.96)}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 14px rgba(31,111,165,.22)}
+    .btn-primary:hover{background:var(--primary-dark)}
+    .btn-soft{background:#fff;border:1px solid var(--line-dark);color:var(--text)}
+
+    .hero{padding:20px 16px 14px;text-align:center}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;background:var(--primary-soft);color:var(--primary-dark);font-size:12px;font-weight:900;margin-bottom:10px}
+    .hero h2{font-size:clamp(20px,4.5vw,36px);font-weight:900;line-height:1.25;margin-bottom:8px}
+    .hero p{color:var(--muted);font-size:clamp(13px,3vw,15px);line-height:1.8;max-width:560px;margin:0 auto}
+
+    .layout{padding:12px 16px 48px;max-width:1180px;margin:0 auto}
+    .layout-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;align-items:start}
+
+    .card{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:20px}
+    .card-title{font-size:19px;font-weight:900;margin-bottom:5px}
+    .card-sub{color:var(--muted);font-size:13px;line-height:1.7}
+
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:16px}
+    .field-wrap.full{grid-column:1/-1}
+    .label{display:block;margin-bottom:5px;color:var(--muted);font-size:12px;font-weight:800}
+    .field{width:100%;border:1.5px solid var(--line-dark);background:#fff;color:var(--text);border-radius:11px;padding:12px 13px;outline:none;font-size:15px;transition:.18s;-webkit-appearance:none;appearance:none}
+    .field:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(31,111,165,.1)}
+
+    .plan-summary{display:none;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+    .ps-item{background:var(--primary-soft);border:1px solid #c8e4f5;border-radius:11px;padding:10px 12px}
+    .ps-item strong{display:block;font-size:13px;font-weight:900;color:var(--primary-dark);margin-bottom:2px}
+    .ps-item span{font-size:11px;color:var(--muted);font-weight:700;line-height:1.5}
+
+    .plans-label{font-size:13px;font-weight:900;color:var(--muted);margin:16px 0 8px}
+    .plans-list{display:grid;gap:9px}
+    .plan-option{position:relative;cursor:pointer}
+    .plan-option input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;z-index:1}
+    .plan-box{border:1.5px solid var(--line);border-radius:13px;padding:13px 14px;background:#fff;transition:.18s;display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .plan-option input:checked + .plan-box{border-color:var(--primary);background:var(--primary-soft);box-shadow:0 0 0 3px rgba(31,111,165,.08)}
+    .plan-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--line-dark);display:grid;place-items:center;flex:0 0 20px;transition:.18s}
+    .plan-option input:checked ~ .plan-box .plan-check,
+    .plan-option input:checked + .plan-box .plan-check{border-color:var(--primary);background:var(--primary)}
+    .plan-check::after{content:'✓';font-size:11px;color:#fff;display:none;font-weight:900}
+    .plan-option input:checked + .plan-box .plan-check::after{display:block}
+    .plan-info h4{font-size:15px;font-weight:900;margin-bottom:2px}
+    .plan-info p{color:var(--muted);font-size:12px;line-height:1.5}
+    .plan-meta{text-align:left;flex-shrink:0}
+    .plan-price{font-size:20px;font-weight:900;line-height:1}
+    .plan-price small{font-size:11px;color:var(--muted);font-weight:700}
+    .plan-tag{display:inline-flex;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:900;margin-top:5px;white-space:nowrap}
+    .tag-primary{background:var(--primary-soft);color:var(--primary-dark)}
+    .tag-blue{background:var(--blue-soft);color:var(--blue)}
+    .tag-green{background:var(--green-soft);color:var(--green)}
+    .tag-amber{background:var(--amber-soft);color:var(--amber)}
+
+    .actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+    .btn-submit{flex:1;min-width:150px;padding:14px;font-size:15px;border-radius:13px;font-weight:900}
+    .btn-login{padding:14px 18px;font-size:14px}
+
+    .notice{margin-top:11px;padding:10px 13px;border-radius:11px;background:#f8fbff;border:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.7}
+
+    .msg{display:none;margin-top:13px;padding:12px 14px;border-radius:12px;font-size:13px;font-weight:800;line-height:1.7}
+    .msg.error{background:var(--red-soft);color:var(--red)}
+    .msg.success{background:var(--green-soft);color:var(--green)}
+    .msg.show{display:block}
+
+    .addons{margin-top:16px;padding:14px;border-radius:14px;background:linear-gradient(135deg,#f7fbff,#eef7fd);border:1px solid #d8e9f7}
+    .addons h4{font-size:15px;font-weight:900;margin-bottom:10px}
+    .addons ul{list-style:none;display:grid;gap:8px}
+    .addons li{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px 13px;font-size:13px;font-weight:800}
+    .addons li span{color:var(--green);font-weight:900;font-size:12px;white-space:nowrap}
+
+    .overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,.88);backdrop-filter:blur(6px);align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:14px}
+    .overlay.show{display:flex}
+    .spinner{width:38px;height:38px;border:3px solid rgba(31,111,165,.15);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite}
+    .overlay-msg{font-size:14px;font-weight:700;color:var(--primary)}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .card-limits{display:block}
+
+    @media(max-width:980px){
+      .layout-grid{grid-template-columns:1fr}
+      .card-limits{display:none}
+      .plan-summary{display:grid}
+    }
+    @media(max-width:600px){
+      .topbar{padding:8px 14px}
+      .brand-text p{display:none}
+      .brand-text h1{font-size:15px}
+      .brand-logo{width:34px;height:34px;font-size:15px}
+      .hero{padding:16px 14px 10px}
+      .hero h2{font-size:20px}
+      .layout{padding:10px 14px 40px}
+      .card{padding:15px;border-radius:16px}
+      .card-title{font-size:17px}
+      .form-grid{grid-template-columns:1fr;gap:10px}
+      .field-wrap.full{grid-column:1}
+      .field{font-size:16px;padding:13px 14px}
+      .plan-box{padding:11px 12px}
+      .plan-info h4{font-size:14px}
+      .plan-price{font-size:18px}
+      .actions{flex-direction:column;gap:8px}
+      .btn-submit{width:100%;padding:15px;font-size:16px}
+      .btn-login{width:100%;padding:13px}
+      .nav-links .btn:first-child{display:none}
+    }
+    @media(hover:none){
+      .btn:hover{background:unset}
+      .btn-primary:hover{background:var(--primary)}
+      .plan-box:hover{border-color:var(--line)}
+    }
+  </style>
+</head>
+<body>
+
+<div class="overlay" id="overlay">
+  <div class="spinner"></div>
+  <div class="overlay-msg" id="overlayText">جاري إنشاء الحساب...</div>
+</div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <img src="assets/logo.png" style="width:38px;height:38px;object-fit:contain" alt="صندوق ساهل">
+      <div class="brand-text">
+        <h1>صندوق ساهل</h1>
+        <p>إنشاء حساب مدير جمعية</p>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a class="btn btn-soft" href="index.html">الرئيسية</a>
+      <a class="btn btn-soft" href="login.html">تسجيل الدخول</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-badge">🚀 ابدأ الآن بخطة واضحة</div>
+    <h2>أنشئ حسابك وجمعيتك من البداية</h2>
+    <p>اختر الباقة المناسبة، أدخل بياناتك، وابدأ إدارة جمعيتك في دقيقتين.</p>
+  </section>
+
+  <div class="layout">
+    <div class="layout-grid">
+
+      <div class="card">
+        <div class="card-title">بيانات الحساب والجمعية</div>
+        <p class="card-sub">سيتم إنشاء حسابك وجمعيتك وربطهما تلقائياً.</p>
+
+        <form id="signupForm" novalidate>
+          <div class="form-grid">
+            <div>
+              <label class="label" for="fullName">الاسم الكامل *</label>
+              <input class="field" type="text" id="fullName" placeholder="اكتب الاسم الكامل" required autocomplete="name">
+            </div>
+            <div>
+              <label class="label" for="phone">رقم الهاتف</label>
+              <input class="field" type="tel" id="phone" placeholder="05xxxxxxxx" autocomplete="tel">
+            </div>
+            <div>
+              <label class="label" for="email">البريد الإلكتروني *</label>
+              <input class="field" type="email" id="email" placeholder="example@email.com" required autocomplete="email">
+            </div>
+            <div>
+              <label class="label" for="password">كلمة المرور *</label>
+              <input class="field" type="password" id="password" placeholder="6 أحرف على الأقل" required minlength="6" autocomplete="new-password">
+            </div>
+            <div class="field-wrap full">
+              <label class="label" for="societyName">اسم الجمعية *</label>
+              <input class="field" type="text" id="societyName" placeholder="مثال: جمعية ساهل الأولى" required>
+            </div>
+            <div class="field-wrap full">
+              <label class="label" for="monthlyAmount">المبلغ الشهري للجمعية (درهم) *</label>
+              <input class="field" type="number" id="monthlyAmount" placeholder="مثال: 500" min="1" required inputmode="numeric">
+            </div>
+          </div>
+
+          <!-- ملخص الباقات — موبايل فقط -->
+          <div class="plan-summary">
+            <div class="ps-item"><strong>Free · 0 د</strong><span>1 جمعية · 4 أعضاء</span></div>
+            <div class="ps-item"><strong>Basic · 59 د</strong><span>3 جمعيات · 10 أعضاء</span></div>
+            <div class="ps-item"><strong>Pro · 99 د</strong><span>6 جمعيات · 15 عضو</span></div>
+            <div class="ps-item"><strong>Business · 179 د</strong><span>10 جمعيات · 25 عضو</span></div>
+          </div>
+
+          <div class="plans-label">اختر الباقة</div>
+          <div class="plans-list">
+            <label class="plan-option">
+              <input type="radio" name="plan" value="Free" checked>
+              <div class="plan-box">
+                <div class="plan-check"></div>
+                <div class="plan-info"><h4>Free</h4><p>1 جمعية · <strong>4 أعضاء</strong></p></div>
+                <div class="plan-meta"><div class="plan-price">0 <small>درهم</small></div><div class="plan-tag tag-primary">مجانًا</div></div>
+              </div>
+            </label>
+            <label class="plan-option">
+              <input type="radio" name="plan" value="Basic">
+              <div class="plan-box">
+                <div class="plan-check"></div>
+                <div class="plan-info"><h4>Basic</h4><p>3 جمعيات · <strong>10 أعضاء</strong></p></div>
+                <div class="plan-meta"><div class="plan-price">59 <small>درهم/سنة</small></div><div class="plan-tag tag-blue">للبداية</div></div>
+              </div>
+            </label>
+            <label class="plan-option">
+              <input type="radio" name="plan" value="Pro">
+              <div class="plan-box">
+                <div class="plan-check"></div>
+                <div class="plan-info"><h4>Pro</h4><p>6 جمعيات · <strong>15 عضو</strong></p></div>
+                <div class="plan-meta"><div class="plan-price">99 <small>درهم/سنة</small></div><div class="plan-tag tag-green">الأكثر استخدامًا</div></div>
+              </div>
+            </label>
+            <label class="plan-option">
+              <input type="radio" name="plan" value="Business">
+              <div class="plan-box">
+                <div class="plan-check"></div>
+                <div class="plan-info"><h4>Business</h4><p>10 جمعيات · <strong>25 عضو</strong></p></div>
+                <div class="plan-meta"><div class="plan-price">179 <small>درهم/سنة</small></div><div class="plan-tag tag-amber">تشغيل أكبر</div></div>
+              </div>
+            </label>
+          </div>
+
+          <div class="notice">عدد الجمعيات والأعضاء محدود حسب الباقة. يمكن الترقية لاحقاً من لوحة التحكم.</div>
+
+          <div class="actions">
+            <button type="submit" class="btn btn-primary btn-submit" id="submitBtn">إنشاء الحساب</button>
+            <a href="login.html" class="btn btn-soft btn-login">لدي حساب بالفعل</a>
+          </div>
+          <div class="msg" id="msgBox"></div>
+        </form>
+      </div>
+
+      <div class="card card-limits">
+        <div class="card-title">حدود الباقات</div>
+        <p class="card-sub">عدد الجمعيات والأعضاء حسب كل باقة.</p>
+        <div class="addons">
+          <h4>جدول الباقات</h4>
+          <ul>
+            <li><strong>Free</strong><span>1 جمعية · 4 أعضاء · مجاناً</span></li>
+            <li><strong>Basic</strong><span>3 جمعيات · 10 أعضاء · 59 درهم/سنة</span></li>
+            <li><strong>Pro</strong><span>6 جمعيات · 15 عضو · 99 درهم/سنة</span></li>
+            <li><strong>Business</strong><span>10 جمعيات · 25 عضو · 179 درهم/سنة</span></li>
+          </ul>
+        </div>
+        <div class="notice">عند اختيار باقة مدفوعة ستُحوَّل لصفحة الدفع أولاً ثم تعود للوحة التحكم.</div>
+        <div class="notice">إذا كان البريد مسجلاً مسبقًا، استخدم صفحة تسجيل الدخول.</div>
+        <div class="notice">يمكنك إنشاء جمعيات إضافية من لوحة التحكم حسب باقتك.</div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  var SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8';
+  var _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  var MEMBER_LIMITS = {Free:4,Basic:10,Pro:15,Business:25};
+
+  document.getElementById('signupForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var msg = document.getElementById('msgBox');
+    msg.className = 'msg'; msg.textContent = '';
+
+    var fullName      = document.getElementById('fullName').value.trim();
+    var email         = document.getElementById('email').value.trim();
+    var password      = document.getElementById('password').value;
+    var societyName   = document.getElementById('societyName').value.trim();
+    var monthlyAmount = parseFloat(document.getElementById('monthlyAmount').value);
+    var plan          = (document.querySelector('input[name="plan"]:checked')||{value:'Free'}).value;
+
+    if (!fullName||!email||!password||!societyName||!monthlyAmount) {
+      msg.textContent='أكمل جميع الحقول المطلوبة.';
+      msg.className='msg error show';
+      msg.scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
+    if (password.length<6) {
+      msg.textContent='كلمة المرور يجب أن تكون 6 أحرف على الأقل.';
+      msg.className='msg error show';
+      return;
+    }
+
+    var btn=document.getElementById('submitBtn');
+    var ov=document.getElementById('overlay');
+    btn.disabled=true; btn.textContent='جاري الإنشاء...'; ov.classList.add('show');
+
+    try {
+      var r1=await _sb.auth.signUp({email,password,options:{data:{full_name:fullName,role:'manager'}}});
+      if(r1.error) throw r1.error;
+
+      var r2=await _sb.auth.signInWithPassword({email,password});
+      if(r2.error) throw r2.error;
+
+      var uid=r2.data.user.id;
+      var accessToken=r2.data.session.access_token;
+      var now=new Date();
+
+      var r3=await _sb.from('groups').insert({
+        manager_id:uid, name:societyName, monthly_amount:monthlyAmount,
+        total_members:0, start_month:now.getMonth()+1, start_year:now.getFullYear(),
+        status:'active', max_members:4,
+        join_token:crypto.randomUUID()
+      });
+      if(r3.error) throw r3.error;
+
+      if(plan==='Free'){
+        var end=new Date(); end.setFullYear(end.getFullYear()+1);
+        var r4=await _sb.from('subscriptions').insert({
+          manager_id:uid, plan_name:'Free', status:'active',
+          start_date:now.toISOString().split('T')[0],
+          end_date:end.toISOString().split('T')[0], amount:0
+        });
+        if(r4.error) throw r4.error;
+        msg.textContent='تم إنشاء الحساب والجمعية بنجاح ✅';
+        msg.className='msg success show';
+        setTimeout(()=>{ window.location.href='dashboard.html'; },1200);
+      } else {
+        document.getElementById('overlayText').textContent='جاري التحويل لصفحة الدفع...';
+        var res=await fetch(SUPABASE_URL+'/functions/v1/create-checkout',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','Authorization':'Bearer '+accessToken},
+          body:JSON.stringify({plan:plan.toLowerCase(),user_id:uid,user_email:email})
+        });
+        var data=await res.json();
+        if(data.url){ window.location.href=data.url; }
+        else { throw new Error(data.error||'فشل الاتصال بنظام الدفع'); }
+      }
+    } catch(err){
+      console.error(err);
+      var m=err.message||'حدث خطأ';
+      if(m.toLowerCase().includes('already registered')) m='هذا البريد مسجل مسبقًا. استخدم صفحة تسجيل الدخول.';
+      msg.textContent=m; msg.className='msg error show';
+      msg.scrollIntoView({behavior:'smooth',block:'center'});
+      ov.classList.remove('show'); btn.disabled=false; btn.textContent='إنشاء الحساب';
+    }
+  });
+</script>
+</body>
+</html>
