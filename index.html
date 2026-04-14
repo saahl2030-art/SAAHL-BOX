@@ -18,16 +18,23 @@
     html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
     body{font-family:'Tajawal',sans-serif;background:var(--white);color:var(--ink);overflow-x:hidden}
 
-    /* ══ NAV ══ */
-    nav{
-      position:fixed;top:0;right:0;left:0;z-index:100;
-      padding:12px 20px;
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      background:rgba(255,255,255,.94);
-      backdrop-filter:blur(20px);
-      border-bottom:1px solid var(--line);
-      transition:.3s;
+    /* ══ SPLASH SCREEN ══ */
+    #splashScreen{
+      position:fixed;inset:0;z-index:9999;
+      background:linear-gradient(160deg,#0a1628 0%,#1a2e4a 50%,#0d2137 100%);
+      display:flex;align-items:center;justify-content:center;
+      flex-direction:column;gap:0;
     }
+    .splash-img{width:min(85vw,380px);animation:splashZoom .8s ease both}
+    .splash-progress{width:min(80vw,300px);height:3px;background:rgba(255,255,255,.15);border-radius:999px;overflow:hidden;margin-top:32px}
+    .splash-progress-fill{height:100%;background:linear-gradient(90deg,var(--sky),var(--gold2));border-radius:999px;width:0%;animation:progressFill 2.8s ease forwards}
+    .splash-text{margin-top:16px;color:rgba(255,255,255,.5);font-size:12px;font-weight:700;letter-spacing:.1em;animation:fadeIn .6s .4s ease both}
+    @keyframes splashZoom{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+    @keyframes progressFill{0%{width:0%}30%{width:40%}70%{width:75%}100%{width:100%}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+    /* ══ NAV ══ */
+    nav{position:fixed;top:0;right:0;left:0;z-index:100;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--line);transition:.3s}
     .nav-brand{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:900;color:var(--ink);text-decoration:none}
     .nav-logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--sky),var(--sky2));display:grid;place-items:center;color:#fff;font-size:17px;font-weight:900;box-shadow:0 4px 14px rgba(31,111,165,.28);flex:0 0 38px}
     .nav-links{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
@@ -37,7 +44,6 @@
     .nav-btn-ghost:hover{background:var(--sky3)}
     .nav-btn-primary{background:var(--sky);color:#fff;box-shadow:0 4px 14px rgba(31,111,165,.22)}
     .nav-btn-primary:hover{background:#185781}
-
     .nav-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;border:none;background:none}
     .nav-toggle span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;transition:.3s}
     .mobile-menu{display:none;position:fixed;inset:0;top:62px;background:#fff;z-index:99;padding:20px;flex-direction:column;gap:10px;border-top:1px solid var(--line)}
@@ -54,7 +60,6 @@
     .hero-dots{position:absolute;inset:0;z-index:0;background-image:radial-gradient(circle,rgba(31,111,165,.1) 1px,transparent 1px);background-size:28px 28px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%)}
     .hero-inner{position:relative;z-index:1;max-width:860px;margin:0 auto;text-align:center}
     .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:12px;font-weight:800;color:var(--sky);box-shadow:0 4px 12px rgba(31,111,165,.1);margin-bottom:22px;animation:fadeUp .6s ease both}
-    .hero-badge-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
     @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(19,138,89,.4)}50%{box-shadow:0 0 0 6px rgba(19,138,89,0)}}
     .hero h1{font-size:clamp(30px,6vw,68px);font-weight:900;line-height:1.15;color:var(--ink);margin-bottom:10px;animation:fadeUp .6s .1s ease both}
     .hero h1 .accent{background:linear-gradient(135deg,var(--sky),var(--sky2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -62,7 +67,6 @@
     .hero-actions{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;animation:fadeUp .6s .3s ease both}
     .btn-hero-primary{padding:14px 28px;border-radius:14px;background:var(--sky);color:#fff;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:900;border:none;cursor:pointer;text-decoration:none;box-shadow:0 10px 28px rgba(31,111,165,.28);transition:.25s;display:inline-flex;align-items:center;gap:7px}
     .btn-hero-primary:hover{background:#185781;transform:translateY(-2px)}
-    .btn-hero-primary:active{transform:scale(.97)}
     .btn-hero-ghost{padding:14px 24px;border-radius:14px;background:#fff;color:var(--ink2);font-family:'Tajawal',sans-serif;font-size:15px;font-weight:800;border:1.5px solid var(--line);cursor:pointer;text-decoration:none;transition:.25s;display:inline-flex;align-items:center;gap:7px}
     .btn-hero-ghost:hover{border-color:var(--sky);color:var(--sky)}
     .hero-stats{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:40px;animation:fadeUp .6s .4s ease both}
@@ -71,14 +75,11 @@
     .stat-pill strong{display:block;font-size:18px;font-weight:900;color:var(--ink)}
     .stat-pill span{display:block;font-size:11px;font-weight:700;color:var(--muted)}
 
-    /* ══ SECTIONS ══ */
     .section{padding:70px 20px;max-width:1180px;margin:0 auto}
     .section-label{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:900;color:var(--sky);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
     .section-label::before{content:'';display:block;width:22px;height:2px;background:var(--sky);border-radius:2px}
     .section h2{font-size:clamp(24px,4vw,40px);font-weight:900;color:var(--ink);line-height:1.25;margin-bottom:12px}
     .section-sub{font-size:15px;color:var(--muted);line-height:1.9;max-width:520px}
-
-    /* FEATURES */
     .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
     .feature-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px 20px;transition:.3s;position:relative;overflow:hidden}
     .feature-card::before{content:'';position:absolute;top:0;right:0;width:70px;height:70px;border-radius:0 20px 0 70px;opacity:.06;transition:.3s}
@@ -93,8 +94,6 @@
     .fc-violet .feature-icon{background:#f3edff}.fc-violet::before{background:#7c3aed}
     .fc-red .feature-icon{background:#fdeeee}.fc-red::before{background:var(--red)}
     .fc-teal .feature-icon{background:#e0f7f4}.fc-teal::before{background:#0d9488}
-
-    /* HOW */
     .how-section{padding:70px 20px;background:linear-gradient(160deg,#f8fbff,#eaf5fd);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
     .how-inner{max-width:1100px;margin:0 auto}
     .steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:44px;position:relative}
@@ -103,8 +102,6 @@
     .step-num{width:68px;height:68px;border-radius:50%;background:#fff;border:2px solid var(--sky);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:26px;box-shadow:0 6px 20px rgba(31,111,165,.14)}
     .step h3{font-size:15px;font-weight:900;color:var(--ink);margin-bottom:7px}
     .step p{font-size:13px;color:var(--muted);line-height:1.8}
-
-    /* PLANS */
     .plans-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:40px;align-items:start}
     .plan-card{background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:24px 20px;transition:.3s;position:relative}
     .plan-card:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(15,40,64,.1)}
@@ -123,8 +120,6 @@
     .plan-btn-primary:hover{background:#185781}
     .plan-btn-ghost{background:var(--sky3);color:var(--sky)}
     .plan-btn-ghost:hover{background:#d3e9f8}
-
-    /* CTA */
     .cta-section{padding:70px 20px;background:linear-gradient(135deg,var(--ink),var(--ink2));position:relative;overflow:hidden}
     .cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 20% 50%,rgba(31,111,165,.22),transparent)}
     .cta-inner{max-width:680px;margin:0 auto;text-align:center;position:relative;z-index:1}
@@ -135,8 +130,6 @@
     .cta-btn-primary:hover{background:#e8be00;transform:translateY(-2px)}
     .cta-btn-ghost{padding:14px 22px;border-radius:14px;background:rgba(255,255,255,.1);color:#fff;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:800;border:1px solid rgba(255,255,255,.2);cursor:pointer;text-decoration:none;transition:.25s;display:inline-flex;align-items:center;gap:7px}
     .cta-btn-ghost:hover{background:rgba(255,255,255,.18)}
-
-    /* FOOTER */
     footer{padding:24px 20px;background:#fff;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
     .footer-brand{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:900;color:var(--ink)}
     .footer-logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--sky),var(--sky2));display:grid;place-items:center;color:#fff;font-size:14px;font-weight:900}
@@ -144,72 +137,28 @@
     .footer-links{display:flex;gap:14px;flex-wrap:wrap}
     .footer-links a{font-size:12px;font-weight:700;color:var(--muted);text-decoration:none}
     .footer-links a:hover{color:var(--sky)}
-
-    /* VIDEO */
     .video-section{padding:70px 20px;background:#fff;border-top:1px solid var(--line)}
     .video-inner{max-width:760px;margin:0 auto;text-align:center}
     .video-wrapper{position:relative;width:100%;padding-bottom:177.77%;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(15,40,64,.15);border:1px solid var(--line)}
     .video-wrapper iframe{position:absolute;inset:0;width:100%;height:100%;border-radius:20px}
     @media(max-width:600px){.video-section{padding:50px 16px}}
-
-    /* ANIMATIONS */
     @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
     .reveal{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease}
     .reveal.visible{opacity:1;transform:translateY(0)}
-
-    /* ══ RESPONSIVE ══ */
-    @media(max-width:1024px){
-      .features-grid{grid-template-columns:repeat(2,1fr)}
-      .plans-grid{grid-template-columns:repeat(2,1fr)}
-      .steps-grid{grid-template-columns:repeat(2,1fr);gap:28px}
-      .steps-grid::before{display:none}
-    }
-    @media(max-width:768px){
-      nav{padding:10px 16px}
-      .nav-links{display:none}
-      .nav-toggle{display:flex}
-      .nav-brand{font-size:17px}
-      .nav-logo{width:34px;height:34px;font-size:15px}
-      .hero{padding:80px 16px 44px;min-height:auto}
-      .hero h1{font-size:28px}
-      .hero-sub{font-size:14px}
-      .btn-hero-primary,.btn-hero-ghost{padding:13px 22px;font-size:14px}
-      .hero-actions{gap:8px}
-      .hero-stats{gap:8px;margin-top:28px}
-      .stat-pill{padding:9px 14px}
-      .stat-pill strong{font-size:16px}
-      .stat-pill span{font-size:10px}
-      .section{padding:50px 16px}
-      .section h2{font-size:24px}
-      .features-grid{grid-template-columns:1fr;gap:12px}
-      .feature-card{padding:20px 16px}
-      .how-section{padding:50px 16px}
-      .steps-grid{grid-template-columns:1fr;gap:20px}
-      .step{padding:0}
-      .step-num{width:58px;height:58px;font-size:22px;margin-bottom:14px}
-      .plans-grid{grid-template-columns:1fr;gap:12px}
-      .plan-card{padding:20px 16px}
-      .plan-price{font-size:28px}
-      .cta-section{padding:50px 16px}
-      .cta-actions{flex-direction:column;align-items:stretch}
-      .cta-btn-primary,.cta-btn-ghost{width:100%;justify-content:center;padding:15px}
-      footer{flex-direction:column;text-align:center;padding:20px 16px}
-      .footer-links{justify-content:center}
-    }
-    @media(max-width:480px){
-      .hero h1{font-size:24px}
-      .hero-actions{flex-direction:column;width:100%}
-      .btn-hero-primary,.btn-hero-ghost{width:100%;justify-content:center}
-      .hero-stats{flex-direction:column;align-items:stretch}
-      .stat-pill{justify-content:center}
-    }
-    @media(hover:none){
-      .feature-card:hover,.plan-card:hover{transform:none}
-      .btn-hero-primary:hover,.btn-hero-ghost:hover{transform:none}
-    }
+    @media(max-width:1024px){.features-grid{grid-template-columns:repeat(2,1fr)}.plans-grid{grid-template-columns:repeat(2,1fr)}.steps-grid{grid-template-columns:repeat(2,1fr);gap:28px}.steps-grid::before{display:none}}
+    @media(max-width:768px){nav{padding:10px 16px}.nav-links{display:none}.nav-toggle{display:flex}.nav-brand{font-size:17px}.nav-logo{width:34px;height:34px;font-size:15px}.hero{padding:80px 16px 44px;min-height:auto}.hero h1{font-size:28px}.hero-sub{font-size:14px}.btn-hero-primary,.btn-hero-ghost{padding:13px 22px;font-size:14px}.hero-actions{gap:8px}.hero-stats{gap:8px;margin-top:28px}.stat-pill{padding:9px 14px}.stat-pill strong{font-size:16px}.stat-pill span{font-size:10px}.section{padding:50px 16px}.section h2{font-size:24px}.features-grid{grid-template-columns:1fr;gap:12px}.feature-card{padding:20px 16px}.how-section{padding:50px 16px}.steps-grid{grid-template-columns:1fr;gap:20px}.step{padding:0}.step-num{width:58px;height:58px;font-size:22px;margin-bottom:14px}.plans-grid{grid-template-columns:1fr;gap:12px}.plan-card{padding:20px 16px}.plan-price{font-size:28px}.cta-section{padding:50px 16px}.cta-actions{flex-direction:column;align-items:stretch}.cta-btn-primary,.cta-btn-ghost{width:100%;justify-content:center;padding:15px}footer{flex-direction:column;text-align:center;padding:20px 16px}.footer-links{justify-content:center}.splash-img{width:90vw}}
+    @media(max-width:480px){.hero h1{font-size:24px}.hero-actions{flex-direction:column;width:100%}.btn-hero-primary,.btn-hero-ghost{width:100%;justify-content:center}.hero-stats{flex-direction:column;align-items:stretch}.stat-pill{justify-content:center}}
+    @media(hover:none){.feature-card:hover,.plan-card:hover{transform:none}.btn-hero-primary:hover,.btn-hero-ghost:hover{transform:none}}
   </style>
 </head>
 <body>
+
+<!-- ══ SPLASH SCREEN ══ -->
+<div id="splashScreen">
+  <img class="splash-img" src="uae-splash.png" alt="حصنتك بسم الله يا وطن">
+  <div class="splash-progress"><div class="splash-progress-fill"></div></div>
+  <div class="splash-text">صندوق ساهل</div>
+</div>
 
 <!-- ══ NAV ══ -->
 <nav id="mainNav">
@@ -229,7 +178,6 @@
   </button>
 </nav>
 
-<!-- قائمة موبايل -->
 <div class="mobile-menu" id="mobileMenu">
   <a class="nav-btn nav-btn-ghost" href="#features" onclick="closeMobileMenu()">المميزات</a>
   <a class="nav-btn nav-btn-ghost" href="#plans" onclick="closeMobileMenu()">الباقات</a>
@@ -238,14 +186,11 @@
   <a class="nav-btn nav-btn-primary" href="auth.html">ابدأ مجاناً ←</a>
 </div>
 
-<!-- ══ HERO ══ -->
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-dots"></div>
   <div class="hero-inner">
-    <div class="hero-badge">
-      منصة إدارة الجمعيات المالية
-    </div>
+    <div class="hero-badge">منصة إدارة الجمعيات المالية</div>
     <h1>أدِر جمعيتك المالية<br><span class="accent">بكل سهولة وثقة</span></h1>
     <p class="hero-sub">منصة رقمية متكاملة تُمكّن مدير الجمعية من إدارة الأعضاء، متابعة الدفعات، وإرسال روابط الانضمام — كل ذلك من مكان واحد.</p>
     <div class="hero-actions">
@@ -261,7 +206,6 @@
   </div>
 </section>
 
-<!-- ══ FEATURES ══ -->
 <section class="section reveal" id="features">
   <div class="section-label">المميزات</div>
   <h2>كل ما تحتاجه لإدارة جمعيتك</h2>
@@ -276,7 +220,6 @@
   </div>
 </section>
 
-<!-- ══ HOW ══ -->
 <div class="how-section reveal" id="how">
   <div class="how-inner">
     <div style="text-align:center">
@@ -293,7 +236,6 @@
   </div>
 </div>
 
-<!-- ══ VIDEO ══ -->
 <div class="video-section reveal">
   <div class="video-inner">
     <div class="section-label" style="justify-content:center">شاهد كيف يعمل</div>
@@ -305,7 +247,6 @@
   </div>
 </div>
 
-<!-- ══ PLANS ══ -->
 <section class="section reveal" id="plans">
   <div class="section-label">الباقات</div>
   <h2>اختر الباقة المناسبة</h2>
@@ -317,42 +258,33 @@
   </div>
   <div class="plans-grid">
     <div class="plan-card reveal">
-      <div class="plan-name">Free</div>
-      <div class="plan-desc">مثالية للبداية والتجربة</div>
-      <div class="plan-period">مجاناً للأبد 🎉</div>
-      <div class="plan-price">0 <small>درهم</small></div>
+      <div class="plan-name">Free</div><div class="plan-desc">مثالية للبداية والتجربة</div>
+      <div class="plan-period">مجاناً للأبد 🎉</div><div class="plan-price">0 <small>درهم</small></div>
       <ul class="plan-features"><li>1 جمعية</li><li>حتى 4 أعضاء</li><li>رابط انضمام</li><li>تتبع الدفعات</li></ul>
       <a class="plan-btn plan-btn-ghost" href="auth.html">ابدأ مجاناً</a>
     </div>
     <div class="plan-card reveal">
-      <div class="plan-name">Basic</div>
-      <div class="plan-desc">للجمعيات الصغيرة النشطة</div>
-      <div class="plan-period">سنوياً · 0.16 درهم / يوم</div>
-      <div class="plan-price">59 <small>درهم</small></div>
+      <div class="plan-name">Basic</div><div class="plan-desc">للجمعيات الصغيرة النشطة</div>
+      <div class="plan-period">سنوياً · 0.16 درهم / يوم</div><div class="plan-price">59 <small>درهم</small></div>
       <ul class="plan-features"><li>3 جمعيات</li><li>حتى 10 أعضاء</li><li>رفع الإيصالات</li><li>جدول الدفعات</li></ul>
       <a class="plan-btn plan-btn-ghost" href="auth.html">اشترك الآن</a>
     </div>
     <div class="plan-card featured reveal">
       <div class="plan-featured-badge">⭐ الأكثر استخداماً</div>
-      <div class="plan-name">Pro</div>
-      <div class="plan-desc">للمدراء المحترفين</div>
-      <div class="plan-period">سنوياً · 0.27 درهم / يوم</div>
-      <div class="plan-price">99 <small>درهم</small></div>
+      <div class="plan-name">Pro</div><div class="plan-desc">للمدراء المحترفين</div>
+      <div class="plan-period">سنوياً · 0.27 درهم / يوم</div><div class="plan-price">99 <small>درهم</small></div>
       <ul class="plan-features"><li>6 جمعيات</li><li>حتى 15 عضو</li><li>جميع المميزات</li><li>دعم أولوي</li></ul>
       <a class="plan-btn plan-btn-primary" href="auth.html">اشترك الآن</a>
     </div>
     <div class="plan-card reveal">
-      <div class="plan-name">Business</div>
-      <div class="plan-desc">للمؤسسات والشركات</div>
-      <div class="plan-period">سنوياً · 0.49 درهم / يوم</div>
-      <div class="plan-price">179 <small>درهم</small></div>
+      <div class="plan-name">Business</div><div class="plan-desc">للمؤسسات والشركات</div>
+      <div class="plan-period">سنوياً · 0.49 درهم / يوم</div><div class="plan-price">179 <small>درهم</small></div>
       <ul class="plan-features"><li>10 جمعيات</li><li>حتى 25 عضو</li><li>جميع المميزات</li><li>تقارير متقدمة</li></ul>
       <a class="plan-btn plan-btn-ghost" href="auth.html">اشترك الآن</a>
     </div>
   </div>
 </section>
 
-<!-- ══ CTA ══ -->
 <section class="cta-section reveal">
   <div class="cta-inner">
     <h2>ابدأ إدارة جمعيتك اليوم</h2>
@@ -364,7 +296,6 @@
   </div>
 </section>
 
-<!-- ══ FOOTER ══ -->
 <footer>
   <img src="assets/logo.png" style="width:32px;height:32px;object-fit:contain" alt="صندوق ساهل">
   <p>© 2026 صندوق ساهل — جميع الحقوق محفوظة</p>
@@ -377,6 +308,16 @@
 </footer>
 
 <script>
+  // ── Splash Screen ──
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      var splash = document.getElementById('splashScreen')
+      splash.style.opacity = '0'
+      splash.style.transition = 'opacity .8s ease'
+      setTimeout(function(){ splash.remove() }, 800)
+    }, 3000)
+  })
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(el => { if(el.isIntersecting){el.target.classList.add('visible');observer.unobserve(el.target)} })
   }, {threshold:.08})
