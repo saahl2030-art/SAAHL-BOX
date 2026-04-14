@@ -1,761 +1,448 @@
-<!DOCTYPE html>
+<! DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>صندوق ساهل — إدارة الجمعيات المالية</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --ink:#0a1628;
-      --ink2:#1a2e4a;
-      --sky:#1f6fa5;
-      --sky2:#46a8d8;
-      --sky3:#eaf5fd;
-      --gold:#c9943a;
-      --gold2:#f5c842;
-      --white:#ffffff;
-      --muted:#6e8498;
-      --line:#dfe8f1;
-      --green:#138a59;
-      --red:#c53b3b;
-    }
-
-    *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-
-    body{
-      font-family:'Tajawal',sans-serif;
-      background:var(--white);
-      color:var(--ink);
-      overflow-x:hidden;
-    }
-
-    /* ══════════════════════════════
-       NAV
-    ══════════════════════════════ */
-    nav{
-      position:fixed;top:0;right:0;left:0;z-index:100;
-      padding:16px 32px;
-      display:flex;align-items:center;justify-content:space-between;
-      background:rgba(255,255,255,.92);
-      backdrop-filter:blur(20px);
-      border-bottom:1px solid var(--line);
-      transition:.3s;
-    }
-
-    .nav-brand{
-      display:flex;align-items:center;gap:12px;
-      font-size:22px;font-weight:900;color:var(--ink);
-      text-decoration:none;
-    }
-
-    .nav-logo{
-      width:42px;height:42px;border-radius:13px;
-      background:linear-gradient(135deg,var(--sky),var(--sky2));
-      display:grid;place-items:center;
-      color:#fff;font-size:19px;font-weight:900;
-      box-shadow:0 6px 18px rgba(31,111,165,.3);
-    }
-
-    .nav-links{display:flex;align-items:center;gap:8px}
-
-    .nav-btn{
-      padding:10px 18px;border-radius:12px;
-      font-family:'Tajawal',sans-serif;font-size:14px;font-weight:800;
-      text-decoration:none;cursor:pointer;border:none;
-      transition:.2s;display:inline-flex;align-items:center;gap:6px;
-    }
-
-    .nav-btn-ghost{color:var(--ink2);background:transparent}
-    .nav-btn-ghost:hover{background:var(--sky3)}
-
-    .nav-btn-primary{
-      background:var(--sky);color:#fff;
-      box-shadow:0 6px 16px rgba(31,111,165,.25);
-    }
-    .nav-btn-primary:hover{background:#185781;transform:translateY(-1px)}
-
-    /* ══════════════════════════════
-       HERO
-    ══════════════════════════════ */
-    .hero{
-      min-height:100vh;
-      display:flex;align-items:center;justify-content:center;
-      position:relative;overflow:hidden;
-      padding:100px 32px 60px;
-    }
-
-    /* خلفية هندسية */
-    .hero-bg{
-      position:absolute;inset:0;
-      background:linear-gradient(160deg,#f8fbff 0%,#eaf5fd 40%,#f0f8f4 100%);
-      z-index:0;
-    }
-
-    .hero-bg::before{
-      content:'';position:absolute;
-      width:700px;height:700px;
-      border-radius:50%;
-      background:radial-gradient(circle,rgba(31,111,165,.08) 0%,transparent 70%);
-      top:-200px;left:-200px;
-    }
-
-    .hero-bg::after{
-      content:'';position:absolute;
-      width:500px;height:500px;
-      border-radius:50%;
-      background:radial-gradient(circle,rgba(19,138,89,.06) 0%,transparent 70%);
-      bottom:-100px;right:-100px;
-    }
-
-    /* شبكة نقاط خلفية */
-    .hero-dots{
-      position:absolute;inset:0;z-index:0;
-      background-image:radial-gradient(circle,rgba(31,111,165,.12) 1px,transparent 1px);
-      background-size:32px 32px;
-      mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%);
-    }
-
-    .hero-inner{
-      position:relative;z-index:1;
-      max-width:920px;margin:0 auto;
-      text-align:center;
-    }
-
-    .hero-badge{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 18px;border-radius:999px;
-      background:#fff;border:1px solid var(--line);
-      font-size:13px;font-weight:800;color:var(--sky);
-      box-shadow:0 4px 12px rgba(31,111,165,.1);
-      margin-bottom:28px;
-      animation:fadeUp .6s ease both;
-    }
-
-    .hero-badge-dot{
-      width:8px;height:8px;border-radius:50%;
-      background:var(--green);
-      animation:pulse 2s infinite;
-    }
-
-    @keyframes pulse{
-      0%,100%{box-shadow:0 0 0 0 rgba(19,138,89,.4)}
-      50%{box-shadow:0 0 0 6px rgba(19,138,89,0)}
-    }
-
-    .hero h1{
-      font-size:clamp(36px,6vw,72px);
-      font-weight:900;line-height:1.1;
-      color:var(--ink);
-      margin-bottom:10px;
-      animation:fadeUp .6s .1s ease both;
-    }
-
-    .hero h1 .accent{
-      background:linear-gradient(135deg,var(--sky),var(--sky2));
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-    }
-
-    .hero-sub{
-      font-size:clamp(16px,2.5vw,22px);
-      color:var(--muted);line-height:1.8;
-      max-width:600px;margin:16px auto 36px;
-      animation:fadeUp .6s .2s ease both;
-    }
-
-    .hero-actions{
-      display:flex;align-items:center;justify-content:center;
-      gap:12px;flex-wrap:wrap;
-      animation:fadeUp .6s .3s ease both;
-    }
-
-    .btn-hero-primary{
-      padding:16px 32px;border-radius:16px;
-      background:var(--sky);color:#fff;
-      font-family:'Tajawal',sans-serif;font-size:16px;font-weight:900;
-      border:none;cursor:pointer;text-decoration:none;
-      box-shadow:0 12px 32px rgba(31,111,165,.3);
-      transition:.25s;display:inline-flex;align-items:center;gap:8px;
-    }
-    .btn-hero-primary:hover{background:#185781;transform:translateY(-2px);box-shadow:0 16px 40px rgba(31,111,165,.4)}
-
-    .btn-hero-ghost{
-      padding:16px 28px;border-radius:16px;
-      background:#fff;color:var(--ink2);
-      font-family:'Tajawal',sans-serif;font-size:16px;font-weight:800;
-      border:1.5px solid var(--line);cursor:pointer;text-decoration:none;
-      transition:.25s;display:inline-flex;align-items:center;gap:8px;
-    }
-    .btn-hero-ghost:hover{border-color:var(--sky);color:var(--sky);transform:translateY(-2px)}
-
-    /* بطاقات الإحصائيات */
-    .hero-stats{
-      display:flex;align-items:center;justify-content:center;
-      gap:24px;flex-wrap:wrap;
-      margin-top:52px;
-      animation:fadeUp .6s .4s ease both;
-    }
-
-    .stat-pill{
-      display:flex;align-items:center;gap:10px;
-      padding:12px 20px;border-radius:14px;
-      background:#fff;border:1px solid var(--line);
-      box-shadow:0 4px 16px rgba(15,40,64,.06);
-    }
-
-    .stat-pill-icon{
-      width:38px;height:38px;border-radius:10px;
-      display:grid;place-items:center;font-size:18px;
-    }
-
-    .stat-pill strong{display:block;font-size:20px;font-weight:900;color:var(--ink)}
-    .stat-pill span{display:block;font-size:11px;font-weight:700;color:var(--muted)}
-
-    /* ══════════════════════════════
-       FEATURES
-    ══════════════════════════════ */
-    .section{padding:80px 32px;max-width:1200px;margin:0 auto}
-
-    .section-label{
-      display:inline-flex;align-items:center;gap:8px;
-      font-size:12px;font-weight:900;
-      color:var(--sky);letter-spacing:.1em;text-transform:uppercase;
-      margin-bottom:14px;
-    }
-
-    .section-label::before{content:'';display:block;width:24px;height:2px;background:var(--sky);border-radius:2px}
-
-    .section h2{
-      font-size:clamp(28px,4vw,44px);font-weight:900;
-      color:var(--ink);line-height:1.2;margin-bottom:14px;
-    }
-
-    .section-sub{
-      font-size:16px;color:var(--muted);
-      line-height:1.9;max-width:560px;
-    }
-
-    .features-grid{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:20px;margin-top:48px;
-    }
-
-    .feature-card{
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:24px;
-      padding:28px 24px;
-      transition:.3s;
-      position:relative;overflow:hidden;
-    }
-
-    .feature-card::before{
-      content:'';position:absolute;
-      top:0;right:0;
-      width:80px;height:80px;
-      border-radius:0 24px 0 80px;
-      opacity:.06;
-      transition:.3s;
-    }
-
-    .feature-card:hover{
-      transform:translateY(-4px);
-      box-shadow:0 20px 48px rgba(15,40,64,.1);
-      border-color:#c3dff0;
-    }
-
-    .feature-card:hover::before{opacity:.12}
-
-    .feature-icon{
-      width:52px;height:52px;border-radius:16px;
-      display:grid;place-items:center;font-size:24px;
-      margin-bottom:18px;
-    }
-
-    .feature-card h3{
-      font-size:18px;font-weight:900;
-      color:var(--ink);margin-bottom:10px;
-    }
-
-    .feature-card p{
-      font-size:14px;color:var(--muted);
-      line-height:1.9;
-    }
-
-    /* ألوان البطاقات */
-    .fc-blue .feature-icon{background:var(--sky3)}
-    .fc-blue::before{background:var(--sky)}
-    .fc-green .feature-icon{background:#e8f8f1}
-    .fc-green::before{background:var(--green)}
-    .fc-gold .feature-icon{background:#fff8e8}
-    .fc-gold::before{background:var(--gold)}
-    .fc-violet .feature-icon{background:#f3edff}
-    .fc-violet::before{background:#7c3aed}
-    .fc-red .feature-icon{background:#fdeeee}
-    .fc-red::before{background:var(--red)}
-    .fc-teal .feature-icon{background:#e0f7f4}
-    .fc-teal::before{background:#0d9488}
-
-    /* ══════════════════════════════
-       HOW IT WORKS
-    ══════════════════════════════ */
-    .how-section{
-      padding:80px 32px;
-      background:linear-gradient(160deg,#f8fbff,#eaf5fd);
-      border-top:1px solid var(--line);
-      border-bottom:1px solid var(--line);
-    }
-
-    .how-inner{max-width:1100px;margin:0 auto}
-
-    .steps-grid{
-      display:grid;grid-template-columns:repeat(4,1fr);
-      gap:0;margin-top:52px;position:relative;
-    }
-
-    .steps-grid::before{
-      content:'';position:absolute;
-      top:36px;right:12.5%;left:12.5%;
-      height:2px;
-      background:linear-gradient(90deg,var(--sky3),var(--sky),var(--sky3));
-      z-index:0;
-    }
-
-    .step{
-      text-align:center;padding:0 16px;
-      position:relative;z-index:1;
-    }
-
-    .step-num{
-      width:72px;height:72px;border-radius:50%;
-      background:#fff;border:2px solid var(--sky);
-      display:flex;align-items:center;justify-content:center;
-      margin:0 auto 20px;
-      font-size:28px;
-      box-shadow:0 8px 24px rgba(31,111,165,.15);
-    }
-
-    .step h3{font-size:16px;font-weight:900;color:var(--ink);margin-bottom:8px}
-    .step p{font-size:13px;color:var(--muted);line-height:1.8}
-
-    /* ══════════════════════════════
-       PLANS
-    ══════════════════════════════ */
-    .plans-grid{
-      display:grid;grid-template-columns:repeat(4,1fr);
-      gap:16px;margin-top:48px;align-items:start;
-    }
-
-    .plan-card{
-      background:#fff;border:1.5px solid var(--line);
-      border-radius:24px;padding:28px 22px;
-      transition:.3s;position:relative;
-    }
-
-    .plan-card:hover{
-      transform:translateY(-4px);
-      box-shadow:0 20px 48px rgba(15,40,64,.1);
-    }
-
-    .plan-card.featured{
-      border-color:var(--sky);
-      box-shadow:0 12px 40px rgba(31,111,165,.18);
-    }
-
-    .plan-featured-badge{
-      position:absolute;top:-14px;right:50%;transform:translateX(50%);
-      background:var(--sky);color:#fff;
-      font-size:11px;font-weight:900;
-      padding:5px 14px;border-radius:999px;
-      white-space:nowrap;
-    }
-
-    .plan-name{font-size:20px;font-weight:900;color:var(--ink);margin-bottom:6px}
-    .plan-desc{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.7}
-
-    .plan-price{
-      font-size:38px;font-weight:900;color:var(--ink);
-      line-height:1;margin-bottom:20px;
-    }
-    .plan-price small{font-size:14px;color:var(--muted);font-weight:700}
-
-    .plan-features{list-style:none;display:grid;gap:10px;margin-bottom:24px}
-    .plan-features li{
-      display:flex;align-items:center;gap:8px;
-      font-size:13px;font-weight:700;color:var(--ink2);
-    }
-    .plan-features li::before{
-      content:'✓';
-      width:20px;height:20px;border-radius:50%;
-      background:var(--sky3);color:var(--sky);
-      display:grid;place-items:center;font-size:11px;font-weight:900;
-      flex:0 0 20px;
-    }
-
-    .plan-btn{
-      display:block;width:100%;padding:13px;border-radius:13px;
-      font-family:'Tajawal',sans-serif;font-size:14px;font-weight:900;
-      text-align:center;text-decoration:none;cursor:pointer;border:none;
-      transition:.2s;
-    }
-
-    .plan-btn-primary{background:var(--sky);color:#fff;box-shadow:0 8px 20px rgba(31,111,165,.2)}
-    .plan-btn-primary:hover{background:#185781}
-    .plan-btn-ghost{background:var(--sky3);color:var(--sky)}
-    .plan-btn-ghost:hover{background:#d3e9f8}
-
-    /* ══════════════════════════════
-       CTA
-    ══════════════════════════════ */
-    .cta-section{
-      padding:80px 32px;
-      background:linear-gradient(135deg,var(--ink) 0%,var(--ink2) 100%);
-      position:relative;overflow:hidden;
-    }
-
-    .cta-section::before{
-      content:'';position:absolute;inset:0;
-      background:radial-gradient(ellipse 60% 80% at 20% 50%,rgba(31,111,165,.25),transparent);
-    }
-
-    .cta-inner{
-      max-width:700px;margin:0 auto;
-      text-align:center;position:relative;z-index:1;
-    }
-
-    .cta-inner h2{
-      font-size:clamp(28px,4vw,44px);font-weight:900;
-      color:#fff;line-height:1.2;margin-bottom:14px;
-    }
-
-    .cta-inner p{font-size:16px;color:rgba(255,255,255,.7);line-height:1.9;margin-bottom:32px}
-
-    .cta-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
-
-    .cta-btn-primary{
-      padding:16px 32px;border-radius:16px;
-      background:var(--gold2);color:var(--ink);
-      font-family:'Tajawal',sans-serif;font-size:16px;font-weight:900;
-      border:none;cursor:pointer;text-decoration:none;
-      box-shadow:0 12px 32px rgba(245,200,66,.3);
-      transition:.25s;display:inline-flex;align-items:center;gap:8px;
-    }
-    .cta-btn-primary:hover{background:#e8be00;transform:translateY(-2px)}
-
-    .cta-btn-ghost{
-      padding:16px 24px;border-radius:16px;
-      background:rgba(255,255,255,.1);color:#fff;
-      font-family:'Tajawal',sans-serif;font-size:16px;font-weight:800;
-      border:1px solid rgba(255,255,255,.2);cursor:pointer;text-decoration:none;
-      transition:.25s;display:inline-flex;align-items:center;gap:8px;
-    }
-    .cta-btn-ghost:hover{background:rgba(255,255,255,.18)}
-
-    /* ══════════════════════════════
-       FOOTER
-    ══════════════════════════════ */
-    footer{
-      padding:32px;
-      background:#fff;border-top:1px solid var(--line);
-      display:flex;align-items:center;justify-content:space-between;
-      flex-wrap:wrap;gap:12px;
-    }
-
-    .footer-brand{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:900;color:var(--ink)}
-
-    .footer-logo{
-      width:34px;height:34px;border-radius:10px;
-      background:linear-gradient(135deg,var(--sky),var(--sky2));
-      display:grid;place-items:center;color:#fff;font-size:15px;font-weight:900;
-    }
-
-    footer p{font-size:13px;color:var(--muted)}
-
-    .footer-links{display:flex;gap:16px}
-    .footer-links a{font-size:13px;font-weight:700;color:var(--muted);text-decoration:none}
-    .footer-links a:hover{color:var(--sky)}
-
-    /* ══════════════════════════════
-       ANIMATIONS
-    ══════════════════════════════ */
-    @keyframes fadeUp{
-      from{opacity:0;transform:translateY(20px)}
-      to{opacity:1;transform:translateY(0)}
-    }
-
-    .reveal{
-      opacity:0;transform:translateY(24px);
-      transition:opacity .6s ease, transform .6s ease;
-    }
-    .reveal.visible{opacity:1;transform:translateY(0)}
-
-    /* ══════════════════════════════
-       RESPONSIVE
-    ══════════════════════════════ */
-    @media(max-width:1024px){
-      .features-grid{grid-template-columns:repeat(2,1fr)}
-      .plans-grid{grid-template-columns:repeat(2,1fr)}
-      .steps-grid{grid-template-columns:repeat(2,1fr);gap:32px}
-      .steps-grid::before{display:none}
-    }
-
-    @media(max-width:640px){
-      nav{padding:14px 18px}
-      .hero{padding:90px 18px 50px}
-      .section{padding:60px 18px}
-      .how-section{padding:60px 18px}
-      .cta-section{padding:60px 18px}
-      footer{padding:24px 18px;flex-direction:column;text-align:center}
-      .features-grid{grid-template-columns:1fr}
-      .plans-grid{grid-template-columns:1fr}
-      .steps-grid{grid-template-columns:1fr}
-      .hero-stats{flex-direction:column;align-items:center}
-    }
-  </style>
-</head>
-<body>
+<الرأس>
+ <meta charset="UTF-8"/>
+ <الاسم الميتا=viewport" المحتوى="عرض=عرض الجهاز، المقياس الأولي=1.0"/>
+ <title>صندوق ساهل — إدارة الجمعيات المالية</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+ < الطريقة>
+ :root{
+ --ink:#0a1628;--ink2:#1a2e4a;
+ --sky:#1f6fa5;--sky2:#46a8d8;--sky3:#eaf5fd;
+ --ذهب:#c9943a;--ذهب2:#f5c842;
+ --أبيض:#fff;--مكتوم:#6e8498;--خط:#dfe8f1;
+ --أخضر:#138a59;--أحمر:#c53b3b;
+ }
+ *{حجم الصندوق:border-box; الهامش: 0; الحشو:0}
+ html{سلوك-سلوك:سلس؛-webkit-text-size-adjust:100٪}
+ الجسد {font-family:'Tajawal', sans-serif; الخلفية: var(--أبيض)؛ اللون: var(--حبر); Overflow-x:hidden}
+
+/* ══ NAV ══ */
+ nav{
+ الموقع: ثابت؛ الأعلى: 0؛ يمين:0; اليسار:0; مؤشر z:100;
+ الحشو: 12 بكسل، 20 بكسل؛
+ display:flex; محاذاة العناصر: المركز؛ تبرير المحتوى: المسافة بين؛ الفجوة:10 بكسل;
+ الخلفية: RGBA (255، 255، 255، .94);
+ فلتر الخلفية: ضبابية (20 بكسل)؛
+ الحافة السفلى: 1px صلب var(--line);
+ الانتقال: 0.3 ثانية؛
+ }
+ .nav-brand{display:flex; محاذاة العناصر: المركز؛ الفجوة:10 بكسل; حجم الخط: 19px; وزن الخط:900; اللون: var(--حبر); زخرفة النص: لا شيء}
+ .nav-logo{width:38px; الارتفاع: 38 بكسل؛ نصف قطر الحدود: 12 بكسل؛ الخلفية: تدرج خطي (135 درجة، فار(--السماء)،فار(--سماء2)); display:grid; المكان-العناصر: المركز؛ اللون: #fff؛ حجم الخط: 17px; وزن الخط:900; ظل: 0 4 بكسل 14 بكسل RGB (31,111,165,.28); flex:0 0 38px}
+ .nav-links{display:flex; محاذاة العناصر: المركز؛ الفجوة: 6 بكسل؛ فليكس-رب:nowrap}
+ .nav-btn{الحشوة:9px 14px; نصف قطر الحدود: 11px; عائلة الخط: 'تجوال'، بدون خط خطي؛ حجم الخط: 13 بكسل؛ وزن الخط: 800; زخرفة النص: لا شيء؛ المؤشر: المؤشر؛ الحدود: لا شيء؛ الانتقال: 0.2 ثانية; display:inline-flex; محاذاة العناصر: المركز؛ الفجوة:5px; space:nowrap}
+ .nav-btn:active{transform:scale(.96)}
+ .nav-btn-ghost{color:var(--ink2); خلفية: شفاف}
+ .nav-btn-ghost:hover{background:var(--sky3)}
+ .nav-btn-primary{background:var(--sky)؛ اللون: #fff؛ box-shadow:0 4px 14px rgba(31,111,165,.22)}
+ .nav-btn-primary:hover{background:#185781}
+
+.nav-toggle{display:none; الاتجاه المرن: عمود؛ الفجوة:5px; المؤشر: المؤشر؛ الحشو: 6 بكسل؛ الحدود: لا شيء؛ الخلفية: لا شيء}
+ .nav-toggle span{display:block; العرض: 22 بكسل؛ الارتفاع: 2 بكسل؛ الخلفية: var(--ink); نصف قطر الحدود: 2px; انتقال:.3s}
+ .mobile-menu{display:none; الموقع: ثابت؛ الداخل: 0; الأعلى: 62 بكسل؛ الخلفية: #fff؛ مؤشر z:99; الحشوة: 20 بكسل؛ الاتجاه المرن: عمود؛ الفجوة:10 بكسل; border-top:1px solid var(--line)}
+ .mobile-menu.open{display:flex}
+ .mobile-menu .nav-btn{width:100٪; تبرير المحتوى: المركز؛ الحشوة: 14 بكسل؛ حجم الخط: 15px; نصف قطر الحدود:13px}
+ .mobile-menu .nav-btn-primary{background:var(--sky); اللون:#fff}
+ .mobile-menu .nav-btn-ghost{border:1px solid var(--line); اللون: var(--ink2)}
+
+/* ══ بطل ══ */
+ .hero{دنى ارتفاع:100 في إم هي؛ display:flex; محاذاة العناصر: المركز؛ تبرير المحتوى: المركز؛ الموقع: نسبي؛ الفائض: مخفي؛ الحشوة:90px 20px 50px}
+ .hero-bg{الموقع:المطلق; الداخل: 0; الخلفية: تدرج خطي (160°G,#f8fbff,#eaf5fd 40٪,#f0f8f4 100٪); z-index:0}
+ .hero-bg::before{content:''; الموقع: المطلق؛ العرض: 600 بكسل؛ الارتفاع: 600 بكسل؛ نصف قطر الحدود: 50٪؛ الخلفية: التدرج الشعاعي (دائري، RGB (31,111,165,.08)، شفاف 70٪); الأعلى: -200 بكسل؛ اليسار:-200px}
+ .hero-bg::after{content:''; الموقع: المطلق؛ العرض: 400 بكسل؛ الارتفاع: 400 بكسل؛ نصف قطر الحدود: 50٪؛ الخلفية: التدرج الشعاعي (دائري، RGB (19,138,89,.06)، شفاف 70٪); الأسفل: -100 بكسل؛ صحيح:-100px}
+ .hero-dots{الموقع:absoالعود؛ الداخل: 0; مؤشر z:0; صورة الخلفية: التدرج الشعاعي (Circle,RGBA(31,111,165,.1) 1px، شفاف 1px); حجم الخلفية: 28 بكسل، 28 بكسل؛ صورة القناع: التدرج الشعاعي (القطع الناقص 80٪ 80٪ عند 50٪ 50٪، الأسود 40٪، شفاف 100٪)}
+ .hero-inner{الموقع: نسبي; مؤشر z:1; أقصى عرض: 860 بكسل؛ الهامش: 0 أوتوماتيكي؛ محاذاة النص:الوسط}
+ .hero-badge{display:inline-flex; محاذاة العناصر: المركز؛ الفجوة:8px; الحشوة: 7 بكسل، 16 بكسل؛ نصف قطر الحدود: 999px; الخلفية: #fff؛ الحدود: 1px solid var(--line); حجم الخط: 12px; وزن الخط: 800; اللون: var(--sky)؛ ظلال الصندوق:0 4 بكسل 12 بكسل RGB (31,111,165,.1); الهامش في الأسفل: 22px; الرسوم المتحركة: fadeUp .6s يسهل كلاهما}
+ .hero-badge-dot{width:7px; الارتفاع: 7 بكسل؛ نصف قطر الحدود: 50٪؛ الخلفية: VAR(--أخضر)؛ الرسوم المتحركة: نبض 2 إس إنفينيت}
+ @keyframes pulse{0٪,100٪{box-shadow:0 0 0 0 rgba(19,138,89,.4)}50٪{box-shadow:0 0 0 6px rgba(19,138,89,0)}}
+ .hero h1{حجم الخط:Clamp(30px,6vw,68px); وزن الخط:900; ارتفاع الخط: 1.15; اللون: var(--حبر); الهامش السفلي: 10 بكسل؛ الرسوم المتحركة: fadeUp .6s .1s سهل كلاهما}
+ .hero h1 .accent{background:linear-gradent(135deg,var(--sky),var(--sky2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+ .hero-sub{font-size:clamp(14px,2.5vw,19px); اللون: var(--مكتوم)؛ ارتفاع الخط: 1.85؛ أقصى عرض: 540 بكسل؛ الهامش: 14 بكسل أوتوماتيكي 30 بكسل؛ الرسوم المتحركة: fadeUp .6s .2s يسهل كلاهما}
+ .hero-actions{display:flex; محاذاة العناصر: المركز؛ تبرير المحتوى: المركز؛ الفجوة:10 بكسل; لف-مرن:لف; الرسوم المتحركة: fadeUp .6s .3s سهل كلاهما}
+ .btn-hero-primary{حشرة:14px 28px; نصف قطر الحدود: 14px; الخلفية: VAR(--Sky); اللون: #fff؛ عائلة الخط: 'تجوال'، بدون خط خطي؛ حجم الخط: 15px; وزن الخط:900; الحدود: لا شيء؛ المؤشر: المؤشر؛ زخرفة النص: لا شيء؛ box-shadow:0 10px 28px RGB (31,111,165,.28); الانتقال: 0.25 ثانية؛ display:inline-flex; محاذاة العناصر: المركز؛ فجوة:7px}
+ .btn-hero-primary:hover{background:#185781; transform:translateY(-2px)}
+ .btn-hero-primary:active{transform:scale(.97)}
+ .btn-hero-ghost{حشو:14px 24px; نصف قطر الحدود: 14px; الخلفية: #fff؛ اللون: var(--ink2); عائلة الخط: 'تجوال'، بدون خط خطي؛ حجم الخط: 15px; وزن الخط: 800; الإطار: 1.5px فاريد صلب(--خط); المؤشر: المؤشر؛ زخرفة النص: لا شيء؛ الانتقال: 0.25 ثانية؛ display:inline-flex; محاذاة العناصر: المركز؛ فجوة:7px}
+ .btn-hero-ghost:hover{border-color:var(--sky); اللون: var(--sky)}
+ .hero-stats{display:flex; محاذاة العناصر: المركز؛ تبرير المحتوى: المركز؛ الفجوة: 12 بكسل؛ لف-مرن:لف; الهامش الأعلى: 40 بكسل؛ الرسوم المتحركة: fadeUp .6s .4s يسهل كلاهما}
+ .stat-pill{display:flex; محاذاة العناصر: المركز؛ الفجوة:10 بكسل; الحشوة: 11 بكسل، 18 بكسل؛ نصف قطر الحدود: 13px; الخلفية: #fff؛ الحدود: 1px solid var(--line); box-shadow:0 4px 14px RGB (15,40,64,.06)}
+ .stat-pill-icon{width:36px; الارتفاع: 36 بكسل؛ نصف قطر الحدود: 10 بكسل؛ display:grid; المكان-العناصر: المركز؛ حجم الخط: 17px; flex:0 0 36px}
+ .stat-pill strong{display:block; حجم الخط: 18px; وزن الخط:900; اللون: var(--ink)}
+ .stat-pill span{display:block; حجم الخط: 11px; وزن الخط:700; اللون: var(--مكتوم)}
+
+/* ══ الأقسام ══ */
+ .section{الحشر:70px 20px; أقصى عرض: 1180 بكسل؛ الهامش: 0 تلقائي}
+ .section-label{display:inline-flex; محاذاة العناصر: المركز؛ الفجوة:8px; حجم الخط: 12px; وزن الخط:900; اللون: var(--sky)؛ تباعد الحروف: .08em; تحويل النص: حروف كبيرة؛ الهامش السفلي: 12px}
+ .section-label::before{content:''; display:block; العرض: 22 بكسل؛ الارتفاع: 2 بكسل؛ الخلفية: VAR(--Sky); نصف قطر الحدود:2px}
+ .section h2{font-size:clamp(24px,4vw,40px); وزن الخط:900; اللون: var(--حبر); ارتفاع الخط: 1.25; الهامش السفلي: 12px}
+ .section-sub{font-size:15px; اللون: var(--مكتوم)؛ ارتفاع الخط: 1.9; أقصى عرض:520 بكسل}
+
+/* الميزات */
+ .feature-grid{display:grid; الشبكة-قالب-الأعمدة (3,1fr)؛ الفجوة: 16 بكسل؛ الهامش الأعلى: 40px}
+ .feature-card{background:#fff; الحدود:1px متغير صلب(--خط); نصف قطر الحدود: 20px; الحشوة: 24 بكسل، 20 بكسل؛ الانتقال: 0.3 ثانية؛ الموقع: نسبي؛ overflow:hidden}
+ .feature-card::before{content:''; الموقع: المطلق؛ الأعلى: 0؛ يمين:0; العرض: 70 بكسل؛ الارتفاع: 70 بكسل؛ نصف قطر الحدود: 0 20 بكسل 0 70 بكسل؛ العتامة:.06; انتقال:.3s}
+ .feature-card:hover{transform:translateY(-3px); box-shadow:0 16px 40px rgba (15,40,64,.1); لون الحدود:#c3dff0}
+ .feature-card:hover::before{opacity:.12}
+ .feature-icon{width:48px; الارتفاع: 48 بكسل؛ نصف قطر الحدود: 14px; display:grid; المكان-العناصر: المركز؛ حجم الخط:22px; الهامش السفلي: 16px}
+ .feature-card h3{font-size:17px; وزن الخط:900; اللون: var(--حبر); الهامش السفلي: 8px}
+ .feature-card p{font-size:13px; اللون: var(--مكتوم)؛ طول الخط:1.85}
+ .fc-blue .feature-icon{background:var(--sky3)}.fc-blue::before{background:var(--sky)}
+ .fc-green .feature-icon{background:#e8f8f1}.fc-green::before{background:var(--green)}
+ .fc-gold .feature-icon{background:#fff8e8}.fc-ذهب::قبل{background:var(--ذهبي)}
+ .fc-violet .feature-icon{background:#f3edff}.fc-violet::before{background:#7c3aed}
+ .fc-red .feature-icon{background:#fdeeee}.fc-red::before{background:var(--red)}
+ .fc-teal .feature-icon{background:#e0f7f4}.fc-teal::before{background:#0d9488}
+
+/* كيف */
+ .how-section{الحشرة:70px 20px; الخلفية: تدرج خطي (160 درجة، #f8fbff، #eaf5fd)؛ الحافة العلوية: 1px صلبة var(--line); border-bottom:1px solid var(--line)}
+ .how-inner{max-width:1100px; الهامش: 0 تلقائي}
+ .steps-grid{display:grid; الشبكة-قالب-الأعمدة:تكرار (4,1fr); الفجوة:0; الهامش الأعلى: 44px; الموقع: نسبي}
+ .steps-grid::before{content:''; الموقع: المطلق؛ الأعلى: 34 بكسل؛ يمين:12.5٪; اليسار: 12.5٪؛ الارتفاع: 2 بكسل؛ الخلفية: الانحدار الخطي (90 درجة، VAR(--sky3)، var(--sky)، var(--sky3)); z-index:0}
+ .step{text-align:center; الحشوة: 0 14 بكسل؛ الموقع: نسبي؛ z-index:1}
+ .step-num{width:68px; الارتفاع: 68 بكسل؛ نصف قطر الحدود: 50٪؛ الخلفية: #fff؛ الحدود: 2px صلبة var(--sky)؛ display:flex; محاذاة العناصر: المركز؛ تبرير المحتوى: المركز؛ الهامش: 0 أوتوماتيكي 18 بكسل؛ حجم الخط: 26px; box-shadow:0 6px 20px RGB (31,111,165,.14)}
+ .step h3{font-size:15px; وزن الخط:900; اللون: var(--حبر); الهامش السفلي: 7px}
+ .step p{font-size:13px; اللون: var(--مكتوم)؛ ارتفاع الخط: 1.8}
+
+/* الخطط */
+ .plans-grid{display:grid; الشبكة-قالب-الأعمدة:تكرار (4,1fr); الفجوة: 14 بكسل؛ الهامش الأعلى: 40 بكسل؛ alalignment-items:start}
+ .plan-card{background:#fff; الإطار: 1.5px فاريد صلب(--خط); نصف قطر الحدود: 20px; الحشوة: 24 بكسل، 20 بكسل؛ الانتقال: 0.3 ثانية؛ الموقع: نسبي}
+ .plan-card:hover{transform:translateY(-3px); box-shadow:0 16px 40px RGB (15,40,64,.1)}
+ .plan-card.featured{border-color:var(--sky)؛ box-shadow:0 10px 36px RGB (31,111,165,.16)}
+ .plan-featured-badge{position:absolute; الأعلى: -13 بكسل؛ صحيح:50٪; transform:translateX (50٪); الخلفية: VAR(--Sky); اللون: #fff؛ حجم الخط: 11px; وزن الخط:900; الحشوة: 4 بكسل، 13 بكسل؛ نصف قطر الحدود: 999px; space:nowrap}
+ .plan-name{font-size:19px; وزن الخط:900; اللون: var(--حبر); الهامش السفلي: 5px}
+ .plan-desc{font-size:12px; اللون: var(--مكتوم)؛ الهامش السفلي: 8px; ارتفاع الخط:1.6}
+ .plan-period{font-size:11px; اللون: var(--أخضر)؛ وزن الخط: 800; الهامش السفلي: 14px}
+ .plan-price{font-size:34px; وزن الخط:900; اللون: var(--حبر); ارتفاع الخط: 1؛ الهامش السفلي: 18px}
+ .plan-price small{font-size:13px; اللون: var(--مكتوم)؛ الوزن:700}
+ .plan-features{list-style:none; display:grid; الفجوة: 9 بكسل؛ الهامش السفلي: 22px}
+ .plan-features li{display:flex; محاذاة العناصر: المركز؛ الفجوة: 7 بكسل؛ حجم الخط: 13 بكسل؛ وزن الخط:700; اللون: var(--ink2)}
+ .plan-features li::before{content:'✓'; العرض: 19 بكسل؛ الارتفاع: 19 بكسل؛ نصف قطر الحدود: 50٪؛ الخلفية: VAR(--sky3); اللون: var(--sky)؛ العرض: Gريد؛ المكان-العناصر: المركز؛ حجم الخط: 10px; وزن الخط:900; flex:0 0 19px}
+ .plan-btn{display:block; العرض: 100٪؛ الحشو: 12 بكسل؛ نصف قطر الحدود: 12 بكسل؛ عائلة الخط: 'تجوال'، بدون خط خطي؛ حجم الخط: 14 بكسل؛ وزن الخط:900; محاذاة النص: المركز؛ زخرفة النص: لا شيء؛ المؤشر: المؤشر؛ الحدود: لا شيء؛ transition:.2s}
+ .plan-btn-primary{background:var(--sky)؛ اللون: #fff؛ box-shadow:0 6px 18px RGB (31,111,165,.2)}
+ .plan-btn-primary:hover{background:#185781}
+ .plan-btn-ghost{background:var(--sky3); اللون: var(--sky)}
+ .plan-btn-ghost:hover{background:#d3e9f8}
+
+/* CTA */
+ .cta-section{الحشر:70px 20px; الخلفية: تدرج خطي (135 درجة، فار(--حبر)، فار(--حبر2)); الموقع: نسبي؛ overflow:hidden}
+ .cta-section::before{content:''; الموقع: المطلق؛ الداخل: 0; الخلفية: التدرج الشعاعي (القطع الناقص 60٪ 80٪ عند 20٪ 50٪، RGB (31,111,165,.22),شفاف)}
+ .cta-inner{أقصى عرض:680 بكسل؛ الهامش: 0 أوتوماتيكي؛ محاذاة النص: المركز؛ الموقع: نسبي؛ z-index:1}
+ .cta-inner h2{font-size:clamp(24px,4vw,40px); وزن الخط:900; اللون: #fff؛ ارتفاع الخط: 1.25; الهامش السفلي: 12px}
+ .cta-inner p{font-size:15px; اللون: rgba (255، 255، 255، .7)؛ ارتفاع الخط: 1.85؛ الهامش السفلي: 28px}
+ .cta-actions{display:flex; محاذاة العناصر: المركز؛ تبرير المحتوى: المركز؛ الفجوة:10 بكسل; لف مرن:wrap}
+ .cta-btn-primary{الحشوة:14px 28px; نصف قطر الحدود: 14px; الخلفية: VAR(--ذهبي2); اللون: var(--حبر); عائلة الخط: 'تجوال'، بدون خط خطي؛ حجم الخط: 15px; وزن الخط:900; الحدود: لا شيء؛ المؤشر: المؤشر؛ زخرفة النص: لا شيء؛ ظل: 0 10 بكسل 28 بكسل RGB (245,200,66,.28); الانتقال: 0.25 ثانية؛ display:inline-flex; محاذاة العناصر: المركز؛ فجوة:7px}
+ .cta-btn-primary:hover{خلفية:#e8be00; transform:translateY(-2px)}
+ .cta-btn-ghost{حشرة:14px 22px; نصف قطر الحدود: 14px; الخلفية: RGBA (255، 255، 255، .1); اللون: #fff؛ عائلة الخط: 'تجوال'، بدون خط خطي؛ حجم الخط: 15px; وزن الخط: 800; الحدود:1px RGB الصلب (255,255,255,.2)؛ المؤشر: المؤشر؛ زخرفة النص: لا شيء؛ الانتقال: 0.25 ثانية؛ display:inline-flex; محاذاة العناصر: المركز؛ فجوة:7px}
+ .cta-btn-ghost:hover{background:rgba(255,255,255,.18)}
+
+/* التذييل */
+ التذييل: 24 بكسل 20 بكسل؛ الخلفية: #fff؛ الحافة العلوية: 1px صلبة var(--line); display:flex; محاذاة العناصر: المركز؛ تبرير المحتوى: المسافة بين؛ لف-مرن:لف; فجوة:12px}
+ .footer-brand{display:flex; محاذاة العناصر: المركز؛ الفجوة: 9 بكسل؛ حجم الخط: 15px; وزن الخط:900; اللون: var(--ink)}
+ .footer-logo{width:32px; الارتفاع: 32 بكسل؛ نصف قطر الحدود: 9px; الخلفية: تدرج خطي (135 درجة، فار(--السماء)،فار(--سماء2)); display:grid; المكان-العناصر: المركز؛ اللون: #fff؛ حجم الخط: 14 بكسل؛ الوزن: 900}
+ التذييل p{حجم الخط:12px; اللون: var(--مكتوم)}
+ .footer-links{display:flex; الفجوة: 14 بكسل؛ لف مرن:wrap}
+ .footer-links a{font-size:12px; وزن الخط:700; اللون: var(--مكتوم)؛ زخرفة النص: لا شيء}
+ .footer-links a:hover{color:var(--sky)}
+
+/* فيديو */
+ .video-section{padding:70px 20px; الخلفية: #fff؛ border-top:1px solid var(--line)}
+ .video-inner{max-width:760px; الهامش: 0 أوتوماتيكي؛ محاذاة النص:الوسط}
+ .video-wrapper{position:relative; العرض: 100٪؛ الحشو-القاع: 177.77٪؛ نصف قطر الحدود: 20px; الفائض: مخفي؛ box-shadow:0 20px 60px rgba (15,40,64,.15); border:1px solid var(--line)}
+ .video-wrapper iframe{position:absolute; الداخل: 0; العرض: 100٪؛ الطول: 100٪؛ نصف قطر الحدود:20px}
+ @media(أقصى عرض:600 بكسل){.video-section{padding:50px 16px}}
+
+/* الرسوم المتحركة */
+ @keyframes fadeUp{from{obacity:0; transform:translateY(18px)}to{عتامة:1; transform:translateY(0)}}}
+ .reveal{عتامة:0; transform:translateY(22px); انتقال: تعتيم .55s إسهال، تحويل .55s إسهال}
+ .reveal.visible{عتامة:1; transform:translateY(0)}
+
+/* ══ استجابة ══ */
+ @media(أقصى عرض:1024px){
+ .feature-grid{grid-template-columns:Repeat(2,1fr)}
+ .plans-grid{grid-template-columns:Repeat(2,1fr)}
+ .steps-grid{grid-template-columns:repeat(2,1fr); الفجوة:28px}
+ .steps-grid::before{display:none}
+ }
+ @media(أقصى عرض:768px){
+ nav{padding:10px 16px}
+ .nav-links{display:none}
+ .nav-toggle{display:flex}
+ .nav-brand{font-size:17px}
+ .nav-logo{width:34px; الارتفاع: 34 بكسل؛ حجم الخط:15px}
+ .hero{الحشوة:80px 16px 44px; الحد الأدنى للارتفاع: auto}
+ .hero h1{font-size:28px}
+ .hero-sub{font-size:14px}
+ .btn-hero-primary,.btn-hero-ghost{حشو:13px 22px; حجم الخط:14px}
+ .hero-actions{gap:8px}
+ .hero-stats{gap:8px; الهامش الأعلى: 28px}
+ .stat-pill{padding:9px 14px}
+ .stat-pill قوي{font-size:16px}
+ .stat-pill span{font-size:10px}
+ .section{padding:50px 16px}
+ .section h2{font-size:24px}
+ .features-grid{grid-template-columns:1fr; فجوة:12px}
+ .feature-card{padding:20px 16px}
+ .how-section{padding:50px 16px}
+ .steps-grid{grid-template-columns:1fr; فجوة:20px}
+ .step{padding:0}
+ .step-num{width:58px; الارتفاع: 58 بكسل؛ حجم الخط:22px; الهامش السفلي: 14px}
+ .plans-grid{grid-template-columns:1fr; فجوة:12px}
+ .plan-card{padding:20px 16px}
+ .plan-price{font-size:28px}
+ .cta-section{padding:50px 16px}
+ .cta-actions{flex-direction:column; محاذاة العناصر:stretch}
+ .cta-btn-primary,.cta-btn-ghost{width:100٪; تبرير المحتوى: المركز؛ الحشو: 15 بكسل}
+ تذييل{اتجاه مرن:عمود؛ محاذاة النص: المركز؛ الحشو: 20 بكسل 16 بكسل}
+ .footer-links{justify-content:center}
+ }
+ @media(أقصى عرض:480 بكسل){
+ .hero h1{حجم الخط:24px}
+ .hero-actions{flex-direction:column; العرض:100٪}
+ .btn-hero-primary,.btn-hero-ghost{width:100٪; justify-content:center}
+ .hero-stats{مرن-الاتجاه:عمود; محاذاة العناصر:stretch}
+ .stat-pill{justify-content:center}
+ }
+ @media(تحويم:لا أحد){
+ .feature-card:hover,.plan-card:hover{transform:none}
+ .btn-hero-primary:hover,.btn-hero-ghost:hover{transform:none}
+ }
+ </الأسلوب>
+</الرأس>
+<الجسم>
 
 <!-- ══ NAV ══ -->
-<nav>
-  <a class="nav-brand" href="index.html">
-    <div class="nav-logo">س</div>
-    صندوق ساهل
-  </a>
-  <div class="nav-links">
-    <a class="nav-btn nav-btn-ghost" href="#features">المميزات</a>
-    <a class="nav-btn nav-btn-ghost" href="#plans">الباقات</a>
-    <a class="nav-btn nav-btn-ghost" href="login.html">دخول</a>
-    <a class="nav-btn nav-btn-primary" href="auth.html">ابدأ مجاناً</a>
-  </div>
-</nav>
+<nav id="mainNav">
+ <a class="nav-brand" href="index.html">
+ <img src="assets/logo.png" style="width:38px; الارتفاع: 38 بكسل؛ ملاءمة الكائن: contain; border-radius:0" alt="صندوق ساهل">
+ صندوق ساهل
+ </أ>
+ <div class="nav-links">
+ <a class="nav-btn nav-btn-ghost" href="#features">المميزات</a>
+ <a class="nav-btn nav-btn-ghost" href="#plans">الباقات</a>
+ <a class="nav-btn nav-btn-ghost" href="guide.html">دليل الاستخدام</a>
+ <a class="nav-btn nav-btn-ghost" href="login.html">دخول</a>
+ <a class="nav-btn nav-btn-primary" href="auth.html">ابدأ مجاناً</a>
+ </div>
+ <button class="nav-toggle" id="navToggle" aria-label="القائمة">
+ <span></span><span></span><span></span>
+ </زر>
+</ملاحة>
 
-<!-- ══ HERO ══ -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-dots"></div>
-  <div class="hero-inner">
-    <div class="hero-badge">
-      <div class="hero-badge-dot"></div>
-      منصة إدارة الجمعيات المالية الأولى في الإمارات
-    </div>
-    <h1>
-      أدِر جمعيتك المالية<br>
-      <span class="accent">بكل سهولة وثقة</span>
-    </h1>
-    <p class="hero-sub">
-      منصة رقمية متكاملة تُمكّن مدير الجمعية من إدارة الأعضاء، متابعة الدفعات، وإرسال روابط الانضمام — كل ذلك من مكان واحد.
-    </p>
-    <div class="hero-actions">
-      <a class="btn-hero-primary" href="auth.html">ابدأ مجاناً الآن ←</a>
-      <a class="btn-hero-ghost" href="#how">كيف يعمل؟</a>
-    </div>
-    <div class="hero-stats">
-      <div class="stat-pill">
-        <div class="stat-pill-icon" style="background:var(--sky3)">🏛️</div>
-        <div><strong>100%</strong><span>رقمي بالكامل</span></div>
-      </div>
-      <div class="stat-pill">
-        <div class="stat-pill-icon" style="background:#e8f8f1">🔒</div>
-        <div><strong>آمن</strong><span>مع صلاحيات محكمة</span></div>
-      </div>
-      <div class="stat-pill">
-        <div class="stat-pill-icon" style="background:#fff8e8">⚡</div>
-        <div><strong>فوري</strong><span>تتبع الدفعات لحظياً</span></div>
-      </div>
-      <div class="stat-pill">
-        <div class="stat-pill-icon" style="background:#f3edff">📱</div>
-        <div><strong>متوافق</strong><span>مع جميع الأجهزة</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ FEATURES ══ -->
-<section class="section reveal" id="features">
-  <div class="section-label">المميزات</div>
-  <h2>كل ما تحتاجه لإدارة جمعيتك</h2>
-  <p class="section-sub">من رابط الانضمام إلى تتبع الدفعات — كل شيء في لوحة تحكم واحدة واضحة.</p>
-
-  <div class="features-grid">
-    <div class="feature-card fc-blue reveal">
-      <div class="feature-icon">🔗</div>
-      <h3>رابط انضمام ذكي</h3>
-      <p>أرسل رابطاً واحداً للأعضاء ليختاروا شهرهم المتاح ويرسلوا طلب الانضمام مباشرة — بدون تنسيق يدوي.</p>
-    </div>
-    <div class="feature-card fc-green reveal">
-      <div class="feature-icon">💳</div>
-      <h3>تتبع الدفعات</h3>
-      <p>سجّل كل دفعة، تابع المتأخرين، ارفع الإيصالات، واعرف الحالة المالية لكل عضو في ثوانٍ.</p>
-    </div>
-    <div class="feature-card fc-gold reveal">
-      <div class="feature-icon">📅</div>
-      <h3>جدول الدفعات الشهري</h3>
-      <p>جدول واضح بأسماء الأعضاء وترتيبهم وشهر استلامهم وحالة دفعهم — كل شيء في صفحة واحدة.</p>
-    </div>
-    <div class="feature-card fc-violet reveal">
-      <div class="feature-icon">✅</div>
-      <h3>قبول الطلبات ورفضها</h3>
-      <p>راجع طلبات الانضمام واقبلها برقمة — الطلب المقبول يُضاف مباشرة لقائمة الأعضاء تلقائياً.</p>
-    </div>
-    <div class="feature-card fc-teal reveal">
-      <div class="feature-icon">📊</div>
-      <h3>لوحة أدمن شاملة</h3>
-      <p>المشرف العام يرى كل الجمعيات والمدراء والأعضاء والدفعات والاشتراكات في مكان واحد.</p>
-    </div>
-    <div class="feature-card fc-red reveal">
-      <div class="feature-icon">🔔</div>
-      <h3>حد الأعضاء التلقائي</h3>
-      <p>عند امتلاء الجمعية يُغلق رابط الانضمام تلقائياً ويُعلَم الأعضاء الجدد بأن الجمعية اكتملت.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ══ HOW IT WORKS ══ -->
-<div class="how-section reveal" id="how">
-  <div class="how-inner">
-    <div style="text-align:center">
-      <div class="section-label" style="justify-content:center">كيف يعمل</div>
-      <h2 style="text-align:center">ابدأ في 4 خطوات بسيطة</h2>
-      <p class="section-sub" style="margin:10px auto 0;text-align:center">من التسجيل إلى إدارة الجمعية في دقائق.</p>
-    </div>
-    <div class="steps-grid">
-      <div class="step reveal">
-        <div class="step-num">1️⃣</div>
-        <h3>أنشئ حسابك</h3>
-        <p>سجّل كمدير جمعية، أدخل اسم الجمعية والمبلغ الشهري، واختر الباقة المناسبة.</p>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">2️⃣</div>
-        <h3>أرسل رابط الانضمام</h3>
-        <p>انسخ رابط الانضمام الخاص بجمعيتك وأرسله للأعضاء عبر واتساب أو أي وسيلة.</p>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">3️⃣</div>
-        <h3>قبول الطلبات</h3>
-        <p>يصلك إشعار بطلبات الانضمام. اقبل أو ارفض برقمة — والعضو المقبول يُضاف تلقائياً.</p>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">4️⃣</div>
-        <h3>تابع الدفعات</h3>
-        <p>سجّل دفعات الأعضاء، ارفع الإيصالات، وتابع من دفع ومن لم يدفع بسهولة تامة.</p>
-      </div>
-    </div>
-  </div>
+<!-- قائمة موبايل -->
+<div class="mobile-menu" id="mobileMenu">
+ <a class="nav-btn nav-btn-ghost" href="#features" onclick="closeMobileMenu()">المميزات</a>
+ <a class="nav-btn nav-btn-ghost" href="#plans" onclick="closeMobileMenu()">الباقات</a>
+ <a class="nav-btn nav-btn-ghost" href="guide.html">دليل الاستخدام</a>
+ <a class="nav-btn nav-btn-ghost" href="login.html">تسجيل الدخول</a>
+ <a class="nav-btn nav-btn-primary" href="auth.html">ابدأ مجانا ←</a>
 </div>
 
-<!-- ══ PLANS ══ -->
+<!-- ══ بطل ══ -->
+<قسم الفئة="البطل">
+ <div class="hero-bg"></div>
+ <div class="hero-dots"></div>
+ <div class="بطل">
+ <div class="شارة البطل">
+ منصة إدارة الجمعيات المالية
+ </div>
+ <h1>أدِر جمعيتك المالية<br><span class="accent">بكل سهولة وثقة</span></h1>
+ <p class="hero-sub">منصة رقمية متكاملة تُمكّن مدير الجمعية من إدارة الأعضاء، متابعة الدفعات، وإرسال روابط الانضمام — كل ذلك من مكان واحد.</p>
+ <div class="hero-actions">
+ <a class="btn-hero-primary" href="auth.html">ابدأ مجاناً الآن ←</a>
+ <a class="btn-hero-ghost" href="#how">كيف يعمل؟</a>
+ </div>
+ <div class="hero-stats">
+ <div class="stat-pill"><div class="stat-pill-icon" style="background:var(--sky3)">🏛️</div><div><strong>100٪</strong><span>رقمي بالكامل</span></div></div>
+ <div class="stat-pill"><div class="stat-pill-icon" style="background:#e8f8f1">🔒</div><div><strong>آمن</strong><span>صلاحيات محكمة</span></div></div>
+ <فئة القسمة="stat-pill"><div class="stat-pill-icon" style="background:#fff8e8">⚡</div><div><strong>فوري</strong><span>تتبع لحظي</span></div></div>
+ <فئة الفرقة="stat-pill"><فئة القسمة="stat-pill-icon" style="background:#f3edff">📱</div><div><strong>متوافق</strong><span>جميع الأجهزة</span></div></div>
+ </div>
+ </div>
+</قسم>
+
+<!-- ══ الميزات ══ -->
+<قسم الفئة="كشف القسم" id="features">
+ <div class="section-label">المميزات</div>
+ <h2>كل ما تحتاجه لإدارة جمعيتك</h2>
+ <p class="section-sub">من رابط الانضمام إلى تتبع الدفعات — كل شيء في لوحة تحكم واحدة واضحة.</p>
+ <div class="features-grid">
+ <div class="feature-card fc-blue reveal"><div class="feature-icon">🔗</div><h3>رابط انضمام ذكي</h3><p>أرسل رابطاً واحداً للأعضاء ليختاروا شهرهم المتاح ويرسلوا طلب الانضمام مباشرة.</p></div>
+ <div class="feature-card fc-green reveal"><div class="feature-icon">💳</div><h3>تتبع الدفعات</h3><p>سجَ كل دفعة، تابع المتأخرين، رفع الإيصالات، واعرف الحالة المالية لكل عضو.</p></div>
+ <div class="feature-card fc-gold reveal"><div class="feature-icon">📅</div><h3>جدول الدفعات الشهري</h3><p>جدول واضح بأسماء الأعضاء وشهر استلامهم وحالة دفعهم — كل شيء في صفحة واحدة.</p></div>
+ <div class="feature-card fc-violet reveal"><div class="feature-icon">✅</div><h3>قبول الطلبات</h3><p>راجع طلبات الانضمام واقبلها برقمة — العضو المقبول يُضاف تلقائياً لقائمة الأعضاء.</p></div>
+ <div class="feature-card fc-teal reveal"><div class="feature-icon">🏛️</div><h3>جمعيات متعددة</h3><p>أنشئ وأدر أكثر من جمعية في نفس الوقت — كل جمعية بلون مميز وداشبورد مستقل.</p></div>
+ <div class="feature-card fc-red reveal"><div class="feature-icon">🔔</div><h3>حد الأعضاء التلقائي</h3><p>عند امتلاء الجمعية يُغلق رابط الانضمام تلقائياً ويُعلَم الأعضاء الجدد.</p></div>
+ </div>
+</قسم>
+
+<!-- ══ كيف ══ -->
+<div class="how-section reveal" id="how">
+ <div class="how-inner">
+ <div style="text-align:center">
+ <div class="section-label" style="justify-content:center">كيف يعمل</div>
+ < h2 style="text-align:center">ابدأ في 4 خطوات بسيطة</h2>
+ <p class="section-sub" style="margin:10px auto 0; text-align:center">من التسجيل إلى إدارة الجمعية في دقائق.</p>
+ </div>
+ <div class="step-grid">
+ <div class="step reveal"><div class="step-num">⃣ 1️</div><h3>أنشئ حسابك</h3><p>سجّل كمدير جمعية، أدخل اسم الجمعية والمبلغ الشهري، واختر الباقة المناسبة.</p></div>
+ <div class="step reveal"><div class="step-num">⃣ 2️</div><h3>أرسل رابط الانضمام</h3><p>انسخ رابط الانضمام وأرسله للأعضاء عبر واتساب أو أي وسيلة.</p></div>
+ <div class="step reveal"><div class="step-num">⃣ 3️</div><h3>قبول الطلبات</h3><p>يصلك إشعار بطلبات الانضمام. اقبل أو ارفض — والعضو يُضاف تلقائياً.</p></div>
+ <div class="step reveal"><div class="step-num">⃣ 4️</div><h3>تابع الدفعات</h3><p>سجّل دفعات الأعضاء، ارفع الإيصالات، وتابع من دفع ومن لم يدفع.</p></div>
+ </div>
+ </div>
+</div>
+
+<!-- ══ فيديو ══ -->
+<div class="video-section reveal">
+ <div class="video-inner">
+ <div class="section-label" style="justify-content:center">شاهد كيف يعمل</div>
+ <h2>صندوق ساهل في دقيقة واحدة</h2>
+ <p class="section-sub" style="margin:10px auto 32px; text-align:center">فيديو توضيحي يشرح كيف تُدار الجمعية من البداية حتى النهاية.</p>
+ <div class="video-wrapper">
+ <iframe
+ src="https://www.youtube.com/embed/xHYDNcTZIkk"
+ title="صندوق ساهل — شرح المنصة"
+ إطار الإطار = 0"
+ مجاز="مقياس التسارع; التشغيل التلقائي؛ كتابة الحافظة؛ وسائط مشفرة؛ الجيروسكوب؛ صورة داخل صورة؛ مشاركة على الويب"
+ مسموح بالشاشة الكاملة (allowfulscreen)>
+ </iframe>
+ </div>
+ </div>
+</div>
+
+<!-- ══ خطط ══ -->
 <section class="section reveal" id="plans">
-  <div class="section-label">الباقات</div>
-  <h2>اختر الباقة المناسبة</h2>
-  <p class="section-sub">ابدأ مجاناً وطوّر باقتك عند الحاجة. لا رسوم خفية.</p>
+ <div class="section-label">الباقات</div>
+ <h2>اختر الباقة المناسبة</h2>
+ <p class="section-sub">ابدأ مجاناً وطوّر باقتك عند الحاجة. لا رسوم خفية.</p>
+ <div style="text-align:center; الهامش السفلي: 28px">
+ <span style="display:inline-flex; محاذاة العناصر: المركز؛ الفجوة:10 بكسل; الخلفية: تدرج خطي (135°G,#1f6fa5,#138a59); اللون: #fff؛ حجم الخط: 16 بكسل؛ وزن الخط:900; الحشوة: 14 بكسل 28 بكسل؛ نصف قطر الحدود: 50 بكسل؛ box-shadow:0 8px 24px RGB (31,111,165,0.3)">
+ 📅 اشتراك سنوي — ادفع مرة واحدة كل سنة
+ </span>
+ </div>
+ <div class="plans-grid">
 
-  <div class="plans-grid">
+<!-- مجاني -->
+ <div class="plan-card reveal">
+ <div class="plan-name">Free</div>
+ <div class="plan-desc">مثالية للبداية والتجربة</div>
+ <div class="plan-period">مجانا للأبد 🎉 </div>
+ <div class="plan-price">0 <small>درهم</small></div>
+ <ul class="plan-features">
+ <li>1 جمعية</li>
+ <li>حتى 4 أعضاء</li>
+ <li>رابط انضمام</li>
+ <li>تتبع الدفعات</li>
+ </ul>
+ <a class="plan-btn plan-btn-ghost" href="auth.html">ابدأ مجاناً</a>
+ </div>
 
-    <div class="plan-card reveal">
-      <div class="plan-name">Free</div>
-      <div class="plan-desc">مثالية للبداية والتجربة</div>
-      <div class="plan-price">0 <small>درهم</small></div>
-      <ul class="plan-features">
-        <li>1 جمعية</li>
-        <li>حتى 4 أعضاء</li>
-        <li>رابط انضمام</li>
-        <li>تتبع الدفعات</li>
-      </ul>
-      <a class="plan-btn plan-btn-ghost" href="auth.html">ابدأ مجاناً</a>
-    </div>
+<!-- أساسي -->
+ <div class="plan-card reveal">
+ <div class="plan-name">Basic</div>
+ <div class="plan-desc">للجمعيات الصغيرة النشطة</div>
+ <div class="plan-period">سنوياً · 0.16 درهم / يوم</div>
+ <div class="plan-price">59 <small>درهم</small></div>
+ <ul class="plan-features">
+ <لي>3 جمعيات</لي>
+ <li>حتى 10 أعضاء</li>
+ <li>رفع الإيصالات</li>
+ <li>جدول الدفعات</li>
+ </ul>
+ <a class="plan-btn plan-btn-ghost" href="auth.html">اشترك الآن</a>
+ </div>
 
-    <div class="plan-card reveal">
-      <div class="plan-name">Basic</div>
-      <div class="plan-desc">للجمعيات الصغيرة النشطة</div>
-      <div class="plan-price">39 <small>درهم/شهر</small></div>
-      <ul class="plan-features">
-        <li>3 جمعيات</li>
-        <li>حتى 10 أعضاء</li>
-        <li>رفع الإيصالات</li>
-        <li>جدول الدفعات</li>
-      </ul>
-      <a class="plan-btn plan-btn-ghost" href="auth.html">اشترك الآن</a>
-    </div>
+<!-- برو -->
+ <div class="كشف بطاقة خطة مميز">
+ <div class="plan-featured-badge"> ⭐ الأكثر استخداماً</div>
+ <div class="plan-name">Pro</div>
+ <div class="plan-desc">للمدراء المحترفين</div>
+ <div class="plan-period">سنوياً · 0.27 درهم / يوم</div>
+ <div class="plan-price">99 <small>درهم</small></div>
+ <ul class="plan-features">
+ <li>6 جمعيات</li>
+ <li>حتى 15 عضو</li>
+ <li>جميع المميزات</li>
+ <li>دعم أولوي</li>
+ </ul>
+ <a class="plan-btn plan-btn-primary" href="auth.html">اشترك الآن</a>
+ </div>
 
-    <div class="plan-card featured reveal">
-      <div class="plan-featured-badge">⭐ الأكثر استخداماً</div>
-      <div class="plan-name">Pro</div>
-      <div class="plan-desc">للمدراء المحترفين</div>
-      <div class="plan-price">69 <small>درهم/شهر</small></div>
-      <ul class="plan-features">
-        <li>6 جمعيات</li>
-        <li>حتى 15 عضو</li>
-        <li>جميع المميزات</li>
-        <li>دعم أولوي</li>
-      </ul>
-      <a class="plan-btn plan-btn-primary" href="auth.html">اشترك الآن</a>
-    </div>
+<!-- الأعمال -- >
+ <div class="plan-card reveal">
+ <div class="plan-name">Business</div>
+ <div class="plan-desc">للمؤسسات والشركات</div>
+ <div class="plan-period">سنوياً · 0.49 درهم / يوم</div>
+ <div class="plan-price">179 <small>درهم</small></div>
+ <ul class="plan-features">
+ <li>10 جمعيات</li>
+ <li>حتى 25 عضو</li>
+ <li>جميع المميزات</li>
+ <li>تقارير متقدمة</li>
+ </ul>
+ <a class="plan-btn plan-btn-ghost" href="auth.html">اشترك الآن</a>
+ </div>
 
-    <div class="plan-card reveal">
-      <div class="plan-name">Business</div>
-      <div class="plan-desc">للمؤسسات والشركات</div>
-      <div class="plan-price">99 <small>درهم/شهر</small></div>
-      <ul class="plan-features">
-        <li>10 جمعيات</li>
-        <li>حتى 25 عضو</li>
-        <li>جميع المميزات</li>
-        <li>تقارير متقدمة</li>
-      </ul>
-      <a class="plan-btn plan-btn-ghost" href="auth.html">اشترك الآن</a>
-    </div>
-
-  </div>
-</section>
+</div>
+</قسم>
 
 <!-- ══ CTA ══ -->
-<section class="cta-section reveal">
-  <div class="cta-inner">
-    <h2>ابدأ إدارة جمعيتك اليوم</h2>
-    <p>انضم إلى مئات المدراء الذين يديرون جمعياتهم بشكل رقمي منظم. التسجيل مجاني ولا يستغرق دقيقة.</p>
-    <div class="cta-actions">
-      <a class="cta-btn-primary" href="auth.html">إنشاء حساب مجاني ←</a>
-      <a class="cta-btn-ghost" href="login.html">لدي حساب بالفعل</a>
-    </div>
-  </div>
-</section>
+<فئة القسم="كشف قسم CTA">
+ <div class="cta-inner">
+ <h2>ابدأ إدارة جمعيتك اليوم</h2>
+ <p>انضم إلى مئات المدراء الذين يديرون جمعياتهم بشكل رقمي منظم. التسجيل مجاني ولا يستغرق دقيقة.</p>
+ <div class="cta-actions">
+ <a class="cta-btn-primary" href="auth.html">إنشاء حساب مجاني ←</a>
+ <a class="cta-btn-ghost" href="login.html">لدي حساب بالفعل</a>
+ </div>
+ </div>
+</قسم>
 
-<!-- ══ FOOTER ══ -->
-<footer>
-  <div class="footer-brand">
-    <div class="footer-logo">س</div>
-    صندوق ساهل
-  </div>
-  <p>© 2026 صندوق ساهل — جميع الحقوق محفوظة</p>
-  <div class="footer-links">
-    <a href="auth.html">إنشاء حساب</a>
-    <a href="login.html">تسجيل الدخول</a>
-    <a href="plans.html">الباقات</a>
-  </div>
-</footer>
+<!-- ══ التذيل ══ -->
+<القدم>
+ <img src="assets/logo.png" style="width:32px; الارتفاع: 32 بكسل؛ object-fit:contain" alt="صندوق ساهل">
+ <p>© 2026 صندوق ساهل — جميع الحقوق محفوظة</p>
+ <div class="footer-links">
+ <a href="auth.html">إنشاء حساب</a>
+ <a href="login.html">تسجيل الدخول</a>
+ <a href="guide.html">دليل الاستخدام</a>
+ <a href="plans.html">الباقات</a>
+ </div>
+</تذييل>
 
-<script>
-  // Scroll reveal
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(el => {
-      if (el.isIntersecting) {
-        el.target.classList.add('visible')
-        observer.unobserve(el.target)
-      }
-    })
-  }, { threshold: 0.1 })
+<نص>
+ const observer = مراقب تقاطع جديد ((مدخلات) = > {
+ entries.forEach(el => { if(el.isIntersecting){el.target.classList.add('visible'); observer.unobserve(el.target)} })
+ }, {threshold:.08})
+ document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
 
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+window.addEventListener('scroll', () => {
+ document.querySelector('nav').style.boxShadow = window.scrollY > 20 ؟ '0 4px 20px rgba(15,40,64,.1)' : 'لا شيء'
+ })
 
-  // Nav scroll effect
-  window.addEventListener('scroll', () => {
-    const nav = document.querySelector('nav')
-    nav.style.boxShadow = window.scrollY > 20
-      ? '0 4px 24px rgba(15,40,64,.1)'
-      : 'none'
-  })
-</script>
-</body>
+const toggle = document.getElementById('navToggle')
+ const menu = document.getElementById('mobileMenu')
+ toggle.addEventListener('click', () => {
+ menu.classList.toggle('open')
+ const spans = toggle.querySelectorAll('span')
+ if(menu.classList.contains('open'){
+ spans[0].style.cssText='transform:rotate(45 درجة) translate(5px,5px)'
+ spans[1].style.cssText='شفافية:0'
+ spans[2].style.cssText='transform:rotate(-45deg) translate(5px,-5px)'
+ } وإلا {
+ الامتدادات.forEach(s=>s.style.cssText='')
+ }
+ })
+
+الدالة closeMobileMenu(){
+ menu.classList.remove('open')
+ toggle.querySelectorAll('span').forEach(s=>s.style.cssText='')
+ }
+
+document.addEventListener('click', (e) => {
+ إذا(!toggle.contains(e.target) && !menu.contains(e.target)) closeMobileMenu()
+ })
+</النص>
+</الجسم>
 </html>
