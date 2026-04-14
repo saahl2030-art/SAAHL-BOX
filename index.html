@@ -18,55 +18,7 @@
     html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
     body{font-family:'Tajawal',sans-serif;background:var(--white);color:var(--ink);overflow-x:hidden}
 
-    /* ══ SPLASH SCREEN ══ */
-    #splashScreen{
-      position:fixed;inset:0;z-index:9999;
-      background:linear-gradient(160deg,#0a1628 0%,#1a2e4a 50%,#0d2137 100%);
-      display:flex;align-items:center;justify-content:center;
-      flex-direction:column;gap:0;
-      transition:opacity .8s ease, visibility .8s ease;
-    }
-    #splashScreen.hide{opacity:0;visibility:hidden;pointer-events:none;z-index:-1;display:none!important}
-    .splash-img{
-      width:min(85vw,380px);
-      animation:splashZoom .8s ease both;
-    }
-    .splash-progress{
-      width:min(80vw,300px);
-      height:3px;
-      background:rgba(255,255,255,.15);
-      border-radius:999px;
-      overflow:hidden;
-      margin-top:32px;
-    }
-    .splash-progress-fill{
-      height:100%;
-      background:linear-gradient(90deg,var(--sky),var(--gold2));
-      border-radius:999px;
-      width:0%;
-      animation:progressFill 2.8s ease forwards;
-    }
-    .splash-text{
-      margin-top:16px;
-      color:rgba(255,255,255,.5);
-      font-size:12px;
-      font-weight:700;
-      letter-spacing:.1em;
-      animation:fadeIn .6s .4s ease both;
-    }
-    @keyframes splashZoom{
-      from{opacity:0;transform:scale(.85)}
-      to{opacity:1;transform:scale(1)}
-    }
-    @keyframes progressFill{
-      0%{width:0%}
-      30%{width:40%}
-      70%{width:75%}
-      100%{width:100%}
-    }
-    @keyframes fadeIn{
-      from{opacity:0}to{opacity:1}
-    }
+
 
     /* ══ NAV ══ */
     nav{
@@ -262,14 +214,6 @@
 </head>
 <body>
 
-<!-- ══ SPLASH SCREEN ══ -->
-<div id="splashScreen">
-  <img class="splash-img" src="assets/uae-splash.png" alt="حصنتك بسم الله يا وطن">
-  <div class="splash-progress">
-    <div class="splash-progress-fill"></div>
-  </div>
-  <div class="splash-text">صندوق ساهل</div>
-</div>
 
 <!-- ══ NAV ══ -->
 <nav id="mainNav">
@@ -314,4 +258,21 @@
     </div>
     <div class="hero-stats">
       <div class="stat-pill"><div class="stat-pill-icon" style="background:var(--sky3)">🏛️</div><div><strong>100%</strong><span>رقمي بالكامل</span></div></div>
-      <div c
+      <div class="stat-pill"><div class="stat-pill-icon" style="background:#e8f8f1">🔒</div><div><strong>آمن</strong><span>صلاحيات محكمة</span></div></div>
+      <div class="stat-pill"><div class="stat-pill-icon" style="background:#fff8e8">⚡</div><div><strong>فوري</strong><span>تتبع لحظي</span></div></div>
+      <div class="stat-pill"><div class="stat-pill-icon" style="background:#f3edff">📱</div><div><strong>متوافق</strong><span>جميع الأجهزة</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FEATURES ══ -->
+<section class="section reveal" id="features">
+  <div class="section-label">المميزات</div>
+  <h2>كل ما تحتاجه لإدارة جمعيتك</h2>
+  <p class="section-sub">من رابط الانضمام إلى تتبع الدفعات — كل شيء في لوحة تحكم واحدة واضحة.</p>
+  <div class="features-grid">
+    <div class="feature-card fc-blue reveal"><div class="feature-icon">🔗</div><h3>رابط انضمام ذكي</h3><p>أرسل رابطاً واحداً للأعضاء ليختاروا شهرهم المتاح ويرسلوا طلب الانضمام مباشرة.</p></div>
+    <div class="feature-card fc-green reveal"><div class="feature-icon">💳</div><h3>تتبع الدفعات</h3><p>سجّل كل دفعة، تابع المتأخرين، ارفع الإيصالات، واعرف الحالة المالية لكل عضو.</p></div>
+    <div class="feature-card fc-gold reveal"><div class="feature-icon">📅</div><h3>جدول الدفعات الشهري</h3><p>جدول واضح بأسماء الأعضاء وشهر استلامهم وحالة دفعهم — كل شيء في صفحة واحدة.</p></div>
+    <div class="feature-card fc-violet reveal"><div class="feature-icon">✅</div><h3>قبول الطلبات</h3><p>راجع طلبات الانضمام واقبلها برقمة — العضو المقبول يُضاف تلقائياً لقائمة الأعضاء.</p></div>
+    <div class="feature-card fc-teal reveal"><div class="feature-icon">🏛️</div><h3>جمعيات متعددة</h3><p>أنشئ وأدر أكثر من جمعية في نفس الوقت — كل جمع
