@@ -158,7 +158,7 @@
   <img class="splash-img" src="uae-splash.png" alt="حصنتك بسم الله يا وطن">
   <div class="splash-progress"><div class="splash-progress-fill"></div></div>
   <div class="splash-text">صندوق ساهل</div>
-  <button onclick="removeSplash()" style="margin-top:24px;padding:10px 28px;border:none;border-radius:10px;background:rgba(255,255,255,.15);color:#fff;font-family:Tajawal,sans-serif;font-size:14px;font-weight:700;cursor:pointer">تخطي ←</button>
+  <button onclick="removeSplash()" style="margin-top:24px;padding:10px 28px;border:2px solid rgba(255,255,255,.4);border-radius:10px;background:transparent;color:#fff;font-family:Tajawal,sans-serif;font-size:14px;font-weight:700;cursor:pointer;z-index:10000;position:relative">تخطي ←</button>
 </div>
 
 <!-- ══ NAV ══ -->
@@ -311,25 +311,25 @@
 <script>
   // ── Splash Screen ──
   function removeSplash(){
-    var splash = document.getElementById('splashScreen')
-    if(!splash) return
-    splash.style.opacity = '0'
-    splash.style.transition = 'opacity .5s ease'
-    setTimeout(function(){ splash.remove() }, 500)
+    var s = document.getElementById('splashScreen')
+    if(!s) return
+    s.style.cssText = 'position:fixed;inset:0;z-index:9999;opacity:0;transition:opacity .5s ease;pointer-events:none'
+    setTimeout(function(){ s.parentNode && s.parentNode.removeChild(s) }, 500)
   }
-  window.addEventListener('load', function() {
-    setTimeout(removeSplash, 3000)
-  })
+  window.addEventListener('load', function(){ setTimeout(removeSplash, 3000) })
 
+  // ── Scroll reveal ──
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(el => { if(el.isIntersecting){el.target.classList.add('visible');observer.unobserve(el.target)} })
   }, {threshold:.08})
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
 
+  // ── Nav shadow on scroll ──
   window.addEventListener('scroll', () => {
     document.querySelector('nav').style.boxShadow = window.scrollY > 20 ? '0 4px 20px rgba(15,40,64,.1)' : 'none'
   })
 
+  // ── Mobile menu ──
   const toggle = document.getElementById('navToggle')
   const menu = document.getElementById('mobileMenu')
   toggle.addEventListener('click', () => {
