@@ -1,749 +1,374 @@
-<!DOCTYPE html>
+<! DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>صندوق ساهل — إنشاء حساب</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --ink:#0a1628;
-      --ink2:#1a2e4a;
-      --sky:#1f6fa5;
-      --sky2:#46a8d8;
-      --sky3:#eaf5fd;
-      --line:#dfe8f1;
-      --muted:#6e8498;
-      --white:#ffffff;
-      --green:#138a59;
-      --red:#c53b3b;
-      --shadow:0 18px 50px rgba(15,40,64,.12);
-    }
-
-    *{box-sizing:border-box;margin:0;padding:0}
-    html{-webkit-text-size-adjust:100%}
-    body{
-      font-family:'Tajawal',sans-serif;
-      background:linear-gradient(160deg,#f8fbff 0%,#eaf5fd 45%,#f0f8f4 100%);
-      color:var(--ink);
-      min-height:100vh;
-      overflow-x:hidden;
-    }
-
-    .bg-orb{
-      position:fixed;
-      border-radius:50%;
-      filter:blur(12px);
-      opacity:.18;
-      pointer-events:none;
-      z-index:0;
-    }
-    .bg-orb.one{
-      width:420px;height:420px;
-      top:-140px;left:-120px;
-      background:radial-gradient(circle, var(--sky2), transparent 70%);
-    }
-    .bg-orb.two{
-      width:360px;height:360px;
-      bottom:-120px;right:-80px;
-      background:radial-gradient(circle, #8fd3b0, transparent 70%);
-    }
-
-    nav{
-      position:sticky;
-      top:0;
-      z-index:10;
-      backdrop-filter:blur(20px);
-      background:rgba(255,255,255,.88);
-      border-bottom:1px solid var(--line);
-    }
-
-    .nav-inner{
-      width:min(1180px, calc(100% - 32px));
-      margin:auto;
-      min-height:72px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      text-decoration:none;
-      color:var(--ink);
-      font-weight:900;
-      font-size:22px;
-    }
-
-    .brand img{
-      width:42px;
-      height:42px;
-      object-fit:contain;
-      border-radius:12px;
-    }
-
-    .nav-actions{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .nav-link{
-      text-decoration:none;
-      color:var(--ink2);
-      font-size:14px;
-      font-weight:800;
-      padding:10px 14px;
-      border-radius:12px;
-      transition:.2s;
-    }
-
-    .nav-link:hover{
-      background:var(--sky3);
-    }
-
-    .nav-primary{
-      background:var(--sky);
-      color:#fff;
-    }
-
-    .nav-primary:hover{
-      background:#185781;
-    }
-
-    .page{
-      position:relative;
-      z-index:1;
-      width:min(1180px, calc(100% - 32px));
-      margin:0 auto;
-      padding:38px 0 48px;
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap:26px;
-      align-items:stretch;
-    }
-
-    .hero-card,
-    .auth-card{
-      background:rgba(255,255,255,.92);
-      border:1px solid var(--line);
-      box-shadow:var(--shadow);
-      border-radius:28px;
-    }
-
-    .hero-card{
-      padding:36px;
-      position:relative;
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      min-height:680px;
-    }
-
-    .hero-card::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(circle at 80% 20%, rgba(70,168,216,.10), transparent 26%),
-        radial-gradient(circle at 15% 80%, rgba(19,138,89,.08), transparent 24%);
-      pointer-events:none;
-    }
-
-    .hero-top,
-    .hero-bottom{
-      position:relative;
-      z-index:1;
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 16px;
-      border-radius:999px;
-      background:#fff;
-      border:1px solid var(--line);
-      color:var(--sky);
-      font-size:12px;
-      font-weight:900;
-      box-shadow:0 4px 12px rgba(31,111,165,.08);
-      margin-bottom:22px;
-    }
-
-    .dot{
-      width:8px;height:8px;border-radius:50%;
-      background:var(--green);
-    }
-
-    .hero-title{
-      font-size:clamp(34px, 4.8vw, 58px);
-      line-height:1.15;
-      font-weight:900;
-      margin-bottom:14px;
-      color:var(--ink);
-    }
-
-    .hero-title .accent{
-      background:linear-gradient(135deg,var(--sky),var(--sky2));
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
-
-    .hero-sub{
-      color:var(--muted);
-      font-size:18px;
-      line-height:1.95;
-      max-width:560px;
-      margin-bottom:28px;
-    }
-
-    .feature-list{
-      display:grid;
-      gap:14px;
-      margin-top:20px;
-    }
-
-    .feature-item{
-      display:flex;
-      align-items:flex-start;
-      gap:12px;
-      padding:14px 16px;
-      border-radius:18px;
-      background:#fff;
-      border:1px solid var(--line);
-    }
-
-    .feature-icon{
-      width:42px;
-      height:42px;
-      border-radius:14px;
-      display:grid;
-      place-items:center;
-      background:var(--sky3);
-      flex:0 0 42px;
-      font-size:18px;
-    }
-
-    .feature-item strong{
-      display:block;
-      font-size:15px;
-      font-weight:900;
-      color:var(--ink);
-      margin-bottom:4px;
-    }
-
-    .feature-item span{
-      display:block;
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.8;
-    }
-
-    .stats{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:12px;
-      margin-top:28px;
-    }
-
-    .stat{
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:16px;
-      text-align:center;
-    }
-
-    .stat strong{
-      display:block;
-      font-size:22px;
-      font-weight:900;
-      color:var(--ink);
-      margin-bottom:4px;
-    }
-
-    .stat span{
-      color:var(--muted);
-      font-size:12px;
-      font-weight:700;
-    }
-
-    .auth-card{
-      padding:28px;
-      min-height:680px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-    }
-
-    .auth-header{
-      text-align:center;
-      margin-bottom:24px;
-    }
-
-    .auth-header h2{
-      font-size:30px;
-      font-weight:900;
-      color:var(--ink);
-      margin-bottom:8px;
-    }
-
-    .auth-header p{
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.8;
-    }
-
-    .tab-switch{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:8px;
-      background:#f3f8fc;
-      border:1px solid var(--line);
-      padding:8px;
-      border-radius:18px;
-      margin-bottom:22px;
-    }
-
-    .tab-btn{
-      border:none;
-      border-radius:14px;
-      padding:13px 14px;
-      font-family:'Tajawal',sans-serif;
-      font-size:14px;
-      font-weight:900;
-      cursor:pointer;
-      background:transparent;
-      color:var(--ink2);
-      transition:.2s;
-    }
-
-    .tab-btn.active{
-      background:#fff;
-      color:var(--sky);
-      box-shadow:0 4px 14px rgba(15,40,64,.07);
-    }
-
-    .form-panel{
-      display:none;
-    }
-
-    .form-panel.active{
-      display:block;
-    }
-
-    .form-grid{
-      display:grid;
-      gap:14px;
-    }
-
-    .field{
-      display:grid;
-      gap:8px;
-    }
-
-    .field label{
-      font-size:13px;
-      font-weight:800;
-      color:var(--ink2);
-    }
-
-    .field input,
-    .field select{
-      width:100%;
-      height:52px;
-      border-radius:14px;
-      border:1.5px solid var(--line);
-      background:#fff;
-      padding:0 14px;
-      font-family:'Tajawal',sans-serif;
-      font-size:14px;
-      color:var(--ink);
-      outline:none;
-      transition:.2s;
-    }
-
-    .field input:focus,
-    .field select:focus{
-      border-color:var(--sky);
-      box-shadow:0 0 0 4px rgba(31,111,165,.10);
-    }
-
-    .row-2{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-    }
-
-    .helper{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.8;
-      margin-top:4px;
-    }
-
-    .submit-btn{
-      width:100%;
-      height:54px;
-      border:none;
-      border-radius:16px;
-      background:var(--sky);
-      color:#fff;
-      font-family:'Tajawal',sans-serif;
-      font-size:15px;
-      font-weight:900;
-      cursor:pointer;
-      transition:.2s;
-      margin-top:8px;
-      box-shadow:0 10px 24px rgba(31,111,165,.22);
-    }
-
-    .submit-btn:hover{
-      background:#185781;
-      transform:translateY(-1px);
-    }
-
-    .alt-link{
-      text-align:center;
-      margin-top:16px;
-      font-size:13px;
-      color:var(--muted);
-    }
-
-    .alt-link a{
-      color:var(--sky);
-      font-weight:900;
-      text-decoration:none;
-    }
-
-    .note-box{
-      margin-top:18px;
-      padding:14px 16px;
-      border-radius:16px;
-      background:#f8fbff;
-      border:1px dashed #c8dcec;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.9;
-    }
-
-    @media (max-width: 980px){
-      .page{
-        grid-template-columns:1fr;
-      }
-      .hero-card,
-      .auth-card{
-        min-height:auto;
-      }
-    }
-
-    @media (max-width: 640px){
-      .nav-inner{
-        width:min(100% - 24px, 1180px);
-        min-height:66px;
-      }
-
-      .brand{
-        font-size:18px;
-      }
-
-      .brand img{
-        width:36px;
-        height:36px;
-      }
-
-      .nav-actions{
-        gap:6px;
-      }
-
-      .nav-link{
-        font-size:12px;
-        padding:8px 10px;
-      }
-
-      .page{
-        width:min(100% - 24px, 1180px);
-        padding:22px 0 28px;
-      }
-
-      .hero-card,
-      .auth-card{
-        padding:20px;
-        border-radius:22px;
-      }
-
-      .hero-sub{
-        font-size:15px;
-      }
-
-      .stats{
-        grid-template-columns:1fr;
-      }
-
-      .row-2{
-        grid-template-columns:1fr;
-      }
-
-      .auth-header h2{
-        font-size:24px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="bg-orb one"></div>
-  <div class="bg-orb two"></div>
-
-  <nav>
-    <div class="nav-inner">
-      <a class="brand" href="index.html">
-        <img src="assets/logo.png" alt="صندوق ساهل">
-        <span>صندوق ساهل</span>
-      </a>
-
-      <div class="nav-actions">
-        <a class="nav-link" href="index.html">الرئيسية</a>
-        <a class="nav-link" href="plans.html">الباقات</a>
-        <a class="nav-link" href="guide.html">الدليل</a>
-        <a class="nav-link nav-primary" href="login.html">دخول</a>
-      </div>
-    </div>
-  </nav>
-
-  <main class="page">
-    <section class="hero-card">
-      <div class="hero-top">
-        <div class="badge">
-          <span class="dot"></span>
-          منصة إدارة الجمعيات المالية
-        </div>
-
-        <h1 class="hero-title">
-          ابدأ إدارة جمعيتك مع
-          <span class="accent">صندوق ساهل</span>
-        </h1>
-
-        <p class="hero-sub">
-          أنشئ حسابك الآن وابدأ بإدارة الأعضاء، تنظيم الأشهر، متابعة الدفعات، وإرسال روابط الانضمام من لوحة واحدة واضحة وسهلة.
-        </p>
-
-        <div class="feature-list">
-          <div class="feature-item">
-            <div class="feature-icon">🔗</div>
-            <div>
-              <strong>رابط انضمام ذكي</strong>
-              <span>أرسل رابطًا واحدًا للأعضاء لطلب الانضمام واختيار الشهر المتاح بسهولة.</span>
-            </div>
-          </div>
-
-          <div class="feature-item">
-            <div class="feature-icon">💳</div>
-            <div>
-              <strong>متابعة الدفعات</strong>
-              <span>راقب حالة السداد، وسجّل المدفوعات، وراجع المتأخرين في مكان واحد.</span>
-            </div>
-          </div>
-
-          <div class="feature-item">
-            <div class="feature-icon">📊</div>
-            <div>
-              <strong>لوحة تحكم منظمة</strong>
-              <span>واجهة واضحة لمدير الجمعية تساعده على الإدارة بدون فوضى أو رسائل مشتتة.</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="hero-bottom">
-        <div class="stats">
-          <div class="stat">
-            <strong>100%</strong>
-            <span>إدارة رقمية</span>
-          </div>
-          <div class="stat">
-            <strong>آمن</strong>
-            <span>صلاحيات محكمة</span>
-          </div>
-          <div class="stat">
-            <strong>فوري</strong>
-            <span>متابعة لحظية</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="auth-card">
-      <div class="auth-header">
-        <h2>حساب صندوق ساهل</h2>
-        <p>أنشئ حسابًا جديدًا أو سجّل الدخول للمتابعة.</p>
-      </div>
-
-      <div class="tab-switch">
-        <button class="tab-btn active" type="button" data-tab="signup">إنشاء حساب</button>
-        <button class="tab-btn" type="button" data-tab="login">تسجيل الدخول</button>
-      </div>
-
-      <div class="form-panel active" id="signup-panel">
-        <form class="form-grid" onsubmit="handleSignup(event)">
-          <div class="field">
-            <label for="fullName">الاسم الكامل</label>
-            <input id="fullName" type="text" placeholder="اكتب اسمك الكامل" required>
-          </div>
-
-          <div class="field">
-            <label for="email">البريد الإلكتروني</label>
-            <input id="email" type="email" placeholder="example@email.com" required>
-          </div>
-
-          <div class="row-2">
-            <div class="field">
-              <label for="password">كلمة المرور</label>
-              <input id="password" type="password" placeholder="********" required>
-            </div>
-
-            <div class="field">
-              <label for="confirmPassword">تأكيد كلمة المرور</label>
-              <input id="confirmPassword" type="password" placeholder="********" required>
-            </div>
-          </div>
-
-          <div class="row-2">
-            <div class="field">
-              <label for="groupName">اسم الجمعية</label>
-              <input id="groupName" type="text" placeholder="مثال: جمعية الخير" required>
-            </div>
-
-            <div class="field">
-              <label for="monthlyAmount">المبلغ الشهري</label>
-              <input id="monthlyAmount" type="number" placeholder="مثال: 500" required>
-            </div>
-          </div>
-
-          <div class="row-2">
-            <div class="field">
-              <label for="membersCount">عدد الأعضاء</label>
-              <select id="membersCount" required>
-                <option value="">اختر</option>
-                <option>4</option>
-                <option>5</option>
-                <option>6</option>
-                <option>8</option>
-                <option>10</option>
-                <option>12</option>
-                <option>15</option>
-                <option>20</option>
-                <option>25</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="plan">الباقة</label>
-              <select id="plan" required>
-                <option value="">اختر الباقة</option>
-                <option value="free">Free</option>
-                <option value="basic">Basic</option>
-                <option value="pro">Pro</option>
-                <option value="business">Business</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="helper">
-            هذه الواجهة جاهزة للشكل والتجربة، ويمكن ربطها مباشرة مع Supabase في الخطوة التالية.
-          </div>
-
-          <button class="submit-btn" type="submit">إنشاء حساب جديد</button>
-        </form>
-
-        <div class="alt-link">
-          لديك حساب؟ <a href="login.html">اذهب إلى تسجيل الدخول</a>
-        </div>
-
-        <div class="note-box">
-          إذا أردت، الخطوة التالية تكون ربط هذه الصفحة فعليًا مع Supabase ليتم إنشاء الحساب الحقيقي وتوجيه المستخدم تلقائيًا إلى لوحة التحكم.
-        </div>
-      </div>
-
-      <div class="form-panel" id="login-panel">
-        <form class="form-grid" onsubmit="handleLogin(event)">
-          <div class="field">
-            <label for="loginEmail">البريد الإلكتروني</label>
-            <input id="loginEmail" type="email" placeholder="example@email.com" required>
-          </div>
-
-          <div class="field">
-            <label for="loginPassword">كلمة المرور</label>
-            <input id="loginPassword" type="password" placeholder="********" required>
-          </div>
-
-          <button class="submit-btn" type="submit">دخول إلى الحساب</button>
-        </form>
-
-        <div class="alt-link">
-          ليس لديك حساب؟ <a href="#" id="switchToSignup">أنشئ حسابًا جديدًا</a>
-        </div>
-
-        <div class="note-box">
-          هذا التبويب للشكل والتنقل حاليًا. ويمكن تحويله إلى تسجيل دخول حقيقي مرتبط بـ Supabase بدون تغيير التصميم.
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    const tabButtons = document.querySelectorAll(".tab-btn");
-    const signupPanel = document.getElementById("signup-panel");
-    const loginPanel = document.getElementById("login-panel");
-    const switchToSignup = document.getElementById("switchToSignup");
-
-    function activateTab(tabName){
-      tabButtons.forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.tab === tabName);
-      });
-
-      signupPanel.classList.toggle("active", tabName === "signup");
-      loginPanel.classList.toggle("active", tabName === "login");
-    }
-
-    tabButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        activateTab(btn.dataset.tab);
-      });
-    });
-
-    if (switchToSignup) {
-      switchToSignup.addEventListener("click", function(e){
-        e.preventDefault();
-        activateTab("signup");
-      });
-    }
-
-    function handleSignup(e){
-      e.preventDefault();
-
-      const password = document.getElementById("password").value.trim();
-      const confirmPassword = document.getElementById("confirmPassword").value.trim();
-
-      if(password !== confirmPassword){
-        alert("كلمتا المرور غير متطابقتين");
-        return;
-      }
-
-      alert("تم حفظ النموذج شكليًا. الخطوة التالية: ربطه فعليًا مع Supabase.");
-    }
-
-    function handleLogin(e){
-      e.preventDefault();
-      alert("تسجيل الدخول الشكلي يعمل. الخطوة التالية: الربط الفعلي مع Supabase.");
-    }
-  </script>
-</body>
+<الرأس>
+ <meta charset="UTF-8" />
+ <الاسم الميتا="نافذة العرض" المحتوى="العرض=عرض الجهاز، المقياس الأولي=1.0" />
+ <title>إنشاء حساب - صندوق ساهل</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" الأصل المتقاطع>
+ <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+ < الطريقة>
+ :root{
+ --bg:#f4f8fc;--panel:#fff;--panel-soft:#f8fbff;
+ --خط:#dfe8f1;--خط-داكن:#cfdbe7;
+ --text:#16324a;--مكتوم:#6e8498;
+ --primary:#1f6fa5;--primary-dark:#185781;--primary-soft:#eaf5fd;
+ --أخضر:#138a59;--أخضر-ناعم:#e8f8f1;
+ --كهرمان:#b7791f;--كهرماني ناعم:#fff5e4;
+ --أحمر:#c53b3b;--أحمر-ناعم:#fdeeee;
+ --أزرق:#2563eb;--blue-soft:#edf3ff;
+ --shadow:0 8px 24px rgba (15,40,64,0.08);
+ --r:16px;
+ }
+ *{حجم الصندوق:border-box; الهامش: 0; الحشو:0}
+ html{سلوك-سلوك:سلس؛-webkit-text-size-adjust:100٪}
+ الجسد{font-family:"Tajawal", sans-serif; الخلفية: تدرج خطي (180 درجة، #f8fbff، #f3f7fb); اللون:var(--text); الحد الأدنى للارتفاع: 100 في الساعة}
+ a{text-decoration:none; اللون:inherit}
+ button,input{font-family:"Tajawal",sans-serif}
+
+.topbar{حشرة:10px 16px; الخلفية: RGBA (248، 251، 255، .96); فلتر الخلفية:blur(10px)؛ الحافة السفلى: 1px صلب var(--line); الموقع: لاصق; الأعلى: 0؛ z-index:50}
+ .topbar-inner{أقصى عرض:1180px; الهامش: 0 أوتوماتيكي؛ display:flex; محاذاة العناصر: المركز؛ تبرير المحتوى: المسافة بين؛ فجوة:10px}
+ .brand{display:flex; محاذاة العناصر: المركز؛ فجوة:10px}
+ .brand-logo{width:38px; الارتفاع: 38 بكسل؛ نصف قطر الحدود: 12 بكسل؛ display:grid; المكان-العناصر: المركز؛ الخلفية: تدرج خطي (135 درجة، فار(--أساسي)،#46a8d8); اللون: #fff؛ حجم الخط: 17px; وزن الخط:900; flex:0 0 38px; box-shadow:0 4px 12px rgba(31,111,165,.2)}
+ .brand-text h1{font-size:17px; وزن الخط:900; ارتفاع الخط:1.1}
+ .brand-text p{font-size:11px; اللون: var(--مكتوم)؛ الهامش الأعلى: 1px}
+ .nav-links{display:flex; فجوة:8px}
+ .btn{border:none; نصف قطر الحدود: 11px; الحشو: 9 بكسل، 14 بكسل؛ المؤشر: المؤشر؛ حجم الخط: 13 بكسل؛ وزن الخط: 800; الانتقال: 0.18 ثانية؛ display:inline-flex; محاذاة العناصر: المركز؛ تبرير المحتوى: المركز؛ الفجوة: 6 بكسل؛ space:nowrap}
+ .btn:active{transform:scale(.96)}
+ .btn:disabled{عتامة:.6; المؤشر: غير مسموح به}
+ .btn-primary{background:var(--primary); اللون: #fff؛ box-shadow:0 4px 14px rgba(31,111,165,.22)}
+ .btn-primary:hover{background:var(--primary-dark)}
+ .btn-soft{background:#fff; الحدود :1px solid var(--line-dark); color:var(--text)}
+
+.hero{الحشرة:20px 16px 14px; محاذاة النص:الوسط}
+ .hero-badge{display:inline-flex; محاذاة العناصر: المركز؛ الفجوة: 6 بكسل؛ الحشو: 6 بكسل 14 بكسل؛ نصف قطر الحدود: 999px; الخلفية: var(--primary-soft); اللون: var(--أساسي-داكن)؛ حجم الخط: 12px; وزن الخط:900; الهامش السفلي: 10px}
+ .hero h2{حجم الخط: Clamp(20px,4.5vw,36px); وزن الخط:900; ارتفاع الخط: 1.25; الهامش السفلي: 8px}
+ .hero p{color:var(--مكتوم); حجم الخط: مشبك (13px,3vw,15px); ارتفاع الخط: 1.8; أقصى عرض: 560 بكسل؛ الهامش: 0 تلقائي}
+
+.layout{الحشرة:12px 16px 48px; أقصى عرض: 1180 بكسل؛ الهامش: 0 تلقائي}
+ .layout-grid{display:grid; عمود القالب-الشبكة:1.05fr .95fr; الفجوة: 18 بكسل؛ alalignment-items:start}
+
+.card{background:#fff; الحدود: 1px solid var(--line); نصف قطر الحدود: 20px; ظل-صندوق:var(--ظل); الحشو: 20 بكسل}
+ .card-title{font-size:19px; وزن الخط:900; الهامش السفلي: 5px}
+ .card-sub{color:var(--مكتوم); حجم الخط: 13 بكسل؛ ارتفاع الخط: 1.7}
+
+.form-grid{display:grid; grid-template-columns:1fr 1fr; الفجوة: 11 بكسل؛ الهامش الأعلى: 16px}
+ .field-wrap.full{grid-column:1/-1}
+ .label{display:block; الهامش في الأسفل: 5px; اللون: var(--مكتوم)؛ حجم الخط: 12px; وزن-الخط:800}
+ .field{width:100٪; الإطار: 1.5px var صلب(--خط داكن); الخلفية: #fff؛ اللون:var(--text); نصف قطر الحدود: 11px; الحشو: 12 بكسل، 13 بكسل؛ الملخص: لا شيء؛ حجم الخط: 15px; الانتقال: .18 سنة؛ - مجموعة ويب-ظهور: لا أحد؛ المظهر: لا شيء}
+ .field:focus{border-color:var(--primary); box-shadow:0 0 0 3px rgba(31,111,165,.1)}
+
+.plan-summary{display:none; grid-template-columns:1fr 1fr; الفجوة:8px; الهامش الأعلى: 14px}
+ .ps-عنصر{خلفية:var(--primary-soft); الحدود: 1px #c8e4f5 صلبة؛ نصف قطر الحدود: 11px; الحشو: 10 بكسل 12 بكسل}
+ .ps عنصر قوي{display:block; حجم الخط: 13 بكسل؛ وزن الخط:900; اللون: var(--أساسي-داكن)؛ الهامش السفلي: 2px}
+ .ps عنصر بنطاق {حجم الخط:11px; اللون: var(--مكتوم)؛ وزن الخط:700; ارتفاع الخط:1.5}
+
+.plans-label{font-size:13px; وزن الخط:900; اللون: var(--مكتوم)؛ الهامش: 16 بكسل 0 8 بكسل}
+ .plans-list{display:grid; فجوة:9px}
+ .plan-option{position:relative; المؤشر:المؤشر}
+ .plan-option input{position:absolute; الداخل: 0; العتامة:0; العرض: 100٪؛ الطول: 100٪؛ المؤشر: المؤشر؛ z-index:1}
+ .plan-box{border:1.5px solid var(--line); نصف قطر الحدود: 13px; الحشوة: 13 بكسل، 14 بكسل؛ الخلفية: #fff؛ الانتقال: 0.18 ثانية؛ display:flex; محاذاة العناصر: المركز؛ تبرير المحتوى: المسافة بين؛ فجوة:10px}
+ .plan-option input:checked + .plan-box{border-color:var(--primary); الخلفية: var(--primary-soft); box-shadow:0 0 0 3px RGB (31,111,165,.08)}
+ .plan-check{width:20px; الارتفاع: 20 بكسل؛ نصف قطر الحدود: 50٪؛ الحافة: 2px صلبة var(--خط داكن); display:grid; المكان-العناصر: المركز؛ flex:0 0 20px; الانتقال: .18 ثانية}
+ .plan-option input:تم التحديد ~ .plan-box .plan-check,
+ .plan-option input:checked + .plan-box .plan-check{border-color:var(--primary); خلفية: VAR(--primary)}
+ .plan-check::after{content:'✓'; حجم الخط: 11px; اللون: #fff؛ العرض: لا شيء؛ الوزن: 900}
+ .plan-option input:checked + .plan-box .plan-check::after{display:block}
+ .plan-info h4{font-size:15px; وزن الخط:900; الهامش السفلي: 2px}
+ .plan-info p{color:var(--مكتوم)؛ حجم الخط: 12px; ارتفاع الخط:1.5}
+ .plan-meta{text-align:left; flex-shrink:0}
+ .plan-price{font-size:20px; وزن الخط:900; ارتفاع الخط:1}
+ .plan-price صغير{font-size:11px; اللون: var(--مكتوم)؛ الوزن:700}
+ .plan-tag{display:inline-flex; الحشوة: 3 بكسل، 9 بكسل؛ نصف قطر الحدود: 999px; حجم الخط: 10px; وزن الخط:900; الهامش الأعلى: 5 بكسل؛ space:nowrap}
+ .tag-primary{background:var(--primary-soft); اللون: var(--primary-dark)}
+ .tag-blue {background:var(--blue-soft); اللون: var(--blue)}
+ .tag-green{خلفية:var(--green-soft); اللون: var(--green)}
+ .tag-amber{background:var(--amber-soft); اللون: var(--amber)}
+
+.actions{margin-top:16px; display:flex; الفجوة:10 بكسل; لف مرن:wrap}
+ .btn-submit{flex:1; الحد الأدنى للعرض: 150 بكسل؛ الحشوة: 14 بكسل؛ حجم الخط: 15px; نصف قطر الحدود: 13px; الوزن: 900}
+ .btn-login{padding:14px 18px; حجم الخط:14px}
+
+.notice{margin-top:11px; الحشو: 10 بكسل، 13 بكسل؛ نصف قطر الحدود: 11px; الخلفية: #f8fbff؛ الحدود: 1px solid var(--line); اللون: var(--مكتوم)؛ حجم الخط: 12px; ارتفاع الخط: 1.7}
+
+.msg{display:none; الهامش الأعلى: 13px; الحشوة: 12 بكسل، 14 بكسل؛ نصف قطر الحدود: 12 بكسل؛ حجم الخط: 13 بكسل؛ وزن الخط: 800; ارتفاع الخط: 1.7}
+ .msg.error{background:var(--red-soft); اللون: var(--red)}
+ .msg.success{background:var(--green-soft); اللون: var(--green)}
+ .msg.show{display:block}
+
+.addons{margin-top:16px; الحشوة: 14 بكسل؛ نصف قطر الحدود: 14px; الخلفية: تدرج خطي (135°G,#f7fbff,#eef7fd); border:1px solid #d8e9f7}}
+ .addons h4{font-size:15px; وزن الخط:900; الهامش السفلي: 10px}
+ .addons ul{list-style:none; display:grid; فجوة:8px}
+ .addons li{display:flex; محاذاة العناصر:ceلا شيء؛ تبرير المحتوى: المسافة بين؛ الفجوة:8px; الخلفية: #fff؛ الحدود: 1px solid var(--line); نصف قطر الحدود: 11px; الحشو: 10 بكسل، 13 بكسل؛ حجم الخط: 13 بكسل؛ وزن-الخط:800}
+ .addons li span{color:var(--green); وزن الخط:900; حجم الخط: 12px; space:nowrap}
+
+.overlay{display:none; الموقع: ثابت؛ الداخل: 0; الخلفية: RGBA (255، 255، 255، .88); فلتر الخلفية:blur(6px); محاذاة العناصر: المركز؛ تبرير المحتوى: المركز؛ مؤشر z:999; الاتجاه المرن: عمود؛ فجوة:14px}
+ .overlay.show{display:flex}
+ .spinner{width:38px; الارتفاع: 38 بكسل؛ الحدود: 3px RGB الصلب (31,111,165,.15); الحافة العلوية: var(--primary); نصف قطر الحدود: 50٪؛ الرسوم المتحركة: Spin .7s linear infinite}
+ .overlay-msg{font-size:14px; وزن الخط:700; color:var(--primary)}
+ @keyframes spin{to{transform:rotate(360deg)}}
+
+.card-limits{display:block}
+
+@media(أقصى عرض:980px){
+ .layout-grid{grid-template-columns:1fr}
+ .card-limits{display:none}
+ .plan-summary{display:grid}
+ }
+ @media(أقصى عرض:600 بكسل){
+ .topbar{padding:8px 14px}
+ .brand-text p{display:none}
+ .brand-text h1{font-size:15px}
+ .brand-logo{width:34px; الارتفاع: 34 بكسل؛ حجم الخط:15px}
+ .hero{padding:16px 14px 10px}
+ .hero h2{حجم الخط:20px}
+ .layout{padding:10px 14px 40px}
+ .card{padding:15px; نصف قطر الحدود:16px}
+ .card-title{font-size:17px}
+ .form-grid{grid-template-columns:1fr; فجوة:10px}
+ .field-wrap.full{grid-column:1}
+ .field{font-size:16px; الحشو: 13px 14px}
+ .plan-box{padding:11px 12px}
+ .plan-info h4{font-size:14px}
+ .plan-price{font-size:18px}
+ .actions{flex-direction:column; فجوة:8px}
+ .btn-submit {width:100٪; الحشو: 15 بكسل؛ حجم الخط:16px}
+ .btn-login{width:100٪; الحشو: 13px}
+ .nav-links .btn:first-child{display:none}
+ }
+ @media(تحويم:لا أحد){
+ .btn:hover{background:unset}
+ .btn-primary:hover{background:var(--primary)}
+ .plan-box:hover{border-color:var(--line)}
+ }
+ </الأسلوب>
+</الرأس>
+<الجسم>
+
+<div class="overlay" id="overlay">
+ <div class="spinner"></div>
+ <div class="overlay-msg" id="overlayText">جاري إنشاء الحساب... </div>
+</div>
+
+<header class="topbar">
+ <div class="topbar-inner">
+ <div class="brand">
+ <img src="assets/logo.png" style="width:38px; الارتفاع: 38 بكسل؛ object-fit:contain" alt="صندوق ساهل">
+ <div class="brand-text">
+ <h1>صندوق ساهل</h1>
+ <p>إنشاء حساب مدير جمعية</p>
+ </div>
+ </div>
+ <div class="nav-links">
+ <a class="btn btn-soft" href="index.html">الرئيسية</a>
+ <a class="btn btn-soft" href="login.html">تسجيل الدخول</a>
+ </div>
+ </div>
+</رأس>
+
+<الرئيسي>
+ <قسم الفئة="البطل">
+ <div class="hero-badge"> 🚀 ابدأ الآن بخطة واضحة</div>
+ <h2>أنشئ حسابك وجمعيتك من البداية</h2>
+ <p>اختر الباقة المناسبة، أدخل بياناتك، وابدأ إدارة جمعيتك في دقيقتين.</p>
+ </قسم>
+
+<div class="layout">
+ <div class="layout-grid">
+
+<div class="card">
+ <div class="card-title">بيانات الحساب والجمعية</div>
+ <p class="card-sub">سيتم إنشاء حسابك وجمعيتك وربطهما تلقائياً.</p>
+
+<form id="signupForm" novalidate>
+ <div class="form-grid">
+ <ديف>
+ <label class="label" for="fullName">الاسم الكامل *</label>
+ <input class="field" type="text" id="fullName" placeholder="اكتب الاسم الكامل" required autocomplete="name">
+ </div>
+ <ديف>
+ <label class="label" for="phone">رقم الهاتف</label>
+ <input class="حقل" type="tel" id="phone" placeholder="05xxxxxxxx" autocomplete="tel">
+ </div>
+ <ديف>
+ <label class="label" for="email">البريد الإلكتروني *</label>
+ <إدخال class="field" type="email" id="email" placeholder="example@email.com" required autocomplete="email">
+ </div>
+ <ديف>
+ <label class="label" for="password">كلمة المرور *</label>
+ <input class="field" type="password" id="password" placeholder="6 أحرف على الأقل" required minlength="6" autocomplete="new-password">
+ </div>
+ <div class="فيلد-لف كامل">
+ <label class="label" for="societyName">اسم الجمعية *</label>
+ <input class="field" type="text" id="societyName" placeholder="مثال: جمعية ساهل الأولى" مطلوبة>
+ </div>
+ <div class="فيلد-لف كامل">
+ <label class="label" for="monthlyAmount">المبلغ الشهري للجمعية (درهم) *</label>
+ <input class="field" type="number" id="monthlyAmount" placeholder="مثال: 500" min="1" required inputmode="numeric">
+ </div>
+ </div>
+
+<!-- ملخص الباقات — موبايل فقط -->
+ <div class="plan-summary">
+ <div class="ps-item"><strong>free · 0 د</strong><span>1 جمعية · 4 أعضاء</span></div>
+ <div class="ps-item"><strong>Basic · 59 د</strong><span>3 جمعيات · 10 أعضاء</span></div>
+ <div class="ps-item"><strong>Pro · 99 د</strong><span>6 جمعيات · 15 عضو</span></div>
+ <div class="ps-item"><strong>business · 179 د</سترونغ><سبنان>10 جمعيات · 25 عضو</span></div>
+ </div>
+
+<div class="plans-label">اختر الباقة</div>
+ <div class="plans-list">
+ <label class="plan-option">
+ <نوع الإدخال="راديو" الاسم="القيمة" المخطط = مجانا" تم الفحص>
+ <div class="plan-box">
+ <div class="plan-check"></div>
+ <div class="plan-info"><h4>Free</h4><p>1 جمعية · <strong>4 أعضاء</strong></p></div>
+ <div class="plan-meta"><div class="plan-price">0 <small>درهم</small></div><div class="plan-tag tag-primary">مجانًا</div></div>
+ </div>
+ </العلامة>
+ <label class="plan-option">
+ <نوع الإدخال="راديو" الاسم="مخطط" القيمة="أساسي">
+ <div class="plan-box">
+ <div class="plan-check"></div>
+ <div class="plan-info"><h4>Basic</h4><p>3 جمعيات · <strong>10 أعضاء</strong></p></div>
+ <div class="plan-meta"><div class="plan-price">59 <small>درهم/سنة</small></div><div class="plan-tag tag-blue">للبداية</div></div>
+ </div>
+ </العلامة>
+ <label class="plan-option">
+ <نوع الإدخال="راديو" name="plan" value="Pro">
+ <div class="plan-box">
+ <div class="plan-check"></div>
+ <div class="plan-info"><h4>Pro</h4><p>6 جمعيات · <strong>15 عضو</strong></p></div>
+ <div class="plan-meta"><div class="plan-price">99 <small>درهم/سنة</small></div><div class="plan-tag tag-green">الأكثر استخدامًا</div></div>
+ </div>
+ </العلامة>
+ <label class="plan-option">
+ <نوع الإدخال="راديو" name="plan" value="Business">
+ <div class="plan-box">
+ <div class="plan-check"></div>
+ <div class="pLAN-info"><h4>Business</h4><p>10 جمعيات · <strong>25 عضو</strong></p></div>
+ <div class="plan-meta"><div class="plan-price">179 <small>درهم/سنة</small></div><div class="plan-tag tag-amber">تشغيل أكبر</div></div>
+ </div>
+ </العلامة>
+ </div>
+
+<div class="notice">عدد الجمعيات والأعضاء محدود حسب الباقة. يمكن الترقية لاحقاً من لوحة التحكم.</div>
+
+<div class="actions">
+ <button type="submit" class="btn btn-primary btn-submit" id="submitBtn">إنشاء الحساب</button>
+ <a href="login.html" class="btn btn-soft btn-login">لدي حساب بالفعل</a>
+ </div>
+ <div class="msg" id="msgBox"></div>
+ </النموذج>
+ </div>
+
+<div class="card card-limits">
+ <div class="card-title">حدود الباقات</div>
+ <p class="card-sub">عدد الجمعيات والأعضاء حسب كل باقة.</p>
+ <div class="addons">
+ <h4>جدول الباقات</h4>
+ <أول>
+ <li><strong>Free</strong><span>1 جمعية · 4 أعضاء · مجاناً</span></li>
+ <li><strong>Basic</strong><span>3 جمعيات · 10 أعضاء · 59 درهم/سنة</سبان></لي>
+ <li><strong>Pro</strong><span>6 جمعيات · 15 عضو · 99 درهم/سنة</سبان></لي>
+ <li><strong>business</strong><span>10 جمعيات · 25 عضو · 179 درهم/سنة</سبان></لي>
+ </ul>
+ </div>
+ <div class="notice">عند اختيار باقة مدفوعة ستُحوَل لصفحة الدفع أولاً ثم تعود للوحة التحكم.</div>
+ <div class="notice">إذا كان البريد مسجلاً مسبقًا، استخدم صفحة تسجيل الدخول.</div>
+ <div class="notice">يمكنك إنشاء جمعيات إضافية من لوحة التحكم حسب باقتك.</div>
+ </div>
+
+</div>
+ </div>
+</الرئيسي>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<نص>
+ var SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co';
+ var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8';
+ var _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+var MEMBER_LIMITS = {Free:4,Basic:10,Pro:15,Business:25};
+
+document.getElementById('signupForm').addEventListener('submission', async function(e) {
+ e.preventDefault();
+ var msg = document.getElementById('msgBox');
+ msg.className = 'msg'; msg.textContent = '';
+
+var fullName = document.getElementById('fullName').value.trim();
+ var email = document.getElementById('email').value.trim();
+ var password = document.getElementById('password').value;
+ var societyName = document.getElementById('societyName').value.trim();
+ var monthlyAmount = parseFloat(document.getElementById('monthlyAmount').value);
+ var plan = (document.querySelector('input[name="plan"]:checked')||{value:'مجاني'}). القيمة؛
+
+إذا (!الاسم الكامل||! بريد إلكتروني||! كلمة المرور||! اسم المجتمع||! monthlyAmount) {
+ msg.textContent='أكمل جميع الحقول المطلوبة.';
+ msg.className='عرض خطأ في msg';
+ msg.scrollIntoView({behavior:'smooth',block:'center'});
+ العودة؛
+ }
+ إذا (password.length<6) {
+ msg.textContent='كلمة المرور يجب أن تكون 6 أحرف على الأقل.';
+ msg.className='عرض خطأ في msg';
+ العودة؛
+ }
+
+var btn=document.getElementById('submitBtn');
+ var ov=document.getElementById('overlay');
+ btn.disabled=true; btn.textContent='جاري الإنشاء...'; ov.classList.add ('عرض');
+
+جرب {
+ var r1=await _sb.auth.signUp({email,password,options:{data:{full_name:fullName,role:'manager'}}});
+ إذا (r1.error) رمى r1.error;
+
+var r2=await _sb.auth.signInWithPassword({email,password});
+ إذا رمى (r2.error) r2.error;
+
+var uid=r2.data.user.id;
+ var accessToken=r2.data.session.access_token;
+ var now=تاريخ جديد();
+
+var r3=انتظر _sb.from('groups').insert({
+ manager_id:uid، الاسم:المجتمعالاسم، monthly_amount:MonthlyAmount,
+ total_members:0، start_month:now.getMonth()+1، start_year:now.getFullYear(),
+ الحالة:'نشط', max_members:4,
+ join_token:crypto.randomUUID()
+ });
+ إذا رمى (r3.error) r3.error؛
+
+إذا(plan==='مجاني'){
+ var end=تاريخ جديد(); end.setFullYear(end.getFullYear()+1);
+ var r4=انتظر _sb.from('subscriptions').insert({
+ manager_id:uid، plan_name:'مجاني'، الحالة:'نشط',
+ start_date:now.toISOString().split('T')[0],
+ end_date:end.toISOString().split('T')[0], المقدار:0
+ });
+ إذا (r4.error) رمى r4.error;
+ msg.textContent='تم إنشاء الحساب والجمعية بنجاح ✅ ';
+ msg.className='عرض نجاح msg';
+ setTimeout(()=>{ window.location.href='dashboard.html'; },1200);
+ } وإلا {
+ document.getElementById('overlayText').textContent='جاري التحويل لصفحة الدفع...';
+ var res=await fetch(SUPABASE_URL+'/functions/v1/create-checkout',{
+ الطريقة: 'POST',
+ headers:{'Content-Type':'application/json','Authorization':'Bearer '+accessToken},
+ body:JSON.stringify({plan:plan.toLowerCase(),user_id:uid,user_email:email})
+ });
+ var data=await res.json();
+ if(data.url){ window.location.href=data.url; }
+ else { throw new error(data.error||' فشل الاتصال بنظام الدفع'); }
+ }
+ } catch(آه){
+ console.error(err)؛
+ var m=err.message||' حدث خطأ';
+ if(m.toLowerCase().includes('مسجل')) m='هذا البريد مسجل مسبقًا. استخدم صفحة تسجيل الدخول.';
+ msg.textContent=m; msg.className='عرض خطأ في msg';
+ msg.scrollIntoView({behavior:'smooth',block:'center'});
+ ov.classList.remove ('عرض'); btn.disabled=false; btn.textContent='إنشاء الحساب';
+ }
+ });
+</النص>
+</الجسم>
 </html>
