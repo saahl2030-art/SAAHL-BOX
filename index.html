@@ -158,6 +158,7 @@
   <img class="splash-img" src="uae-splash.png" alt="حصنتك بسم الله يا وطن">
   <div class="splash-progress"><div class="splash-progress-fill"></div></div>
   <div class="splash-text">صندوق ساهل</div>
+  <button onclick="removeSplash()" style="margin-top:24px;padding:10px 28px;border:none;border-radius:10px;background:rgba(255,255,255,.15);color:#fff;font-family:Tajawal,sans-serif;font-size:14px;font-weight:700;cursor:pointer">تخطي ←</button>
 </div>
 
 <!-- ══ NAV ══ -->
@@ -309,13 +310,15 @@
 
 <script>
   // ── Splash Screen ──
+  function removeSplash(){
+    var splash = document.getElementById('splashScreen')
+    if(!splash) return
+    splash.style.opacity = '0'
+    splash.style.transition = 'opacity .5s ease'
+    setTimeout(function(){ splash.remove() }, 500)
+  }
   window.addEventListener('load', function() {
-    setTimeout(function() {
-      var splash = document.getElementById('splashScreen')
-      splash.style.opacity = '0'
-      splash.style.transition = 'opacity .8s ease'
-      setTimeout(function(){ splash.remove() }, 800)
-    }, 3000)
+    setTimeout(removeSplash, 3000)
   })
 
   const observer = new IntersectionObserver((entries) => {
