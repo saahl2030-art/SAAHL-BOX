@@ -468,7 +468,9 @@ async function init(){
   const{data:sd}=await sb.auth.getSession()
   if(!sd?.session){window.location.href='login.html';return}
   const{data:prof}=await sb.from('profiles').select('*').eq('id',sd.session.user.id).single()
-  if(!prof){$('pageLoader').classList.remove('show');alert('تعذّر تحميل بيانات المستخدم. حاول مجدداً.');return}
+if(!prof){
+  console.warn('لا يوجد profile — تخطي مؤقت')
+}
   if(prof.role!=='admin'){window.location.href='dashboard.html';return}
   $('adminName').textContent=prof.full_name||'—'
   await loadOverview()
