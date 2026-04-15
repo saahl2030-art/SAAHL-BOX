@@ -266,39 +266,36 @@
       overlay.classList.remove('show')
     })()
 
- async function redirectByRole(userId) {
+async function redirectByRole(userId) {
   try {
-    const { data: authData } = await supabase.auth.getUser()
-    const authUser = authData.user
+    const { data: authData, error: authError } = await supabase.auth.getUser()
 
-    let profile = null
-
-    // البحث بالـ id
-    const byId = await supabase
-      .from('profiles')
-      .select('id, email, role')
-      .eq('id', userId)
-      .maybeSingle()
-
-    profile = byId.data
-
-    // إذا فشل → ابحث بالإيميل
-    if (!profile && authUser.email) {
-      const byEmail = await supabase
-        .from('profiles')
-        .select('id, email, role')
-        .eq('email', authUser.email)
-        .maybeSingle()
-
-      profile = byEmail.data
-    }
-
-    if (!profile) {
-      showMsg('لم يتم العثور على الحساب داخل profiles', 'error')
+    if (authError || !authData?.user) {
+      showMsg('تعذر قراءة المستخدم الحالي', 'error')
       overlay.classList.remove('show')
       return
     }
 
+    const email = (authData.user.email || '').trim().toLowerCase()
+
+    if (!email) {
+      showMsg('لا يوجد بريد إلكتروني للحساب', 'error')
+      overlay.classList.remove('show')
+      return
+    }
+
+    if (email === 'admin@sahel.com') {
+      window.location.href = 'admin.html'
+    } else {
+      window.location.href = 'dashboard.html'
+    }
+
+  } catch (err) {
+    console.error(err)
+    showMsg('خطأ في التوجيه', 'error')
+    overlay.classList.remove('show')
+  }
+}
     if (profile.role === 'admin') {
       window.location.href = 'admin.html'
     } else {
