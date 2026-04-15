@@ -54,6 +54,10 @@
       color:var(--primary);
       margin-bottom:20px;
       text-align:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
     }
 
     h2{
@@ -130,8 +134,6 @@
       text-decoration:none;
     }
 
-    .links a:hover{ text-decoration:underline; }
-
     .forgot{
       display:block;
       text-align:center;
@@ -145,8 +147,6 @@
       color:var(--primary);
       text-decoration:none;
     }
-
-    .forgot a:hover{ text-decoration:underline; }
 
     .msg{
       display:none;
@@ -192,7 +192,7 @@
   <div class="overlay" id="overlay">جاري التحقق...</div>
 
   <div class="box">
-    <div class="logo" style="display:flex;align-items:center;justify-content:center;gap:10px">
+    <div class="logo">
       <img src="assets/logo.png" style="width:48px;height:48px;object-fit:contain" alt="صندوق ساهل">
       صندوق ساهل
     </div>
@@ -202,24 +202,10 @@
 
     <form id="loginForm" novalidate>
       <label for="email">البريد الإلكتروني</label>
-      <input
-        class="field"
-        id="email"
-        type="email"
-        placeholder="example@email.com"
-        autocomplete="email"
-        required
-      >
+      <input class="field" id="email" type="email" placeholder="example@email.com" autocomplete="email" required>
 
       <label for="password">كلمة المرور</label>
-      <input
-        class="field"
-        id="password"
-        type="password"
-        placeholder="••••••••"
-        autocomplete="current-password"
-        required
-      >
+      <input class="field" id="password" type="password" placeholder="••••••••" autocomplete="current-password" required>
 
       <button class="btn" id="loginBtn" type="submit">دخول</button>
     </form>
@@ -252,63 +238,32 @@
     ;(async () => {
       overlay.classList.add('show')
 
-      const { data: { user }, error } = await supabase.auth.getUser()
+      try {
+        const { data } = await supabase.auth.getUser()
+        const user = data?.user
 
-      if (error) {
-        console.error('getUser error:', error)
-      }
-
-      if (user) {
-        await redirectByRole(user.id)
-        return
+        if (user?.email) {
+          redirectByEmail(user.email)
+          return
+        }
+      } catch (err) {
+        console.error(err)
       }
 
       overlay.classList.remove('show')
     })()
 
-async function redirectByRole(userId) {
-  try {
-    const { data: authData, error: authError } = await supabase.auth.getUser()
+    function redirectByEmail(email) {
+      const cleanEmail = String(email || '').trim().toLowerCase()
 
-    if (authError || !authData?.user) {
-      showMsg('تعذر قراءة المستخدم الحالي', 'error')
-      overlay.classList.remove('show')
-      return
+      if (cleanEmail === 'admin@sahel.com') {
+        window.location.href = 'admin.html'
+      } else {
+        window.location.href = 'dashboard.html'
+      }
     }
 
-    const email = (authData.user.email || '').trim().toLowerCase()
-
-    if (!email) {
-      showMsg('لا يوجد بريد إلكتروني للحساب', 'error')
-      overlay.classList.remove('show')
-      return
-    }
-
-    if (email === 'admin@sahel.com') {
-      window.location.href = 'admin.html'
-    } else {
-      window.location.href = 'dashboard.html'
-    }
-
-  } catch (err) {
-    console.error(err)
-    showMsg('خطأ في التوجيه', 'error')
-    overlay.classList.remove('show')
-  }
-}
-    if (profile.role === 'admin') {
-      window.location.href = 'admin.html'
-    } else {
-      window.location.href = 'dashboard.html'
-    }
-
-  } catch (err) {
-    console.error(err)
-    showMsg('خطأ في التوجيه', 'error')
-    overlay.classList.remove('show')
-  }
-}
-    loginForm.addEventListener('submit', async (e) => {
+    loginForm.addEventListener('submit', async function (e) {
       e.preventDefault()
       clearMsg()
 
@@ -325,7 +280,10 @@ async function redirectByRole(userId) {
       overlay.classList.add('show')
 
       try {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password
+        })
 
         if (error) {
           showMsg(mapError(error.message), 'error')
@@ -333,13 +291,8 @@ async function redirectByRole(userId) {
           return
         }
 
-        if (!data?.user) {
-          showMsg('فشل تسجيل الدخول.', 'error')
-          overlay.classList.remove('show')
-          return
-        }
-
-        await redirectByRole(data.user.id)
+        const userEmail = data?.user?.email || email
+        redirectByEmail(userEmail)
 
       } catch (err) {
         console.error(err)
@@ -353,7 +306,7 @@ async function redirectByRole(userId) {
 
     function showMsg(text, type) {
       msgBox.textContent = text
-      msgBox.className = `msg ${type} show`
+      msgBox.className = 'msg ' + type + ' show'
     }
 
     function clearMsg() {
