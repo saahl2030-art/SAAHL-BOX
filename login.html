@@ -266,39 +266,51 @@
       overlay.classList.remove('show')
     })()
 
-    async function redirectByRole(userId) {
-      try {
-        const { data: profile, error } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', userId)
-          .maybeSingle()
+ async function redirectByRole(userId) {
+  try {
+    const { data: authData } = await supabase.auth.getUser()
+    const authUser = authData.user
 
-        if (error) {
-          console.error('profile error:', error)
-          showMsg('تعذّر تحميل بيانات الحساب.', 'error')
-          overlay.classList.remove('show')
-          return
-        }
+    let profile = null
 
-        if (!profile) {
-          showMsg('الحساب موجود لكن بياناته غير مكتملة.', 'error')
-          overlay.classList.remove('show')
-          return
-        }
+    // البحث بالـ id
+    const byId = await supabase
+      .from('profiles')
+      .select('id, email, role')
+      .eq('id', userId)
+      .maybeSingle()
 
-        if (profile.role === 'admin') {
-          window.location.href = 'admin.html'
-        } else {
-          window.location.href = 'dashboard.html'
-        }
-      } catch (err) {
-        console.error('redirectByRole crash:', err)
-        showMsg('حدث خطأ أثناء التوجيه.', 'error')
-        overlay.classList.remove('show')
-      }
+    profile = byId.data
+
+    // إذا فشل → ابحث بالإيميل
+    if (!profile && authUser.email) {
+      const byEmail = await supabase
+        .from('profiles')
+        .select('id, email, role')
+        .eq('email', authUser.email)
+        .maybeSingle()
+
+      profile = byEmail.data
     }
 
+    if (!profile) {
+      showMsg('لم يتم العثور على الحساب داخل profiles', 'error')
+      overlay.classList.remove('show')
+      return
+    }
+
+    if (profile.role === 'admin') {
+      window.location.href = 'admin.html'
+    } else {
+      window.location.href = 'dashboard.html'
+    }
+
+  } catch (err) {
+    console.error(err)
+    showMsg('خطأ في التوجيه', 'error')
+    overlay.classList.remove('show')
+  }
+}
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault()
       clearMsg()
