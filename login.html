@@ -1,271 +1,50 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تسجيل الدخول - صندوق ساهل</title>
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
+  const SUPABASE_URL = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
 
-  <style>
-    :root{
-      --primary:#1f6fa5;
-      --primary-dark:#185781;
-      --bg:#f4f8fc;
-      --line:#dfe8f1;
-      --text:#16324a;
-      --muted:#6e8498;
-      --panel:#ffffff;
-      --green:#138a59;
-      --green-soft:#e8f8f1;
-      --red:#c53b3b;
-      --red-soft:#fdeeee;
-      --shadow:0 15px 40px rgba(0,0,0,0.08);
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+  const loginForm = document.getElementById('loginForm')
+  const loginBtn = document.getElementById('loginBtn')
+  const msgBox = document.getElementById('msgBox')
+  const overlay = document.getElementById('overlay')
+
+  ;(async () => {
+    overlay.classList.add('show')
+
+    const { data: { user }, error } = await supabase.auth.getUser()
+
+    if (error) {
+      console.error('getUser error:', error)
     }
 
-    *{box-sizing:border-box}
-
-    body{
-      margin:0;
-      font-family:"Tajawal", sans-serif;
-      background:linear-gradient(180deg,#f8fbff,#f3f7fb);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      min-height:100vh;
-      padding:20px;
-      color:var(--text);
+    if (user) {
+      await redirectByRole(user.id)
+      return
     }
 
-    .box{
-      width:100%;
-      max-width:420px;
-      background:var(--panel);
-      padding:32px 28px;
-      border-radius:20px;
-      box-shadow:var(--shadow);
-      border:1px solid var(--line);
-    }
+    overlay.classList.remove('show')
+  })()
 
-    .logo{
-      font-size:22px;
-      font-weight:900;
-      color:var(--primary);
-      margin-bottom:20px;
-      text-align:center;
-    }
-
-    h2{
-      margin:0 0 8px;
-      font-size:24px;
-      font-weight:900;
-      color:var(--text);
-      text-align:center;
-    }
-
-    .subtitle{
-      margin:0 0 24px;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.8;
-      text-align:center;
-    }
-
-    label{
-      display:block;
-      font-size:13px;
-      font-weight:700;
-      color:var(--text);
-      margin-bottom:6px;
-    }
-
-    .field{
-      width:100%;
-      padding:13px 14px;
-      border-radius:12px;
-      border:1px solid var(--line);
-      margin-bottom:16px;
-      font-size:14px;
-      font-family:"Tajawal", sans-serif;
-      background:#fff;
-      color:var(--text);
-      transition:.2s;
-    }
-
-    .field:focus{
-      outline:none;
-      border-color:var(--primary);
-      box-shadow:0 0 0 4px rgba(31,111,165,.08);
-    }
-
-    .btn{
-      width:100%;
-      padding:14px;
-      border:none;
-      border-radius:14px;
-      background:var(--primary);
-      color:#fff;
-      font-size:15px;
-      font-weight:900;
-      font-family:"Tajawal", sans-serif;
-      cursor:pointer;
-      transition:.2s ease;
-      margin-top:4px;
-    }
-
-    .btn:hover{ background:var(--primary-dark); }
-    .btn:disabled{ opacity:.65; cursor:not-allowed; }
-
-    .links{
-      margin-top:18px;
-      display:flex;
-      justify-content:space-between;
-      font-size:13px;
-    }
-
-    .links a{
-      color:var(--primary);
-      font-weight:700;
-      text-decoration:none;
-    }
-
-    .links a:hover{ text-decoration:underline; }
-
-    .forgot{
-      display:block;
-      text-align:center;
-      margin-top:12px;
-      font-size:13px;
-      font-weight:700;
-      color:var(--muted);
-    }
-
-    .forgot a{
-      color:var(--primary);
-      text-decoration:none;
-    }
-
-    .forgot a:hover{ text-decoration:underline; }
-
-    .msg{
-      display:none;
-      margin-top:16px;
-      padding:12px 14px;
-      border-radius:12px;
-      font-size:14px;
-      font-weight:700;
-      line-height:1.8;
-    }
-
-    .msg.error{
-      background:var(--red-soft);
-      color:var(--red);
-    }
-
-    .msg.success{
-      background:var(--green-soft);
-      color:var(--green);
-    }
-
-    .msg.show{ display:block; }
-
-    .overlay{
-      display:none;
-      position:fixed;
-      inset:0;
-      background:rgba(255,255,255,.7);
-      align-items:center;
-      justify-content:center;
-      z-index:999;
-      font-size:16px;
-      font-weight:700;
-      color:var(--primary);
-      font-family:"Tajawal",sans-serif;
-    }
-    .overlay.show{ display:flex; }
-  </style>
-</head>
-<body>
-
-  <div class="overlay" id="overlay">جاري التحقق...</div>
-
-  <div class="box">
-    <div class="logo" style="display:flex;align-items:center;justify-content:center;gap:10px">
-  <img src="assets/logo.png" style="width:48px;height:48px;object-fit:contain" alt="صندوق ساهل">
-  صندوق ساهل
-</div>
-    <h2>تسجيل الدخول</h2>
-    <p class="subtitle">أدخل بياناتك للوصول إلى لوحة التحكم</p>
-
-    <form id="loginForm" novalidate>
-      <label for="email">البريد الإلكتروني</label>
-      <input
-        class="field"
-        id="email"
-        type="email"
-        placeholder="example@email.com"
-        autocomplete="email"
-        required
-      >
-
-      <label for="password">كلمة المرور</label>
-      <input
-        class="field"
-        id="password"
-        type="password"
-        placeholder="••••••••"
-        autocomplete="current-password"
-        required
-      >
-
-      <button class="btn" id="loginBtn" type="submit">دخول</button>
-    </form>
-
-    <div class="msg" id="msgBox"></div>
-
-    <div class="forgot">
-      <a href="reset.html">نسيت كلمة المرور؟</a>
-    </div>
-
-    <div class="links">
-      <a href="auth.html">إنشاء حساب جديد</a>
-      <a href="index.html">الرئيسية</a>
-    </div>
-  </div>
-
-  <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-
-    const SUPABASE_URL      = 'https://qxyrpnexybxmfmtrnzpg.supabase.co'
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
-
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-
-    const loginForm = document.getElementById('loginForm')
-    const loginBtn  = document.getElementById('loginBtn')
-    const msgBox    = document.getElementById('msgBox')
-    const overlay   = document.getElementById('overlay')
-
-    ;(async () => {
-      overlay.classList.add('show')
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session) {
-        await redirectByRole(session.user.id)
-        return
-      }
-      overlay.classList.remove('show')
-    })()
-
-    async function redirectByRole(userId) {
+  async function redirectByRole(userId) {
+    try {
       const { data: profile, error } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', userId)
-        .single()
+        .maybeSingle()
 
-      if (error || !profile) {
-        showMsg('تعذّر تحميل بيانات الحساب. تواصل مع الدعم.', 'error')
+      if (error) {
+        console.error('profile error:', error)
+        showMsg('تعذّر تحميل بيانات الحساب.', 'error')
+        overlay.classList.remove('show')
+        return
+      }
+
+      if (!profile) {
+        showMsg('الحساب موجود لكن بياناته غير مكتملة.', 'error')
         overlay.classList.remove('show')
         return
       }
@@ -275,64 +54,71 @@
       } else {
         window.location.href = 'dashboard.html'
       }
+    } catch (err) {
+      console.error('redirectByRole crash:', err)
+      showMsg('حدث خطأ أثناء التوجيه.', 'error')
+      overlay.classList.remove('show')
+    }
+  }
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    clearMsg()
+
+    const email = document.getElementById('email').value.trim()
+    const password = document.getElementById('password').value
+
+    if (!email || !password) {
+      showMsg('أدخل البريد الإلكتروني وكلمة المرور.', 'error')
+      return
     }
 
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault()
-      clearMsg()
+    loginBtn.disabled = true
+    loginBtn.textContent = 'جاري الدخول...'
+    overlay.classList.add('show')
 
-      const email    = document.getElementById('email').value.trim()
-      const password = document.getElementById('password').value
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
-      if (!email || !password) {
-        showMsg('أدخل البريد الإلكتروني وكلمة المرور.', 'error')
+      if (error) {
+        showMsg(mapError(error.message), 'error')
+        overlay.classList.remove('show')
         return
       }
 
-      loginBtn.disabled    = true
-      loginBtn.textContent = 'جاري الدخول...'
-
-      try {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-
-        if (error) {
-          showMsg(mapError(error.message), 'error')
-          return
-        }
-
-        showMsg('تم تسجيل الدخول. جاري التحويل...', 'success')
-        await redirectByRole(data.user.id)
-
-      } catch (err) {
-        console.error(err)
-        showMsg('حدث خطأ غير متوقع. حاول مرة أخرى.', 'error')
-      } finally {
-        loginBtn.disabled    = false
-        loginBtn.textContent = 'دخول'
+      if (!data?.user) {
+        showMsg('فشل تسجيل الدخول.', 'error')
+        overlay.classList.remove('show')
+        return
       }
-    })
 
-    function showMsg(text, type) {
-      msgBox.textContent = text
-      msgBox.className   = `msg ${type} show`
+      await redirectByRole(data.user.id)
+
+    } catch (err) {
+      console.error(err)
+      showMsg('حدث خطأ غير متوقع. حاول مرة أخرى.', 'error')
+      overlay.classList.remove('show')
+    } finally {
+      loginBtn.disabled = false
+      loginBtn.textContent = 'دخول'
     }
+  })
 
-    function clearMsg() {
-      msgBox.className   = 'msg'
-      msgBox.textContent = ''
-    }
+  function showMsg(text, type) {
+    msgBox.textContent = text
+    msgBox.className = `msg ${type} show`
+  }
 
-    function mapError(msg) {
-      if (!msg) return 'حدث خطأ غير معروف'
-      if (msg.includes('Invalid login credentials'))
-        return 'البريد الإلكتروني أو كلمة المرور غير صحيحة'
-      if (msg.includes('Email not confirmed'))
-        return 'يرجى تأكيد بريدك الإلكتروني أولاً'
-      if (msg.includes('Too many requests'))
-        return 'محاولات كثيرة. انتظر قليلاً ثم حاول مجدداً'
-      return msg
-    }
-  </script>
+  function clearMsg() {
+    msgBox.className = 'msg'
+    msgBox.textContent = ''
+  }
 
-</body>
-</html>
+  function mapError(msg) {
+    if (!msg) return 'حدث خطأ غير معروف'
+    if (msg.includes('Invalid login credentials')) return 'البريد الإلكتروني أو كلمة المرور غير صحيحة'
+    if (msg.includes('Email not confirmed')) return 'يرجى تأكيد بريدك الإلكتروني أولاً'
+    if (msg.includes('Too many requests')) return 'محاولات كثيرة. انتظر قليلاً ثم حاول مجدداً'
+    return msg
+  }
+</script>
