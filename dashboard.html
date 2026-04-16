@@ -177,7 +177,6 @@
     .upgrade-btn:hover{background:var(--primary-dark);transform:translateY(-1px)}
     .renew-btn{display:block;text-align:center;margin-top:12px;padding:10px;border-radius:12px;background:var(--gc-soft);color:var(--gc);font-size:13px;font-weight:900;text-decoration:none;transition:.2s}
     .renew-btn:hover{background:#d3e9f8}
-    /* ── نافذة الإشعارات ── */
     .notif-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:400;align-items:center;justify-content:center;padding:20px}
     .notif-modal-overlay.show{display:flex}
     .notif-modal{background:#fff;border-radius:24px;padding:32px 28px;width:100%;max-width:480px;box-shadow:0 24px 64px rgba(0,0,0,.18);text-align:center}
@@ -194,7 +193,6 @@
 <body>
 <div class="page-loader" id="pageLoader">جاري تحميل لوحة التحكم...</div>
 
-<!-- نافذة الإشعارات -->
 <div class="notif-modal-overlay" id="notifModalOverlay">
   <div class="notif-modal">
     <div class="notif-modal-icon">📢</div>
@@ -205,7 +203,6 @@
   </div>
 </div>
 
-<!-- MEMBER MODAL -->
 <div class="modal-overlay" id="memberModal"><div class="modal">
   <h3 id="memberModalTitle">إضافة عضو</h3>
   <div class="form-grid">
@@ -226,7 +223,6 @@
   </div>
 </div></div>
 
-<!-- RECEIPT MODAL -->
 <div class="modal-overlay" id="receiptModal"><div class="modal" style="max-width:580px">
   <h3 id="receiptModalTitle">إيصال الدفع</h3>
   <div id="receiptModalContent"></div>
@@ -236,7 +232,6 @@
   </div>
 </div></div>
 
-<!-- STATUS MODAL -->
 <div class="modal-overlay" id="statusModal"><div class="modal" style="max-width:360px">
   <h3>تعديل حالة الدفعة</h3>
   <input type="hidden" id="statusPaymentId">
@@ -251,7 +246,6 @@
   </div>
 </div></div>
 
-<!-- NEW GROUP MODAL -->
 <div class="modal-overlay" id="newGroupModal"><div class="modal" style="max-width:460px">
   <h3>➕ إنشاء جمعية جديدة</h3>
   <div class="ng-limit" id="ngLimitBox">
@@ -493,17 +487,13 @@ function buildSelect(){
   btnNew.title=allGroups.length>=maxG?`وصلت للحد (${maxG}) — ترقية الباقة مطلوبة`:`إنشاء جمعية جديدة (${maxG-allGroups.length} متبقية)`
 }
 
-// ── نظام الإشعارات ──
 async function checkNotifications(userId){
   try{
-    // جلب آخر إشعار
     const{data:notifs}=await sb.from('notifications').select('*').order('created_at',{ascending:false}).limit(1)
     if(!notifs||!notifs.length)return
     const notif=notifs[0]
-    // التحقق إذا قرأه المدير
     const{data:read}=await sb.from('notification_reads').select('id').eq('notification_id',notif.id).eq('manager_id',userId)
     if(read&&read.length)return
-    // عرض الإشعار
     currentNotifId=notif.id
     document.getElementById('notifModalTitle').textContent=notif.title
     document.getElementById('notifModalBody').textContent=notif.body
@@ -514,9 +504,7 @@ async function checkNotifications(userId){
 
 window.markNotifRead=async function(){
   if(!currentNotifId||!currentUser)return
-  try{
-    await sb.from('notification_reads').insert({notification_id:currentNotifId,manager_id:currentUser.id})
-  }catch(e){console.error(e)}
+  try{await sb.from('notification_reads').insert({notification_id:currentNotifId,manager_id:currentUser.id})}catch(e){console.error(e)}
   document.getElementById('notifModalOverlay').classList.remove('show')
   currentNotifId=null
 }
@@ -546,7 +534,7 @@ function showExpiredOverlay(name){
       <div class="expired-title">انتهى اشتراكك</div>
       <p class="expired-sub">مرحباً ${name}،<br>انتهت صلاحية اشتراكك.<br>لمواصلة إدارة جمعياتك يرجى تجديد باقتك.</p>
       <a href="plans.html" style="display:block;background:#1f6fa5;color:#fff;border-radius:14px;padding:14px 28px;font-size:15px;font-weight:900;text-decoration:none;margin-bottom:10px">🔄 تجديد الباقة</a>
-      <a href="login.html" style="display:block;background:#f8fbff;color:#6e8498;border:1px solid #dfe8f1;border-radius:14px;padding:12px 28px;font-size:13px;font-weight:700;text-decoration:none">تسجيل الخروج</a>
+      <button onclick="doLogout()" style="display:block;width:100%;background:#f8fbff;color:#6e8498;border:1px solid #dfe8f1;border-radius:14px;padding:12px 28px;font-size:13px;font-weight:700;cursor:pointer">تسجيل الخروج</button>
     </div>`
   document.body.appendChild(overlay)
 }
@@ -565,11 +553,40 @@ async function init(){
   loader.classList.add('show')
   try{
     const{data:{session}}=await sb.auth.getSession()
-    if(!session){window.location.href='login.html';return}
+    if(!session){
+      loader.classList.remove('show')
+      window.location.replace('login.html')
+      return
+    }
     currentUser=session.user
-    const{data:p}=await sb.from('profiles').select('*').eq('id',currentUser.id).single()
-    if(!p){window.location.href='login.html';return}
-    if(p.role!=='manager'){window.location.href='admin.html';return}
+
+    const{data:p,error:pErr}=await sb.from('profiles').select('*').eq('id',currentUser.id).single()
+
+    if(pErr||!p){
+      // المستخدم موجود في Auth لكن مو في profiles — أنشئ له profile
+      const{error:insErr}=await sb.from('profiles').insert({
+        id:currentUser.id,
+        full_name:currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'مدير',
+        email:currentUser.email,
+        role:'manager'
+      })
+      if(insErr){
+        console.error('profile insert error',insErr)
+        loader.classList.remove('show')
+        window.location.replace('login.html')
+        return
+      }
+      // أعد تحميل الصفحة بعد إنشاء الـ profile
+      window.location.reload()
+      return
+    }
+
+    if(p.role==='admin'){
+      loader.classList.remove('show')
+      window.location.replace('admin.html')
+      return
+    }
+
     currentProfile=p
     document.getElementById('sidebarManagerName').textContent=p.full_name||'—'
 
@@ -577,11 +594,15 @@ async function init(){
     const sub=subs?.[0]||null
     const subStatus=sub?.status||'none'
 
-    if(subStatus==='expired'){showExpiredOverlay(p.full_name);loader.classList.remove('show');return}
+    if(subStatus==='expired'){
+      showExpiredOverlay(p.full_name)
+      loader.classList.remove('show')
+      return
+    }
 
-    if(sub?.expires_at){
-      const now=new Date(),expiresAt=new Date(sub.expires_at)
-      const daysLeft=Math.ceil((expiresAt-now)/(1000*60*60*24))
+    if(sub?.end_date){
+      const now=new Date(),endDate=new Date(sub.end_date)
+      const daysLeft=Math.ceil((endDate-now)/(1000*60*60*24))
       if(daysLeft<=0){showExpiredOverlay(p.full_name);loader.classList.remove('show');return}
       if(daysLeft<=30)showExpiryWarning(daysLeft)
     }
@@ -603,12 +624,14 @@ async function init(){
     await updateOverview()
     await loadMemberFilter()
     loadMembers();loadRequests();loadPayments();loadSchedule();loadPlan();loadNotes()
-
-    // فحص الإشعارات بعد تحميل الصفحة
     await checkNotifications(currentUser.id)
 
-  }catch(e){console.error(e);window.location.href='login.html'}
-  finally{loader.classList.remove('show')}
+  }catch(e){
+    console.error('init error',e)
+    loader.classList.remove('show')
+  }finally{
+    loader.classList.remove('show')
+  }
 }
 
 function setLinks(){
@@ -638,16 +661,16 @@ async function updateOverview(){
   document.getElementById('infoManagerName').textContent=currentProfile.full_name
   document.getElementById('infoAmount').textContent=currentGroup.monthly_amount+' درهم'
   document.getElementById('infoStartDate').textContent=`${currentGroup.start_month}/${currentGroup.start_year}`
-const smap={active:{l:'الجمعية نشطة',c:'active',b:'badge-green'},pending:{l:'لم تبدأ بعد',c:'stopped',b:'badge-amber'},completed:{l:'اكتملت دورة الجمعية',c:'completed',b:'badge-blue'},stopped:{l:'الجمعية متوقفة',c:'stopped',b:'badge-red'},renewed:{l:'تم تجديد الجمعية',c:'active',b:'badge-violet'}}
+  const smap={active:{l:'الجمعية نشطة',c:'active',b:'badge-green'},pending:{l:'لم تبدأ بعد',c:'stopped',b:'badge-amber'},completed:{l:'اكتملت دورة الجمعية',c:'completed',b:'badge-blue'},stopped:{l:'الجمعية متوقفة',c:'stopped',b:'badge-red'},renewed:{l:'تم تجديد الجمعية',c:'active',b:'badge-violet'}}
   const s=smap[currentGroup.status]||smap.active
   document.getElementById('cycleBanner').className=`cycle-banner ${s.c}`
   document.getElementById('cycleBannerText').textContent=s.l
   document.getElementById('groupStatusBadge').className=`badge ${s.b}`
   document.getElementById('groupStatusBadge').textContent=s.l
   const ca=document.getElementById('cycleActions');ca.innerHTML=''
-if(currentGroup.status==='pending')ca.innerHTML=`<button class="btn btn-success btn-sm" onclick="updateGroupStatus('active')">🚀 بدء الدورة</button>`
-else if(currentGroup.status==='active')ca.innerHTML=`<button class="btn btn-soft btn-sm" onclick="updateGroupStatus('completed')">✅ إنهاء الدورة</button><button class="btn btn-danger btn-sm" onclick="updateGroupStatus('stopped')">⏹ إيقاف</button>`
-else if(['completed','stopped'].includes(currentGroup.status))ca.innerHTML=`<button class="btn btn-success btn-sm" onclick="updateGroupStatus('pending')">🔄 تجديد</button>`
+  if(currentGroup.status==='pending')ca.innerHTML=`<button class="btn btn-success btn-sm" onclick="updateGroupStatus('active')">🚀 بدء الدورة</button>`
+  else if(currentGroup.status==='active')ca.innerHTML=`<button class="btn btn-soft btn-sm" onclick="updateGroupStatus('completed')">✅ إنهاء الدورة</button><button class="btn btn-danger btn-sm" onclick="updateGroupStatus('stopped')">⏹ إيقاف</button>`
+  else if(['completed','stopped'].includes(currentGroup.status))ca.innerHTML=`<button class="btn btn-success btn-sm" onclick="updateGroupStatus('pending')">🔄 تجديد</button>`
   const cnt=await getMemberCount(),max=currentGroup.max_members||4
   document.getElementById('statTotal').textContent=cnt
   const pct=Math.min(100,Math.round(cnt/max*100))
@@ -878,16 +901,9 @@ async function loadPlan(){
   }
   const pL={free:'المجاني',basic:'الأساسي',pro:'الاحترافي',business:'الأعمال'}
   const maxG=PLAN_LIMITS[planName]||1
-  let daysLeftHtml=''
-  if(data.expires_at){
-    const now=new Date(),exp=new Date(data.expires_at)
-    const days=Math.ceil((exp-now)/(1000*60*60*24))
-    const color=days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
-    daysLeftHtml=`<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px"><span style="color:var(--muted);font-weight:700">الأيام المتبقية</span><strong style="color:${color}">${days} يوم</strong></div>`
-  }
   const atLimit=allGroups.length>=maxG
   const limitHtml=atLimit?`<div style="padding:10px;background:var(--amber-soft);border-radius:10px;font-size:13px;color:var(--amber);font-weight:800">وصلت للحد الأقصى — <a href="plans.html" style="color:var(--amber);text-decoration:underline">ترقية الباقة</a></div>`:`<button class="btn btn-primary btn-sm" onclick="openNewGroupModal()" style="width:fit-content;margin-top:4px">➕ إنشاء جمعية جديدة</button>`
-  el.innerHTML=`<div style="display:grid;gap:10px">${[['الباقة',pL[planName]||data.plan_name],['الحالة','✅ نشط'],['الجمعيات المستخدمة',`${allGroups.length} من ${maxG}`],['تاريخ الاشتراك',data.start_date||'—'],['تاريخ الانتهاء',data.expires_at?new Date(data.expires_at).toLocaleDateString('ar-AE'):'غير محدد'],['المبلغ المدفوع',data.amount+' درهم']].map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px"><span style="color:var(--muted);font-weight:700">${k}</span><strong>${v}</strong></div>`).join('')}${daysLeftHtml}${limitHtml}<a href="plans.html" class="renew-btn">🔄 تجديد أو ترقية الباقة</a></div>`
+  el.innerHTML=`<div style="display:grid;gap:10px">${[['الباقة',pL[planName]||data.plan_name],['الحالة','✅ نشط'],['الجمعيات المستخدمة',`${allGroups.length} من ${maxG}`],['تاريخ الاشتراك',data.start_date||'—'],['تاريخ الانتهاء',data.end_date?new Date(data.end_date).toLocaleDateString('ar-AE'):'غير محدد'],['المبلغ المدفوع',data.amount+' درهم']].map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px"><span style="color:var(--muted);font-weight:700">${k}</span><strong>${v}</strong></div>`).join('')}${limitHtml}<a href="plans.html" class="renew-btn">🔄 تجديد أو ترقية الباقة</a></div>`
 }
 
 async function loadNotes(){
@@ -904,7 +920,7 @@ window.saveNote=async function(){
   document.getElementById('noteText').value=''
   showMsg('noteMsg','تم إرسال الملاحظة','success');loadNotes();setTimeout(()=>clearMsg('noteMsg'),2000)
 }
-window.doLogout=async function(){await sb.auth.signOut();window.location.href='login.html'}
+window.doLogout=async function(){await sb.auth.signOut();window.location.replace('login.html')}
 function showNoGroup(){document.querySelector('.content').innerHTML=`<div style="text-align:center;padding:60px 20px"><div style="font-size:48px;margin-bottom:16px">🏛️</div><h2 style="font-size:22px;font-weight:900;margin-bottom:8px">لا توجد جمعية مرتبطة بحسابك</h2><p style="color:var(--muted);font-size:14px;margin-bottom:20px">يرجى إنشاء جمعية جديدة.</p><button class="btn btn-primary" onclick="openNewGroupModal()">إنشاء جمعية جديدة</button></div>`}
 window.openModal=id=>document.getElementById(id).classList.add('show')
 window.closeModal=id=>document.getElementById(id).classList.remove('show')
