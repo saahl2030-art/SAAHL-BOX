@@ -38,7 +38,7 @@
     .sb-admin strong{display:block;font-size:12px;font-weight:900;color:var(--red)}
     .sb-nav{padding:8px;flex:1;overflow:auto}
     .nav-section{font-size:9px;color:var(--muted);padding:8px 8px 3px;letter-spacing:.06em;font-weight:700}
-    .nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:2px;transition:.15s}
+    .nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:2px;transition:.15s;position:relative}
     .nav-item:hover{background:var(--panel-soft);color:var(--text)}
     .nav-item.active{background:var(--red-soft);color:var(--red);font-weight:800}
     .nav-item .ni{font-size:14px;width:18px;text-align:center;flex:0 0 18px}
@@ -137,6 +137,21 @@
     .page-loader{display:none;position:fixed;inset:0;background:rgba(255,255,255,.88);z-index:200;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--primary)}
     .page-loader.show{display:flex}
     .chart-wrap{position:relative;width:100%;height:130px}
+    /* ===== التنبيهات ===== */
+    .notif-list{display:grid;gap:10px}
+    .notif-item{display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:12px;border:1px solid var(--line);background:#fff;transition:.2s;position:relative}
+    .notif-item.unread{background:#f0f9ff;border-color:#c3dff0}
+    .notif-item:hover{box-shadow:0 4px 12px rgba(0,0,0,.06)}
+    .notif-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex:0 0 38px}
+    .notif-icon.new-group{background:#eaf5fd}
+    .notif-body{flex:1}
+    .notif-title{font-size:13px;font-weight:900;color:var(--text);margin-bottom:4px}
+    .notif-text{font-size:12px;color:var(--muted);line-height:1.7}
+    .notif-meta{display:flex;align-items:center;justify-content:space-between;margin-top:8px;flex-wrap:wrap;gap:6px}
+    .notif-date{font-size:10px;color:var(--muted);font-weight:700}
+    .notif-unread-dot{width:8px;height:8px;border-radius:50%;background:var(--primary);position:absolute;top:14px;left:14px}
+    .mark-read-btn{font-size:10px;padding:4px 8px;border:1px solid var(--line-dark);border-radius:7px;background:#fff;color:var(--muted);cursor:pointer;font-weight:800;transition:.15s}
+    .mark-read-btn:hover{background:var(--green-soft);color:var(--green);border-color:#b7e4cf}
     @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
     @media(max-width:980px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.mid-row,.bot-row{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}}
   </style>
@@ -165,6 +180,8 @@
       <div class="nav-section">المالية</div>
       <div class="nav-item" data-page="subscriptions-page"><span class="ni">📦</span> الاشتراكات</div>
       <div class="nav-item" data-page="notes-page"><span class="ni">📝</span> ملاحظات المدراء</div>
+      <div class="nav-section">التنبيهات</div>
+      <div class="nav-item" data-page="notifications-page"><span class="ni">🔔</span> التنبيهات<span class="nav-badge" id="notifNavBadge" style="display:none">0</span></div>
     </div>
     <div class="sb-footer">
       <div class="logout-nav" onclick="doLogout()">🚪 تسجيل الخروج</div>
@@ -188,6 +205,7 @@
 
     <div class="scr">
 
+      <!-- نظرة عامة -->
       <section class="page active" id="overview-page">
         <div class="kpi-grid">
           <div class="kpi active-kpi">
@@ -243,17 +261,10 @@
             <div class="tbl-filters">
               <input class="srch" id="ovSearch" placeholder="بحث بالاسم أو المدير..." oninput="ovFilter()">
               <select class="flt-sel" id="ovStatus" onchange="ovFilter()">
-                <option value="">كل الحالات</option>
-                <option value="active">نشطة</option>
-                <option value="completed">مكتملة</option>
-                <option value="stopped">متوقفة</option>
+                <option value="">كل الحالات</option><option value="active">نشطة</option><option value="completed">مكتملة</option><option value="stopped">متوقفة</option>
               </select>
               <select class="flt-sel" id="ovPlan" onchange="ovFilter()">
-                <option value="">كل الباقات</option>
-                <option value="free">Free</option>
-                <option value="basic">Basic</option>
-                <option value="pro">Pro</option>
-                <option value="business">Business</option>
+                <option value="">كل الباقات</option><option value="free">Free</option><option value="basic">Basic</option><option value="pro">Pro</option><option value="business">Business</option>
               </select>
             </div>
             <div class="tbl-wrap">
@@ -269,6 +280,7 @@
         </div>
       </section>
 
+      <!-- الجمعيات -->
       <section class="page" id="groups-page">
         <div class="full-card">
           <div class="card-hd"><div><div class="card-title">الجمعيات والمدراء</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="groupsCount">جاري التحميل...</div></div></div>
@@ -286,6 +298,7 @@
         </div>
       </section>
 
+      <!-- الدفعات -->
       <section class="page" id="payments-page">
         <div class="full-card">
           <div class="card-hd"><div><div class="card-title">كل الدفعات</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="paymentsCount">جاري التحميل...</div></div></div>
@@ -301,6 +314,7 @@
         </div>
       </section>
 
+      <!-- طلبات الانضمام -->
       <section class="page" id="requests-page">
         <div class="full-card">
           <div class="card-hd"><div><div class="card-title">طلبات الانضمام</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="requestsCount">جاري التحميل...</div></div></div>
@@ -316,6 +330,7 @@
         </div>
       </section>
 
+      <!-- الاشتراكات -->
       <section class="page" id="subscriptions-page">
         <div class="full-card">
           <div class="card-hd"><div><div class="card-title">كل الاشتراكات</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="subsCount">جاري التحميل...</div></div></div>
@@ -332,10 +347,28 @@
         </div>
       </section>
 
+      <!-- الملاحظات -->
       <section class="page" id="notes-page">
         <div class="full-card">
           <div class="card-hd"><div><div class="card-title">ملاحظات المدراء</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="notesCount">جاري التحميل...</div></div><button class="tb-btn" onclick="loadNotes()">🔄 تحديث</button></div>
           <div id="notesList"><div style="text-align:center;padding:20px;color:var(--muted)">جاري التحميل...</div></div>
+        </div>
+      </section>
+
+      <!-- ✅ التنبيهات الجديدة -->
+      <section class="page" id="notifications-page">
+        <div class="full-card">
+          <div class="card-hd">
+            <div>
+              <div class="card-title">🔔 التنبيهات</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px" id="notifCount">جاري التحميل...</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="tb-btn" onclick="loadNotifications()">🔄 تحديث</button>
+              <button class="tb-btn" onclick="markAllRead()" style="color:var(--green)">✓ تعليم الكل كمقروء</button>
+            </div>
+          </div>
+          <div id="notifList"><div style="text-align:center;padding:30px;color:var(--muted)">جاري التحميل...</div></div>
         </div>
       </section>
 
@@ -362,11 +395,18 @@ async function init(){
     if(email!=='admin@sahel.com'){window.location.replace('dashboard.html');return}
     document.getElementById('adminName').textContent='admin@sahel.com'
     await loadOverview()
-  }catch(e){
-    console.error(e)
-  }finally{
-    loader.classList.remove('show')
-  }
+    await loadUnreadCount()
+  }catch(e){console.error(e)}
+  finally{loader.classList.remove('show')}
+}
+
+async function loadUnreadCount(){
+  try{
+    const{count}=await sb.from('admin_notifications').select('*',{count:'exact',head:true}).eq('is_read',false)
+    const badge=document.getElementById('notifNavBadge')
+    if(count>0){badge.textContent=count;badge.style.display='inline-flex'}
+    else badge.style.display='none'
+  }catch(e){console.error(e)}
 }
 
 async function loadOverview(){
@@ -382,7 +422,6 @@ async function loadOverview(){
     sb.from('groups').select('id,status,manager_id,name,monthly_amount,max_members,start_month,start_year'),
     sb.from('profiles').select('*',{count:'exact',head:true}).eq('role','manager'),
     sb.from('members').select('*',{count:'exact',head:true}),
-    // ✅ إصلاح: end_date بدل expires_at
     sb.from('subscriptions').select('manager_id,plan_name,status,end_date,amount').eq('status','active'),
     sb.from('payments').select('*',{count:'exact',head:true}).eq('status','late'),
     sb.from('join_requests').select('*, groups(name,profiles(full_name))').eq('status','pending').order('created_at',{ascending:false}).limit(5),
@@ -400,7 +439,6 @@ async function loadOverview(){
   document.getElementById('statRevSub').textContent=`من ${subs?.length||0} اشتراك نشط`
   document.getElementById('statLate').textContent=late||0
 
-  // ✅ إصلاح: end_date بدل expires_at
   const expiring=subs?.filter(s=>{if(!s.end_date)return false;const d=Math.ceil((new Date(s.end_date)-new Date())/(1000*60*60*24));return d<=30&&d>0}).length||0
   if(expiring>0){document.getElementById('alertBar').style.display='flex';document.getElementById('alertText').textContent=`${expiring} اشتراك ينتهي خلال 30 يوماً — راجع قسم الاشتراكات للمتابعة`}
   const pending=reqs?.length||0
@@ -430,7 +468,6 @@ async function loadOverview(){
 
   const managerIds=[...new Set(groups?.map(g=>g.manager_id)||[])]
   let subsMap={}
-  // ✅ إصلاح: end_date بدل expires_at
   if(managerIds.length){const{data:subsAll}=await sb.from('subscriptions').select('manager_id,plan_name,end_date,amount').eq('status','active').in('manager_id',managerIds);subsAll?.forEach(s=>{subsMap[s.manager_id]=s})}
   const gids=groups?.map(g=>g.id)||[]
   let mcMap={}
@@ -442,13 +479,56 @@ async function loadOverview(){
   renderOvTable(allGroupsData)
 }
 
+// ✅ تحميل التنبيهات
+window.loadNotifications=async function(){
+  try{
+    const{data,error}=await sb.from('admin_notifications')
+      .select('*, profiles(full_name), groups(name)')
+      .order('created_at',{ascending:false})
+    const el=document.getElementById('notifList')
+    const unread=data?.filter(n=>!n.is_read).length||0
+    document.getElementById('notifCount').textContent=`${data?.length||0} تنبيه — ${unread} غير مقروء`
+    if(!data?.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--muted)">لا توجد تنبيهات</div>';return}
+    el.innerHTML=`<div class="notif-list">${data.map(n=>`
+      <div class="notif-item ${n.is_read?'':'unread'}" id="notif-${n.id}">
+        ${!n.is_read?'<div class="notif-unread-dot"></div>':''}
+        <div class="notif-icon new-group">🏛️</div>
+        <div class="notif-body">
+          <div class="notif-title">${n.title}</div>
+          <div class="notif-text">${n.body}</div>
+          <div class="notif-meta">
+            <span class="notif-date">${new Date(n.created_at).toLocaleString('ar-AE')}</span>
+            ${!n.is_read?`<button class="mark-read-btn" onclick="markOneRead('${n.id}')">✓ تعليم كمقروء</button>`:'<span style="font-size:10px;color:var(--green);font-weight:700">✓ مقروء</span>'}
+          </div>
+        </div>
+      </div>`).join('')}</div>`
+    await loadUnreadCount()
+  }catch(e){console.error(e)}
+}
+
+window.markOneRead=async function(id){
+  await sb.from('admin_notifications').update({is_read:true}).eq('id',id)
+  const el=document.getElementById(`notif-${id}`)
+  if(el){
+    el.classList.remove('unread')
+    el.querySelector('.notif-unread-dot')?.remove()
+    const btn=el.querySelector('.mark-read-btn')
+    if(btn)btn.replaceWith(Object.assign(document.createElement('span'),{textContent:'✓ مقروء',style:'font-size:10px;color:var(--green);font-weight:700'}))
+  }
+  await loadUnreadCount()
+}
+
+window.markAllRead=async function(){
+  await sb.from('admin_notifications').update({is_read:true}).eq('is_read',false)
+  await loadNotifications()
+}
+
 function renderOvTable(data){
   selIdx=-1
   document.getElementById('detPanel').innerHTML=`<div class="det-empty"><div class="det-empty-ic">🏛️</div><div>اضغط على أي جمعية<br>لعرض تفاصيلها الكاملة</div></div>`
   if(!data.length){document.getElementById('ovTbody').innerHTML='<tr><td colspan="6" style="text-align:center;padding:16px;color:var(--muted)">لا توجد نتائج</td></tr>';return}
   document.getElementById('ovTbody').innerHTML=data.map((g,i)=>{
     const pct=Math.round(g.memberCount/(g.max_members||4)*100)
-    // ✅ إصلاح: end_date بدل expires_at
     const days=g.sub?.end_date?Math.ceil((new Date(g.sub.end_date)-new Date())/(1000*60*60*24)):null
     const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
     const plan=g.sub?.plan_name||'Free'
@@ -462,7 +542,6 @@ window.ovSel=function(i){
   document.querySelectorAll('#ovTbody tr').forEach((r,j)=>r.classList.toggle('tr-sel',j===i))
   const g=filtered[i];if(!g)return
   const pct=Math.round(g.memberCount/(g.max_members||4)*100)
-  // ✅ إصلاح: end_date بدل expires_at
   const days=g.sub?.end_date?Math.ceil((new Date(g.sub.end_date)-new Date())/(1000*60*60*24)):null
   const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
   const pc=pct>=100?'var(--red)':pct>=75?'var(--amber)':'var(--green)'
@@ -514,7 +593,6 @@ window.loadGroups=async function(){
   if(!filtered.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted)">لا توجد نتائج</td></tr>';return}
   tbody.innerHTML=filtered.map(g=>{
     const plan=g.sub?.plan_name||'Free'
-    // ✅ إصلاح: end_date بدل expires_at
     const days=g.sub?.end_date?Math.ceil((new Date(g.sub.end_date)-new Date())/(1000*60*60*24)):null
     const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
     return `<tr><td><strong>${g.name}</strong></td><td>${g.managerName}</td><td><span class="badge ${planBadge(plan)}">${plan}</span></td><td>${g.memberCount}/${g.max_members||4}</td><td>${g.monthly_amount} درهم</td><td>${g.sub?.end_date?new Date(g.sub.end_date).toLocaleDateString('ar-AE'):'—'}</td><td style="color:${dc};font-weight:900">${days!==null?days+' يوم':'—'}</td><td><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></td><td><div style="display:flex;gap:4px"><button class="action-btn ab-green" onclick="changeStatus('${g.id}','active')">تفعيل</button><button class="action-btn ab-red" onclick="changeStatus('${g.id}','stopped')">إيقاف</button></div></td></tr>`
@@ -554,7 +632,6 @@ window.loadSubscriptions=async function(){
   const tbody=document.getElementById('subsTbody')
   if(!data?.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">لا توجد اشتراكات</td></tr>';return}
   tbody.innerHTML=data.map(s=>{
-    // ✅ إصلاح: end_date بدل expires_at
     const days=s.end_date?Math.ceil((new Date(s.end_date)-new Date())/(1000*60*60*24)):null
     const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
     return `<tr><td>${s.profiles?.full_name||'—'}</td><td><span class="badge ${planBadge(s.plan_name)}">${s.plan_name}</span></td><td>${s.amount} درهم</td><td><span class="badge ${s.status==='active'?'b-green':'b-red'}">${s.status==='active'?'نشط':'منتهي'}</span></td><td>${s.start_date||'—'}</td><td>${s.end_date?new Date(s.end_date).toLocaleDateString('ar-AE'):'—'}</td><td style="color:${dc};font-weight:900">${days!==null?days+' يوم':'—'}</td></tr>`
@@ -579,12 +656,20 @@ window.exportData=function(){
 }
 
 window.reloadCurrentPage=function(){
-  const map={'overview-page':loadOverview,'groups-page':loadGroups,'payments-page':loadPayments,'requests-page':loadRequests,'subscriptions-page':loadSubscriptions,'notes-page':loadNotes}
+  const map={'overview-page':loadOverview,'groups-page':loadGroups,'payments-page':loadPayments,'requests-page':loadRequests,'subscriptions-page':loadSubscriptions,'notes-page':loadNotes,'notifications-page':loadNotifications}
   map[currentPage]?.()
 }
 
-const pageMeta={'overview-page':['نظرة عامة على المنصة','إحصائيات شاملة لكامل المنصة'],'groups-page':['الجمعيات والمدراء','كل الجمعيات مع بيانات مدرائها'],'payments-page':['الدفعات','سجل الدفعات على مستوى المنصة'],'requests-page':['طلبات الانضمام','الطلبات الواردة من الأعضاء'],'subscriptions-page':['الاشتراكات','باقات المدراء وتواريخ الانتهاء'],'notes-page':['ملاحظات المدراء','رسائل واردة من المدراء للإدارة']}
-const pageLoaders={'groups-page':loadGroups,'payments-page':loadPayments,'requests-page':loadRequests,'subscriptions-page':loadSubscriptions,'notes-page':loadNotes}
+const pageMeta={
+  'overview-page':['نظرة عامة على المنصة','إحصائيات شاملة لكامل المنصة'],
+  'groups-page':['الجمعيات والمدراء','كل الجمعيات مع بيانات مدرائها'],
+  'payments-page':['الدفعات','سجل الدفعات على مستوى المنصة'],
+  'requests-page':['طلبات الانضمام','الطلبات الواردة من الأعضاء'],
+  'subscriptions-page':['الاشتراكات','باقات المدراء وتواريخ الانتهاء'],
+  'notes-page':['ملاحظات المدراء','رسائل واردة من المدراء للإدارة'],
+  'notifications-page':['التنبيهات','تنبيهات النظام والجمعيات الجديدة']
+}
+const pageLoaders={'groups-page':loadGroups,'payments-page':loadPayments,'requests-page':loadRequests,'subscriptions-page':loadSubscriptions,'notes-page':loadNotes,'notifications-page':loadNotifications}
 
 window.switchPage=function(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'))
