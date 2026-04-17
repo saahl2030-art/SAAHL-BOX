@@ -563,20 +563,13 @@ async function init(){
     const{data:p,error:pErr}=await sb.from('profiles').select('*').eq('id',currentUser.id).single()
 
     if(pErr||!p){
-      // المستخدم موجود في Auth لكن مو في profiles — أنشئ له profile
       const{error:insErr}=await sb.from('profiles').insert({
         id:currentUser.id,
         full_name:currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'مدير',
         email:currentUser.email,
         role:'manager'
       })
-      if(insErr){
-        console.error('profile insert error',insErr)
-        loader.classList.remove('show')
-        window.location.replace('login.html')
-        return
-      }
-      // أعد تحميل الصفحة بعد إنشاء الـ profile
+      if(insErr){console.error('profile insert error',insErr);loader.classList.remove('show');window.location.replace('login.html');return}
       window.location.reload()
       return
     }
@@ -903,7 +896,22 @@ async function loadPlan(){
   const maxG=PLAN_LIMITS[planName]||1
   const atLimit=allGroups.length>=maxG
   const limitHtml=atLimit?`<div style="padding:10px;background:var(--amber-soft);border-radius:10px;font-size:13px;color:var(--amber);font-weight:800">وصلت للحد الأقصى — <a href="plans.html" style="color:var(--amber);text-decoration:underline">ترقية الباقة</a></div>`:`<button class="btn btn-primary btn-sm" onclick="openNewGroupModal()" style="width:fit-content;margin-top:4px">➕ إنشاء جمعية جديدة</button>`
-  el.innerHTML=`<div style="display:grid;gap:10px">${[['الباقة',pL[planName]||data.plan_name],['الحالة','✅ نشط'],['الجمعيات المستخدمة',`${allGroups.length} من ${maxG}`],['تاريخ الاشتراك',data.start_date||'—'],['تاريخ الانتهاء',data.end_date?new Date(data.end_date).toLocaleDateString('ar-AE'):'غير محدد'],['المبلغ المدفوع',data.amount+' درهم']].map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px"><span style="color:var(--muted);font-weight:700">${k}</span><strong>${v}</strong></div>`).join('')}${limitHtml}<a href="plans.html" class="renew-btn">🔄 تجديد أو ترقية الباقة</a></div>`
+  // ✅ إصلاح: استخدام end_date بدل expires_at
+  let daysLeftHtml=''
+  if(data.end_date){
+    const now=new Date(),exp=new Date(data.end_date)
+    const days=Math.ceil((exp-now)/(1000*60*60*24))
+    const color=days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
+    daysLeftHtml=`<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px"><span style="color:var(--muted);font-weight:700">الأيام المتبقية</span><strong style="color:${color}">${days} يوم</strong></div>`
+  }
+  el.innerHTML=`<div style="display:grid;gap:10px">${[
+    ['الباقة',pL[planName]||data.plan_name],
+    ['الحالة','✅ نشط'],
+    ['الجمعيات المستخدمة',`${allGroups.length} من ${maxG}`],
+    ['تاريخ الاشتراك',data.start_date||'—'],
+    ['تاريخ الانتهاء',data.end_date?new Date(data.end_date).toLocaleDateString('ar-AE'):'غير محدد'],
+    ['المبلغ المدفوع',data.amount+' درهم']
+  ].map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px"><span style="color:var(--muted);font-weight:700">${k}</span><strong>${v}</strong></div>`).join('')}${daysLeftHtml}${limitHtml}<a href="plans.html" class="renew-btn">🔄 تجديد أو ترقية الباقة</a></div>`
 }
 
 async function loadNotes(){
