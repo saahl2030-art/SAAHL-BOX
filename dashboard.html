@@ -20,8 +20,7 @@
       --violet:#7c3aed;--violet-soft:#f3edff;
       --shadow:0 12px 30px rgba(15,40,64,0.08);
       --radius:18px;
-      --gc:#1f6fa5;
-      --gc-soft:#eaf5fd;
+      --gc:#1f6fa5;--gc-soft:#eaf5fd;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
@@ -528,14 +527,7 @@ window.switchGroup=async function(gid){
 function showExpiredOverlay(name){
   const overlay=document.createElement('div')
   overlay.className='expired-overlay'
-  overlay.innerHTML=`
-    <div class="expired-card">
-      <div class="expired-icon">⏰</div>
-      <div class="expired-title">انتهى اشتراكك</div>
-      <p class="expired-sub">مرحباً ${name}،<br>انتهت صلاحية اشتراكك.<br>لمواصلة إدارة جمعياتك يرجى تجديد باقتك.</p>
-      <a href="plans.html" style="display:block;background:#1f6fa5;color:#fff;border-radius:14px;padding:14px 28px;font-size:15px;font-weight:900;text-decoration:none;margin-bottom:10px">🔄 تجديد الباقة</a>
-      <button onclick="doLogout()" style="display:block;width:100%;background:#f8fbff;color:#6e8498;border:1px solid #dfe8f1;border-radius:14px;padding:12px 28px;font-size:13px;font-weight:700;cursor:pointer">تسجيل الخروج</button>
-    </div>`
+  overlay.innerHTML=`<div class="expired-card"><div class="expired-icon">⏰</div><div class="expired-title">انتهى اشتراكك</div><p class="expired-sub">مرحباً ${name}،<br>انتهت صلاحية اشتراكك.<br>لمواصلة إدارة جمعياتك يرجى تجديد باقتك.</p><a href="plans.html" style="display:block;background:#1f6fa5;color:#fff;border-radius:14px;padding:14px 28px;font-size:15px;font-weight:900;text-decoration:none;margin-bottom:10px">🔄 تجديد الباقة</a><button onclick="doLogout()" style="display:block;width:100%;background:#f8fbff;color:#6e8498;border:1px solid #dfe8f1;border-radius:14px;padding:12px 28px;font-size:13px;font-weight:700;cursor:pointer">تسجيل الخروج</button></div>`
   document.body.appendChild(overlay)
 }
 
@@ -553,53 +545,27 @@ async function init(){
   loader.classList.add('show')
   try{
     const{data:{session}}=await sb.auth.getSession()
-    if(!session){
-      loader.classList.remove('show')
-      window.location.replace('login.html')
-      return
-    }
+    if(!session){loader.classList.remove('show');window.location.replace('login.html');return}
     currentUser=session.user
-
     const{data:p,error:pErr}=await sb.from('profiles').select('*').eq('id',currentUser.id).single()
-
     if(pErr||!p){
-      const{error:insErr}=await sb.from('profiles').insert({
-        id:currentUser.id,
-        full_name:currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'مدير',
-        email:currentUser.email,
-        role:'manager'
-      })
+      const{error:insErr}=await sb.from('profiles').insert({id:currentUser.id,full_name:currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'مدير',email:currentUser.email,role:'manager'})
       if(insErr){console.error('profile insert error',insErr);loader.classList.remove('show');window.location.replace('login.html');return}
-      window.location.reload()
-      return
+      window.location.reload();return
     }
-
-    if(p.role==='admin'){
-      loader.classList.remove('show')
-      window.location.replace('admin.html')
-      return
-    }
-
+    if(p.role==='admin'){loader.classList.remove('show');window.location.replace('admin.html');return}
     currentProfile=p
     document.getElementById('sidebarManagerName').textContent=p.full_name||'—'
-
     const{data:subs}=await sb.from('subscriptions').select('*').eq('manager_id',currentUser.id).order('created_at',{ascending:false}).limit(1)
     const sub=subs?.[0]||null
     const subStatus=sub?.status||'none'
-
-    if(subStatus==='expired'){
-      showExpiredOverlay(p.full_name)
-      loader.classList.remove('show')
-      return
-    }
-
+    if(subStatus==='expired'){showExpiredOverlay(p.full_name);loader.classList.remove('show');return}
     if(sub?.end_date){
       const now=new Date(),endDate=new Date(sub.end_date)
       const daysLeft=Math.ceil((endDate-now)/(1000*60*60*24))
       if(daysLeft<=0){showExpiredOverlay(p.full_name);loader.classList.remove('show');return}
       if(daysLeft<=30)showExpiryWarning(daysLeft)
     }
-
     planName=(sub?.plan_name||'free').toLowerCase()
     memberLimit=MEMBER_LIMITS[planName]||4
     const{data:groups}=await sb.from('groups').select('*').eq('manager_id',currentUser.id).order('created_at',{ascending:true})
@@ -618,13 +584,8 @@ async function init(){
     await loadMemberFilter()
     loadMembers();loadRequests();loadPayments();loadSchedule();loadPlan();loadNotes()
     await checkNotifications(currentUser.id)
-
-  }catch(e){
-    console.error('init error',e)
-    loader.classList.remove('show')
-  }finally{
-    loader.classList.remove('show')
-  }
+  }catch(e){console.error('init error',e);loader.classList.remove('show')}
+  finally{loader.classList.remove('show')}
 }
 
 function setLinks(){
@@ -743,6 +704,19 @@ window.saveNewGroup=async function(){
   }).select().single()
   btn.disabled=false;btn.textContent='إنشاء'
   if(error){showMsg('ngMsg','خطأ: '+error.message,'error');return}
+
+  // ✅ إرسال تنبيه للأدمن عند إنشاء جمعية جديدة
+  try{
+    await sb.from('admin_notifications').insert({
+      type:'new_group',
+      title:'🏛️ جمعية جديدة أُنشئت',
+      body:`أنشأ المدير "${currentProfile.full_name}" جمعية جديدة باسم "${name}" بمبلغ شهري ${amount} درهم وحد أقصى ${maxM} أعضاء.`,
+      manager_id:currentUser.id,
+      group_id:ng.id,
+      is_read:false
+    })
+  }catch(e){console.error('admin notification error',e)}
+
   allGroups.push(ng);buildSelect();closeModal('newGroupModal')
   document.getElementById('groupSelect').value=ng.id
   await switchGroup(ng.id)
@@ -896,7 +870,6 @@ async function loadPlan(){
   const maxG=PLAN_LIMITS[planName]||1
   const atLimit=allGroups.length>=maxG
   const limitHtml=atLimit?`<div style="padding:10px;background:var(--amber-soft);border-radius:10px;font-size:13px;color:var(--amber);font-weight:800">وصلت للحد الأقصى — <a href="plans.html" style="color:var(--amber);text-decoration:underline">ترقية الباقة</a></div>`:`<button class="btn btn-primary btn-sm" onclick="openNewGroupModal()" style="width:fit-content;margin-top:4px">➕ إنشاء جمعية جديدة</button>`
-  // ✅ إصلاح: استخدام end_date بدل expires_at
   let daysLeftHtml=''
   if(data.end_date){
     const now=new Date(),exp=new Date(data.end_date)
@@ -904,14 +877,7 @@ async function loadPlan(){
     const color=days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
     daysLeftHtml=`<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px"><span style="color:var(--muted);font-weight:700">الأيام المتبقية</span><strong style="color:${color}">${days} يوم</strong></div>`
   }
-  el.innerHTML=`<div style="display:grid;gap:10px">${[
-    ['الباقة',pL[planName]||data.plan_name],
-    ['الحالة','✅ نشط'],
-    ['الجمعيات المستخدمة',`${allGroups.length} من ${maxG}`],
-    ['تاريخ الاشتراك',data.start_date||'—'],
-    ['تاريخ الانتهاء',data.end_date?new Date(data.end_date).toLocaleDateString('ar-AE'):'غير محدد'],
-    ['المبلغ المدفوع',data.amount+' درهم']
-  ].map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px"><span style="color:var(--muted);font-weight:700">${k}</span><strong>${v}</strong></div>`).join('')}${daysLeftHtml}${limitHtml}<a href="plans.html" class="renew-btn">🔄 تجديد أو ترقية الباقة</a></div>`
+  el.innerHTML=`<div style="display:grid;gap:10px">${[['الباقة',pL[planName]||data.plan_name],['الحالة','✅ نشط'],['الجمعيات المستخدمة',`${allGroups.length} من ${maxG}`],['تاريخ الاشتراك',data.start_date||'—'],['تاريخ الانتهاء',data.end_date?new Date(data.end_date).toLocaleDateString('ar-AE'):'غير محدد'],['المبلغ المدفوع',data.amount+' درهم']].map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fbff;border-radius:10px;font-size:14px"><span style="color:var(--muted);font-weight:700">${k}</span><strong>${v}</strong></div>`).join('')}${daysLeftHtml}${limitHtml}<a href="plans.html" class="renew-btn">🔄 تجديد أو ترقية الباقة</a></div>`
 }
 
 async function loadNotes(){
