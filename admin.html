@@ -435,8 +435,7 @@ window.loadNotes=async function(){
 window.toggleReply=function(id){
   const el=document.getElementById(`reply-${id}`)
   el.style.display=el.style.display==='block'?'none':'block'
-  if(el.style.display==='block')el.querySelector('textarea').focus()
-}
+if(el.style.display==='block'){el.querySelector('textarea').value='';el.querySelector('textarea').focus()}}
 
 window.submitReply=async function(id){
   const el=document.getElementById(`reply-${id}`)
