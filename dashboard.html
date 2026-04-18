@@ -706,16 +706,15 @@ window.saveNewGroup=async function(){
   if(error){showMsg('ngMsg','خطأ: '+error.message,'error');return}
 
   // ✅ إرسال تنبيه للأدمن عند إنشاء جمعية جديدة
-  try{
-    await sb.from('admin_notifications').insert({
-      type:'new_group',
-      title:'🏛️ جمعية جديدة أُنشئت',
-      body:`أنشأ المدير "${currentProfile.full_name}" جمعية جديدة باسم "${name}" بمبلغ شهري ${amount} درهم وحد أقصى ${maxM} أعضاء.`,
-      manager_id:currentUser.id,
-      group_id:ng.id,
-      is_read:false
+try{
+    await sb.rpc('notify_admin_new_group',{
+      p_type:'new_group',
+      p_title:'🏛️ جمعية جديدة أُنشئت',
+      p_body:`أنشأ المدير "${currentProfile.full_name}" جمعية جديدة باسم "${name}" بمبلغ شهري ${amount} درهم وحد أقصى ${maxM} أعضاء.`,
+      p_manager_id:currentUser.id,
+      p_group_id:ng.id
     })
-}catch(e){console.error('admin notification error',e);alert('خطأ التنبيه: '+JSON.stringify(e))}
+  }catch(e){console.error('admin notification error',e)}
 
   allGroups.push(ng);buildSelect();closeModal('newGroupModal')
   document.getElementById('groupSelect').value=ng.id
