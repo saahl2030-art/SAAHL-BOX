@@ -286,7 +286,7 @@
       var accessToken=r2.data.session.access_token;
       var now=new Date();
 
-      // 3. تأكد من وجود profile — أنشئه إذا لم يكن موجوداً
+      // 3. تأكد من وجود profile
       var { data: existingProfile } = await _sb.from('profiles').select('id').eq('id', uid).single();
       if (!existingProfile) {
         await _sb.from('profiles').insert({
@@ -315,11 +315,36 @@
           end_date:end.toISOString().split('T')[0], amount:0
         });
         if(r4.error) throw r4.error;
+
+        // ✅ تنبيه الأدمن — مدير جديد (باقة مجانية)
+        try{
+          await _sb.rpc('notify_admin_new_group',{
+            p_type:'new_manager',
+            p_title:'👤 مدير جديد انضم للمنصة',
+            p_body:'سجّل "'+fullName+'" ('+email+') حساباً جديداً بالباقة المجانية وأنشأ جمعية "'+societyName+'" بمبلغ شهري '+monthlyAmount+' درهم.',
+            p_manager_id:uid,
+            p_group_id:null
+          });
+        }catch(ne){console.error('notify error',ne)}
+
         msg.textContent='تم إنشاء الحساب والجمعية بنجاح ✅';
         msg.className='msg success show';
         setTimeout(()=>{ window.location.href='dashboard.html'; },1200);
+
       } else {
         document.getElementById('overlayText').textContent='جاري التحويل لصفحة الدفع...';
+
+        // ✅ تنبيه الأدمن — مدير جديد (باقة مدفوعة)
+        try{
+          await _sb.rpc('notify_admin_new_group',{
+            p_type:'new_manager',
+            p_title:'👤 مدير جديد — باقة '+plan,
+            p_body:'سجّل "'+fullName+'" ('+email+') حساباً جديداً بالباقة '+plan+' وأنشأ جمعية "'+societyName+'" بمبلغ شهري '+monthlyAmount+' درهم.',
+            p_manager_id:uid,
+            p_group_id:null
+          });
+        }catch(ne){console.error('notify error',ne)}
+
         var res=await fetch(SUPABASE_URL+'/functions/v1/create-checkout',{
           method:'POST',
           headers:{'Content-Type':'application/json','Authorization':'Bearer '+accessToken},
