@@ -715,7 +715,7 @@ window.saveNewGroup=async function(){
       group_id:ng.id,
       is_read:false
     })
-  }catch(e){console.error('admin notification error',e)}
+}catch(e){console.error('admin notification error',e);alert('خطأ التنبيه: '+JSON.stringify(e))}
 
   allGroups.push(ng);buildSelect();closeModal('newGroupModal')
   document.getElementById('groupSelect').value=ng.id
