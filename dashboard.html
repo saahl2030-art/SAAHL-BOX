@@ -490,7 +490,7 @@ async function checkNotifications(userId){
   try{const{data:notifs}=await sb.from('notifications').select('*').eq('manager_id',userId).order('created_at',{ascending:false}).limit(1)
     if(!notifs||!notifs.length)return
     const notif=notifs[0]
-    const{data:read}=await sb.from('notification_reads').select('id').eq('notification_id',notif.id).eq('manager_id',userId)
+const{data:read}=await sb.from('notification_reads').select('id').eq('notification_id',notif.id).eq('manager_id',userId)
     if(read&&read.length)return
     currentNotifId=notif.id
     document.getElementById('notifModalTitle').textContent=notif.title
