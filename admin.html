@@ -442,7 +442,15 @@ window.submitReply=async function(id){
   const el=document.getElementById(`reply-${id}`)
   const text=el.querySelector('textarea').value.trim()
   if(!text)return
+  const{data:note}=await sb.from('manager_notes').select('manager_id').eq('id',id).single()
   await sb.from('manager_notes').update({admin_reply:text}).eq('id',id)
+  if(note?.manager_id){
+    await sb.from('notifications').insert({
+      manager_id:note.manager_id,
+      title:'📩 رد من الإدارة',
+      body:text
+    }).catch(e=>console.error(e))
+  }
   el.style.display='none'
   loadNotes()
 }
