@@ -101,23 +101,30 @@
     .mark-read-btn{font-size:10px;padding:4px 8px;border:1px solid var(--line-dark);border-radius:7px;background:#fff;color:var(--muted);cursor:pointer;font-weight:800;transition:.15s}
     .mark-read-btn:hover{background:var(--green-soft);color:var(--green);border-color:#b7e4cf}
     /* ملاحظات المدراء */
-    .note-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px;transition:.2s}
-    .note-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.06)}
-    .note-card.unread-note{border-right:3px solid var(--primary);background:#f8fbff}
+    .note-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}
     .note-card-hd{display:flex;align-items:center;gap:10px;margin-bottom:10px}
     .note-card-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex:0 0 36px}
     .note-card-info{flex:1}
     .note-card-name{font-size:13px;font-weight:900;color:var(--text)}
     .note-card-sub{font-size:11px;color:var(--muted);margin-top:2px}
-    .note-card-date{font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap}
+    .note-card-date{font-size:10px;color:var(--muted);font-weight:700}
     .note-card-body{font-size:13px;color:var(--text);line-height:1.8;padding:10px;background:#f8fbff;border-radius:8px;margin-bottom:10px}
-    .note-card-reply{margin-top:10px;padding:10px;background:var(--green-soft);border-radius:8px;font-size:12px;color:var(--green);font-weight:700}
+    .note-card-reply{margin-top:8px;padding:10px;background:var(--green-soft);border-radius:8px;font-size:12px;color:var(--green);font-weight:700}
     .note-card-reply-lbl{font-size:10px;color:var(--green);font-weight:900;margin-bottom:4px}
-    .note-actions{display:flex;gap:6px;flex-wrap:wrap}
-    .note-reply-input{display:none;margin-top:10px}
-    .note-reply-input textarea{width:100%;border:1px solid var(--line-dark);border-radius:10px;padding:10px;font-size:13px;resize:vertical;outline:none}
-    .note-reply-input textarea:focus{border-color:var(--primary)}
-    .note-reply-actions{display:flex;gap:6px;margin-top:6px;justify-content:flex-end}
+    .note-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+    .note-reply-area{display:none;margin-top:10px}
+    .note-reply-area textarea{width:100%;border:1px solid var(--line-dark);border-radius:10px;padding:10px;font-size:13px;resize:vertical;outline:none;min-height:80px}
+    .note-reply-area textarea:focus{border-color:var(--primary)}
+    .note-reply-btns{display:flex;gap:6px;margin-top:6px;justify-content:flex-end}
+    /* إشعارات للمدراء */
+    .broadcast-card{background:linear-gradient(135deg,#f0f9ff,var(--primary-soft));border:1px solid #c3dff0;border-radius:var(--radius);padding:16px;margin-bottom:14px}
+    .broadcast-card h3{font-size:14px;font-weight:900;color:var(--primary-dark);margin-bottom:4px}
+    .broadcast-card p{font-size:12px;color:var(--muted);margin-bottom:12px}
+    .broadcast-form{display:grid;gap:10px}
+    .broadcast-input{width:100%;border:1px solid var(--line-dark);border-radius:10px;padding:10px 12px;font-size:13px;outline:none;background:#fff}
+    .broadcast-input:focus{border-color:var(--primary)}
+    .broadcast-textarea{width:100%;border:1px solid var(--line-dark);border-radius:10px;padding:10px 12px;font-size:13px;outline:none;resize:vertical;min-height:80px;background:#fff}
+    .broadcast-textarea:focus{border-color:var(--primary)}
     @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
     @media(max-width:980px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.mid-row,.bot-row{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}}
   </style>
@@ -141,7 +148,8 @@
       <div class="nav-section">المالية</div>
       <div class="nav-item" data-page="subscriptions-page"><span class="ni">📦</span> الاشتراكات</div>
       <div class="nav-item" data-page="notes-page"><span class="ni">📝</span> ملاحظات المدراء<span class="nav-badge" id="notesNavBadge" style="display:none">0</span></div>
-      <div class="nav-section">التنبيهات</div>
+      <div class="nav-section">التواصل</div>
+      <div class="nav-item" data-page="broadcast-page"><span class="ni">📢</span> إشعار للمدراء</div>
       <div class="nav-item" data-page="notifications-page"><span class="ni">🔔</span> التنبيهات<span class="nav-badge" id="notifNavBadge" style="display:none">0</span></div>
     </div>
     <div class="sb-footer"><div class="logout-nav" onclick="doLogout()">🚪 تسجيل الخروج</div></div>
@@ -181,7 +189,7 @@
         </div>
         <div class="bot-row">
           <div class="tbl-card">
-            <div class="card-hd"><div class="card-title">الجمعيات والمدراء <span style="font-size:10px;font-weight:400;color:var(--muted)">— اضغط لعرض التفاصيل</span></div><span class="card-link" onclick="switchPage('groups-page')">عرض الكل ←</span></div>
+            <div class="card-hd"><div class="card-title">الجمعيات والمدراء</div><span class="card-link" onclick="switchPage('groups-page')">عرض الكل ←</span></div>
             <div class="tbl-filters">
               <input class="srch" id="ovSearch" placeholder="بحث بالاسم أو المدير..." oninput="ovFilter()">
               <select class="flt-sel" id="ovStatus" onchange="ovFilter()"><option value="">كل الحالات</option><option value="active">نشطة</option><option value="completed">مكتملة</option><option value="stopped">متوقفة</option></select>
@@ -232,20 +240,40 @@
         </div>
       </section>
 
-      <!-- ملاحظات المدراء المحسّنة -->
+      <!-- ملاحظات المدراء -->
       <section class="page" id="notes-page">
         <div class="full-card">
           <div class="card-hd">
             <div><div class="card-title">ملاحظات المدراء</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="notesCount">جاري التحميل...</div></div>
             <div style="display:flex;gap:8px">
               <button class="tb-btn" onclick="loadNotes()">🔄 تحديث</button>
-              <button class="tb-btn" onclick="markAllNotesRead()" style="color:var(--green)">✓ تعليم الكل كمقروء</button>
             </div>
           </div>
           <div id="notesList"><div style="text-align:center;padding:20px;color:var(--muted)">جاري التحميل...</div></div>
         </div>
       </section>
 
+      <!-- إشعار للمدراء -->
+      <section class="page" id="broadcast-page">
+        <div class="broadcast-card">
+          <h3>📢 إرسال إشعار لجميع المدراء</h3>
+          <p>سيصل الإشعار لكل مدير عند دخوله للوحة التحكم كـ popup</p>
+          <div class="broadcast-form">
+            <input class="broadcast-input" id="broadcastTitle" type="text" placeholder="عنوان الإشعار *" maxlength="100">
+            <textarea class="broadcast-textarea" id="broadcastBody" placeholder="نص الإشعار *"></textarea>
+            <div style="display:flex;gap:8px;align-items:center">
+              <button class="tb-btn" id="broadcastBtn" onclick="sendBroadcast()" style="background:var(--primary);color:#fff;border-color:var(--primary)">📤 إرسال للجميع</button>
+              <span id="broadcastMsg" style="font-size:12px;font-weight:700"></span>
+            </div>
+          </div>
+        </div>
+        <div class="full-card">
+          <div class="card-hd"><div class="card-title">الإشعارات السابقة</div><button class="tb-btn" onclick="loadBroadcasts()">🔄 تحديث</button></div>
+          <div id="broadcastList"><div style="text-align:center;padding:20px;color:var(--muted)">جاري التحميل...</div></div>
+        </div>
+      </section>
+
+      <!-- التنبيهات -->
       <section class="page" id="notifications-page">
         <div class="full-card">
           <div class="card-hd">
@@ -299,16 +327,11 @@ async function loadUnreadCount(){
 
 async function loadNotesCount(){
   try{
-    const{count}=await sb.from('manager_notes').select('*',{count:'exact',head:true}).eq('is_read',false)
+    const{count}=await sb.from('manager_notes').select('*',{count:'exact',head:true})
     const badge=document.getElementById('notesNavBadge')
     if(count>0){badge.textContent=count;badge.style.display='inline-flex'}
     else badge.style.display='none'
-  }catch(e){
-    // عمود is_read غير موجود — أظهر العدد الكلي
-    const{count:total}=await sb.from('manager_notes').select('*',{count:'exact',head:true})
-    const badge=document.getElementById('notesNavBadge')
-    if(total>0){badge.textContent=total;badge.style.display='inline-flex'}
-  }
+  }catch(e){console.error(e)}
 }
 
 async function loadOverview(){
@@ -395,14 +418,12 @@ window.markAllRead=async function(){
   await loadNotifications()
 }
 
-// ✅ ملاحظات المدراء المحسّنة
+// ✅ ملاحظات المدراء مع رد وحذف
 window.loadNotes=async function(){
   const{data}=await sb.from('manager_notes').select('*, profiles(full_name,email), groups(name)').order('created_at',{ascending:false})
   document.getElementById('notesCount').textContent=`${data?.length||0} ملاحظة`
-  // تحديث badge
   const badge=document.getElementById('notesNavBadge')
-  if(data?.length>0){badge.textContent=data.length;badge.style.display='inline-flex'}
-  else badge.style.display='none'
+  if(data?.length>0){badge.textContent=data.length;badge.style.display='inline-flex'}else badge.style.display='none'
   const el=document.getElementById('notesList')
   if(!data?.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted)">لا توجد ملاحظات</div>';return}
   const ac=['#eaf5fd','#e8f8f1','#fff5e4','#f3edff','#fdeeee'],tc=['#185781','#138a59','#b7791f','#7c3aed','#c53b3b']
@@ -422,9 +443,9 @@ window.loadNotes=async function(){
         <button class="action-btn ab-blue" onclick="toggleReply('${n.id}')">↩ رد</button>
         <button class="action-btn ab-red" onclick="deleteNote('${n.id}')">🗑 حذف</button>
       </div>
-      <div class="note-reply-input" id="reply-${n.id}">
-        <textarea placeholder="اكتب ردك هنا..." rows="3"></textarea>
-        <div class="note-reply-actions">
+      <div class="note-reply-area" id="reply-${n.id}">
+        <textarea placeholder="اكتب ردك هنا..."></textarea>
+        <div class="note-reply-btns">
           <button class="action-btn" style="background:#f2f5f8;color:var(--muted)" onclick="toggleReply('${n.id}')">إلغاء</button>
           <button class="action-btn ab-green" onclick="submitReply('${n.id}')">إرسال الرد</button>
         </div>
@@ -435,22 +456,26 @@ window.loadNotes=async function(){
 window.toggleReply=function(id){
   const el=document.getElementById(`reply-${id}`)
   el.style.display=el.style.display==='block'?'none':'block'
-if(el.style.display==='block'){el.querySelector('textarea').value='';el.querySelector('textarea').focus()}}
+  if(el.style.display==='block'){el.querySelector('textarea').value='';el.querySelector('textarea').focus()}
+}
 
 window.submitReply=async function(id){
   const el=document.getElementById(`reply-${id}`)
   const text=el.querySelector('textarea').value.trim()
   if(!text)return
+  const btn=el.querySelector('.ab-green')
+  btn.disabled=true;btn.textContent='جاري الإرسال...'
   const{data:note}=await sb.from('manager_notes').select('manager_id').eq('id',id).single()
   await sb.from('manager_notes').update({admin_reply:text}).eq('id',id)
   if(note?.manager_id){
-   await sb.from('notifications').insert({
-  user_id:note.manager_id,
-  manager_id:note.manager_id,
-  title:'📩 رد من الإدارة',
-  body:text
-}).catch(e=>console.error(e))
+    await sb.from('notifications').insert({
+      user_id:note.manager_id,
+      manager_id:note.manager_id,
+      title:'📩 رد من الإدارة',
+      body:text
+    }).catch(e=>console.error(e))
   }
+  btn.disabled=false;btn.textContent='إرسال الرد'
   el.style.display='none'
   loadNotes()
 }
@@ -462,11 +487,45 @@ window.deleteNote=async function(id){
   loadNotesCount()
 }
 
-window.markAllNotesRead=async function(){
+// ✅ إشعار للمدراء
+window.sendBroadcast=async function(){
+  const title=document.getElementById('broadcastTitle').value.trim()
+  const body=document.getElementById('broadcastBody').value.trim()
+  const msgEl=document.getElementById('broadcastMsg')
+  const btn=document.getElementById('broadcastBtn')
+  if(!title||!body){msgEl.textContent='⚠️ أكمل العنوان والنص';msgEl.style.color='var(--red)';return}
+  btn.disabled=true;btn.textContent='جاري الإرسال...'
+  msgEl.textContent=''
   try{
-    await sb.from('manager_notes').update({is_read:true}).eq('is_read',false)
-  }catch(e){console.error(e)}
-  await loadNotes()
+    // جلب كل المدراء
+    const{data:managers}=await sb.from('profiles').select('id').eq('role','manager')
+    if(!managers?.length){msgEl.textContent='لا يوجد مدراء';msgEl.style.color='var(--amber)';return}
+    // إدراج إشعار في جدول notifications لكل مدير
+    const inserts=managers.map(m=>({user_id:m.id,manager_id:m.id,title,body,is_read:false}))
+    const{error}=await sb.from('notifications').insert(inserts)
+    if(error)throw error
+    msgEl.textContent=`✅ تم الإرسال لـ ${managers.length} مدير`
+    msgEl.style.color='var(--green)'
+    document.getElementById('broadcastTitle').value=''
+    document.getElementById('broadcastBody').value=''
+    loadBroadcasts()
+  }catch(e){
+    console.error(e)
+    msgEl.textContent='خطأ: '+e.message
+    msgEl.style.color='var(--red)'
+  }
+  btn.disabled=false;btn.textContent='📤 إرسال للجميع'
+}
+
+window.loadBroadcasts=async function(){
+  const{data}=await sb.from('notifications').select('title,body,created_at').order('created_at',{ascending:false}).limit(20)
+  const el=document.getElementById('broadcastList')
+  if(!data?.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted)">لا توجد إشعارات سابقة</div>';return}
+  // إزالة المكرر بالعنوان+الوقت
+  const unique=[]
+  const seen=new Set()
+  data.forEach(n=>{const k=n.title+n.created_at;if(!seen.has(k)){seen.add(k);unique.push(n)}})
+  el.innerHTML=unique.map(n=>`<div style="padding:12px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;font-size:12px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><strong>${n.title}</strong><span style="color:var(--muted)">${new Date(n.created_at).toLocaleDateString('ar-AE')}</span></div><div style="color:var(--muted)">${n.body}</div></div>`).join('')
 }
 
 function renderOvTable(data){
@@ -578,12 +637,21 @@ window.exportData=function(){
 }
 
 window.reloadCurrentPage=function(){
-  const map={'overview-page':loadOverview,'groups-page':loadGroups,'payments-page':loadPayments,'requests-page':loadRequests,'subscriptions-page':loadSubscriptions,'notes-page':loadNotes,'notifications-page':loadNotifications}
+  const map={'overview-page':loadOverview,'groups-page':loadGroups,'payments-page':loadPayments,'requests-page':loadRequests,'subscriptions-page':loadSubscriptions,'notes-page':loadNotes,'broadcast-page':loadBroadcasts,'notifications-page':loadNotifications}
   map[currentPage]?.()
 }
 
-const pageMeta={'overview-page':['نظرة عامة على المنصة','إحصائيات شاملة لكامل المنصة'],'groups-page':['الجمعيات والمدراء','كل الجمعيات مع بيانات مدرائها'],'payments-page':['الدفعات','سجل الدفعات على مستوى المنصة'],'requests-page':['طلبات الانضمام','الطلبات الواردة من الأعضاء'],'subscriptions-page':['الاشتراكات','باقات المدراء وتواريخ الانتهاء'],'notes-page':['ملاحظات المدراء','رسائل واردة من المدراء للإدارة'],'notifications-page':['التنبيهات','تنبيهات النظام والجمعيات الجديدة']}
-const pageLoaders={'groups-page':loadGroups,'payments-page':loadPayments,'requests-page':loadRequests,'subscriptions-page':loadSubscriptions,'notes-page':loadNotes,'notifications-page':loadNotifications}
+const pageMeta={
+  'overview-page':['نظرة عامة على المنصة','إحصائيات شاملة لكامل المنصة'],
+  'groups-page':['الجمعيات والمدراء','كل الجمعيات مع بيانات مدرائها'],
+  'payments-page':['الدفعات','سجل الدفعات على مستوى المنصة'],
+  'requests-page':['طلبات الانضمام','الطلبات الواردة من الأعضاء'],
+  'subscriptions-page':['الاشتراكات','باقات المدراء وتواريخ الانتهاء'],
+  'notes-page':['ملاحظات المدراء','رسائل واردة من المدراء للإدارة'],
+  'broadcast-page':['إشعار للمدراء','إرسال إشعار يصل لجميع المدراء'],
+  'notifications-page':['التنبيهات','تنبيهات النظام والجمعيات الجديدة']
+}
+const pageLoaders={'groups-page':loadGroups,'payments-page':loadPayments,'requests-page':loadRequests,'subscriptions-page':loadSubscriptions,'notes-page':loadNotes,'broadcast-page':loadBroadcasts,'notifications-page':loadNotifications}
 
 window.switchPage=function(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'))
