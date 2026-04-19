@@ -303,7 +303,7 @@
       <button class="menu-btn" data-page="schedule-page"><div class="menu-icon">📅</div><span>جدول الدفعات</span></button>
       <button class="menu-btn" data-page="link-page"><div class="menu-icon">🔗</div><span>روابط الجمعية</span></button>
       <button class="menu-btn" data-page="plan-page"><div class="menu-icon">📦</div><span>الباقة</span></button>
-      <button class="menu-btn" data-page="notes-page"><div class="menu-icon">📝</div><span>ملاحظات للإدارة</span></button>
+      <button class="menu-btn" data-page="notes-page"><div class="menu-icon">📝</div><span>ملاحظات للإدارة</span><div class="rbadge" id="notesBadge">0</div></button>
       <button class="menu-btn" onclick="window.location.href='guide.html'"><div class="menu-icon">📖</div><span>دليل الاستخدام</span></button>
     </div>
     <button class="logout-btn" onclick="doLogout()">🚪 <span>تسجيل الخروج</span></button>
@@ -487,10 +487,11 @@ function buildSelect(){
 }
 
 async function checkNotifications(userId){
-  try{const{data:notifs}=await sb.from('notifications').select('*').eq('manager_id',userId).order('created_at',{ascending:false}).limit(1)
+  try{
+    const{data:notifs}=await sb.from('notifications').select('*').eq('manager_id',userId).order('created_at',{ascending:false}).limit(1)
     if(!notifs||!notifs.length)return
     const notif=notifs[0]
-const{data:read}=await sb.from('notification_reads').select('id').eq('notification_id',notif.id).eq('manager_id',userId)
+    const{data:read}=await sb.from('notification_reads').select('id').eq('notification_id',notif.id).eq('manager_id',userId)
     if(read&&read.length)return
     currentNotifId=notif.id
     document.getElementById('notifModalTitle').textContent=notif.title
@@ -650,6 +651,7 @@ async function updateOverview(){
 
 function updateReqBadge(n){const b=document.getElementById('reqBadge');n>0?(b.textContent=n,b.classList.add('show')):b.classList.remove('show')}
 function updateReceiptBadge(n){const b=document.getElementById('receiptBadge');n>0?(b.textContent=n,b.classList.add('show')):b.classList.remove('show')}
+function updateNotesBadge(n){const b=document.getElementById('notesBadge');n>0?(b.textContent=n,b.classList.add('show')):b.classList.remove('show')}
 
 window.updateGroupStatus=async function(s){
   if(!confirm('تغيير حالة الجمعية؟'))return
@@ -703,9 +705,7 @@ window.saveNewGroup=async function(){
   }).select().single()
   btn.disabled=false;btn.textContent='إنشاء'
   if(error){showMsg('ngMsg','خطأ: '+error.message,'error');return}
-
-  // ✅ إرسال تنبيه للأدمن عند إنشاء جمعية جديدة
-try{
+  try{
     await sb.rpc('notify_admin_new_group',{
       p_type:'new_group',
       p_title:'🏛️ جمعية جديدة أُنشئت',
@@ -714,7 +714,6 @@ try{
       p_group_id:ng.id
     })
   }catch(e){console.error('admin notification error',e)}
-
   allGroups.push(ng);buildSelect();closeModal('newGroupModal')
   document.getElementById('groupSelect').value=ng.id
   await switchGroup(ng.id)
@@ -881,16 +880,25 @@ async function loadPlan(){
 async function loadNotes(){
   const{data}=await sb.from('manager_notes').select('*').eq('manager_id',currentUser.id).order('created_at',{ascending:false})
   const el=document.getElementById('notesList')
-  if(!data||!data.length){el.innerHTML='<div class="empty">لا توجد ملاحظات</div>';return}
-  el.innerHTML=data.map(n=>`<div style="padding:12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;font-size:13px"><div style="color:var(--muted);margin-bottom:4px">${new Date(n.created_at).toLocaleDateString('ar')}</div><div>${n.note}</div>${n.admin_reply?`<div style="margin-top:8px;padding:8px 10px;background:var(--green-soft);border-radius:8px;font-size:12px;color:var(--green);font-weight:700"><span style="font-size:10px;display:block;margin-bottom:2px">↩ رد الإدارة:</span>${n.admin_reply}</div>`:''}</div>`).join('')
+  if(!data||!data.length){el.innerHTML='<div class="empty">لا توجد ملاحظات</div>';updateNotesBadge(0);return}
+  // ✅ badge عدد الردود غير المقروءة
+  const unreadReplies=data.filter(n=>n.admin_reply&&!n.reply_read).length
+  updateNotesBadge(unreadReplies)
+  el.innerHTML=data.map(n=>`<div style="padding:12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;font-size:13px${n.admin_reply&&!n.reply_read?';border-right:3px solid var(--primary)':''}"><div style="color:var(--muted);margin-bottom:4px">${new Date(n.created_at).toLocaleDateString('ar')}</div><div>${n.note}</div>${n.admin_reply?`<div style="margin-top:8px;padding:8px 10px;background:var(--green-soft);border-radius:8px;font-size:12px;color:var(--green);font-weight:700"><span style="font-size:10px;display:block;margin-bottom:2px">↩ رد الإدارة:</span>${n.admin_reply}</div>`:''}${n.admin_reply&&!n.reply_read?`<button onclick="markReplyRead('${n.id}')" style="margin-top:6px;font-size:10px;padding:3px 8px;border:1px solid var(--line-dark);border-radius:6px;background:#fff;cursor:pointer;color:var(--muted)">✓ تم الاطلاع</button>`:''}</div>`).join('')
 }
+
+window.markReplyRead=async function(id){
+  await sb.from('manager_notes').update({reply_read:true}).eq('id',id)
+  loadNotes()
+}
+
 window.saveNote=async function(){
   const note=document.getElementById('noteText').value.trim()
   if(!note){showMsg('noteMsg','اكتب ملاحظتك أولاً','error');return}
   const{error}=await sb.from('manager_notes').insert({manager_id:currentUser.id,group_id:currentGroup?.id,note})
   if(error){showMsg('noteMsg','خطأ: '+error.message,'error');return}
   document.getElementById('noteText').value=''
-  showMsg('noteMsg','تم إرسال الملاحظة','success');loadNotes();setTimeout(()=>clearMsg('noteMsg'),2000)
+  showMsg('noteMsg','تم إرسال الملاحظة ✅','success');loadNotes();setTimeout(()=>clearMsg('noteMsg'),2000)
 }
 window.doLogout=async function(){await sb.auth.signOut();window.location.replace('login.html')}
 function showNoGroup(){document.querySelector('.content').innerHTML=`<div style="text-align:center;padding:60px 20px"><div style="font-size:48px;margin-bottom:16px">🏛️</div><h2 style="font-size:22px;font-weight:900;margin-bottom:8px">لا توجد جمعية مرتبطة بحسابك</h2><p style="color:var(--muted);font-size:14px;margin-bottom:20px">يرجى إنشاء جمعية جديدة.</p><button class="btn btn-primary" onclick="openNewGroupModal()">إنشاء جمعية جديدة</button></div>`}
