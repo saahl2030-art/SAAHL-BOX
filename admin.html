@@ -100,7 +100,8 @@
     .notif-unread-dot{width:8px;height:8px;border-radius:50%;background:var(--primary);position:absolute;top:14px;left:14px}
     .mark-read-btn{font-size:10px;padding:4px 8px;border:1px solid var(--line-dark);border-radius:7px;background:#fff;color:var(--muted);cursor:pointer;font-weight:800;transition:.15s}
     .mark-read-btn:hover{background:var(--green-soft);color:var(--green);border-color:#b7e4cf}
-    /* ملاحظات المدراء */
+    .del-notif-btn{font-size:10px;padding:4px 8px;border:1px solid #f5c6c6;border-radius:7px;background:#fff;color:var(--red);cursor:pointer;font-weight:800;transition:.15s}
+    .del-notif-btn:hover{background:var(--red-soft)}
     .note-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}
     .note-card-hd{display:flex;align-items:center;gap:10px;margin-bottom:10px}
     .note-card-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex:0 0 36px}
@@ -116,7 +117,6 @@
     .note-reply-area textarea{width:100%;border:1px solid var(--line-dark);border-radius:10px;padding:10px;font-size:13px;resize:vertical;outline:none;min-height:80px}
     .note-reply-area textarea:focus{border-color:var(--primary)}
     .note-reply-btns{display:flex;gap:6px;margin-top:6px;justify-content:flex-end}
-    /* إشعارات للمدراء */
     .broadcast-card{background:linear-gradient(135deg,#f0f9ff,var(--primary-soft));border:1px solid #c3dff0;border-radius:var(--radius);padding:16px;margin-bottom:14px}
     .broadcast-card h3{font-size:14px;font-weight:900;color:var(--primary-dark);margin-bottom:4px}
     .broadcast-card p{font-size:12px;color:var(--muted);margin-bottom:12px}
@@ -240,20 +240,16 @@
         </div>
       </section>
 
-      <!-- ملاحظات المدراء -->
       <section class="page" id="notes-page">
         <div class="full-card">
           <div class="card-hd">
             <div><div class="card-title">ملاحظات المدراء</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="notesCount">جاري التحميل...</div></div>
-            <div style="display:flex;gap:8px">
-              <button class="tb-btn" onclick="loadNotes()">🔄 تحديث</button>
-            </div>
+            <button class="tb-btn" onclick="loadNotes()">🔄 تحديث</button>
           </div>
           <div id="notesList"><div style="text-align:center;padding:20px;color:var(--muted)">جاري التحميل...</div></div>
         </div>
       </section>
 
-      <!-- إشعار للمدراء -->
       <section class="page" id="broadcast-page">
         <div class="broadcast-card">
           <h3>📢 إرسال إشعار لجميع المدراء</h3>
@@ -273,7 +269,6 @@
         </div>
       </section>
 
-      <!-- التنبيهات -->
       <section class="page" id="notifications-page">
         <div class="full-card">
           <div class="card-hd">
@@ -381,6 +376,7 @@ async function loadOverview(){
   renderOvTable(allGroupsData)
 }
 
+// ✅ التنبيهات مع زر حذف
 window.loadNotifications=async function(){
   try{
     const{data,error}=await sb.from('admin_notifications').select('*').order('created_at',{ascending:false})
@@ -398,7 +394,10 @@ window.loadNotifications=async function(){
           <div class="notif-text">${n.body}</div>
           <div class="notif-meta">
             <span class="notif-date">${new Date(n.created_at).toLocaleString('ar-AE')}</span>
-            ${!n.is_read?`<button class="mark-read-btn" onclick="markOneRead('${n.id}')">✓ تعليم كمقروء</button>`:'<span style="font-size:10px;color:var(--green);font-weight:700">✓ مقروء</span>'}
+            <div style="display:flex;gap:6px;align-items:center">
+              ${!n.is_read?`<button class="mark-read-btn" onclick="markOneRead('${n.id}')">✓ تعليم كمقروء</button>`:'<span style="font-size:10px;color:var(--green);font-weight:700">✓ مقروء</span>'}
+              <button class="del-notif-btn" onclick="deleteNotif('${n.id}')">🗑 حذف</button>
+            </div>
           </div>
         </div>
       </div>`).join('')}</div>`
@@ -409,7 +408,12 @@ window.loadNotifications=async function(){
 window.markOneRead=async function(id){
   await sb.from('admin_notifications').update({is_read:true}).eq('id',id)
   const el=document.getElementById(`notif-${id}`)
-  if(el){el.classList.remove('unread');el.querySelector('.notif-unread-dot')?.remove();const btn=el.querySelector('.mark-read-btn');if(btn)btn.replaceWith(Object.assign(document.createElement('span'),{textContent:'✓ مقروء',style:'font-size:10px;color:var(--green);font-weight:700'}))}
+  if(el){
+    el.classList.remove('unread')
+    el.querySelector('.notif-unread-dot')?.remove()
+    const btn=el.querySelector('.mark-read-btn')
+    if(btn)btn.replaceWith(Object.assign(document.createElement('span'),{textContent:'✓ مقروء',style:'font-size:10px;color:var(--green);font-weight:700'}))
+  }
   await loadUnreadCount()
 }
 
@@ -418,7 +422,18 @@ window.markAllRead=async function(){
   await loadNotifications()
 }
 
-// ✅ ملاحظات المدراء مع رد وحذف
+// ✅ حذف تنبيه واحد فقط من القائمة
+window.deleteNotif=async function(id){
+  await sb.from('admin_notifications').delete().eq('id',id)
+  document.getElementById(`notif-${id}`)?.remove()
+  await loadUnreadCount()
+  // تحديث العداد
+  const remaining=document.querySelectorAll('.notif-item').length
+  const unread=document.querySelectorAll('.notif-item.unread').length
+  document.getElementById('notifCount').textContent=`${remaining} تنبيه — ${unread} غير مقروء`
+}
+
+// ✅ ملاحظات المدراء
 window.loadNotes=async function(){
   const{data}=await sb.from('manager_notes').select('*, profiles(full_name,email), groups(name)').order('created_at',{ascending:false})
   document.getElementById('notesCount').textContent=`${data?.length||0} ملاحظة`
@@ -497,10 +512,8 @@ window.sendBroadcast=async function(){
   btn.disabled=true;btn.textContent='جاري الإرسال...'
   msgEl.textContent=''
   try{
-    // جلب كل المدراء
     const{data:managers}=await sb.from('profiles').select('id').eq('role','manager')
-    if(!managers?.length){msgEl.textContent='لا يوجد مدراء';msgEl.style.color='var(--amber)';return}
-    // إدراج إشعار في جدول notifications لكل مدير
+    if(!managers?.length){msgEl.textContent='لا يوجد مدراء';msgEl.style.color='var(--amber)';btn.disabled=false;btn.textContent='📤 إرسال للجميع';return}
     const inserts=managers.map(m=>({user_id:m.id,manager_id:m.id,title,body,is_read:false}))
     const{error}=await sb.from('notifications').insert(inserts)
     if(error)throw error
@@ -521,7 +534,6 @@ window.loadBroadcasts=async function(){
   const{data}=await sb.from('notifications').select('title,body,created_at').order('created_at',{ascending:false}).limit(20)
   const el=document.getElementById('broadcastList')
   if(!data?.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted)">لا توجد إشعارات سابقة</div>';return}
-  // إزالة المكرر بالعنوان+الوقت
   const unique=[]
   const seen=new Set()
   data.forEach(n=>{const k=n.title+n.created_at;if(!seen.has(k)){seen.add(k);unique.push(n)}})
