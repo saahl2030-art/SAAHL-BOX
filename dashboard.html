@@ -303,7 +303,7 @@
       <button class="menu-btn" data-page="schedule-page"><div class="menu-icon">📅</div><span>جدول الدفعات</span></button>
       <button class="menu-btn" data-page="link-page"><div class="menu-icon">🔗</div><span>روابط الجمعية</span></button>
       <button class="menu-btn" data-page="plan-page"><div class="menu-icon">📦</div><span>الباقة</span></button>
-     <button class="menu-btn" data-page="notes-page"><div class="menu-icon">📝</div><span>ملاحظات للإدارة</span><div class="rbadge" id="notesBadge">0</div></button>
+      <button class="menu-btn" data-page="notes-page"><div class="menu-icon">📝</div><span>ملاحظات للإدارة</span></button>
       <button class="menu-btn" onclick="window.location.href='guide.html'"><div class="menu-icon">📖</div><span>دليل الاستخدام</span></button>
     </div>
     <button class="logout-btn" onclick="doLogout()">🚪 <span>تسجيل الخروج</span></button>
@@ -883,6 +883,7 @@ async function loadNotes(){
   const el=document.getElementById('notesList')
   if(!data||!data.length){el.innerHTML='<div class="empty">لا توجد ملاحظات</div>';return}
   el.innerHTML=data.map(n=>`<div style="padding:12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;font-size:13px"><div style="color:var(--muted);margin-bottom:4px">${new Date(n.created_at).toLocaleDateString('ar')}</div><div>${n.note}</div>${n.admin_reply?`<div style="margin-top:8px;padding:8px 10px;background:var(--green-soft);border-radius:8px;font-size:12px;color:var(--green);font-weight:700"><span style="font-size:10px;display:block;margin-bottom:2px">↩ رد الإدارة:</span>${n.admin_reply}</div>`:''}</div>`).join('')
+}
 window.saveNote=async function(){
   const note=document.getElementById('noteText').value.trim()
   if(!note){showMsg('noteMsg','اكتب ملاحظتك أولاً','error');return}
