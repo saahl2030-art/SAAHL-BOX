@@ -30,7 +30,6 @@
     .app{min-height:100vh;display:grid;grid-template-columns:280px 1fr}
     .sidebar{background:#fff;border-left:1px solid var(--line);padding:20px 16px;position:sticky;top:0;height:100vh;box-shadow:var(--shadow);overflow:auto;z-index:20;display:flex;flex-direction:column;gap:0}
     .brand{display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:14px}
-    .brand-logo{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gc),#46a8d8);color:#fff;font-size:20px;font-weight:900;flex:0 0 46px;transition:background .3s}
     .brand h1{font-size:19px;font-weight:900;line-height:1.1}
     .brand p{color:var(--muted);font-size:12px;margin-top:3px}
     .chip{padding:8px 12px;border-radius:12px;background:var(--gc-soft);margin-top:8px;transition:background .3s}
@@ -664,6 +663,7 @@ function updateReqBadge(n){const b=document.getElementById('reqBadge');n>0?(b.te
 function updateReceiptBadge(n){const b=document.getElementById('receiptBadge');n>0?(b.textContent=n,b.classList.add('show')):b.classList.remove('show')}
 function updateNotesBadge(n){const b=document.getElementById('notesBadge');n>0?(b.textContent=n,b.classList.add('show')):b.classList.remove('show')}
 
+// ✅ إنهاء الدورة مع إرسال واتساب للأعضاء
 window.updateGroupStatus=async function(s){
   if(!confirm('تغيير حالة الجمعية؟'))return
   const updates={status:s}
@@ -676,7 +676,24 @@ window.updateGroupStatus=async function(s){
     await sb.from('subscriptions').update({end_date:end.toISOString().split('T')[0]}).eq('manager_id',currentGroup.manager_id)
   }
   await sb.from('groups').update(updates).eq('id',currentGroup.id)
-  currentGroup.status=s;updateOverview()
+  currentGroup.status=s
+
+  // ✅ إرسال رسالة واتساب لكل عضو عند إنهاء الدورة
+  if(s==='completed'){
+    const{data:members}=await sb.from('members').select('full_name,phone').eq('group_id',currentGroup.id).eq('status','active')
+    if(members?.length){
+      const msg=encodeURIComponent(`🎉 *انتهت جمعيتنا بنجاح!*\n\nشكراً لثقتك ومشاركتك في جمعية *${currentGroup.name}* — كانت تجربة رائعة.\n\nهل تريد أن تبدأ جمعيتك الخاصة وتكون أنت المدير؟\nسجّل الآن مجاناً 👇\nhttps://saahl2030-art.github.io/SAAHL-BOX/auth.html\n\n*صندوق ساهل* — إدارة جمعياتك بكل سهولة 💙`)
+      for(const m of members){
+        if(m.phone){
+          const phone=m.phone.replace(/\D/g,'').replace(/^0/,'971')
+          window.open(`https://wa.me/${phone}?text=${msg}`,'_blank')
+          await new Promise(r=>setTimeout(r,1500))
+        }
+      }
+    }
+  }
+
+  updateOverview()
 }
 
 window.openNewGroupModal=function(){
