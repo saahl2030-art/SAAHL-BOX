@@ -193,10 +193,10 @@
     .note-action-btn:hover{background:var(--panel-soft)}
     .note-action-btn.read{color:var(--green);border-color:#b7e4cf}
     .note-action-btn.del{color:var(--red);border-color:#f5c6c6}
-    /* رسالة نسخ الواتساب */
     .copy-banner{display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:500;background:var(--green);color:#fff;padding:14px 24px;border-radius:14px;font-size:14px;font-weight:900;box-shadow:0 8px 24px rgba(0,0,0,.15);text-align:center;min-width:320px}
     .copy-banner.show{display:block;animation:slideDown .3s ease}
     @keyframes slideDown{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+    .email-hint{font-size:11px;color:var(--muted);margin-top:4px;font-weight:700}
     @media(max-width:1280px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:980px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto;border-left:none;border-bottom:1px solid var(--line)}.menu{display:grid;grid-template-columns:repeat(3,1fr)}.content{padding:16px}.grid-2{grid-template-columns:1fr}}
     @media(max-width:640px){.menu{grid-template-columns:repeat(2,1fr)}.stats-grid{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.topbar h2{font-size:20px}.topbar{flex-direction:column;gap:10px}.topbar-actions{width:100%}.topbar-actions .btn{width:100%;justify-content:center}.card{padding:14px}.card-head{flex-direction:column;align-items:flex-start}.cycle-banner{flex-direction:column;align-items:flex-start}.filters{flex-direction:column;align-items:stretch}.filters .select,.filters .field{width:100%}.modal{padding:16px;border-radius:14px}}
@@ -206,9 +206,8 @@
 <body>
 <div class="page-loader" id="pageLoader">جاري تحميل لوحة التحكم...</div>
 
-<!-- رسالة نسخ الواتساب -->
 <div class="copy-banner" id="copyBanner">
-  ✅ تم نسخ رسالة الشكر — الصقها في مجموعة واتساب الجمعية 💬
+  ✅ تم إرسال رسالة الشكر لأعضاء الجمعية بالبريد الإلكتروني 📧
 </div>
 
 <div class="notif-modal-overlay" id="notifModalOverlay">
@@ -226,6 +225,10 @@
   <div class="form-grid">
     <div><label class="label">الاسم الكامل *</label><input class="field" id="m_fullName" type="text" placeholder="اسم العضو" style="width:100%"></div>
     <div><label class="label">رقم الهاتف</label><input class="field" id="m_phone" type="tel" placeholder="05xxxxxxxx" style="width:100%"></div>
+    <div style="grid-column:span 2">
+      <label class="label">البريد الإلكتروني <span style="color:var(--muted);font-weight:400">(اختياري — لإرسال رسالة الشكر تلقائياً عند إنهاء الدورة)</span></label>
+      <input class="field" id="m_email" type="email" placeholder="example@email.com" style="width:100%">
+    </div>
     <div><label class="label">شهر الاستلام *</label>
       <select class="select" id="m_month" style="width:100%">
         <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option><option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option><option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option><option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
@@ -378,7 +381,7 @@
           <input class="field" id="filterYear" type="number" placeholder="السنة" style="width:110px" onchange="loadMembers()">
           <button class="btn btn-soft btn-sm" onclick="clearFilters()">مسح الفلتر</button>
         </div>
-        <div class="table-wrap"><table><thead><tr><th>#</th><th>الاسم</th><th>الهاتف</th><th>شهر الاستلام</th><th>السنة</th><th>الترتيب</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody id="membersBody"><tr><td colspan="8" class="empty">جاري التحميل...</td></tr></tbody></table></div>
+        <div class="table-wrap"><table><thead><tr><th>#</th><th>الاسم</th><th>الهاتف</th><th>البريد</th><th>شهر الاستلام</th><th>السنة</th><th>الترتيب</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody id="membersBody"><tr><td colspan="9" class="empty">جاري التحميل...</td></tr></tbody></table></div>
       </div>
     </section>
 
@@ -455,6 +458,7 @@ import{createClient}from'https://esm.sh/@supabase/supabase-js@2'
 const SUPABASE_URL='https://qxyrpnexybxmfmtrnzpg.supabase.co'
 const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
 const sb=createClient(SUPABASE_URL,SUPABASE_ANON_KEY)
+const RESEND_API_KEY='re_YUcMFTTt_9wohKmBFHSBhVBaZ6vPMJMq6'
 
 const COLORS=[
   {hex:'#1f6fa5',soft:'#eaf5fd',name:'أزرق'},
@@ -472,8 +476,7 @@ const MEMBER_LIMITS={free:4,basic:10,pro:15,business:25}
 
 let currentUser=null,currentProfile=null,currentGroup=null
 let allGroups=[],planName='free',memberLimit=4,groupIdx=0
-let editingMemberId=null,pendingReceiptId=null
-let currentNotifId=null
+let editingMemberId=null,pendingReceiptId=null,currentNotifId=null
 const loader=document.getElementById('pageLoader')
 
 function gc(){return COLORS[groupIdx%COLORS.length]}
@@ -505,9 +508,9 @@ function buildSelect(){
   btnNew.title=allGroups.length>=maxG?`وصلت للحد (${maxG}) — ترقية الباقة مطلوبة`:`إنشاء جمعية جديدة (${maxG-allGroups.length} متبقية)`
 }
 
-// ✅ عرض banner النسخ
-function showCopyBanner(){
+function showCopyBanner(msg){
   const b=document.getElementById('copyBanner')
+  b.textContent=msg
   b.classList.add('show')
   setTimeout(()=>b.classList.remove('show'),5000)
 }
@@ -576,7 +579,7 @@ async function init(){
     const{data:p,error:pErr}=await sb.from('profiles').select('*').eq('id',currentUser.id).single()
     if(pErr||!p){
       const{error:insErr}=await sb.from('profiles').insert({id:currentUser.id,full_name:currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'مدير',email:currentUser.email,role:'manager'})
-      if(insErr){console.error('profile insert error',insErr);loader.classList.remove('show');window.location.replace('login.html');return}
+      if(insErr){loader.classList.remove('show');window.location.replace('login.html');return}
       window.location.reload();return
     }
     if(p.role==='admin'){loader.classList.remove('show');window.location.replace('admin.html');return}
@@ -679,7 +682,50 @@ function updateReqBadge(n){const b=document.getElementById('reqBadge');n>0?(b.te
 function updateReceiptBadge(n){const b=document.getElementById('receiptBadge');n>0?(b.textContent=n,b.classList.add('show')):b.classList.remove('show')}
 function updateNotesBadge(n){const b=document.getElementById('notesBadge');n>0?(b.textContent=n,b.classList.add('show')):b.classList.remove('show')}
 
-// ✅ إنهاء الدورة مع نسخ رسالة الشكر
+// ✅ إرسال بريد شكر عند إنهاء الدورة عبر Resend
+async function sendThankYouEmails(members,groupName){
+  const membersWithEmail=members.filter(m=>m.email)
+  if(!membersWithEmail.length)return 0
+  let sent=0
+  for(const m of membersWithEmail){
+    try{
+      await fetch('https://api.resend.com/emails',{
+        method:'POST',
+        headers:{'Authorization':`Bearer ${RESEND_API_KEY}`,'Content-Type':'application/json'},
+        body:JSON.stringify({
+          from:'صندوق ساهل <onboarding@resend.dev>',
+          to:[m.email],
+          subject:`🎉 انتهت جمعية ${groupName} بنجاح!`,
+          html:`
+            <div dir="rtl" style="font-family:Arial,sans-serif;max-width:520px;margin:auto;padding:24px;background:#f8fbff;border-radius:16px">
+              <div style="background:#1f6fa5;color:#fff;border-radius:12px;padding:20px;text-align:center;margin-bottom:20px">
+                <h1 style="margin:0;font-size:22px">🎉 صندوق ساهل</h1>
+              </div>
+              <h2 style="color:#16324a">مرحباً ${m.full_name}،</h2>
+              <p style="color:#6e8498;line-height:1.8;font-size:15px">
+                انتهت دورة جمعية <strong style="color:#1f6fa5">${groupName}</strong> بنجاح!<br>
+                شكراً جزيلاً لثقتك ومشاركتك — كانت تجربة رائعة بفضلك.
+              </p>
+              <div style="background:#fff;border:1px solid #dfe8f1;border-radius:12px;padding:16px;margin:20px 0;text-align:center">
+                <p style="color:#16324a;font-weight:bold;font-size:16px">هل تريد أن تبدأ جمعيتك الخاصة؟</p>
+                <p style="color:#6e8498;font-size:14px">سجّل الآن مجاناً وكن أنت المدير!</p>
+                <a href="https://saahl2030-art.github.io/SAAHL-BOX/auth.html"
+                   style="display:inline-block;background:#1f6fa5;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:bold;font-size:15px;margin-top:8px">
+                  🚀 ابدأ جمعيتك الآن
+                </a>
+              </div>
+              <p style="color:#6e8498;font-size:12px;text-align:center;margin-top:16px">
+                صندوق ساهل — إدارة جمعياتك بكل سهولة 💙
+              </p>
+            </div>`
+        })
+      })
+      sent++
+    }catch(e){console.error('email error',e)}
+  }
+  return sent
+}
+
 window.updateGroupStatus=async function(s){
   if(!confirm('تغيير حالة الجمعية؟'))return
   const updates={status:s}
@@ -694,11 +740,17 @@ window.updateGroupStatus=async function(s){
   await sb.from('groups').update(updates).eq('id',currentGroup.id)
   currentGroup.status=s
 
-  // ✅ نسخ رسالة الشكر عند إنهاء الدورة
+  // ✅ إرسال بريد شكر تلقائياً لكل عضو لديه إيميل
   if(s==='completed'){
-    const msg=`🎉 انتهت جمعيتنا بنجاح!\n\nأعزائي أعضاء جمعية ${currentGroup.name} —\n\nشكراً جزيلاً لكل واحد منكم على ثقتكم ومشاركتكم، كانت تجربة رائعة بفضلكم.\n\nهل تريد أن تبدأ جمعيتك الخاصة وتكون أنت المدير؟\nسجّل الآن مجاناً 👇\nhttps://saahl2030-art.github.io/SAAHL-BOX/auth.html\n\nصندوق ساهل — إدارة جمعياتك بكل سهولة 💙`
-    try{await navigator.clipboard.writeText(msg)}catch(e){console.error('clipboard error',e)}
-    showCopyBanner()
+    const{data:members}=await sb.from('members').select('full_name,email').eq('group_id',currentGroup.id).eq('status','active')
+    if(members?.length){
+      const sent=await sendThankYouEmails(members,currentGroup.name)
+      if(sent>0){
+        showCopyBanner(`✅ تم إرسال رسالة الشكر لـ ${sent} عضو بالبريد الإلكتروني 📧`)
+      } else {
+        showCopyBanner(`✅ انتهت الدورة — أضف بريد الأعضاء لإرسال رسائل الشكر تلقائياً 📧`)
+      }
+    }
   }
 
   updateOverview()
@@ -761,54 +813,67 @@ window.loadMembers=async function(){
   if(month)q=q.eq('join_month',+month);if(year)q=q.eq('join_year',+year)
   const{data,error}=await q
   const tb=document.getElementById('membersBody')
-  if(!data||!data.length){tb.innerHTML=`<tr><td colspan="8" class="empty">${error?'خطأ':'لا يوجد أعضاء'}</td></tr>`;document.getElementById('memberCount').textContent='0 عضو';return}
+  if(!data||!data.length){tb.innerHTML=`<tr><td colspan="9" class="empty">${error?'خطأ':'لا يوجد أعضاء'}</td></tr>`;document.getElementById('memberCount').textContent='0 عضو';return}
   document.getElementById('memberCount').textContent=`${data.length} عضو من ${currentGroup.max_members||4}`
-  tb.innerHTML=data.map((m,i)=>`<tr><td>${i+1}</td><td>${m.full_name}</td><td>${m.phone||'—'}</td><td>${mn(m.join_month)}</td><td>${m.join_year}</td><td>${m.payout_order||'—'}</td><td><span class="badge ${sBadge(m.status)}">${sLabel(m.status)}</span></td><td><div class="td-actions"><button class="action-btn action-blue" onclick="openEditMember('${m.id}','${eq(m.full_name)}','${m.phone||''}',${m.join_month},${m.join_year},${m.payout_order||0})">تعديل</button><button class="action-btn action-red" onclick="deleteMember('${m.id}')">حذف</button></div></td></tr>`).join('')
+  tb.innerHTML=data.map((m,i)=>`<tr><td>${i+1}</td><td>${m.full_name}</td><td>${m.phone||'—'}</td><td style="font-size:11px;color:var(--muted)">${m.email||'—'}</td><td>${mn(m.join_month)}</td><td>${m.join_year}</td><td>${m.payout_order||'—'}</td><td><span class="badge ${sBadge(m.status)}">${sLabel(m.status)}</span></td><td><div class="td-actions"><button class="action-btn action-blue" onclick="openEditMember('${m.id}','${eq(m.full_name)}','${m.phone||''}','${m.email||''}',${m.join_month},${m.join_year},${m.payout_order||0})">تعديل</button><button class="action-btn action-red" onclick="deleteMember('${m.id}')">حذف</button></div></td></tr>`).join('')
 }
+
 window.clearFilters=function(){document.getElementById('filterMonth').value='';document.getElementById('filterYear').value='';loadMembers()}
 window.clearPayFilters=function(){['payFilterMember','payFilterMonth','payFilterYear','payFilterStatus','payFilterReceipt'].forEach(id=>{document.getElementById(id).value=''});loadPayments()}
+
 window.openAddMember=async function(){
   const c=await getMemberCount(),max=currentGroup.max_members||4
   if(c>=max){alert(`وصلت الجمعية للحد الأقصى (${max} أعضاء).`);return}
   editingMemberId=null
   document.getElementById('memberModalTitle').textContent='إضافة عضو'
-  ;['m_fullName','m_phone','m_order'].forEach(id=>document.getElementById(id).value='')
+  ;['m_fullName','m_phone','m_email','m_order'].forEach(id=>document.getElementById(id).value='')
   document.getElementById('m_month').value=new Date().getMonth()+1
   document.getElementById('m_year').value=new Date().getFullYear()
   clearMsg('memberMsg');openModal('memberModal')
 }
-window.openEditMember=function(id,name,phone,month,year,order){
+
+window.openEditMember=function(id,name,phone,email,month,year,order){
   editingMemberId=id
   document.getElementById('memberModalTitle').textContent='تعديل بيانات العضو'
-  document.getElementById('m_fullName').value=name;document.getElementById('m_phone').value=phone
-  document.getElementById('m_month').value=month;document.getElementById('m_year').value=year
+  document.getElementById('m_fullName').value=name
+  document.getElementById('m_phone').value=phone
+  document.getElementById('m_email').value=email||''
+  document.getElementById('m_month').value=month
+  document.getElementById('m_year').value=year
   document.getElementById('m_order').value=order||''
   clearMsg('memberMsg');openModal('memberModal')
 }
+
 window.saveMember=async function(){
-  const fullName=document.getElementById('m_fullName').value.trim(),phone=document.getElementById('m_phone').value.trim()
-  const join_month=+document.getElementById('m_month').value,join_year=+document.getElementById('m_year').value
+  const fullName=document.getElementById('m_fullName').value.trim()
+  const phone=document.getElementById('m_phone').value.trim()
+  const email=document.getElementById('m_email').value.trim()
+  const join_month=+document.getElementById('m_month').value
+  const join_year=+document.getElementById('m_year').value
   const payout_order=+document.getElementById('m_order').value||null
   if(!fullName||!join_month||!join_year){showMsg('memberMsg','أكمل الحقول المطلوبة','error');return}
   document.getElementById('memberSaveBtn').disabled=true
   let error
-  if(editingMemberId){({error}=await sb.from('members').update({full_name:fullName,phone,join_month,join_year,payout_order}).eq('id',editingMemberId))}
-  else{
+  if(editingMemberId){
+    ({error}=await sb.from('members').update({full_name:fullName,phone,email,join_month,join_year,payout_order}).eq('id',editingMemberId))
+  } else {
     const c=await getMemberCount(),max=currentGroup.max_members||4
     if(c>=max){showMsg('memberMsg',`الجمعية وصلت للحد الأقصى (${max})`,'error');document.getElementById('memberSaveBtn').disabled=false;return}
     const{data:ex}=await sb.from('members').select('id').eq('group_id',currentGroup.id).eq('join_month',join_month).eq('join_year',join_year)
     if(ex&&ex.length){showMsg('memberMsg','هذا الشهر محجوز لعضو آخر','error');document.getElementById('memberSaveBtn').disabled=false;return}
-    ;({error}=await sb.from('members').insert({group_id:currentGroup.id,full_name:fullName,phone,join_month,join_year,payout_order,status:'active'}))
+    ;({error}=await sb.from('members').insert({group_id:currentGroup.id,full_name:fullName,phone,email,join_month,join_year,payout_order,status:'active'}))
   }
   document.getElementById('memberSaveBtn').disabled=false
   if(error){showMsg('memberMsg','خطأ: '+error.message,'error');return}
   closeModal('memberModal');loadMembers();loadSchedule();updateOverview();loadMemberFilter()
 }
+
 window.deleteMember=async function(id){
   if(!confirm('حذف هذا العضو؟'))return
   await sb.from('members').delete().eq('id',id)
   loadMembers();loadSchedule();updateOverview();loadMemberFilter()
 }
+
 window.loadPayments=async function(){
   const memberId=document.getElementById('payFilterMember')?.value
   const month=document.getElementById('payFilterMonth')?.value,year=document.getElementById('payFilterYear')?.value
@@ -830,6 +895,7 @@ window.loadPayments=async function(){
     return `<tr><td><strong>${p.members?.full_name||'—'}</strong></td><td>${mn(p.payment_month)} ${p.payment_year}</td><td style="color:var(--gc);font-weight:900">${p.amount} درهم</td><td>${rCell}</td><td><span class="badge ${pBadge(p.status)}">${pLabel(p.status)}</span>${rBadge}</td><td style="color:var(--muted);font-size:12px">${p.paid_at?new Date(p.paid_at).toLocaleDateString('ar-AE'):'—'}</td><td><div class="td-actions">${rPending&&hasR?`<button class="action-btn action-green" onclick="confirmReceipt('${p.id}')">✅ تأكيد</button>`:''}<button class="action-btn action-amber" onclick="openStatusModal('${p.id}','${p.status}')">✏️ حالة</button></div></td></tr>`
   }).join('')
 }
+
 window.viewReceipt=function(pid,name,url,month,year,isPending){
   pendingReceiptId=pid
   document.getElementById('receiptModalTitle').textContent=`إيصال — ${name}`
