@@ -193,6 +193,10 @@
     .note-action-btn:hover{background:var(--panel-soft)}
     .note-action-btn.read{color:var(--green);border-color:#b7e4cf}
     .note-action-btn.del{color:var(--red);border-color:#f5c6c6}
+    /* رسالة نسخ الواتساب */
+    .copy-banner{display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:500;background:var(--green);color:#fff;padding:14px 24px;border-radius:14px;font-size:14px;font-weight:900;box-shadow:0 8px 24px rgba(0,0,0,.15);text-align:center;min-width:320px}
+    .copy-banner.show{display:block;animation:slideDown .3s ease}
+    @keyframes slideDown{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
     @media(max-width:1280px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:980px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto;border-left:none;border-bottom:1px solid var(--line)}.menu{display:grid;grid-template-columns:repeat(3,1fr)}.content{padding:16px}.grid-2{grid-template-columns:1fr}}
     @media(max-width:640px){.menu{grid-template-columns:repeat(2,1fr)}.stats-grid{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.topbar h2{font-size:20px}.topbar{flex-direction:column;gap:10px}.topbar-actions{width:100%}.topbar-actions .btn{width:100%;justify-content:center}.card{padding:14px}.card-head{flex-direction:column;align-items:flex-start}.cycle-banner{flex-direction:column;align-items:flex-start}.filters{flex-direction:column;align-items:stretch}.filters .select,.filters .field{width:100%}.modal{padding:16px;border-radius:14px}}
@@ -201,6 +205,11 @@
 </head>
 <body>
 <div class="page-loader" id="pageLoader">جاري تحميل لوحة التحكم...</div>
+
+<!-- رسالة نسخ الواتساب -->
+<div class="copy-banner" id="copyBanner">
+  ✅ تم نسخ رسالة الشكر — الصقها في مجموعة واتساب الجمعية 💬
+</div>
 
 <div class="notif-modal-overlay" id="notifModalOverlay">
   <div class="notif-modal">
@@ -496,6 +505,13 @@ function buildSelect(){
   btnNew.title=allGroups.length>=maxG?`وصلت للحد (${maxG}) — ترقية الباقة مطلوبة`:`إنشاء جمعية جديدة (${maxG-allGroups.length} متبقية)`
 }
 
+// ✅ عرض banner النسخ
+function showCopyBanner(){
+  const b=document.getElementById('copyBanner')
+  b.classList.add('show')
+  setTimeout(()=>b.classList.remove('show'),5000)
+}
+
 async function checkNotifications(userId){
   try{
     const{data:notifs}=await sb.from('notifications').select('*').eq('manager_id',userId).order('created_at',{ascending:false}).limit(1)
@@ -663,7 +679,7 @@ function updateReqBadge(n){const b=document.getElementById('reqBadge');n>0?(b.te
 function updateReceiptBadge(n){const b=document.getElementById('receiptBadge');n>0?(b.textContent=n,b.classList.add('show')):b.classList.remove('show')}
 function updateNotesBadge(n){const b=document.getElementById('notesBadge');n>0?(b.textContent=n,b.classList.add('show')):b.classList.remove('show')}
 
-// ✅ إنهاء الدورة مع إرسال واتساب للأعضاء
+// ✅ إنهاء الدورة مع نسخ رسالة الشكر
 window.updateGroupStatus=async function(s){
   if(!confirm('تغيير حالة الجمعية؟'))return
   const updates={status:s}
@@ -678,19 +694,11 @@ window.updateGroupStatus=async function(s){
   await sb.from('groups').update(updates).eq('id',currentGroup.id)
   currentGroup.status=s
 
-  // ✅ إرسال رسالة واتساب لكل عضو عند إنهاء الدورة
+  // ✅ نسخ رسالة الشكر عند إنهاء الدورة
   if(s==='completed'){
-    const{data:members}=await sb.from('members').select('full_name,phone').eq('group_id',currentGroup.id).eq('status','active')
-    if(members?.length){
-      const msg=encodeURIComponent(`🎉 *انتهت جمعيتنا بنجاح!*\n\nشكراً لثقتك ومشاركتك في جمعية *${currentGroup.name}* — كانت تجربة رائعة.\n\nهل تريد أن تبدأ جمعيتك الخاصة وتكون أنت المدير؟\nسجّل الآن مجاناً 👇\nhttps://saahl2030-art.github.io/SAAHL-BOX/auth.html\n\n*صندوق ساهل* — إدارة جمعياتك بكل سهولة 💙`)
-      for(const m of members){
-        if(m.phone){
-          const phone=m.phone.replace(/\D/g,'').replace(/^0/,'971')
-          window.open(`https://wa.me/${phone}?text=${msg}`,'_blank')
-          await new Promise(r=>setTimeout(r,1500))
-        }
-      }
-    }
+    const msg=`🎉 انتهت جمعيتنا بنجاح!\n\nأعزائي أعضاء جمعية ${currentGroup.name} —\n\nشكراً جزيلاً لكل واحد منكم على ثقتكم ومشاركتكم، كانت تجربة رائعة بفضلكم.\n\nهل تريد أن تبدأ جمعيتك الخاصة وتكون أنت المدير؟\nسجّل الآن مجاناً 👇\nhttps://saahl2030-art.github.io/SAAHL-BOX/auth.html\n\nصندوق ساهل — إدارة جمعياتك بكل سهولة 💙`
+    try{await navigator.clipboard.writeText(msg)}catch(e){console.error('clipboard error',e)}
+    showCopyBanner()
   }
 
   updateOverview()
