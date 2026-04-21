@@ -686,44 +686,16 @@ function updateNotesBadge(n){const b=document.getElementById('notesBadge');n>0?(
 async function sendThankYouEmails(members,groupName){
   const membersWithEmail=members.filter(m=>m.email)
   if(!membersWithEmail.length)return 0
-  let sent=0
-  for(const m of membersWithEmail){
-    try{
-      await fetch('https://api.resend.com/emails',{
-        method:'POST',
-        headers:{'Authorization':`Bearer ${RESEND_API_KEY}`,'Content-Type':'application/json'},
-        body:JSON.stringify({
-       from:'صندوق ساهل <noreply@saahluae.com>',
-          to:[m.email],
-          subject:`🎉 انتهت جمعية ${groupName} بنجاح!`,
-          html:`
-            <div dir="rtl" style="font-family:Arial,sans-serif;max-width:520px;margin:auto;padding:24px;background:#f8fbff;border-radius:16px">
-              <div style="background:#1f6fa5;color:#fff;border-radius:12px;padding:20px;text-align:center;margin-bottom:20px">
-                <h1 style="margin:0;font-size:22px">🎉 صندوق ساهل</h1>
-              </div>
-              <h2 style="color:#16324a">مرحباً ${m.full_name}،</h2>
-              <p style="color:#6e8498;line-height:1.8;font-size:15px">
-                انتهت دورة جمعية <strong style="color:#1f6fa5">${groupName}</strong> بنجاح!<br>
-                شكراً جزيلاً لثقتك ومشاركتك — كانت تجربة رائعة بفضلك.
-              </p>
-              <div style="background:#fff;border:1px solid #dfe8f1;border-radius:12px;padding:16px;margin:20px 0;text-align:center">
-                <p style="color:#16324a;font-weight:bold;font-size:16px">هل تريد أن تبدأ جمعيتك الخاصة؟</p>
-                <p style="color:#6e8498;font-size:14px">سجّل الآن مجاناً وكن أنت المدير!</p>
-                <a href="https://saahl2030-art.github.io/SAAHL-BOX/auth.html"
-                   style="display:inline-block;background:#1f6fa5;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:bold;font-size:15px;margin-top:8px">
-                  🚀 ابدأ جمعيتك الآن
-                </a>
-              </div>
-              <p style="color:#6e8498;font-size:12px;text-align:center;margin-top:16px">
-                صندوق ساهل — إدارة جمعياتك بكل سهولة 💙
-              </p>
-            </div>`
-        })
-      })
-      sent++
-    }catch(e){console.error('email error',e)}
+  try{
+    const{data,error}=await sb.functions.invoke('send-completion-email',{
+      body:{members:membersWithEmail,groupName}
+    })
+    if(error)throw error
+    return data?.sent||0
+  }catch(e){
+    console.error('email error',e)
+    return 0
   }
-  return sent
 }
 
 window.updateGroupStatus=async function(s){
