@@ -458,7 +458,46 @@ import{createClient}from'https://esm.sh/@supabase/supabase-js@2'
 const SUPABASE_URL='https://qxyrpnexybxmfmtrnzpg.supabase.co'
 const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
 const sb=createClient(SUPABASE_URL,SUPABASE_ANON_KEY)
+async function launchWhatsAppThanksFlow(groupId){
+  try{
+    const {data:members} = await sb
+      .from('members')
+      .select('full_name, phone')
+      .eq('group_id', groupId)
+      .eq('status','active')
 
+    if(!members || !members.length){
+      showCopyBanner('⚠️ لا يوجد أعضاء لإرسال الرسائل')
+      return
+    }
+
+    const message = encodeURIComponent(
+`انتهت الجمعية بنجاح 🎉
+شكراً لمشاركتك معنا
+
+ابدأ جمعيتك الآن:
+https://saahl2030-art.github.io/SAAHL-BOX/auth.html`
+    )
+
+    let i = 0
+    members.forEach(m=>{
+      if(!m.phone) return
+
+      const phone = m.phone.replace(/^0/, '971')
+
+      setTimeout(()=>{
+        window.open(`https://wa.me/${phone}?text=${message}`, '_blank')
+      }, i * 700)
+
+      i++
+    })
+
+    showCopyBanner('✅ تم تجهيز رسائل واتساب للأعضاء')
+  }catch(e){
+    console.error(e)
+    showCopyBanner('❌ خطأ في إرسال واتساب')
+  }
+}
 const COLORS=[
   {hex:'#1f6fa5',soft:'#eaf5fd',name:'أزرق'},
   {hex:'#138a59',soft:'#e8f8f1',name:'أخضر'},
