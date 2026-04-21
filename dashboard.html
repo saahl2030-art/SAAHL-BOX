@@ -458,7 +458,6 @@ import{createClient}from'https://esm.sh/@supabase/supabase-js@2'
 const SUPABASE_URL='https://qxyrpnexybxmfmtrnzpg.supabase.co'
 const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8'
 const sb=createClient(SUPABASE_URL,SUPABASE_ANON_KEY)
-const RESEND_API_KEY='re_YUcMFTTt_9wohKmBFHSBhVBaZ6vPMJMq6'
 
 const COLORS=[
   {hex:'#1f6fa5',soft:'#eaf5fd',name:'أزرق'},
@@ -682,22 +681,6 @@ function updateReqBadge(n){const b=document.getElementById('reqBadge');n>0?(b.te
 function updateReceiptBadge(n){const b=document.getElementById('receiptBadge');n>0?(b.textContent=n,b.classList.add('show')):b.classList.remove('show')}
 function updateNotesBadge(n){const b=document.getElementById('notesBadge');n>0?(b.textContent=n,b.classList.add('show')):b.classList.remove('show')}
 
-// ✅ إرسال بريد شكر عند إنهاء الدورة عبر Resend
-async function sendThankYouEmails(members,groupName){
-  const membersWithEmail=members.filter(m=>m.email)
-  if(!membersWithEmail.length)return 0
-  try{
-    const{data,error}=await sb.functions.invoke('send-completion-email',{
-      body:{members:membersWithEmail,groupName}
-    })
-    if(error)throw error
-    return data?.sent||0
-  }catch(e){
-    console.error('email error',e)
-    return 0
-  }
-}
-
 window.updateGroupStatus=async function(s){
   if(!confirm('تغيير حالة الجمعية؟'))return
   const updates={status:s}
@@ -712,16 +695,21 @@ window.updateGroupStatus=async function(s){
   await sb.from('groups').update(updates).eq('id',currentGroup.id)
   currentGroup.status=s
 
-  // ✅ إرسال بريد شكر تلقائياً لكل عضو لديه إيميل
+  // ✅ إرسال بريد شكر تلقائياً عند إنهاء الدورة
   if(s==='completed'){
-    const{data:members}=await sb.from('members').select('full_name,email').eq('group_id',currentGroup.id).eq('status','active')
-    if(members?.length){
-      const sent=await sendThankYouEmails(members,currentGroup.name)
+    try{
+      const res=await sb.functions.invoke('send-completion-email',{
+        body:{group_id:currentGroup.id}
+      })
+      const sent=res.data?.sent||0
       if(sent>0){
         showCopyBanner(`✅ تم إرسال رسالة الشكر لـ ${sent} عضو بالبريد الإلكتروني 📧`)
       } else {
         showCopyBanner(`✅ انتهت الدورة — أضف بريد الأعضاء لإرسال رسائل الشكر تلقائياً 📧`)
       }
+    }catch(e){
+      console.error('email error',e)
+      showCopyBanner(`✅ انتهت الدورة بنجاح`)
     }
   }
 
