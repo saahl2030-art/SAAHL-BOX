@@ -735,21 +735,9 @@ window.updateGroupStatus=async function(s){
   currentGroup.status=s
 
   // ✅ إرسال بريد شكر تلقائياً عند إنهاء الدورة
-  if(s==='completed'){
-    try{
-      const res=await sb.functions.invoke('send-completion-email',{
-        body:{group_id:currentGroup.id}
-      })
-      const sent=res.data?.sent||0
-      if(sent>0){
-        showCopyBanner(`✅ تم إرسال رسالة الشكر لـ ${sent} عضو بالبريد الإلكتروني 📧`)
-      } else {
-        showCopyBanner(`✅ انتهت الدورة — أضف بريد الأعضاء لإرسال رسائل الشكر تلقائياً 📧`)
-      }
-    }catch(e){
-      console.error('email error',e)
-      showCopyBanner(`✅ انتهت الدورة بنجاح`)
-    }
+ if(s==='completed'){
+  await launchWhatsAppThanksFlow(currentGroup.id)
+}
   }
 
   updateOverview()
