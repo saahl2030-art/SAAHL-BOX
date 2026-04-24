@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>شروط وأحكام الأعضاء – صندوق ساهل</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --teal:#1a6b8a; --teal-deep:#134f68; --teal-mid:#1f6fa5;
+      --gold:#c9a84c; --gold-light:#e8c96e;
+      --bg:#f5f7f9; --surface:#ffffff;
+      --text:#0d2233; --muted:#5a7a8a; --border:#d0e0ea;
+      --red:#c0392b; --green:#1a7a4a; --purple:#6c3fa8;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'IBM Plex Sans Arabic','Tajawal',sans-serif;background:var(--bg);color:var(--text);line-height:1.85;font-size:15px}
+    header{background:linear-gradient(135deg,#1a4a6a 0%,#1f6fa5 55%,#2e86c1 100%);color:#fff;padding:52px 40px 44px;position:relative;overflow:hidden}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(201,168,76,.15) 0%,transparent 65%)}
+    header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:32px;background:var(--bg);clip-path:ellipse(55% 100% at 50% 100%)}
+    .header-inner{max-width:820px;margin:0 auto;position:relative;z-index:1}
+    .logo-row{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+    .logo-box{width:48px;height:48px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+    .logo-name{font-family:'Tajawal',sans-serif;font-weight:900;font-size:22px}
+    .logo-name span{color:var(--gold-light)}
+    h1{font-family:'Tajawal',sans-serif;font-size:28px;font-weight:700;line-height:1.4;margin-bottom:10px}
+    .header-meta{font-size:13px;opacity:.75;display:flex;gap:24px;flex-wrap:wrap}
+    .member-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:6px 16px;font-size:13px;font-weight:600;margin-bottom:14px}
+    main{max-width:820px;margin:40px auto 60px;padding:0 20px}
+    .intro-card{background:var(--surface);border:1.5px solid var(--border);border-right:4px solid #2e86c1;border-radius:10px;padding:22px 24px;margin-bottom:36px;font-size:14.5px;color:var(--muted)}
+    .intro-card strong{color:var(--teal)}
+    .section{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:24px;overflow:hidden;box-shadow:0 2px 8px rgba(26,107,138,.06)}
+    .section-header{display:flex;align-items:center;gap:14px;padding:18px 24px;border-bottom:1px solid var(--border);background:linear-gradient(90deg,rgba(26,107,138,.05) 0%,transparent 100%)}
+    .section-icon{width:38px;height:38px;border-radius:9px;background:#2e86c1;color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+    .section-title{font-family:'Tajawal',sans-serif;font-size:17px;font-weight:700;color:var(--teal-deep)}
+    .section-num{margin-right:auto;font-size:12px;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:2px 10px}
+    .section-body{padding:20px 24px}
+    .item{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .item:last-child{border-bottom:none;padding-bottom:0}
+    .item:first-child{padding-top:0}
+    .item-bullet{width:26px;height:26px;border-radius:50%;background:rgba(46,134,193,.1);color:#2e86c1;font-weight:700;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+    .item-text{flex:1;font-size:14.5px}
+    .item-text strong{color:var(--teal-deep);font-weight:600}
+    .badge{display:inline-block;font-size:11px;font-weight:600;border-radius:4px;padding:1px 7px;margin-right:4px;vertical-align:middle}
+    .badge-must{background:#fde8e6;color:var(--red)}
+    .badge-may{background:#e6f4ea;color:var(--green)}
+    .badge-note{background:#fff8e1;color:#8a6200}
+    .warn-box{background:#fef9ec;border:1.5px solid #f0d070;border-radius:8px;padding:14px 18px;margin-top:8px;font-size:13.5px;color:#7a5800;display:flex;gap:10px;align-items:flex-start}
+    .warn-box .wi{font-size:18px;flex-shrink:0}
+    .info-box{background:#eef7fd;border:1.5px solid #b8ddf0;border-radius:8px;padding:14px 18px;margin-top:8px;font-size:13.5px;color:#1a4a6a;display:flex;gap:10px;align-items:flex-start}
+    .footer-note{text-align:center;padding:24px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);margin-top:40px}
+    .footer-note a{color:var(--teal);text-decoration:none}
+    @media(max-width:580px){header{padding:36px 20px 40px}h1{font-size:22px}.section-header,.section-body{padding:14px 16px}}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-row">
+      <div class="logo-box">👥</div>
+      <div class="logo-name">صندوق <span>ساهل</span></div>
+    </div>
+    <div class="member-badge">🙋 شروط خاصة بالأعضاء المشتركين</div>
+    <h1>الشروط والأحكام<br/>الخاصة بأعضاء الجمعيات</h1>
+    <div class="header-meta">
+      <span>📅 الإصدار 1.0 – 2025</span>
+      <span>🌐 saahluae.com</span>
+      <span>🇦🇪 سوق الإمارات العربية المتحدة</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="intro-card">
+    بالانضمام إلى أي جمعية عبر منصة <strong>صندوق ساهل</strong> بصفتك <strong>عضواً</strong>، فأنت تقرّ بقراءة هذه الشروط وفهمها والموافقة الكاملة عليها. الانضمام للجمعية يُعدّ قبولاً ضمنياً لهذه الشروط.
+  </div>
+
+  <!-- 1. تعريف العضو -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">👤</div>
+      <div class="section-title">تعريف العضو وطبيعة مشاركته</div>
+      <div class="section-num">المادة 1</div>
+    </div>
+    <div class="section-body">
+      <div class="item">
+        <div class="item-bullet">1</div>
+        <div class="item-text">العضو هو الشخص الذي <strong>قبل دعوة مدير الجمعية</strong> وانضم إليها عبر رابط الانضمام الخاص.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">2</div>
+        <div class="item-text">العضو <strong>لا يدفع أي رسوم لمنصة ساهل</strong> — رسوم المنصة يتحملها مدير الجمعية حصراً. ما يدفعه العضو هو اشتراكه الشهري في الجمعية مباشرةً للمدير.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">3</div>
+        <div class="item-text">منصة ساهل <strong>أداة تنظيمية</strong> فقط — لا تُعدّ طرفاً مالياً في الجمعية ولا تضمن استلام العضو لحصته في أي وقت.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. الالتزام بالدفع -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">💰</div>
+      <div class="section-title">الالتزام بالدفع الشهري</div>
+      <div class="section-num">المادة 2</div>
+    </div>
+    <div class="section-body">
+      <div class="item">
+        <div class="item-bullet">1</div>
+        <div class="item-text"><span class="badge badge-must">إلزامي</span> على العضو <strong>دفع اشتراكه الشهري في موعده</strong> المتفق عليه مع المدير. التأخر في الدفع يؤثر على حقوق باقي الأعضاء.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">2</div>
+        <div class="item-text"><span class="badge badge-must">إلزامي</span> على العضو <strong>رفع إيصال الدفع</strong> عبر رابط الإيصال الخاص الذي يُرسله له المدير في كل شهر، وذلك كدليل على السداد.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">3</div>
+        <div class="item-text">رفع إيصال مزيف أو مُعدَّل <strong>جريمة يعاقب عليها القانون الإماراتي</strong> وتُعرّض صاحبها للمساءلة القانونية الفورية.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">4</div>
+        <div class="item-text"><span class="badge badge-note">ملاحظة</span> لا تتدخل ساهل في تحديد موعد الدفع أو طريقته — هذا يُحدده المدير والأعضاء فيما بينهم.</div>
+      </div>
+      <div class="warn-box">
+        <span class="wi">⚠️</span>
+        <span>التخلف عن الدفع الشهري قد يُلحق ضرراً مالياً بباقي أعضاء الجمعية. ساهل توثّق حالات التأخر ولا تتدخل في تسويتها.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. الحصول على الدور -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🏆</div>
+      <div class="section-title">استلام الحصة والدور</div>
+      <div class="section-num">المادة 3</div>
+    </div>
+    <div class="section-body">
+      <div class="item">
+        <div class="item-bullet">1</div>
+        <div class="item-text">ترتيب الصرف يُحدده <strong>مدير الجمعية</strong> عند إنشاء الجمعية ولا يحق لأي عضو تغييره إلا باتفاق الجميع وموافقة المدير.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">2</div>
+        <div class="item-text">ساهل <strong>لا تضمن</strong> توقيت استلام العضو لحصته — هذا التزام مباشر بين الأعضاء والمدير خارج نطاق المنصة.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">3</div>
+        <div class="item-text"><span class="badge badge-must">إلزامي</span> على العضو الذي استلم حصته <strong>الاستمرار في الدفع</strong> للأشهر المتبقية حتى انتهاء الدورة. الانسحاب بعد الاستلام يُعدّ إخلالاً بالعقد.</div>
+      </div>
+      <div class="info-box">
+        <span>ℹ️</span>
+        <span>المنصة تسجّل تواريخ تأكيد الدفع من قِبل المدير فقط. يُنصح الأعضاء بالاحتفاظ بإثبات الدفع خارج المنصة أيضاً (كالحوالات البنكية أو الرسائل).</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. السلوك والأمانة -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🤝</div>
+      <div class="section-title">السلوك والأمانة داخل الجمعية</div>
+      <div class="section-num">المادة 4</div>
+    </div>
+    <div class="section-body">
+      <div class="item">
+        <div class="item-bullet">1</div>
+        <div class="item-text"><span class="badge badge-must">إلزامي</span> يلتزم العضو بالتعامل بـ<strong>أمانة وصدق</strong> مع المدير وباقي الأعضاء طوال فترة الجمعية.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">2</div>
+        <div class="item-text">يُمنع منعاً باتاً <strong>نشر رابط الانضمام</strong> أو أي معلومات خاصة بالجمعية خارج أعضائها المعتمدين.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">3</div>
+        <div class="item-text">يُمنع العضو من <strong>انتحال صفة عضو آخر</strong> أو رفع إيصالات باسم شخص غيره.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">4</div>
+        <div class="item-text"><span class="badge badge-may">مسموح</span> يحق للعضو تقديم <strong>شكوى موثّقة</strong> ضد المدير لإدارة ساهل إذا ثبت إهمال أو تجاوز في إدارة الجمعية.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. البيانات الشخصية -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🔒</div>
+      <div class="section-title">البيانات الشخصية والخصوصية</div>
+      <div class="section-num">المادة 5</div>
+    </div>
+    <div class="section-body">
+      <div class="item">
+        <div class="item-bullet">1</div>
+        <div class="item-text">بيانات العضو (الاسم، رقم الهاتف، الإيصالات) تكون مرئية <strong>للمدير فقط</strong> وليس لأعضاء آخرين.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">2</div>
+        <div class="item-text">ساهل <strong>لا تبيع ولا تشارك</strong> بيانات الأعضاء مع أي جهة خارجية.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">3</div>
+        <div class="item-text">الإيصالات المرفوعة تُخزَّن بشكل آمن وتكون متاحة للمدير لأغراض التحقق فقط.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">4</div>
+        <div class="item-text"><span class="badge badge-note">ملاحظة</span> عند انتهاء اشتراك المدير وعدم التجديد، تُحفَظ بيانات الجمعية (بما فيها بيانات الأعضاء) لمدة <strong>90 يوماً</strong> ثم تُحذف نهائياً.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. النزاعات -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">⚖️</div>
+      <div class="section-title">النزاعات والمسؤولية</div>
+      <div class="section-num">المادة 6</div>
+    </div>
+    <div class="section-body">
+      <div class="item">
+        <div class="item-bullet">1</div>
+        <div class="item-text">ساهل <strong>لا تتوسط في النزاعات المالية</strong> بين العضو والمدير. أي نزاع يُحل مباشرةً بين الطرفين وفق القانون الإماراتي النافذ.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">2</div>
+        <div class="item-text">ساهل تحتفظ بسجلات الدفع المؤكدة وتواريخها، وقد تُستخدم <strong>كمرجع توثيقي</strong> في حال اللجوء للجهات الرسمية.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">3</div>
+        <div class="item-text">في حال ثبوت تصرف احتيالي من أي عضو، تحتفظ ساهل بحق <strong>إيقاف وصوله للمنصة</strong> وإبلاغ مدير جمعيته فوراً.</div>
+      </div>
+      <div class="warn-box">
+        <span class="wi">⚠️</span>
+        <span>الجمعية عقد اجتماعي بين أشخاص متعارفين — ساهل توفّر الأدوات لكنها لا تتحمل المسؤولية عن أي خسارة مالية ناتجة عن تخلف أي طرف عن التزاماته.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. الانسحاب -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🚪</div>
+      <div class="section-title">الانسحاب من الجمعية</div>
+      <div class="section-num">المادة 7</div>
+    </div>
+    <div class="section-body">
+      <div class="item">
+        <div class="item-bullet">1</div>
+        <div class="item-text">لا يحق للعضو الانسحاب من الجمعية إلا <strong>بموافقة المدير</strong> وترتيب بديل مناسب لا يضر بباقي الأعضاء.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">2</div>
+        <div class="item-text">الانسحاب بعد استلام الحصة دون إتمام الدفع للأشهر المتبقية <strong>يُعرّض العضو للمساءلة القانونية</strong> من المدير أو باقي الأعضاء.</div>
+      </div>
+      <div class="item">
+        <div class="item-bullet">3</div>
+        <div class="item-text"><span class="badge badge-may">مسموح</span> يحق للعضو الانسحاب <strong>قبل بدء الدورة</strong> (قبل الضغط على زر "بدء الدورة") دون أي التزامات.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    📌 هذه الوثيقة خاصة بأعضاء الجمعيات | <a href="saahl-terms-managers.html">اطلع على شروط المدراء</a> | saahluae.com<br/>
+    © 2025 صندوق ساهل – جميع الحقوق محفوظة
+  </div>
+
+</main>
+</body>
+</html>
