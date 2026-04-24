@@ -98,14 +98,287 @@
     @media(max-width:980px){.layout-grid{grid-template-columns:1fr}.card-limits{display:none}.plan-summary{display:grid}}
     @media(max-width:600px){.topbar{padding:8px 14px}.brand-text p{display:none}.brand-text h1{font-size:15px}.brand-logo{width:34px;height:34px;font-size:15px}.hero{padding:16px 14px 10px}.hero h2{font-size:20px}.layout{padding:10px 14px 40px}.card{padding:15px;border-radius:16px}.card-title{font-size:17px}.form-grid{grid-template-columns:1fr;gap:10px}.field-wrap.full{grid-column:1}.field{font-size:16px;padding:13px 14px}.plan-box{padding:11px 12px}.plan-info h4{font-size:14px}.plan-price{font-size:18px}.actions{flex-direction:column;gap:8px}.btn-submit{width:100%;padding:15px;font-size:16px}.btn-login{width:100%;padding:13px}.nav-links .btn:first-child{display:none}}
     @media(hover:none){.btn:hover{background:unset}.btn-primary:hover{background:var(--primary)}.plan-box:hover{border-color:var(--line)}}
+
+    /* ═══════════════════════════════════════
+       TERMS MODAL
+    ═══════════════════════════════════════ */
+    .terms-backdrop{
+      display:none;
+      position:fixed;inset:0;
+      background:rgba(10,25,40,.55);
+      backdrop-filter:blur(4px);
+      z-index:800;
+      align-items:center;justify-content:center;
+      padding:16px;
+    }
+    .terms-backdrop.show{display:flex}
+
+    .terms-modal{
+      background:#fff;
+      border-radius:20px;
+      box-shadow:0 24px 64px rgba(10,25,40,.22);
+      width:100%;max-width:560px;
+      max-height:90vh;
+      display:flex;flex-direction:column;
+      overflow:hidden;
+      animation:modalIn .25s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes modalIn{from{opacity:0;transform:scale(.92) translateY(20px)}to{opacity:1;transform:none}}
+
+    .terms-modal-head{
+      padding:20px 22px 16px;
+      border-bottom:1px solid var(--line);
+      flex-shrink:0;
+    }
+    .terms-modal-head h3{
+      font-size:18px;font-weight:900;
+      display:flex;align-items:center;gap:9px;
+      margin-bottom:4px;
+    }
+    .terms-modal-head p{color:var(--muted);font-size:13px;line-height:1.6}
+
+    .terms-scroll{
+      overflow-y:auto;
+      flex:1;
+      padding:18px 22px;
+      font-size:13.5px;
+      line-height:1.85;
+      color:var(--text);
+    }
+    .terms-scroll::-webkit-scrollbar{width:5px}
+    .terms-scroll::-webkit-scrollbar-track{background:#f0f4f8}
+    .terms-scroll::-webkit-scrollbar-thumb{background:#b0c8dc;border-radius:99px}
+
+    /* scroll progress bar */
+    .terms-progress-bar{
+      height:3px;
+      background:var(--line);
+      flex-shrink:0;
+      position:relative;
+    }
+    .terms-progress-fill{
+      height:100%;
+      background:linear-gradient(90deg,var(--primary),#46a8d8);
+      width:0%;
+      transition:width .1s linear;
+      border-radius:99px;
+    }
+
+    .terms-article{margin-bottom:20px}
+    .terms-article-title{
+      font-size:13px;font-weight:900;
+      color:var(--primary-dark);
+      display:flex;align-items:center;gap:7px;
+      margin-bottom:8px;
+      padding-bottom:6px;
+      border-bottom:1px solid var(--line);
+    }
+    .terms-article-title span{
+      background:var(--primary-soft);
+      color:var(--primary);
+      border-radius:6px;
+      padding:1px 8px;
+      font-size:11px;
+    }
+    .terms-article ul{list-style:none;display:grid;gap:7px}
+    .terms-article ul li{
+      display:flex;gap:9px;align-items:flex-start;
+      font-size:13px;color:#2a4a60;
+    }
+    .terms-article ul li::before{
+      content:'•';color:var(--primary);font-weight:900;
+      flex-shrink:0;margin-top:1px;
+    }
+    .terms-article ul li strong{color:#16324a}
+
+    .terms-read-note{
+      background:#fff8e1;
+      border:1px solid #f0d060;
+      border-radius:10px;
+      padding:11px 14px;
+      font-size:12.5px;
+      color:#7a5800;
+      margin-bottom:16px;
+      display:flex;gap:8px;align-items:center;
+    }
+
+    .terms-modal-foot{
+      padding:16px 22px;
+      border-top:1px solid var(--line);
+      background:#f8fbff;
+      flex-shrink:0;
+    }
+    .terms-check-row{
+      display:flex;align-items:flex-start;gap:11px;
+      margin-bottom:14px;
+      cursor:pointer;
+    }
+    .terms-check-row input[type=checkbox]{
+      width:20px;height:20px;
+      border-radius:6px;
+      border:2px solid var(--line-dark);
+      cursor:pointer;
+      flex-shrink:0;
+      margin-top:1px;
+      accent-color:var(--primary);
+    }
+    .terms-check-row label{
+      font-size:13.5px;font-weight:700;
+      color:var(--text);cursor:pointer;
+      line-height:1.6;
+    }
+    .terms-check-row label a{color:var(--primary);text-decoration:underline}
+
+    .terms-foot-btns{display:flex;gap:10px}
+    .btn-terms-accept{
+      flex:1;padding:13px;font-size:15px;
+      border-radius:12px;font-weight:900;
+      background:var(--primary);color:#fff;
+      border:none;cursor:pointer;transition:.18s;
+      box-shadow:0 4px 14px rgba(31,111,165,.22);
+    }
+    .btn-terms-accept:hover:not(:disabled){background:var(--primary-dark)}
+    .btn-terms-accept:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+    .btn-terms-cancel{
+      padding:13px 18px;font-size:14px;
+      border-radius:12px;font-weight:800;
+      background:#fff;border:1px solid var(--line-dark);
+      color:var(--text);cursor:pointer;transition:.18s;
+    }
+    .btn-terms-cancel:hover{background:#f0f4f8}
+
+    /* read-more hint that fades once scrolled */
+    .scroll-hint{
+      text-align:center;font-size:12px;
+      color:var(--muted);margin-top:8px;
+      transition:opacity .3s;
+    }
+    .scroll-hint.hidden{opacity:0;pointer-events:none}
   </style>
 </head>
 <body>
 
+<!-- ═══ LOADING OVERLAY ═══ -->
 <div class="overlay" id="overlay">
   <div class="spinner"></div>
   <div class="overlay-msg" id="overlayText">جاري إنشاء الحساب...</div>
 </div>
+
+<!-- ═══════════════════════════════════════
+     TERMS & CONDITIONS MODAL
+═══════════════════════════════════════ -->
+<div class="terms-backdrop" id="termsBackdrop" role="dialog" aria-modal="true" aria-labelledby="termsTitle">
+  <div class="terms-modal">
+
+    <div class="terms-modal-head">
+      <h3 id="termsTitle">📋 الشروط والأحكام</h3>
+      <p>يُرجى قراءة الشروط كاملةً قبل إنشاء حسابك — القبول إلزامي للمتابعة.</p>
+    </div>
+
+    <!-- progress bar -->
+    <div class="terms-progress-bar">
+      <div class="terms-progress-fill" id="termsProgressFill"></div>
+    </div>
+
+    <div class="terms-scroll" id="termsScroll">
+
+      <div class="terms-read-note">
+        ⬇️ اقرأ جميع البنود للأسفل لتفعيل زر القبول
+      </div>
+
+      <!-- المادة 1 -->
+      <div class="terms-article">
+        <div class="terms-article-title"><span>المادة 1</span> تعريف المدير ودوره</div>
+        <ul>
+          <li>أنت المسؤول الأول والأخير أمام أعضاء جمعيتك عن إدارتها بشكل عادل ومنظّم.</li>
+          <li>مسؤوليتك تشمل: اختيار الأعضاء، تحديد المبلغ الشهري، عدد الأعضاء، وترتيب الصرف.</li>
+          <li><strong>منصة ساهل أداة تنظيمية فقط</strong> — لا تمثّل طرفاً مالياً ولا تتحمل أي مسؤولية عن المبالغ المتداولة بين الأعضاء.</li>
+        </ul>
+      </div>
+
+      <!-- المادة 2 -->
+      <div class="terms-article">
+        <div class="terms-article-title"><span>المادة 2</span> الاشتراك والدفع</div>
+        <ul>
+          <li>الاشتراك <strong>سنوي يُدفع مرة واحدة</strong> ويشمل الوصول لجميع ميزات خطتك.</li>
+          <li>الخطط: أساسي 59 د.إ (3 جمعيات/10 أعضاء) | احترافي 99 د.إ (6/15) | أعمال 179 د.إ (10/25).</li>
+          <li><strong>لا يوجد استرداد للرسوم</strong> بعد تفعيل الاشتراك في أي حال من الأحوال.</li>
+          <li>تُرسل تذكيرية قبل انتهاء الاشتراك بـ5 أيام. عدم التجديد يوقف وصول الأعضاء دون حذف البيانات.</li>
+        </ul>
+      </div>
+
+      <!-- المادة 3 -->
+      <div class="terms-article">
+        <div class="terms-article-title"><span>المادة 3</span> التزامات إدارة الجمعية</div>
+        <ul>
+          <li>يجب إنشاء الجمعية بمعلومات <strong>دقيقة وصحيحة</strong>. لا يجوز تعديل المبلغ أو عدد الأعضاء بعد بدء الدورة.</li>
+          <li>أنت ملزم بـ<strong>تأكيد الاستلام</strong> لكل إيصال دفع عبر لوحة التحكم في الوقت المناسب.</li>
+          <li>يجب الضغط على زر <strong>"بدء الدورة"</strong> في الوقت المحدد لتسجيل تاريخ البداية والنهاية رسمياً.</li>
+          <li>أنت تتحمل كامل المسؤولية القانونية والمالية في حال نشأ نزاع مع أعضائك.</li>
+        </ul>
+      </div>
+
+      <!-- المادة 4 -->
+      <div class="terms-article">
+        <div class="terms-article-title"><span>المادة 4</span> الأعضاء والانضمام</div>
+        <ul>
+          <li>أنت مسؤول عن <strong>اختيار أعضاء موثوقين</strong>. ساهل لا تتحقق من هوية الأعضاء.</li>
+          <li>عدد الأعضاء يجب أن يلتزم بالحد الأقصى المنصوص عليه في خطتك.</li>
+          <li><strong>يُمنع</strong> إضافة أعضاء وهميين أو إنشاء حسابات مزيفة — يؤدي ذلك لإيقاف حسابك فوراً.</li>
+        </ul>
+      </div>
+
+      <!-- المادة 5 -->
+      <div class="terms-article">
+        <div class="terms-article-title"><span>المادة 5</span> البيانات والخصوصية</div>
+        <ul>
+          <li>أنت ملزم بـ<strong>سرية بيانات الأعضاء</strong> ولا يجوز مشاركتها مع أطراف خارجية.</li>
+          <li>الإيصالات المرفوعة تُخزَّن بشكل آمن — لا تشارك روابطها خارج نطاق الجمعية.</li>
+        </ul>
+      </div>
+
+      <!-- المادة 6 -->
+      <div class="terms-article">
+        <div class="terms-article-title"><span>المادة 6</span> المخالفات والإيقاف</div>
+        <ul>
+          <li>تحتفظ ساهل بحق <strong>إيقاف حسابك فوراً ودون تعويض</strong> عند ثبوت: بيانات مزيفة، تحايل على الأنظمة، أو إضرار مقصود بالأعضاء.</li>
+          <li>البيانات تُحفَظ <strong>90 يوماً</strong> بعد انتهاء الاشتراك ثم تُحذف نهائياً.</li>
+          <li>أي نزاعات مالية بين المدير والأعضاء تُحل خارج المنصة وفق القانون الإماراتي.</li>
+        </ul>
+      </div>
+
+      <!-- المادة 7 -->
+      <div class="terms-article">
+        <div class="terms-article-title"><span>المادة 7</span> تعديل الشروط</div>
+        <ul>
+          <li>تحتفظ ساهل بحق تعديل هذه الشروط مع إشعار مسبق <strong>14 يوماً</strong> لبريدك الإلكتروني.</li>
+          <li>استمرار استخدام المنصة بعد التعديل يُعدّ موافقةً ضمنية على الشروط الجديدة.</li>
+        </ul>
+      </div>
+
+    </div><!-- /terms-scroll -->
+
+    <div class="terms-modal-foot">
+      <label class="terms-check-row" id="termsCheckRow">
+        <input type="checkbox" id="termsCheckbox" disabled>
+        <label for="termsCheckbox">
+          أقرّ بأنني قرأت وفهمت وأوافق على <strong>جميع الشروط والأحكام</strong> الخاصة بمدراء صندوق ساهل، وأتحمل كامل المسؤولية القانونية والمالية تجاه أعضاء جمعيتي.
+        </label>
+      </label>
+
+      <div class="scroll-hint" id="scrollHint">⬇️ اكمل القراءة لتفعيل خيار القبول</div>
+
+      <div class="terms-foot-btns">
+        <button class="btn-terms-cancel" id="btnTermsCancel" type="button">إلغاء</button>
+        <button class="btn-terms-accept" id="btnTermsAccept" disabled type="button">
+          ✅ أوافق وأتابع إنشاء الحساب
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- /TERMS MODAL -->
 
 <header class="topbar">
   <div class="topbar-inner">
@@ -245,8 +518,109 @@
   var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXJwbmV4eWJ4bWZtdHJuenBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzODI5MTksImV4cCI6MjA4ODk1ODkxOX0.R6l1QAiKR5pHrSlnwqc3N31BU5zwl1iaEvX_-nSoDk8';
   var _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  document.getElementById('signupForm').addEventListener('submit', async function(e) {
+  /* ─────────────────────────────────────
+     TERMS MODAL LOGIC
+  ───────────────────────────────────── */
+  var termsAccepted = false;
+
+  var termsBackdrop  = document.getElementById('termsBackdrop');
+  var termsScroll    = document.getElementById('termsScroll');
+  var termsCheckbox  = document.getElementById('termsCheckbox');
+  var btnAccept      = document.getElementById('btnTermsAccept');
+  var btnCancel      = document.getElementById('btnTermsCancel');
+  var progressFill   = document.getElementById('termsProgressFill');
+  var scrollHint     = document.getElementById('scrollHint');
+  var scrolledToEnd  = false;
+
+  // Track scroll progress & unlock checkbox when reached bottom
+  termsScroll.addEventListener('scroll', function () {
+    var scrolled = termsScroll.scrollTop;
+    var total    = termsScroll.scrollHeight - termsScroll.clientHeight;
+    var pct      = total > 0 ? Math.min(100, (scrolled / total) * 100) : 100;
+    progressFill.style.width = pct + '%';
+
+    if (pct >= 95 && !scrolledToEnd) {
+      scrolledToEnd = true;
+      termsCheckbox.disabled = false;
+      scrollHint.classList.add('hidden');
+      termsCheckbox.closest('label') && (termsCheckbox.closest('.terms-check-row').style.opacity = '1');
+    }
+  });
+
+  // Enable accept button only when checkbox ticked
+  termsCheckbox.addEventListener('change', function () {
+    btnAccept.disabled = !this.checked;
+  });
+
+  // Cancel → close modal, do nothing
+  btnCancel.addEventListener('click', function () {
+    termsBackdrop.classList.remove('show');
+    document.body.style.overflow = '';
+  });
+
+  // Accept → mark accepted, proceed with signup
+  btnAccept.addEventListener('click', function () {
+    if (!termsCheckbox.checked) return;
+    termsAccepted = true;
+    termsBackdrop.classList.remove('show');
+    document.body.style.overflow = '';
+    proceedSignup(); // run the actual signup
+  });
+
+  // Close on backdrop click
+  termsBackdrop.addEventListener('click', function (e) {
+    if (e.target === termsBackdrop) {
+      termsBackdrop.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+  });
+
+  /* ─────────────────────────────────────
+     FORM SUBMIT → show modal first
+  ───────────────────────────────────── */
+  document.getElementById('signupForm').addEventListener('submit', function (e) {
     e.preventDefault();
+
+    var msg = document.getElementById('msgBox');
+    msg.className = 'msg'; msg.textContent = '';
+
+    // Validate fields first — don't open modal if form is invalid
+    var fullName      = document.getElementById('fullName').value.trim();
+    var email         = document.getElementById('email').value.trim();
+    var password      = document.getElementById('password').value;
+    var societyName   = document.getElementById('societyName').value.trim();
+    var monthlyAmount = parseFloat(document.getElementById('monthlyAmount').value);
+
+    if (!fullName || !email || !password || !societyName || !monthlyAmount) {
+      msg.textContent = 'أكمل جميع الحقول المطلوبة.';
+      msg.className = 'msg error show';
+      msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    if (password.length < 6) {
+      msg.textContent = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل.';
+      msg.className = 'msg error show';
+      return;
+    }
+
+    // Form is valid — open terms modal
+    // Reset modal state each time
+    scrolledToEnd = false;
+    termsCheckbox.disabled = true;
+    termsCheckbox.checked  = false;
+    btnAccept.disabled     = true;
+    progressFill.style.width = '0%';
+    scrollHint.classList.remove('hidden');
+    termsScroll.scrollTop  = 0;
+
+    termsBackdrop.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  });
+
+  /* ─────────────────────────────────────
+     ACTUAL SIGNUP (runs after acceptance)
+  ───────────────────────────────────── */
+  async function proceedSignup() {
     var msg = document.getElementById('msgBox');
     msg.className = 'msg'; msg.textContent = '';
 
@@ -255,114 +629,96 @@
     var password      = document.getElementById('password').value;
     var societyName   = document.getElementById('societyName').value.trim();
     var monthlyAmount = parseFloat(document.getElementById('monthlyAmount').value);
-    var plan          = (document.querySelector('input[name="plan"]:checked')||{value:'Free'}).value;
+    var plan          = (document.querySelector('input[name="plan"]:checked') || { value: 'Free' }).value;
 
-    if (!fullName||!email||!password||!societyName||!monthlyAmount) {
-      msg.textContent='أكمل جميع الحقول المطلوبة.';
-      msg.className='msg error show';
-      msg.scrollIntoView({behavior:'smooth',block:'center'});
-      return;
-    }
-    if (password.length<6) {
-      msg.textContent='كلمة المرور يجب أن تكون 6 أحرف على الأقل.';
-      msg.className='msg error show';
-      return;
-    }
-
-    var btn=document.getElementById('submitBtn');
-    var ov=document.getElementById('overlay');
-    btn.disabled=true; btn.textContent='جاري الإنشاء...'; ov.classList.add('show');
+    var btn = document.getElementById('submitBtn');
+    var ov  = document.getElementById('overlay');
+    btn.disabled = true; btn.textContent = 'جاري الإنشاء...'; ov.classList.add('show');
 
     try {
       // 1. إنشاء الحساب
-      var r1=await _sb.auth.signUp({email,password,options:{data:{full_name:fullName,role:'manager'}}});
-      if(r1.error) throw r1.error;
+      var r1 = await _sb.auth.signUp({ email, password, options: { data: { full_name: fullName, role: 'manager' } } });
+      if (r1.error) throw r1.error;
 
       // 2. تسجيل الدخول
-      var r2=await _sb.auth.signInWithPassword({email,password});
-      if(r2.error) throw r2.error;
+      var r2 = await _sb.auth.signInWithPassword({ email, password });
+      if (r2.error) throw r2.error;
 
-      var uid=r2.data.user.id;
-      var accessToken=r2.data.session.access_token;
-      var now=new Date();
+      var uid         = r2.data.user.id;
+      var accessToken = r2.data.session.access_token;
+      var now         = new Date();
 
       // 3. تأكد من وجود profile
       var { data: existingProfile } = await _sb.from('profiles').select('id').eq('id', uid).single();
       if (!existingProfile) {
         await _sb.from('profiles').insert({
-          id: uid,
-          full_name: fullName,
-          email: email,
-          role: 'manager'
+          id: uid, full_name: fullName, email: email, role: 'manager'
         });
       }
 
       // 4. إنشاء الجمعية
-      var r3=await _sb.from('groups').insert({
-        manager_id:uid, name:societyName, monthly_amount:monthlyAmount,
-        total_members:0, start_month:now.getMonth()+1, start_year:now.getFullYear(),
-        status:'pending', max_members:4,
-        join_token:crypto.randomUUID()
+      var r3 = await _sb.from('groups').insert({
+        manager_id: uid, name: societyName, monthly_amount: monthlyAmount,
+        total_members: 0, start_month: now.getMonth() + 1, start_year: now.getFullYear(),
+        status: 'pending', max_members: 4,
+        join_token: crypto.randomUUID()
       });
-      if(r3.error) throw r3.error;
+      if (r3.error) throw r3.error;
 
-      // 5. إنشاء الاشتراك أو التحويل للدفع
-      if(plan==='Free'){
-        var end=new Date(); end.setFullYear(end.getFullYear()+1);
-        var r4=await _sb.from('subscriptions').insert({
-          manager_id:uid, plan_name:'Free', status:'active',
-          start_date:now.toISOString().split('T')[0],
-          end_date:end.toISOString().split('T')[0], amount:0
+      // 5. اشتراك أو تحويل للدفع
+      if (plan === 'Free') {
+        var end = new Date(); end.setFullYear(end.getFullYear() + 1);
+        var r4 = await _sb.from('subscriptions').insert({
+          manager_id: uid, plan_name: 'Free', status: 'active',
+          start_date: now.toISOString().split('T')[0],
+          end_date: end.toISOString().split('T')[0], amount: 0
         });
-        if(r4.error) throw r4.error;
+        if (r4.error) throw r4.error;
 
-        // ✅ تنبيه الأدمن — مدير جديد (باقة مجانية)
-        try{
-          await _sb.rpc('notify_admin_new_group',{
-            p_type:'new_manager',
-            p_title:'👤 مدير جديد انضم للمنصة',
-            p_body:'سجّل "'+fullName+'" ('+email+') حساباً جديداً بالباقة المجانية وأنشأ جمعية "'+societyName+'" بمبلغ شهري '+monthlyAmount+' درهم.',
-            p_manager_id:uid,
-            p_group_id:null
+        try {
+          await _sb.rpc('notify_admin_new_group', {
+            p_type: 'new_manager',
+            p_title: '👤 مدير جديد انضم للمنصة',
+            p_body: 'سجّل "' + fullName + '" (' + email + ') حساباً جديداً بالباقة المجانية وأنشأ جمعية "' + societyName + '" بمبلغ شهري ' + monthlyAmount + ' درهم.',
+            p_manager_id: uid, p_group_id: null
           });
-        }catch(ne){console.error('notify error',ne)}
+        } catch (ne) { console.error('notify error', ne); }
 
-        msg.textContent='تم إنشاء الحساب والجمعية بنجاح ✅';
-        msg.className='msg success show';
-        setTimeout(()=>{ window.location.href='dashboard.html'; },1200);
+        msg.textContent = 'تم إنشاء الحساب والجمعية بنجاح ✅';
+        msg.className = 'msg success show';
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
 
       } else {
-        document.getElementById('overlayText').textContent='جاري التحويل لصفحة الدفع...';
+        document.getElementById('overlayText').textContent = 'جاري التحويل لصفحة الدفع...';
 
-        // ✅ تنبيه الأدمن — مدير جديد (باقة مدفوعة)
-        try{
-          await _sb.rpc('notify_admin_new_group',{
-            p_type:'new_manager',
-            p_title:'👤 مدير جديد — باقة '+plan,
-            p_body:'سجّل "'+fullName+'" ('+email+') حساباً جديداً بالباقة '+plan+' وأنشأ جمعية "'+societyName+'" بمبلغ شهري '+monthlyAmount+' درهم.',
-            p_manager_id:uid,
-            p_group_id:null
+        try {
+          await _sb.rpc('notify_admin_new_group', {
+            p_type: 'new_manager',
+            p_title: '👤 مدير جديد — باقة ' + plan,
+            p_body: 'سجّل "' + fullName + '" (' + email + ') حساباً جديداً بالباقة ' + plan + ' وأنشأ جمعية "' + societyName + '" بمبلغ شهري ' + monthlyAmount + ' درهم.',
+            p_manager_id: uid, p_group_id: null
           });
-        }catch(ne){console.error('notify error',ne)}
+        } catch (ne) { console.error('notify error', ne); }
 
-        var res=await fetch(SUPABASE_URL+'/functions/v1/create-checkout',{
-          method:'POST',
-          headers:{'Content-Type':'application/json','Authorization':'Bearer '+accessToken},
-          body:JSON.stringify({plan:plan.toLowerCase(),user_id:uid,user_email:email})
+        var res  = await fetch(SUPABASE_URL + '/functions/v1/create-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + accessToken },
+          body: JSON.stringify({ plan: plan.toLowerCase(), user_id: uid, user_email: email })
         });
-        var data=await res.json();
-        if(data.url){ window.location.href=data.url; }
-        else { throw new Error(data.error||'فشل الاتصال بنظام الدفع'); }
+        var data = await res.json();
+        if (data.url) { window.location.href = data.url; }
+        else { throw new Error(data.error || 'فشل الاتصال بنظام الدفع'); }
       }
-    } catch(err){
+
+    } catch (err) {
       console.error(err);
-      var m=err.message||'حدث خطأ';
-      if(m.toLowerCase().includes('already registered')) m='هذا البريد مسجل مسبقًا. استخدم صفحة تسجيل الدخول.';
-      msg.textContent=m; msg.className='msg error show';
-      msg.scrollIntoView({behavior:'smooth',block:'center'});
-      ov.classList.remove('show'); btn.disabled=false; btn.textContent='إنشاء الحساب';
+      var m = err.message || 'حدث خطأ';
+      if (m.toLowerCase().includes('already registered')) m = 'هذا البريد مسجل مسبقًا. استخدم صفحة تسجيل الدخول.';
+      msg.textContent = m; msg.className = 'msg error show';
+      msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      ov.classList.remove('show'); btn.disabled = false; btn.textContent = 'إنشاء الحساب';
     }
-  });
+  }
 </script>
 </body>
 </html>
