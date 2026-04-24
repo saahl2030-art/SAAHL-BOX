@@ -94,11 +94,152 @@
     @keyframes spin{to{transform:rotate(360deg)}}
     @media(max-width:540px){.group-info{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.hero h1{font-size:24px}}
     @media(max-width:380px){.months-grid{grid-template-columns:repeat(2,1fr)}}
+
+    /* ═══════════════════════════════════════
+       TERMS MODAL — إضافة فقط
+    ═══════════════════════════════════════ */
+    .tm-backdrop{
+      display:none;position:fixed;inset:0;
+      background:rgba(10,25,40,.52);
+      backdrop-filter:blur(4px);
+      z-index:800;
+      align-items:center;justify-content:center;
+      padding:16px;
+    }
+    .tm-backdrop.show{display:flex}
+    .tm-modal{
+      background:#fff;border-radius:20px;
+      box-shadow:0 24px 64px rgba(10,25,40,.2);
+      width:100%;max-width:520px;max-height:88vh;
+      display:flex;flex-direction:column;overflow:hidden;
+      animation:tmIn .22s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes tmIn{from{opacity:0;transform:scale(.93) translateY(18px)}to{opacity:1;transform:none}}
+    .tm-head{padding:18px 20px 14px;border-bottom:1px solid var(--line);flex-shrink:0}
+    .tm-head h3{font-size:17px;font-weight:900;display:flex;align-items:center;gap:8px;margin-bottom:3px}
+    .tm-head p{font-size:12.5px;color:var(--muted);line-height:1.6}
+    .tm-prog{height:3px;background:var(--line);flex-shrink:0}
+    .tm-prog-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--p),#46a8d8);transition:width .1s linear;border-radius:99px}
+    .tm-body{overflow-y:auto;flex:1;padding:16px 20px;font-size:13px;line-height:1.85;color:var(--text)}
+    .tm-body::-webkit-scrollbar{width:4px}
+    .tm-body::-webkit-scrollbar-thumb{background:#b0c8dc;border-radius:99px}
+    .tm-hint{background:#fff8e1;border:1px solid #f0d060;border-radius:9px;padding:10px 13px;font-size:12px;color:#7a5800;margin-bottom:14px;display:flex;gap:7px;align-items:center}
+    .tm-art{margin-bottom:16px}
+    .tm-art-title{font-size:12px;font-weight:900;color:var(--p2);display:flex;align-items:center;gap:6px;margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+    .tm-art-title span{background:var(--p3);color:var(--p);border-radius:5px;padding:1px 7px;font-size:11px}
+    .tm-art ul{list-style:none;display:grid;gap:6px}
+    .tm-art ul li{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:#2a4a60}
+    .tm-art ul li::before{content:'•';color:var(--p);font-weight:900;flex-shrink:0;margin-top:1px}
+    .tm-art ul li strong{color:var(--text)}
+    .tm-foot{padding:14px 20px;border-top:1px solid var(--line);background:#f8fbff;flex-shrink:0}
+    .tm-check-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;cursor:pointer}
+    .tm-check-row input{width:19px;height:19px;border-radius:5px;cursor:pointer;flex-shrink:0;margin-top:2px;accent-color:var(--p)}
+    .tm-check-row label{font-size:13px;font-weight:700;color:var(--text);cursor:pointer;line-height:1.6}
+    .tm-scroll-hint{font-size:11.5px;color:var(--muted);margin-bottom:10px;transition:opacity .3s}
+    .tm-scroll-hint.hidden{opacity:0;pointer-events:none}
+    .tm-btns{display:flex;gap:9px}
+    .tm-accept{flex:1;padding:12px;font-size:14px;border-radius:11px;font-weight:900;background:var(--p);color:#fff;border:none;cursor:pointer;transition:.18s;box-shadow:0 4px 14px rgba(31,111,165,.2)}
+    .tm-accept:hover:not(:disabled){background:var(--p2)}
+    .tm-accept:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+    .tm-cancel{padding:12px 16px;font-size:13px;border-radius:11px;font-weight:800;background:#fff;border:1px solid var(--line2);color:var(--text);cursor:pointer;transition:.18s}
+    .tm-cancel:hover{background:#f0f4f8}
   </style>
 </head>
 <body>
 
 <div class="loader" id="loader"><div class="spinner"></div><span>جاري التحميل...</span></div>
+
+<!-- ═══════════════════════════════════════
+     TERMS MODAL للأعضاء — إضافة فقط
+═══════════════════════════════════════ -->
+<div class="tm-backdrop" id="tmBackdrop">
+  <div class="tm-modal">
+
+    <div class="tm-head">
+      <h3>📋 شروط وأحكام الأعضاء</h3>
+      <p>يُرجى قراءة الشروط كاملةً — القبول إلزامي قبل إرسال طلب الانضمام.</p>
+    </div>
+
+    <div class="tm-prog"><div class="tm-prog-fill" id="tmProgFill"></div></div>
+
+    <div class="tm-body" id="tmBody">
+      <div class="tm-hint">⬇️ اقرأ جميع البنود للأسفل لتفعيل زر القبول</div>
+
+      <div class="tm-art">
+        <div class="tm-art-title"><span>المادة 1</span> طبيعة مشاركة العضو</div>
+        <ul>
+          <li>بانضمامك أنت عضو في جمعية ادخار خاصة يديرها المدير المسجّل على المنصة.</li>
+          <li><strong>لا تدفع أي رسوم لمنصة ساهل</strong> — اشتراكك الشهري يذهب مباشرةً للمدير.</li>
+          <li>ساهل أداة تنظيمية فقط ولا تضمن استلامك لحصتك في أي وقت.</li>
+        </ul>
+      </div>
+
+      <div class="tm-art">
+        <div class="tm-art-title"><span>المادة 2</span> الالتزام بالدفع الشهري</div>
+        <ul>
+          <li><strong>يجب دفع اشتراكك الشهري في موعده</strong> المتفق عليه. التأخر يؤثر على باقي الأعضاء.</li>
+          <li>يجب رفع إيصال الدفع عبر الرابط الذي يرسله لك المدير كل شهر.</li>
+          <li>رفع إيصال مزيف أو معدّل <strong>جريمة يعاقب عليها القانون الإماراتي</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="tm-art">
+        <div class="tm-art-title"><span>المادة 3</span> استلام الحصة والدور</div>
+        <ul>
+          <li>ترتيب الصرف يحدده المدير ولا يحق لأي عضو تغييره منفرداً.</li>
+          <li>على العضو الذي استلم حصته <strong>الاستمرار في الدفع</strong> للأشهر المتبقية. الانسحاب بعد الاستلام إخلال بالعقد.</li>
+        </ul>
+      </div>
+
+      <div class="tm-art">
+        <div class="tm-art-title"><span>المادة 4</span> السلوك والأمانة</div>
+        <ul>
+          <li>التعامل بأمانة وصدق مع المدير وباقي الأعضاء طوال فترة الجمعية.</li>
+          <li><strong>يُمنع</strong> مشاركة رابط الانضمام مع أشخاص لم يوافق عليهم المدير.</li>
+          <li>يُمنع انتحال صفة عضو آخر أو رفع إيصالات باسم شخص غيرك.</li>
+        </ul>
+      </div>
+
+      <div class="tm-art">
+        <div class="tm-art-title"><span>المادة 5</span> الخصوصية والبيانات</div>
+        <ul>
+          <li>بياناتك مرئية للمدير فقط — ساهل لا تبيع ولا تشارك بياناتك مع أي جهة.</li>
+          <li>الإيصالات تُخزَّن بشكل آمن لأغراض التحقق فقط.</li>
+        </ul>
+      </div>
+
+      <div class="tm-art">
+        <div class="tm-art-title"><span>المادة 6</span> النزاعات والمسؤولية</div>
+        <ul>
+          <li>ساهل <strong>لا تتوسط في النزاعات المالية</strong> — تُحل مباشرةً بين الطرفين وفق القانون الإماراتي.</li>
+          <li>في حال ثبوت تصرف احتيالي، تحتفظ ساهل بحق إيقاف وصولك فوراً.</li>
+        </ul>
+      </div>
+
+      <div class="tm-art">
+        <div class="tm-art-title"><span>المادة 7</span> الانسحاب</div>
+        <ul>
+          <li>لا يحق الانسحاب إلا <strong>بموافقة المدير</strong> وترتيب بديل مناسب.</li>
+          <li>يحق الانسحاب <strong>قبل بدء الدورة</strong> دون أي التزامات.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tm-foot">
+      <div class="tm-check-row">
+        <input type="checkbox" id="tmCheckbox" disabled>
+        <label for="tmCheckbox">أقرّ بأنني قرأت وفهمت وأوافق على جميع شروط وأحكام الأعضاء، وأتحمل كامل التزاماتي تجاه الجمعية وأعضائها.</label>
+      </div>
+      <div class="tm-scroll-hint" id="tmScrollHint">⬇️ اكمل القراءة لتفعيل خيار القبول</div>
+      <div class="tm-btns">
+        <button class="tm-cancel" id="tmCancel" type="button">إلغاء</button>
+        <button class="tm-accept" id="tmAccept" disabled type="button">✅ أوافق وأرسل الطلب</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- /TERMS MODAL -->
 
 <header class="header">
   <div class="header-logo">
@@ -192,7 +333,7 @@
       </div>
 
       <div class="msg" id="formMsg"></div>
-      <button class="submit-btn" id="submitBtn" onclick="submitRequest()">إرسال طلب الانضمام</button>
+      <button class="submit-btn" id="submitBtn" onclick="openTermsModal()">إرسال طلب الانضمام</button>
     </div>
 
     <div class="success-state" id="successState">
@@ -224,6 +365,75 @@ let isFull        = false
 
 const loader = document.getElementById('loader')
 
+/* ─────────────────────────────────────────────
+   TERMS MODAL LOGIC — إضافة فقط، لا يمس الكود الأصلي
+───────────────────────────────────────────── */
+const tmBackdrop  = document.getElementById('tmBackdrop')
+const tmBody      = document.getElementById('tmBody')
+const tmCheckbox  = document.getElementById('tmCheckbox')
+const tmAccept    = document.getElementById('tmAccept')
+const tmCancel    = document.getElementById('tmCancel')
+const tmProgFill  = document.getElementById('tmProgFill')
+const tmScrollHint= document.getElementById('tmScrollHint')
+let   tmScrolled  = false
+
+tmBody.addEventListener('scroll', function() {
+  const pct = Math.min(100, (tmBody.scrollTop / (tmBody.scrollHeight - tmBody.clientHeight)) * 100)
+  tmProgFill.style.width = pct + '%'
+  if (pct >= 95 && !tmScrolled) {
+    tmScrolled = true
+    tmCheckbox.disabled = false
+    tmScrollHint.classList.add('hidden')
+  }
+})
+
+tmCheckbox.addEventListener('change', function() {
+  tmAccept.disabled = !this.checked
+})
+
+tmCancel.addEventListener('click', function() {
+  tmBackdrop.classList.remove('show')
+  document.body.style.overflow = ''
+})
+
+tmBackdrop.addEventListener('click', function(e) {
+  if (e.target === tmBackdrop) {
+    tmBackdrop.classList.remove('show')
+    document.body.style.overflow = ''
+  }
+})
+
+tmAccept.addEventListener('click', function() {
+  if (!tmCheckbox.checked) return
+  tmBackdrop.classList.remove('show')
+  document.body.style.overflow = ''
+  submitRequest()  // ← نفس الدالة الأصلية بالضبط
+})
+
+window.openTermsModal = function() {
+  // نفس تحققات الأصل قبل فتح الـ modal
+  const name  = document.getElementById('fName').value.trim()
+  const phone = document.getElementById('fPhone').value.trim()
+  if (!name)          { showFormMsg('أدخل اسمك الكامل', 'error'); return }
+  if (!phone)         { showFormMsg('أدخل رقم هاتفك', 'error'); return }
+  if (!selectedMonth) { showFormMsg('اختر شهر الاستلام أولاً', 'error'); return }
+
+  // reset modal state
+  tmScrolled = false
+  tmCheckbox.disabled = true
+  tmCheckbox.checked  = false
+  tmAccept.disabled   = true
+  tmProgFill.style.width = '0%'
+  tmScrollHint.classList.remove('hidden')
+  tmBody.scrollTop = 0
+
+  tmBackdrop.classList.add('show')
+  document.body.style.overflow = 'hidden'
+}
+/* ─────────────────────────────────────────────
+   END TERMS MODAL LOGIC
+───────────────────────────────────────────── */
+
 async function init() {
   loader.classList.add('show')
 
@@ -246,8 +456,6 @@ async function init() {
     return
   }
 
-  // ✅ إصلاح: الرابط يعمل مع pending وactive وcompleted
-  // يُغلق فقط عند stopped
   if (group.status === 'stopped') {
     showError('هذه الجمعية متوقفة حالياً ولا تقبل أعضاء جدد.')
     loader.classList.remove('show')
