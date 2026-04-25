@@ -334,7 +334,8 @@ async function loadOverview(){
     sb.from('groups').select('id,status,manager_id,name,monthly_amount,max_members,start_month,start_year'),
     sb.from('profiles').select('*',{count:'exact',head:true}).eq('role','manager'),
     sb.from('members').select('*',{count:'exact',head:true}),
-    sb.from('subscriptions').select('manager_id,plan_name,status,end_date,amount').eq('status','active'),
+    // ✅ إصلاح: expires_at بدل end_date
+    sb.from('subscriptions').select('manager_id,plan_name,status,expires_at,amount').eq('status','active'),
     sb.from('payments').select('*',{count:'exact',head:true}).eq('status','late'),
     sb.from('join_requests').select('*, groups(name,profiles(full_name))').eq('status','pending').order('created_at',{ascending:false}).limit(5),
     sb.from('manager_notes').select('*, profiles(full_name,email)').order('created_at',{ascending:false}).limit(4),
@@ -349,7 +350,8 @@ async function loadOverview(){
   document.getElementById('statRevenue').textContent=Math.round(revenue)+' د'
   document.getElementById('statRevSub').textContent=`من ${subs?.length||0} اشتراك نشط`
   document.getElementById('statLate').textContent=late||0
-  const expiring=subs?.filter(s=>{if(!s.end_date)return false;const d=Math.ceil((new Date(s.end_date)-new Date())/(1000*60*60*24));return d<=30&&d>0}).length||0
+  // ✅ إصلاح: expires_at بدل end_date
+  const expiring=subs?.filter(s=>{if(!s.expires_at)return false;const d=Math.ceil((new Date(s.expires_at)-new Date())/(1000*60*60*24));return d<=30&&d>0}).length||0
   if(expiring>0){document.getElementById('alertBar').style.display='flex';document.getElementById('alertText').textContent=`${expiring} اشتراك ينتهي خلال 30 يوماً`}
   const pending=reqs?.length||0
   if(pending>0){const b=document.getElementById('reqNavBadge');b.textContent=pending;b.style.display='inline-flex'}
@@ -365,7 +367,11 @@ async function loadOverview(){
   document.getElementById('miniNotes').innerHTML=!notes?.length?'<div style="color:var(--muted);font-size:12px">لا توجد ملاحظات</div>':notes.map((n,i)=>`<div class="note-mini"><div class="note-avatar" style="background:${ac[i%5]};color:${tc[i%5]}">${(n.profiles?.full_name||'؟')[0]}</div><div class="note-body"><div class="note-name">${n.profiles?.full_name||'—'}</div><div class="note-text">${(n.note||'').substring(0,60)}${(n.note||'').length>60?'...':''}</div></div><div class="note-date">${new Date(n.created_at).toLocaleDateString('ar')}</div></div>`).join('')
   const managerIds=[...new Set(groups?.map(g=>g.manager_id)||[])]
   let subsMap={}
-  if(managerIds.length){const{data:subsAll}=await sb.from('subscriptions').select('manager_id,plan_name,end_date,amount').eq('status','active').in('manager_id',managerIds);subsAll?.forEach(s=>{subsMap[s.manager_id]=s})}
+  if(managerIds.length){
+    // ✅ إصلاح: expires_at بدل end_date
+    const{data:subsAll}=await sb.from('subscriptions').select('manager_id,plan_name,expires_at,amount').eq('status','active').in('manager_id',managerIds)
+    subsAll?.forEach(s=>{subsMap[s.manager_id]=s})
+  }
   const gids=groups?.map(g=>g.id)||[]
   let mcMap={}
   if(gids.length){const{data:mems}=await sb.from('members').select('group_id').in('group_id',gids).eq('status','active');mems?.forEach(m=>{mcMap[m.group_id]=(mcMap[m.group_id]||0)+1})}
@@ -376,7 +382,6 @@ async function loadOverview(){
   renderOvTable(allGroupsData)
 }
 
-// ✅ التنبيهات مع زر حذف
 window.loadNotifications=async function(){
   try{
     const{data,error}=await sb.from('admin_notifications').select('*').order('created_at',{ascending:false})
@@ -422,18 +427,15 @@ window.markAllRead=async function(){
   await loadNotifications()
 }
 
-// ✅ حذف تنبيه واحد فقط من القائمة
 window.deleteNotif=async function(id){
   await sb.from('admin_notifications').delete().eq('id',id)
   document.getElementById(`notif-${id}`)?.remove()
   await loadUnreadCount()
-  // تحديث العداد
   const remaining=document.querySelectorAll('.notif-item').length
   const unread=document.querySelectorAll('.notif-item.unread').length
   document.getElementById('notifCount').textContent=`${remaining} تنبيه — ${unread} غير مقروء`
 }
 
-// ✅ ملاحظات المدراء
 window.loadNotes=async function(){
   const{data}=await sb.from('manager_notes').select('*, profiles(full_name,email), groups(name)').order('created_at',{ascending:false})
   document.getElementById('notesCount').textContent=`${data?.length||0} ملاحظة`
@@ -502,7 +504,6 @@ window.deleteNote=async function(id){
   loadNotesCount()
 }
 
-// ✅ إشعار للمدراء
 window.sendBroadcast=async function(){
   const title=document.getElementById('broadcastTitle').value.trim()
   const body=document.getElementById('broadcastBody').value.trim()
@@ -546,7 +547,8 @@ function renderOvTable(data){
   if(!data.length){document.getElementById('ovTbody').innerHTML='<tr><td colspan="6" style="text-align:center;padding:16px;color:var(--muted)">لا توجد نتائج</td></tr>';return}
   document.getElementById('ovTbody').innerHTML=data.map((g,i)=>{
     const pct=Math.round(g.memberCount/(g.max_members||4)*100)
-    const days=g.sub?.end_date?Math.ceil((new Date(g.sub.end_date)-new Date())/(1000*60*60*24)):null
+    // ✅ إصلاح: expires_at بدل end_date
+    const days=g.sub?.expires_at?Math.ceil((new Date(g.sub.expires_at)-new Date())/(1000*60*60*24)):null
     const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
     const plan=g.sub?.plan_name||'Free'
     return `<tr class="tr-click${i===selIdx?' tr-sel':''}" onclick="ovSel(${i})"><td><strong>${g.name}</strong></td><td>${g.managerName}</td><td><span class="badge ${planBadge(plan)}">${plan}</span></td><td><div>${g.memberCount}/${g.max_members||4}</div><div class="mini-prog"><div class="mini-prog-fill" style="width:${pct}%;background:${pct>=100?'var(--red)':pct>=75?'var(--amber)':'var(--green)'}"></div></div></td><td style="color:${dc};font-weight:900">${days!==null?days+' يوم':'—'}</td><td><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></td></tr>`
@@ -559,11 +561,12 @@ window.ovSel=function(i){
   document.querySelectorAll('#ovTbody tr').forEach((r,j)=>r.classList.toggle('tr-sel',j===i))
   const g=filtered[i];if(!g)return
   const pct=Math.round(g.memberCount/(g.max_members||4)*100)
-  const days=g.sub?.end_date?Math.ceil((new Date(g.sub.end_date)-new Date())/(1000*60*60*24)):null
+  // ✅ إصلاح: expires_at بدل end_date
+  const days=g.sub?.expires_at?Math.ceil((new Date(g.sub.expires_at)-new Date())/(1000*60*60*24)):null
   const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
   const pc=pct>=100?'var(--red)':pct>=75?'var(--amber)':'var(--green)'
   const plan=g.sub?.plan_name||'Free'
-  document.getElementById('detPanel').innerHTML=`<div class="det-hd">🏛️ ${g.name}</div><div class="det-row"><span class="det-k">المدير</span><span class="det-v">${g.managerName}</span></div><div class="det-row"><span class="det-k">البريد</span><span class="det-v" style="direction:ltr;font-size:10px">${g.managerEmail}</span></div><div class="det-row"><span class="det-k">الباقة</span><span class="badge ${planBadge(plan)}">${plan}</span></div><div class="det-row"><span class="det-k">الأعضاء</span><span class="det-v">${g.memberCount}/${g.max_members||4} (${pct}%)</span></div><div class="det-prog"><div class="det-prog-fill" style="width:${pct}%;background:${pc}"></div></div><div class="det-row"><span class="det-k">المبلغ الشهري</span><span class="det-v">${g.monthly_amount} درهم</span></div><div class="det-row"><span class="det-k">الاشتراك السنوي</span><span class="det-v">${g.sub?.amount||0} درهم</span></div><div class="det-row"><span class="det-k">انتهاء الباقة</span><span class="det-v">${g.sub?.end_date?new Date(g.sub.end_date).toLocaleDateString('ar-AE'):'—'}</span></div><div class="det-row"><span class="det-k">الأيام المتبقية</span><span class="det-v" style="color:${dc}">${days!==null?days+' يوم':'—'}</span></div><div class="det-row"><span class="det-k">الحالة</span><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></div><div class="det-actions"><div class="det-btn grn" onclick="changeStatus('${g.id}','active')">✓ تفعيل</div><div class="det-btn red" onclick="changeStatus('${g.id}','stopped')">✕ إيقاف</div></div>`
+  document.getElementById('detPanel').innerHTML=`<div class="det-hd">🏛️ ${g.name}</div><div class="det-row"><span class="det-k">المدير</span><span class="det-v">${g.managerName}</span></div><div class="det-row"><span class="det-k">البريد</span><span class="det-v" style="direction:ltr;font-size:10px">${g.managerEmail}</span></div><div class="det-row"><span class="det-k">الباقة</span><span class="badge ${planBadge(plan)}">${plan}</span></div><div class="det-row"><span class="det-k">الأعضاء</span><span class="det-v">${g.memberCount}/${g.max_members||4} (${pct}%)</span></div><div class="det-prog"><div class="det-prog-fill" style="width:${pct}%;background:${pc}"></div></div><div class="det-row"><span class="det-k">المبلغ الشهري</span><span class="det-v">${g.monthly_amount} درهم</span></div><div class="det-row"><span class="det-k">الاشتراك السنوي</span><span class="det-v">${g.sub?.amount||0} درهم</span></div><div class="det-row"><span class="det-k">انتهاء الباقة</span><span class="det-v">${g.sub?.expires_at?new Date(g.sub.expires_at).toLocaleDateString('ar-AE'):'—'}</span></div><div class="det-row"><span class="det-k">الأيام المتبقية</span><span class="det-v" style="color:${dc}">${days!==null?days+' يوم':'—'}</span></div><div class="det-row"><span class="det-k">الحالة</span><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></div><div class="det-actions"><div class="det-btn grn" onclick="changeStatus('${g.id}','active')">✓ تفعيل</div><div class="det-btn red" onclick="changeStatus('${g.id}','stopped')">✕ إيقاف</div></div>`
 }
 
 window.changeStatus=async function(id,status){
@@ -595,9 +598,10 @@ window.loadGroups=async function(){
   if(!filtered.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted)">لا توجد نتائج</td></tr>';return}
   tbody.innerHTML=filtered.map(g=>{
     const plan=g.sub?.plan_name||'Free'
-    const days=g.sub?.end_date?Math.ceil((new Date(g.sub.end_date)-new Date())/(1000*60*60*24)):null
+    // ✅ إصلاح: expires_at بدل end_date
+    const days=g.sub?.expires_at?Math.ceil((new Date(g.sub.expires_at)-new Date())/(1000*60*60*24)):null
     const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
-    return `<tr><td><strong>${g.name}</strong></td><td>${g.managerName}</td><td><span class="badge ${planBadge(plan)}">${plan}</span></td><td>${g.memberCount}/${g.max_members||4}</td><td>${g.monthly_amount} درهم</td><td>${g.sub?.end_date?new Date(g.sub.end_date).toLocaleDateString('ar-AE'):'—'}</td><td style="color:${dc};font-weight:900">${days!==null?days+' يوم':'—'}</td><td><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></td><td><div style="display:flex;gap:4px"><button class="action-btn ab-green" onclick="changeStatus('${g.id}','active')">تفعيل</button><button class="action-btn ab-red" onclick="changeStatus('${g.id}','stopped')">إيقاف</button></div></td></tr>`
+    return `<tr><td><strong>${g.name}</strong></td><td>${g.managerName}</td><td><span class="badge ${planBadge(plan)}">${plan}</span></td><td>${g.memberCount}/${g.max_members||4}</td><td>${g.monthly_amount} درهم</td><td>${g.sub?.expires_at?new Date(g.sub.expires_at).toLocaleDateString('ar-AE'):'—'}</td><td style="color:${dc};font-weight:900">${days!==null?days+' يوم':'—'}</td><td><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></td><td><div style="display:flex;gap:4px"><button class="action-btn ab-green" onclick="changeStatus('${g.id}','active')">تفعيل</button><button class="action-btn ab-red" onclick="changeStatus('${g.id}','stopped')">إيقاف</button></div></td></tr>`
   }).join('')
 }
 
@@ -626,17 +630,36 @@ window.loadRequests=async function(){
 window.loadSubscriptions=async function(){
   const plan=document.getElementById('subsPlan')?.value||''
   const status=document.getElementById('subsStatus')?.value||''
-  let q=sb.from('subscriptions').select('*, profiles(full_name)').order('created_at',{ascending:false})
+  // ✅ إصلاح: جيب الـ profiles عن طريق manager_id مع profiles مباشرة
+  let q=sb.from('subscriptions').select('*, profiles!subscriptions_manager_id_fkey(full_name)').order('created_at',{ascending:false})
   if(plan)q=q.eq('plan_name',plan)
   if(status)q=q.eq('status',status)
-  const{data}=await q
-  document.getElementById('subsCount').textContent=`${data?.length||0} اشتراك`
+  const{data,error}=await q
+  // fallback: لو الـ join فشل بسبب اسم العلاقة، نجيب الأسماء يدوياً
+  let rows=data
+  if(error||!data){
+    const{data:subs}=await sb.from('subscriptions').select('*').order('created_at',{ascending:false})
+    rows=subs
+  }
+  // نجيب أسماء المدراء إذا ما اتجابت مع الـ join
+  if(rows&&(!rows[0]?.profiles)){
+    const mids=[...new Set(rows.map(s=>s.manager_id).filter(Boolean))]
+    if(mids.length){
+      const{data:profs}=await sb.from('profiles').select('id,full_name').in('id',mids)
+      const pm={}
+      profs?.forEach(p=>{pm[p.id]=p.full_name})
+      rows=rows.map(s=>({...s,_managerName:pm[s.manager_id]||'—'}))
+    }
+  }
+  document.getElementById('subsCount').textContent=`${rows?.length||0} اشتراك`
   const tbody=document.getElementById('subsTbody')
-  if(!data?.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">لا توجد اشتراكات</td></tr>';return}
-  tbody.innerHTML=data.map(s=>{
-    const days=s.end_date?Math.ceil((new Date(s.end_date)-new Date())/(1000*60*60*24)):null
+  if(!rows?.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">لا توجد اشتراكات</td></tr>';return}
+  tbody.innerHTML=rows.map(s=>{
+    const managerName=s.profiles?.full_name||s._managerName||'—'
+    // ✅ إصلاح: expires_at بدل end_date
+    const days=s.expires_at?Math.ceil((new Date(s.expires_at)-new Date())/(1000*60*60*24)):null
     const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
-    return `<tr><td>${s.profiles?.full_name||'—'}</td><td><span class="badge ${planBadge(s.plan_name)}">${s.plan_name}</span></td><td>${s.amount} درهم</td><td><span class="badge ${s.status==='active'?'b-green':'b-red'}">${s.status==='active'?'نشط':'منتهي'}</span></td><td>${s.start_date||'—'}</td><td>${s.end_date?new Date(s.end_date).toLocaleDateString('ar-AE'):'—'}</td><td style="color:${dc};font-weight:900">${days!==null?days+' يوم':'—'}</td></tr>`
+    return `<tr><td>${managerName}</td><td><span class="badge ${planBadge(s.plan_name)}">${s.plan_name}</span></td><td>${s.amount} درهم</td><td><span class="badge ${s.status==='active'?'b-green':'b-red'}">${s.status==='active'?'نشط':'منتهي'}</span></td><td>${s.start_date||'—'}</td><td>${s.expires_at?new Date(s.expires_at).toLocaleDateString('ar-AE'):'—'}</td><td style="color:${dc};font-weight:900">${days!==null?days+' يوم':'—'}</td></tr>`
   }).join('')
 }
 
