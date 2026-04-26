@@ -149,7 +149,6 @@
     .terms-scroll::-webkit-scrollbar-track{background:#f0f4f8}
     .terms-scroll::-webkit-scrollbar-thumb{background:#b0c8dc;border-radius:99px}
 
-    /* scroll progress bar */
     .terms-progress-bar{
       height:3px;
       background:var(--line);
@@ -247,7 +246,6 @@
     }
     .btn-terms-cancel:hover{background:#f0f4f8}
 
-    /* read-more hint that fades once scrolled */
     .scroll-hint{
       text-align:center;font-size:12px;
       color:var(--muted);margin-top:8px;
@@ -275,7 +273,6 @@
       <p>يُرجى قراءة الشروط كاملةً قبل إنشاء حسابك — القبول إلزامي للمتابعة.</p>
     </div>
 
-    <!-- progress bar -->
     <div class="terms-progress-bar">
       <div class="terms-progress-fill" id="termsProgressFill"></div>
     </div>
@@ -286,7 +283,6 @@
         ⬇️ اقرأ جميع البنود للأسفل لتفعيل زر القبول
       </div>
 
-      <!-- المادة 1 -->
       <div class="terms-article">
         <div class="terms-article-title"><span>المادة 1</span> تعريف المدير ودوره</div>
         <ul>
@@ -296,7 +292,6 @@
         </ul>
       </div>
 
-      <!-- المادة 2 -->
       <div class="terms-article">
         <div class="terms-article-title"><span>المادة 2</span> الاشتراك والدفع</div>
         <ul>
@@ -307,7 +302,6 @@
         </ul>
       </div>
 
-      <!-- المادة 3 -->
       <div class="terms-article">
         <div class="terms-article-title"><span>المادة 3</span> التزامات إدارة الجمعية</div>
         <ul>
@@ -318,7 +312,6 @@
         </ul>
       </div>
 
-      <!-- المادة 4 -->
       <div class="terms-article">
         <div class="terms-article-title"><span>المادة 4</span> الأعضاء والانضمام</div>
         <ul>
@@ -328,7 +321,6 @@
         </ul>
       </div>
 
-      <!-- المادة 5 -->
       <div class="terms-article">
         <div class="terms-article-title"><span>المادة 5</span> البيانات والخصوصية</div>
         <ul>
@@ -337,7 +329,6 @@
         </ul>
       </div>
 
-      <!-- المادة 6 -->
       <div class="terms-article">
         <div class="terms-article-title"><span>المادة 6</span> المخالفات والإيقاف</div>
         <ul>
@@ -347,7 +338,6 @@
         </ul>
       </div>
 
-      <!-- المادة 7 -->
       <div class="terms-article">
         <div class="terms-article-title"><span>المادة 7</span> تعديل الشروط</div>
         <ul>
@@ -532,42 +522,35 @@
   var scrollHint     = document.getElementById('scrollHint');
   var scrolledToEnd  = false;
 
-  // Track scroll progress & unlock checkbox when reached bottom
   termsScroll.addEventListener('scroll', function () {
     var scrolled = termsScroll.scrollTop;
     var total    = termsScroll.scrollHeight - termsScroll.clientHeight;
     var pct      = total > 0 ? Math.min(100, (scrolled / total) * 100) : 100;
     progressFill.style.width = pct + '%';
-
     if (pct >= 95 && !scrolledToEnd) {
       scrolledToEnd = true;
       termsCheckbox.disabled = false;
       scrollHint.classList.add('hidden');
-      termsCheckbox.closest('label') && (termsCheckbox.closest('.terms-check-row').style.opacity = '1');
     }
   });
 
-  // Enable accept button only when checkbox ticked
   termsCheckbox.addEventListener('change', function () {
     btnAccept.disabled = !this.checked;
   });
 
-  // Cancel → close modal, do nothing
   btnCancel.addEventListener('click', function () {
     termsBackdrop.classList.remove('show');
     document.body.style.overflow = '';
   });
 
-  // Accept → mark accepted, proceed with signup
   btnAccept.addEventListener('click', function () {
     if (!termsCheckbox.checked) return;
     termsAccepted = true;
     termsBackdrop.classList.remove('show');
     document.body.style.overflow = '';
-    proceedSignup(); // run the actual signup
+    proceedSignup();
   });
 
-  // Close on backdrop click
   termsBackdrop.addEventListener('click', function (e) {
     if (e.target === termsBackdrop) {
       termsBackdrop.classList.remove('show');
@@ -584,7 +567,6 @@
     var msg = document.getElementById('msgBox');
     msg.className = 'msg'; msg.textContent = '';
 
-    // Validate fields first — don't open modal if form is invalid
     var fullName      = document.getElementById('fullName').value.trim();
     var email         = document.getElementById('email').value.trim();
     var password      = document.getElementById('password').value;
@@ -603,8 +585,6 @@
       return;
     }
 
-    // Form is valid — open terms modal
-    // Reset modal state each time
     scrolledToEnd = false;
     termsCheckbox.disabled = true;
     termsCheckbox.checked  = false;
@@ -625,6 +605,7 @@
     msg.className = 'msg'; msg.textContent = '';
 
     var fullName      = document.getElementById('fullName').value.trim();
+    var phone         = document.getElementById('phone').value.trim();
     var email         = document.getElementById('email').value.trim();
     var password      = document.getElementById('password').value;
     var societyName   = document.getElementById('societyName').value.trim();
@@ -648,12 +629,15 @@
       var accessToken = r2.data.session.access_token;
       var now         = new Date();
 
-      // 3. تأكد من وجود profile
+      // 3. تأكد من وجود profile مع حفظ رقم الهاتف
       var { data: existingProfile } = await _sb.from('profiles').select('id').eq('id', uid).single();
       if (!existingProfile) {
         await _sb.from('profiles').insert({
-          id: uid, full_name: fullName, email: email, role: 'manager'
+          id: uid, full_name: fullName, email: email, role: 'manager', phone: phone
         });
+      } else {
+        // تحديث الهاتف في حال كان الحساب موجوداً
+        await _sb.from('profiles').update({ phone: phone }).eq('id', uid);
       }
 
       // 4. إنشاء الجمعية
@@ -667,6 +651,7 @@
 
       // 5. اشتراك أو تحويل للدفع
       if (plan === 'Free') {
+        // ── باقة مجانية: إنشاء اشتراك فوري + إشعار الأدمن ──
         var end = new Date(); end.setFullYear(end.getFullYear() + 1);
         var r4 = await _sb.from('subscriptions').insert({
           manager_id: uid, plan_name: 'Free', status: 'active',
@@ -679,7 +664,7 @@
           await _sb.rpc('notify_admin_new_group', {
             p_type: 'new_manager',
             p_title: '👤 مدير جديد انضم للمنصة',
-            p_body: 'سجّل "' + fullName + '" (' + email + ') حساباً جديداً بالباقة المجانية وأنشأ جمعية "' + societyName + '" بمبلغ شهري ' + monthlyAmount + ' درهم.',
+            p_body: 'سجّل "' + fullName + '" (' + email + (phone ? ' · 📱 ' + phone : '') + ') حساباً جديداً بالباقة المجانية وأنشأ جمعية "' + societyName + '" بمبلغ شهري ' + monthlyAmount + ' درهم.',
             p_manager_id: uid, p_group_id: null
           });
         } catch (ne) { console.error('notify error', ne); }
@@ -689,16 +674,8 @@
         setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
 
       } else {
+        // ── باقة مدفوعة: التحويل لـ Stripe فقط — الإشعار يأتي بعد تأكيد الدفع ──
         document.getElementById('overlayText').textContent = 'جاري التحويل لصفحة الدفع...';
-
-        try {
-          await _sb.rpc('notify_admin_new_group', {
-            p_type: 'new_manager',
-            p_title: '👤 مدير جديد — باقة ' + plan,
-            p_body: 'سجّل "' + fullName + '" (' + email + ') حساباً جديداً بالباقة ' + plan + ' وأنشأ جمعية "' + societyName + '" بمبلغ شهري ' + monthlyAmount + ' درهم.',
-            p_manager_id: uid, p_group_id: null
-          });
-        } catch (ne) { console.error('notify error', ne); }
 
         var res  = await fetch(SUPABASE_URL + '/functions/v1/create-checkout', {
           method: 'POST',
