@@ -209,7 +209,7 @@
             <select class="flt-sel" id="grpStatus" onchange="loadGroups()"><option value="">كل الحالات</option><option value="active">نشطة</option><option value="completed">مكتملة</option><option value="stopped">متوقفة</option><option value="renewed">مجددة</option></select>
             <select class="flt-sel" id="grpPlan" onchange="loadGroups()"><option value="">كل الباقات</option><option value="free">Free</option><option value="basic">Basic</option><option value="pro">Pro</option><option value="business">Business</option></select>
           </div>
-          <div class="full-tbl-wrap"><table class="full-table"><thead><tr><th>الجمعية</th><th>المدير</th><th>الباقة</th><th>الأعضاء</th><th>المبلغ الشهري</th><th>انتهاء الاشتراك</th><th>الأيام المتبقية</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody id="grpTbody"><tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted)">جاري التحميل...</td></tr></tbody></table></div>
+          <div class="full-tbl-wrap"><table class="full-table"><thead><tr><th>الجمعية</th><th>المدير</th><th>الهاتف</th><th>البريد الإلكتروني</th><th>الباقة</th><th>الأعضاء</th><th>المبلغ الشهري</th><th>انتهاء الاشتراك</th><th>الأيام المتبقية</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody id="grpTbody"><tr><td colspan="11" style="text-align:center;padding:20px;color:var(--muted)">جاري التحميل...</td></tr></tbody></table></div>
         </div>
       </section>
 
@@ -334,7 +334,6 @@ async function loadOverview(){
     sb.from('groups').select('id,status,manager_id,name,monthly_amount,max_members,start_month,start_year'),
     sb.from('profiles').select('*',{count:'exact',head:true}).eq('role','manager'),
     sb.from('members').select('*',{count:'exact',head:true}),
-    // ✅ إصلاح: expires_at بدل end_date
     sb.from('subscriptions').select('manager_id,plan_name,status,expires_at,amount').eq('status','active'),
     sb.from('payments').select('*',{count:'exact',head:true}).eq('status','late'),
     sb.from('join_requests').select('*, groups(name,profiles(full_name))').eq('status','pending').order('created_at',{ascending:false}).limit(5),
@@ -350,7 +349,6 @@ async function loadOverview(){
   document.getElementById('statRevenue').textContent=Math.round(revenue)+' د'
   document.getElementById('statRevSub').textContent=`من ${subs?.length||0} اشتراك نشط`
   document.getElementById('statLate').textContent=late||0
-  // ✅ إصلاح: expires_at بدل end_date
   const expiring=subs?.filter(s=>{if(!s.expires_at)return false;const d=Math.ceil((new Date(s.expires_at)-new Date())/(1000*60*60*24));return d<=30&&d>0}).length||0
   if(expiring>0){document.getElementById('alertBar').style.display='flex';document.getElementById('alertText').textContent=`${expiring} اشتراك ينتهي خلال 30 يوماً`}
   const pending=reqs?.length||0
@@ -368,17 +366,27 @@ async function loadOverview(){
   const managerIds=[...new Set(groups?.map(g=>g.manager_id)||[])]
   let subsMap={}
   if(managerIds.length){
-    // ✅ إصلاح: expires_at بدل end_date
     const{data:subsAll}=await sb.from('subscriptions').select('manager_id,plan_name,expires_at,amount').eq('status','active').in('manager_id',managerIds)
     subsAll?.forEach(s=>{subsMap[s.manager_id]=s})
   }
   const gids=groups?.map(g=>g.id)||[]
   let mcMap={}
   if(gids.length){const{data:mems}=await sb.from('members').select('group_id').in('group_id',gids).eq('status','active');mems?.forEach(m=>{mcMap[m.group_id]=(mcMap[m.group_id]||0)+1})}
-  const{data:profiles}=await sb.from('profiles').select('id,full_name,email').eq('role','manager')
+
+  // ✅ جلب الـ profiles مع الهاتف
+  const{data:profiles}=await sb.from('profiles').select('id,full_name,email,phone').eq('role','manager')
   const profMap={}
   profiles?.forEach(p=>{profMap[p.id]=p})
-  allGroupsData=(groups||[]).map(g=>({...g,sub:subsMap[g.manager_id]||null,memberCount:mcMap[g.id]||0,managerName:profMap[g.manager_id]?.full_name||'—',managerEmail:profMap[g.manager_id]?.email||'—'}))
+
+  // ✅ بناء allGroupsData مع الهاتف والإيميل
+  allGroupsData=(groups||[]).map(g=>({
+    ...g,
+    sub:subsMap[g.manager_id]||null,
+    memberCount:mcMap[g.id]||0,
+    managerName:profMap[g.manager_id]?.full_name||'—',
+    managerEmail:profMap[g.manager_id]?.email||'—',
+    managerPhone:profMap[g.manager_id]?.phone||'—'
+  }))
   renderOvTable(allGroupsData)
 }
 
@@ -547,7 +555,6 @@ function renderOvTable(data){
   if(!data.length){document.getElementById('ovTbody').innerHTML='<tr><td colspan="6" style="text-align:center;padding:16px;color:var(--muted)">لا توجد نتائج</td></tr>';return}
   document.getElementById('ovTbody').innerHTML=data.map((g,i)=>{
     const pct=Math.round(g.memberCount/(g.max_members||4)*100)
-    // ✅ إصلاح: expires_at بدل end_date
     const days=g.sub?.expires_at?Math.ceil((new Date(g.sub.expires_at)-new Date())/(1000*60*60*24)):null
     const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
     const plan=g.sub?.plan_name||'Free'
@@ -561,12 +568,27 @@ window.ovSel=function(i){
   document.querySelectorAll('#ovTbody tr').forEach((r,j)=>r.classList.toggle('tr-sel',j===i))
   const g=filtered[i];if(!g)return
   const pct=Math.round(g.memberCount/(g.max_members||4)*100)
-  // ✅ إصلاح: expires_at بدل end_date
   const days=g.sub?.expires_at?Math.ceil((new Date(g.sub.expires_at)-new Date())/(1000*60*60*24)):null
   const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
   const pc=pct>=100?'var(--red)':pct>=75?'var(--amber)':'var(--green)'
   const plan=g.sub?.plan_name||'Free'
-  document.getElementById('detPanel').innerHTML=`<div class="det-hd">🏛️ ${g.name}</div><div class="det-row"><span class="det-k">المدير</span><span class="det-v">${g.managerName}</span></div><div class="det-row"><span class="det-k">البريد</span><span class="det-v" style="direction:ltr;font-size:10px">${g.managerEmail}</span></div><div class="det-row"><span class="det-k">الباقة</span><span class="badge ${planBadge(plan)}">${plan}</span></div><div class="det-row"><span class="det-k">الأعضاء</span><span class="det-v">${g.memberCount}/${g.max_members||4} (${pct}%)</span></div><div class="det-prog"><div class="det-prog-fill" style="width:${pct}%;background:${pc}"></div></div><div class="det-row"><span class="det-k">المبلغ الشهري</span><span class="det-v">${g.monthly_amount} درهم</span></div><div class="det-row"><span class="det-k">الاشتراك السنوي</span><span class="det-v">${g.sub?.amount||0} درهم</span></div><div class="det-row"><span class="det-k">انتهاء الباقة</span><span class="det-v">${g.sub?.expires_at?new Date(g.sub.expires_at).toLocaleDateString('ar-AE'):'—'}</span></div><div class="det-row"><span class="det-k">الأيام المتبقية</span><span class="det-v" style="color:${dc}">${days!==null?days+' يوم':'—'}</span></div><div class="det-row"><span class="det-k">الحالة</span><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></div><div class="det-actions"><div class="det-btn grn" onclick="changeStatus('${g.id}','active')">✓ تفعيل</div><div class="det-btn red" onclick="changeStatus('${g.id}','stopped')">✕ إيقاف</div></div>`
+  document.getElementById('detPanel').innerHTML=`
+    <div class="det-hd">🏛️ ${g.name}</div>
+    <div class="det-row"><span class="det-k">المدير</span><span class="det-v">${g.managerName}</span></div>
+    <div class="det-row"><span class="det-k">البريد</span><span class="det-v" style="direction:ltr;font-size:10px">${g.managerEmail}</span></div>
+    <div class="det-row"><span class="det-k">الهاتف</span><span class="det-v" style="direction:ltr">${g.managerPhone}</span></div>
+    <div class="det-row"><span class="det-k">الباقة</span><span class="badge ${planBadge(plan)}">${plan}</span></div>
+    <div class="det-row"><span class="det-k">الأعضاء</span><span class="det-v">${g.memberCount}/${g.max_members||4} (${pct}%)</span></div>
+    <div class="det-prog"><div class="det-prog-fill" style="width:${pct}%;background:${pc}"></div></div>
+    <div class="det-row"><span class="det-k">المبلغ الشهري</span><span class="det-v">${g.monthly_amount} درهم</span></div>
+    <div class="det-row"><span class="det-k">الاشتراك السنوي</span><span class="det-v">${g.sub?.amount||0} درهم</span></div>
+    <div class="det-row"><span class="det-k">انتهاء الباقة</span><span class="det-v">${g.sub?.expires_at?new Date(g.sub.expires_at).toLocaleDateString('ar-AE'):'—'}</span></div>
+    <div class="det-row"><span class="det-k">الأيام المتبقية</span><span class="det-v" style="color:${dc}">${days!==null?days+' يوم':'—'}</span></div>
+    <div class="det-row"><span class="det-k">الحالة</span><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></div>
+    <div class="det-actions">
+      <div class="det-btn grn" onclick="changeStatus('${g.id}','active')">✓ تفعيل</div>
+      <div class="det-btn red" onclick="changeStatus('${g.id}','stopped')">✕ إيقاف</div>
+    </div>`
 }
 
 window.changeStatus=async function(id,status){
@@ -590,18 +612,32 @@ window.loadGroups=async function(){
   const status=document.getElementById('grpStatus')?.value||''
   const plan=document.getElementById('grpPlan')?.value||''
   let filtered=allGroupsData
-  if(search)filtered=filtered.filter(g=>g.name.toLowerCase().includes(search)||g.managerName.toLowerCase().includes(search))
+  if(search)filtered=filtered.filter(g=>g.name.toLowerCase().includes(search)||g.managerName.toLowerCase().includes(search)||g.managerEmail.toLowerCase().includes(search)||(g.managerPhone||'').includes(search))
   if(status)filtered=filtered.filter(g=>g.status===status)
   if(plan)filtered=filtered.filter(g=>(g.sub?.plan_name||'free').toLowerCase()===plan.toLowerCase())
   document.getElementById('groupsCount').textContent=`${filtered.length} جمعية`
   const tbody=document.getElementById('grpTbody')
-  if(!filtered.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted)">لا توجد نتائج</td></tr>';return}
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="11" style="text-align:center;padding:20px;color:var(--muted)">لا توجد نتائج</td></tr>';return}
   tbody.innerHTML=filtered.map(g=>{
     const plan=g.sub?.plan_name||'Free'
-    // ✅ إصلاح: expires_at بدل end_date
     const days=g.sub?.expires_at?Math.ceil((new Date(g.sub.expires_at)-new Date())/(1000*60*60*24)):null
     const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
-    return `<tr><td><strong>${g.name}</strong></td><td>${g.managerName}</td><td><span class="badge ${planBadge(plan)}">${plan}</span></td><td>${g.memberCount}/${g.max_members||4}</td><td>${g.monthly_amount} درهم</td><td>${g.sub?.expires_at?new Date(g.sub.expires_at).toLocaleDateString('ar-AE'):'—'}</td><td style="color:${dc};font-weight:900">${days!==null?days+' يوم':'—'}</td><td><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></td><td><div style="display:flex;gap:4px"><button class="action-btn ab-green" onclick="changeStatus('${g.id}','active')">تفعيل</button><button class="action-btn ab-red" onclick="changeStatus('${g.id}','stopped')">إيقاف</button></div></td></tr>`
+    return `<tr>
+      <td><strong>${g.name}</strong></td>
+      <td>${g.managerName}</td>
+      <td style="direction:ltr;font-size:11px;color:var(--muted)">${g.managerPhone||'—'}</td>
+      <td style="direction:ltr;font-size:11px;color:var(--muted)">${g.managerEmail||'—'}</td>
+      <td><span class="badge ${planBadge(plan)}">${plan}</span></td>
+      <td>${g.memberCount}/${g.max_members||4}</td>
+      <td>${g.monthly_amount} درهم</td>
+      <td>${g.sub?.expires_at?new Date(g.sub.expires_at).toLocaleDateString('ar-AE'):'—'}</td>
+      <td style="color:${dc};font-weight:900">${days!==null?days+' يوم':'—'}</td>
+      <td><span class="badge ${groupBadge(g.status)}">${groupLabel(g.status)}</span></td>
+      <td><div style="display:flex;gap:4px">
+        <button class="action-btn ab-green" onclick="changeStatus('${g.id}','active')">تفعيل</button>
+        <button class="action-btn ab-red" onclick="changeStatus('${g.id}','stopped')">إيقاف</button>
+      </div></td>
+    </tr>`
   }).join('')
 }
 
@@ -630,18 +666,15 @@ window.loadRequests=async function(){
 window.loadSubscriptions=async function(){
   const plan=document.getElementById('subsPlan')?.value||''
   const status=document.getElementById('subsStatus')?.value||''
-  // ✅ إصلاح: جيب الـ profiles عن طريق manager_id مع profiles مباشرة
   let q=sb.from('subscriptions').select('*, profiles!subscriptions_manager_id_fkey(full_name)').order('created_at',{ascending:false})
   if(plan)q=q.eq('plan_name',plan)
   if(status)q=q.eq('status',status)
   const{data,error}=await q
-  // fallback: لو الـ join فشل بسبب اسم العلاقة، نجيب الأسماء يدوياً
   let rows=data
   if(error||!data){
     const{data:subs}=await sb.from('subscriptions').select('*').order('created_at',{ascending:false})
     rows=subs
   }
-  // نجيب أسماء المدراء إذا ما اتجابت مع الـ join
   if(rows&&(!rows[0]?.profiles)){
     const mids=[...new Set(rows.map(s=>s.manager_id).filter(Boolean))]
     if(mids.length){
@@ -656,7 +689,6 @@ window.loadSubscriptions=async function(){
   if(!rows?.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">لا توجد اشتراكات</td></tr>';return}
   tbody.innerHTML=rows.map(s=>{
     const managerName=s.profiles?.full_name||s._managerName||'—'
-    // ✅ إصلاح: expires_at بدل end_date
     const days=s.expires_at?Math.ceil((new Date(s.expires_at)-new Date())/(1000*60*60*24)):null
     const dc=days===null?'var(--muted)':days<=30?'var(--red)':days<=90?'var(--amber)':'var(--green)'
     return `<tr><td>${managerName}</td><td><span class="badge ${planBadge(s.plan_name)}">${s.plan_name}</span></td><td>${s.amount} درهم</td><td><span class="badge ${s.status==='active'?'b-green':'b-red'}">${s.status==='active'?'نشط':'منتهي'}</span></td><td>${s.start_date||'—'}</td><td>${s.expires_at?new Date(s.expires_at).toLocaleDateString('ar-AE'):'—'}</td><td style="color:${dc};font-weight:900">${days!==null?days+' يوم':'—'}</td></tr>`
@@ -666,8 +698,8 @@ window.loadSubscriptions=async function(){
 window.doLogout=async function(){await sb.auth.signOut();window.location.replace('login.html')}
 
 window.exportData=function(){
-  const rows=allGroupsData.map(g=>[g.name,g.managerName,g.sub?.plan_name||'Free',g.memberCount,g.max_members,g.monthly_amount,groupLabel(g.status)])
-  const csv=[['الجمعية','المدير','الباقة','الأعضاء','الحد الأقصى','المبلغ الشهري','الحالة'],...rows].map(r=>r.join(',')).join('\n')
+  const rows=allGroupsData.map(g=>[g.name,g.managerName,g.managerPhone,g.managerEmail,g.sub?.plan_name||'Free',g.memberCount,g.max_members,g.monthly_amount,groupLabel(g.status)])
+  const csv=[['الجمعية','المدير','الهاتف','البريد','الباقة','الأعضاء','الحد الأقصى','المبلغ الشهري','الحالة'],...rows].map(r=>r.join(',')).join('\n')
   const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download='saahl-groups.csv';a.click()
 }
 
